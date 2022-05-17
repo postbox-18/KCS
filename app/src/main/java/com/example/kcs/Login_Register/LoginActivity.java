@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
 import com.example.kcs.Class.MyLog;
+import com.example.kcs.HomeActivity;
 import com.example.kcs.MainActivity;
 import com.example.kcs.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -94,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 // intent to home activity
                                                 Intent intent
                                                         = new Intent(LoginActivity.this,
-                                                        MainActivity.class);
+                                                        HomeActivity.class);
                                                 startActivity(intent);
                                             }
 
