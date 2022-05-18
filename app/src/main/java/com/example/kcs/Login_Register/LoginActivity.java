@@ -20,6 +20,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
 import com.example.kcs.Classes.LoadingDialogs;
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.MainActivity;
 import com.example.kcs.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -93,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 // intent to home activity
                                                 Intent intent
                                                         = new Intent(LoginActivity.this,
-                                                        HomeActivity.class);
+                                                        MainActivity.class);
                                                 startActivity(intent);
                                             }
 
