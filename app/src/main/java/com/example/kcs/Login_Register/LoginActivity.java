@@ -120,17 +120,9 @@ public class LoginActivity extends AppCompatActivity {
                                                 else
                                                 {
                                                     MyLog.e(TAG,"logout>>Check box not checked>>"+remember_me.isChecked());
-
                                                     SharedPreferences_data.logout_User();
                                                 }
-                                                if ((new SharedPreferences_data(getApplicationContext()).getEnter_password()).equals(s_password)) {
-                                                    login();
-                                                } else {
-                                                    Toast.makeText(LoginActivity.this, "FAIL", Toast.LENGTH_SHORT).show();
-                                                    password.setText(null);
-                                                    email.setText(null);
 
-                                                }
                                                 login();
                                             }
 
