@@ -1,4 +1,4 @@
-package com.example.kcs.Class;
+package com.example.kcs.Classes;
 
 import android.content.Context;
 import android.content.SharedPreferences;

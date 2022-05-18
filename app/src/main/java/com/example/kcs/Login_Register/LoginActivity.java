@@ -5,11 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,9 +18,8 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
-import com.example.kcs.Class.MyLog;
-import com.example.kcs.HomeActivity;
-import com.example.kcs.MainActivity;
+import com.example.kcs.Classes.LoadingDialogs;
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     //anim
     private Animation slide_down_anim,slide_up_anim,fade_in_anim;
     private ConstraintLayout bg_banner,head_layout;
+    private LoadingDialogs loadingDialog=new LoadingDialogs();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         Toast.LENGTH_LONG)
                                                         .show();
 
-                                                lottie_loading.setVisibility(View.GONE);
-                                                head_layout.setVisibility(View.VISIBLE);
+                                                loadingDialog.dismiss();
 
                                                 // if sign-in is successful
                                                 // intent to home activity
@@ -108,14 +105,12 @@ public class LoginActivity extends AppCompatActivity {
                                                         Toast.LENGTH_LONG)
                                                         .show();
 
-                                                lottie_loading.setVisibility(View.GONE);
-                                                head_layout.setVisibility(View.VISIBLE);
+                                                loadingDialog.dismiss();
                                             }
                                         }
                                     });
                 } else {
-                    lottie_loading.setVisibility(View.GONE);
-                    head_layout.setVisibility(View.VISIBLE);
+                    loadingDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Please check the values", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -146,8 +141,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         else
         {
-            head_layout.setVisibility(View.GONE);
-            lottie_loading.setVisibility(View.VISIBLE);
+            loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
 
            return true;
         }

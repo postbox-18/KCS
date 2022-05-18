@@ -1,4 +1,4 @@
-package com.example.kcs.Class;
+package com.example.kcs.Classes;
 
 public class BuildConfig {
     public static final boolean DEBUG = Boolean.parseBoolean("true");

@@ -9,7 +9,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -22,16 +21,15 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
-import com.example.kcs.Class.MyLog;
-import com.example.kcs.Class.SharedPreferences_data;
+import com.example.kcs.Classes.LoadingDialogs;
+import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -51,6 +49,10 @@ public class RegisterActivity extends AppCompatActivity {
     //Anim
     private Animation slide_down_anim,slide_up_anim,fade_in_anim;
     private ConstraintLayout bg_banner,head_layout;
+
+    //loading
+    private LoadingDialogs loadingDialog=new LoadingDialogs();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 Toast.LENGTH_LONG)
                                                 .show();
 
-                                        lottie_loading.setVisibility(View.GONE);
-                                        head_layout.setVisibility(View.VISIBLE);
+                                        loadingDialog.dismiss();
 
                                         //Next Screen Login
                                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
@@ -123,14 +124,12 @@ public class RegisterActivity extends AppCompatActivity {
                                                 .show();
 
                                         // hide the progress bar
-                                        lottie_loading.setVisibility(View.GONE);
-                                        head_layout.setVisibility(View.VISIBLE);
+                                        loadingDialog.dismiss();
                                     }
                                 }
                             });
                 } else {
-                    lottie_loading.setVisibility(View.GONE);
-                    head_layout.setVisibility(View.VISIBLE);
+                    loadingDialog.dismiss();
                     Toast.makeText(RegisterActivity.this, "Check the Details", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -192,9 +191,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else {
             //shared-preferences
-            head_layout.setVisibility(View.GONE);
-            lottie_loading.setVisibility(View.VISIBLE);
-            lottie_loading.playAnimation();
+            loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
             new SharedPreferences_data(this).setS_user_name(s_user_name);
             new SharedPreferences_data(this).setS_phone_number(s_phone_number);
             new SharedPreferences_data(this).setS_password(s_password);

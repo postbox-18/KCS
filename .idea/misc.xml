@@ -16,6 +16,7 @@
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.12" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
         <entry key="app/src/main/res/layout/app_bar_home__sample.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/nav_header_home__sample.xml" value="0.19375" />
       </map>
     </option>

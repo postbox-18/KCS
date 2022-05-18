@@ -2,4 +2,7 @@
     <string name="app_name">kcs</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dataset_one">Data set One</string>
+    <string name="dataset_one_str">Data set One String</string>
+    <string name="chkLoginNew">"Check Login New "</string>
 </resources>

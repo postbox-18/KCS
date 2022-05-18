@@ -10,7 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.kcs.Class.SharedPreferences_data;
+import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.R;
 
 public class SplashActivity extends AppCompatActivity {
