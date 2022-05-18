@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
 import com.example.kcs.Classes.LoadingDialogs;
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.MainActivity;
 import com.example.kcs.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     private TextView no_account;
     private String s_email, s_password;
     private String TAG="LoginActivity";
+    private CheckBox remember_me;
+    private boolean check_password=false;
+    private String s_check_box;
     //firebase auth
     private FirebaseAuth mAuth;
     //Lottie anim
@@ -57,7 +62,21 @@ public class LoginActivity extends AppCompatActivity {
         head_layout = findViewById(R.id.head_layout);
         lottie_loading = findViewById(R.id.lottie_loading);
         no_account = findViewById(R.id.no_account);
+        remember_me = findViewById(R.id.remember_me);
+
         Top_Bg();
+        //checkBox remember me
+        s_check_box=new SharedPreferences_data(LoginActivity.this).getBoolen_check();
+        if(s_check_box!=null) {
+            if (s_check_box.equals("true")) {
+                MyLog.e(TAG, "logout>>Check condition>>" + s_check_box);
+                login();
+            } else if (s_check_box.equals("false")) {
+                MyLog.e(TAG, "logout>>Check is condition>>" + s_check_box);
+                SharedPreferences_data.logout_User();
+            }
+        }
+
         //lottie
         lottie_loading.setFailureListener(new LottieListener<Throwable>() {
             @Override
@@ -75,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                 s_email = email.getText().toString();
                 s_password = password.getText().toString();
                 if (CheckDeatils()) {
+
                     mAuth.signInWithEmailAndPassword(s_email, s_password)
                             .addOnCompleteListener(
                                     new OnCompleteListener<AuthResult>() {
@@ -90,12 +110,28 @@ public class LoginActivity extends AppCompatActivity {
 
                                                 loadingDialog.dismiss();
 
-                                                // if sign-in is successful
-                                                // intent to home activity
-                                                Intent intent
-                                                        = new Intent(LoginActivity.this,
-                                                        MainActivity.class);
-                                                startActivity(intent);
+
+                                                if(remember_me.isChecked())
+                                                {
+                                                    MyLog.e(TAG,"logout>>Check box checked>>"+remember_me.isChecked());
+                                                    check_password=true;
+
+                                                }
+                                                else
+                                                {
+                                                    MyLog.e(TAG,"logout>>Check box not checked>>"+remember_me.isChecked());
+
+                                                    SharedPreferences_data.logout_User();
+                                                }
+                                                if ((new SharedPreferences_data(getApplicationContext()).getEnter_password()).equals(s_password)) {
+                                                    login();
+                                                } else {
+                                                    Toast.makeText(LoginActivity.this, "FAIL", Toast.LENGTH_SHORT).show();
+                                                    password.setText(null);
+                                                    email.setText(null);
+
+                                                }
+                                                login();
                                             }
 
                                             else {
@@ -123,6 +159,17 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
+
+    }
+
+    private void login() {
+        // if sign-in is successful
+        // intent to home activity
+        new SharedPreferences_data(getApplicationContext()).setEnter_password(s_password);
+        new SharedPreferences_data(getApplicationContext()).setBoolen_check(String.valueOf(check_password));
+        Intent intent = new Intent(LoginActivity.this,
+                MainActivity.class);
+        startActivity(intent);
 
     }
 

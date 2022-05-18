@@ -2,12 +2,17 @@ package com.example.kcs.Fragment;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.R;
 
 /**
@@ -25,6 +30,11 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    //primary field's
+    private ImageView pic;
+    private TextView user_name,email;
+    private CardView log_out;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -61,6 +71,27 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view= inflater.inflate(R.layout.fragment_profile, container, false);
+
+        //id's
+        pic=view.findViewById(R.id.pic);
+        user_name=view.findViewById(R.id.user_name);
+        email=view.findViewById(R.id.email);
+        log_out=view.findViewById(R.id.logout);
+
+        //setText
+        user_name.setText(new SharedPreferences_data(getContext()).getS_user_name());
+        email.setText(new SharedPreferences_data(getContext()).getS_email());
+
+        //onclick
+        log_out.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences_data.logout_User();
+            }
+        });
+
+
+        return view;
     }
 }

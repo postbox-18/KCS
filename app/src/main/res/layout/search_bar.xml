@@ -32,12 +32,13 @@
                 android:layout_alignParentTop="true"
                 />
             <ImageView
+
                 android:id="@+id/id_ClearSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center"
                 android:layout_margin="10dp"
-                android:visibility=""
+
                 app:srcCompat="@drawable/ic_close_black_24dp" />
         </FrameLayout>
     </androidx.cardview.widget.CardView>
