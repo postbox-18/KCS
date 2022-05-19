@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
             } else if (s_check_box.equals("false")) {
                 MyLog.e(TAG, "logout>>Check is condition>>" + s_check_box);
                 SharedPreferences_data.logout_User();
+                
             }
         }
 
@@ -113,6 +114,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                                 if(remember_me.isChecked())
                                                 {
+                                                    MyLog.e(TAG,"logout>> remember me is checked");
                                                     MyLog.e(TAG,"logout>>Check box checked>>"+remember_me.isChecked());
                                                     check_password=true;
 
@@ -121,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 {
                                                     MyLog.e(TAG,"logout>>Check box not checked>>"+remember_me.isChecked());
                                                     SharedPreferences_data.logout_User();
+
                                                 }
 
                                                 login();

@@ -1,5 +1,6 @@
 package com.example.kcs.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
@@ -12,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.Login_Register.LoginActivity;
+import com.example.kcs.MainActivity;
 import com.example.kcs.R;
 
 /**
@@ -30,6 +34,7 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String TAG="ProfileFragment";
 
     //primary field's
     private ImageView pic;
@@ -87,7 +92,12 @@ public class ProfileFragment extends Fragment {
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MyLog.e(TAG,"logout>> btn clicked");
                 SharedPreferences_data.logout_User();
+                new SharedPreferences_data(getContext()).setBoolen_check("false");
+                Intent intent=new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+
             }
         });
 
