@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public class ProfileFragment extends Fragment {
     private ImageView pic;
     private TextView user_name,email;
     private CardView log_out;
+    private ImageView back_btn;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -83,6 +85,7 @@ public class ProfileFragment extends Fragment {
         user_name=view.findViewById(R.id.user_name);
         email=view.findViewById(R.id.email);
         log_out=view.findViewById(R.id.logout);
+        back_btn=view.findViewById(R.id.back_btn);
 
         //setText
         user_name.setText(new SharedPreferences_data(getContext()).getS_user_name());
@@ -98,6 +101,15 @@ public class ProfileFragment extends Fragment {
                 Intent intent=new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
 
+            }
+        });
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment=new HomeFragment();
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
             }
         });
 
