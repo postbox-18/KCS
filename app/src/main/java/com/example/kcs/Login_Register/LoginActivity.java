@@ -1,10 +1,5 @@
 package com.example.kcs.Login_Register;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +12,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
 import com.example.kcs.Classes.LoadingDialogs;
@@ -28,6 +28,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     //primary field
@@ -39,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private String TAG="LoginActivity";
     private CheckBox remember_me;
     private boolean check_password=false;
+    private boolean check_email=false;
     private String s_check_box;
     //firebase auth
     private FirebaseAuth mAuth;
@@ -48,7 +56,9 @@ public class LoginActivity extends AppCompatActivity {
     private Animation slide_down_anim,slide_up_anim,fade_in_anim;
     private ConstraintLayout bg_banner,head_layout;
     private LoadingDialogs loadingDialog=new LoadingDialogs();
-
+    //firebase database retrieve
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +73,9 @@ public class LoginActivity extends AppCompatActivity {
         lottie_loading = findViewById(R.id.lottie_loading);
         no_account = findViewById(R.id.no_account);
         remember_me = findViewById(R.id.remember_me);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Users-Id");
 
         Top_Bg();
         //checkBox remember me
@@ -103,7 +116,8 @@ public class LoginActivity extends AppCompatActivity {
                                         public void onComplete(
                                                 @NonNull Task<AuthResult> task)
                                         {
-                                            if (task.isSuccessful()) {
+                                            FireseBaseDataDetails(s_email);
+                                            if (task.isSuccessful()&&check_email) {
                                                 Toast.makeText(getApplicationContext(),
                                                         "Login successful!!",
                                                         Toast.LENGTH_LONG)
@@ -125,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     SharedPreferences_data.logout_User();
 
                                                 }
-
+                                                
                                                 login();
                                             }
 
@@ -157,9 +171,45 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void FireseBaseDataDetails(String s_email) {
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Users-Id");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "snap>>" + snapshot);
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                  /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
+                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
+                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*/
+                    if(Objects.equals(s_email, datas.child("email").getValue().toString())) {
+                        new SharedPreferences_data(getApplicationContext()).setS_email(datas.child("email").getValue().toString());
+                        new SharedPreferences_data(getApplicationContext()).setS_user_name(datas.child("username").getValue().toString());
+                        new SharedPreferences_data(getApplicationContext()).setS_phone_number(datas.child("phone_number").getValue().toString());
+                        check_email=true;
+                    }
+                    else
+                    {
+                        check_email=false;
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(LoginActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
     private void login() {
         // if sign-in is successful
         // intent to home activity
+      
         new SharedPreferences_data(getApplicationContext()).setEnter_password(s_password);
         new SharedPreferences_data(getApplicationContext()).setBoolen_check(String.valueOf(check_password));
         Intent intent = new Intent(LoginActivity.this,

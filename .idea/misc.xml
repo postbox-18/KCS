@@ -10,7 +10,9 @@
         <entry key="app/src/main/res/drawable/ic_circle_user_regular.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_close_black_24dp.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_gear_fill.xml" value="0.184" />
+        <entry key="app/src/main/res/drawable/ic_gear_fill_tool.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_kitchen_set_solid.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/ic_kitchen_set_solid_tool.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_user_solid.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/register_btn.xml" value="0.1235" />

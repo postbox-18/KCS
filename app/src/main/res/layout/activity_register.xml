@@ -128,7 +128,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/text_silver"
-
                 android:drawablePadding="10dp"
                 android:hint="Phone Number"
                 android:imeOptions="actionNext"

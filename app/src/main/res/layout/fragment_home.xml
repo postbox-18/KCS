@@ -45,7 +45,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             android:padding="5dp"
-                            app:srcCompat="@drawable/ic_kitchen_set_solid" />
+                            app:srcCompat="@drawable/ic_kitchen_set_solid_tool" />
 
                         <ImageView
                             android:id="@+id/profile"
@@ -55,7 +55,7 @@
                             android:layout_marginEnd="15dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_gear_fill" />
+                            android:src="@drawable/ic_gear_fill_tool" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.appcompat.widget.Toolbar>
