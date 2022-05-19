@@ -1,17 +1,14 @@
 package com.example.adm;
 
 import android.content.Context;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 
-import com.example.adm.Classes.MyLog;
 import com.example.adm.Fragments.OrdersFragment;
-import com.example.adm.Fragments.UserFragment;
+import com.example.adm.Fragments.Users.UserFragment;
 
 public class MyFragments_Adapter extends FragmentStatePagerAdapter {
     private int tabCount;

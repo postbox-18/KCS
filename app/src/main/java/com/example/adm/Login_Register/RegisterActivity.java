@@ -24,12 +24,19 @@ import com.airbnb.lottie.LottieListener;
 import com.example.adm.Classes.LoadingDialogs;
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SharedPreferences_data;
+import com.example.adm.Fragments.Users.UserDetailsAdapter;
+import com.example.adm.Fragments.Users.UserDetailsList;
 import com.example.adm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -53,7 +60,9 @@ public class RegisterActivity extends AppCompatActivity {
     //loading
     private LoadingDialogs loadingDialog=new LoadingDialogs();
 
-
+    //firebase database retrieve
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +79,27 @@ public class RegisterActivity extends AppCompatActivity {
         bg_banner = findViewById(R.id.headings);
         head_layout = findViewById(R.id.head_layout);
         lottie_loading = findViewById(R.id.lottie_loading);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Users-Id");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "snap>>" + snapshot);
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                    MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
+                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
+                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Top_Bg();
         //lottie
         lottie_loading.setFailureListener(new LottieListener<Throwable>() {

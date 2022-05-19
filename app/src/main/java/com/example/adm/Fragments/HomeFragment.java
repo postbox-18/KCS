@@ -78,8 +78,8 @@ public class HomeFragment extends Fragment {
         viewPager=(ViewPager)view.findViewById(R.id.viewPager);
 
         //tablayout
-        tabLayout.addTab(tabLayout.newTab().setText("Home"));
-        tabLayout.addTab(tabLayout.newTab().setText("Movie"));
+        tabLayout.addTab(tabLayout.newTab().setText("Orders"));
+        tabLayout.addTab(tabLayout.newTab().setText("Users"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         final MyFragments_Adapter adapter = new MyFragments_Adapter(getContext(),getParentFragmentManager(), tabLayout.getTabCount());

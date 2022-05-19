@@ -28,6 +28,7 @@
         <entry key="app/src/main/res/layout/nav_header_home__sample.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/search_bar.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/topic_activity.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/user_details_cardview.xml" value="0.1" />
       </map>
     </option>
   </component>
