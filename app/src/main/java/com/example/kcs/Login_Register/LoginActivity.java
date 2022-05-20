@@ -173,8 +173,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void FireseBaseDataDetails(String s_email) {
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Users-Id");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
