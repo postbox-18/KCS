@@ -33,8 +33,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -198,17 +201,21 @@ public class HomeFragment extends Fragment {
                 int size=0;
 
 
-                /*for (DataSnapshot datas : snapshot.getChildren()) {*/
 
-                    MyLog.e(TAG, "list>>snap>>fun>>" +  snapshot.child(headerList1.getHeader()).getValue().toString());
 
-                    ItemList list =  (snapshot.child(headerList1.getHeader())).getValue(ItemList.class);
-                MyLog.e(TAG, "list>>snap>>fun>>list>>" +  list.getItem());
-                    itemLists=new ArrayList<>();
-                    ItemList itemLists1 = new ItemList(
-                            list.getItem());
-                    itemLists.add(itemLists1);
+                    MyLog.e(TAG, "list>>snap>>fun>>" + snapshot.child(headerList1.getHeader()).getValue());
+
+                    ArrayList<String> str = new ArrayList<>();
+                    str= (ArrayList<String>) snapshot.child(headerList1.getHeader()).getValue();
+                    for(String i:str) {
+                        MyLog.e(TAG,"list>>"+i);
+                        ItemList itemLists1 = new ItemList(
+                                i);
+                        itemLists.add(itemLists1);
+                    }
+                    MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     size++;
+
 
 
             }

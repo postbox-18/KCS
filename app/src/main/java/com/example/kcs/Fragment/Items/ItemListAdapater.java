@@ -13,8 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.ItemList;
 import com.example.kcs.R;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -41,6 +43,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         final ItemList itemList1 = itemLists.get(position);
         //img update soon
         //holder.header_img.setText(funList1.getUsername());
+        MyLog.e(TAG, "Data>>header itemadapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemList1));
         holder.item_check.setText(itemList1.getItem());
 
 

@@ -51,6 +51,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
         holder.header_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 getHeaderFragment.getheaderFragment(headerList1);
             }
         });
