@@ -1,15 +1,9 @@
 package com.example.kcs.Login_Register;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -20,18 +14,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
-import com.example.kcs.Class.MyLog;
-import com.example.kcs.Class.SharedPreferences_data;
+import com.example.kcs.Classes.LoadingDialogs;
+import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -52,6 +55,12 @@ public class RegisterActivity extends AppCompatActivity {
     private Animation slide_down_anim,slide_up_anim,fade_in_anim;
     private ConstraintLayout bg_banner,head_layout;
 
+    //loading
+    private LoadingDialogs loadingDialog=new LoadingDialogs();
+
+    //firebase database retrieve
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +77,27 @@ public class RegisterActivity extends AppCompatActivity {
         bg_banner = findViewById(R.id.headings);
         head_layout = findViewById(R.id.head_layout);
         lottie_loading = findViewById(R.id.lottie_loading);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Users-Id");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "snap>>" + snapshot);
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                  /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
+                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
+                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*/
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Top_Bg();
         //lottie
         lottie_loading.setFailureListener(new LottieListener<Throwable>() {
@@ -107,8 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 Toast.LENGTH_LONG)
                                                 .show();
 
-                                        lottie_loading.setVisibility(View.GONE);
-                                        head_layout.setVisibility(View.VISIBLE);
+                                        loadingDialog.dismiss();
 
                                         //Next Screen Login
                                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
@@ -123,14 +152,12 @@ public class RegisterActivity extends AppCompatActivity {
                                                 .show();
 
                                         // hide the progress bar
-                                        lottie_loading.setVisibility(View.GONE);
-                                        head_layout.setVisibility(View.VISIBLE);
+                                        loadingDialog.dismiss();
                                     }
                                 }
                             });
                 } else {
-                    lottie_loading.setVisibility(View.GONE);
-                    head_layout.setVisibility(View.VISIBLE);
+                    loadingDialog.dismiss();
                     Toast.makeText(RegisterActivity.this, "Check the Details", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -192,9 +219,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else {
             //shared-preferences
-            head_layout.setVisibility(View.GONE);
-            lottie_loading.setVisibility(View.VISIBLE);
-            lottie_loading.playAnimation();
+            loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
             new SharedPreferences_data(this).setS_user_name(s_user_name);
             new SharedPreferences_data(this).setS_phone_number(s_phone_number);
             new SharedPreferences_data(this).setS_password(s_password);

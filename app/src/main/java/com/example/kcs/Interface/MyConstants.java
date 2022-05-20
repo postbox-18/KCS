@@ -1,6 +1,6 @@
 package com.example.kcs.Interface;
 
-import com.example.kcs.Class.BuildConfig;
+import com.example.kcs.Classes.BuildConfig;
 
 import java.util.Locale;
 

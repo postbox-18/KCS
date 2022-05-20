@@ -1,4 +1,4 @@
-package com.example.kcs.Class;
+package com.example.kcs.Classes;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,9 @@ public class SharedPreferences_data {
     private static final String s_user_name="s_user_name";
     private static final String s_phone_number="s_phone_number";
     private static final String s_password="s_password";
+    private static final String enter_password="enter_password";
+    private static final String boolen_check="boolen_check";
+
     private static final String s_email="s_email";
     public SharedPreferences_data(Context context) {
         sharedPreferences = context.getSharedPreferences("password", Context.MODE_PRIVATE);
@@ -17,7 +20,7 @@ public class SharedPreferences_data {
     }
     public static boolean logout_User() {
         if (editor != null) {
-            editor.remove("");
+            editor.remove("enter_password");
             editor.apply();
             return true;
         } else {
@@ -68,6 +71,21 @@ public class SharedPreferences_data {
     }
     public static String getS_email() {
         return sharedPreferences.getString(s_email, null);
+    }
+  public void setEnter_password(String en_password){
+        sharedPreferences.edit().putString(enter_password, en_password).commit();
+
+    }
+    public static String getEnter_password() {
+        return sharedPreferences.getString(enter_password, null);
+    }
+
+  public void setBoolen_check(String boolen_checks){
+        sharedPreferences.edit().putString(boolen_check, boolen_checks).commit();
+
+    }
+    public static String getBoolen_check() {
+        return sharedPreferences.getString(boolen_check, null);
     }
 
 
