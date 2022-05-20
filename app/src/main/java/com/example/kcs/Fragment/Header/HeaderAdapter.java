@@ -5,11 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.Fragment.ProfileFragment;
 import com.example.kcs.R;
 
 import java.util.List;
@@ -38,6 +42,8 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
         //img update soon
         //holder.header_img.setText(funList1.getUsername());
         holder.header_title.setText(headerList1.getHeader());
+
+
     }
 
     @Override
@@ -46,12 +52,14 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private LinearLayout header_linear;
         private ImageView header_img;
         private TextView header_title;
         public ViewHolder(View view) {
             super(view);
             header_img=view.findViewById(R.id.header_img);
             header_title=view.findViewById(R.id.header_title);
+            header_linear=view.findViewById(R.id.header_linear);
 
         }
     }

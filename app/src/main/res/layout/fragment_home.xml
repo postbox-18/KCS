@@ -105,7 +105,6 @@
                         android:id="@+id/recyclerview_header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:scrollbars="horizontal"
                         tools:itemCount="2"
                         tools:listitem="@layout/header_layout" />
 
@@ -115,7 +114,6 @@
                     android:id="@+id/recyclerview_fun"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="horizontal"
                     tools:itemCount="2"
                     tools:listitem="@layout/fun_activity" />
             </LinearLayout>
@@ -129,7 +127,6 @@
                     android:id="@+id/recyclerview_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="horizontal"
                     tools:itemCount="2"
                     tools:listitem="@layout/img_activity" />
             </LinearLayout>

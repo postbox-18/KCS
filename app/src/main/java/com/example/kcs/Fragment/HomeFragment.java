@@ -22,6 +22,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunAdapter;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
+import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,10 +73,20 @@ public class HomeFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private String TAG="HomeFragment";
+
     public HomeFragment() {
         // Required empty public constructor
     }
+    private FunAdapter.GetFragment getFragment=new FunAdapter.GetFragment() {
+        @Override
+        public void getFragment(FunList funList1) {
+            GetHeader();
+            Fragment fragment=new HeaderFragment(funList1,headerList);
+            FragmentManager fragmentManager = getParentFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
 
+        }
+    };
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -149,6 +160,8 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "home>>snap>>fun>>" + snapshot);
                 int size=0;
+                funLists=new ArrayList<>();
+
                 for (DataSnapshot datas : snapshot.getChildren()) {
                   /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
                     MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
@@ -162,7 +175,7 @@ public class HomeFragment extends Fragment {
                     size++;
 
                 }
-                funAdapter=new FunAdapter(getContext(),funLists);
+                funAdapter=new FunAdapter(getContext(),funLists,getFragment);
                 recyclerview_fun.setAdapter(funAdapter);
 
             }
@@ -182,6 +195,7 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "home>>snap>>" + snapshot);
                 int size=0;
+                headerList=new ArrayList<>();
                 for (DataSnapshot datas : snapshot.getChildren()) {
                   /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
                     MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());*/
@@ -197,6 +211,7 @@ public class HomeFragment extends Fragment {
                     size++;
 
                 }
+
                 headerAdapter=new HeaderAdapter(getContext(),headerList);
                 recyclerview_header.setAdapter(headerAdapter);
 

@@ -8,9 +8,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.R;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -18,10 +24,16 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
     private Context context;
     private List<FunList>funLists;
     private String TAG="FunAdapter";
-    public FunAdapter(Context context, List<FunList> funLists) {
+    FunAdapter.GetFragment getFragment;
+    public interface GetFragment
+    {
+        void getFragment(FunList funList1);
+    }
+    public FunAdapter(Context context, List<FunList> funLists, GetFragment getFragment) {
         this.context=context;
         this.funLists=funLists;
-        
+        this.getFragment=getFragment;
+
     }
 
     @NonNull
@@ -38,6 +50,12 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
         //img update soon
         //holder.fun_img.setText(funList1.getUsername());
         holder.fun_title.setText(funList1.getFun());
+        holder.fun_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragment.getFragment(funList1);
+            }
+        });
     }
 
     @Override
@@ -48,10 +66,12 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView fun_img;
         private TextView fun_title;
+        private CardView fun_card;
         public ViewHolder(View view) {
             super(view);
             fun_img=view.findViewById(R.id.fun_img);
             fun_title=view.findViewById(R.id.fun_title);
+            fun_card=view.findViewById(R.id.fun_card);
 
         }
     }
