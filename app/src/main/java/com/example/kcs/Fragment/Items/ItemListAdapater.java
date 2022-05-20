@@ -47,6 +47,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         holder.item_check.setText(itemList1.getItem());
 
 
+
     }
 
     @Override
