@@ -24,6 +24,7 @@ import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
 import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.Header.HeaderList;
+import com.example.kcs.Fragment.Items.ItemFragment;
 import com.example.kcs.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -72,21 +73,40 @@ public class HomeFragment extends Fragment {
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private List<ItemList> itemLists=new ArrayList<>();
     private String TAG="HomeFragment";
+    private MyViewModel myViewModel;
 
     public HomeFragment() {
         // Required empty public constructor
     }
-    private FunAdapter.GetFragment getFragment=new FunAdapter.GetFragment() {
+    private HeaderAdapter.GetHeaderFragment getheaderFragment=new HeaderAdapter.GetHeaderFragment() {
         @Override
-        public void getFragment(FunList funList1) {
-            GetHeader();
-            Fragment fragment=new HeaderFragment(funList1,headerList);
-            FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+        public void getheaderFragment(HeaderList headerList1) {
+            GetItem(headerList1);
+            Fragment fragment=new ItemFragment(headerList1,itemLists);
+            myViewModel.setI_value(2,fragment);
+           // SetToFragment(fragment);
+
 
         }
     };
+
+    private void SetToFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+    }
+
+    private FunAdapter.GetFunFragment getfunFragment=new FunAdapter.GetFunFragment() {
+        @Override
+        public void getfunFragment(FunList funList1) {
+            GetHeader();
+            Fragment fragment=new HeaderFragment(funList1,headerList,getheaderFragment);
+            SetToFragment(fragment);
+
+        }
+    };
+
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -152,6 +172,39 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    private void GetItem(HeaderList headerList1) {
+        databaseReference = firebaseDatabase.getReference("Items").child("List");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "list>>snap>>" + snapshot);
+                int size=0;
+
+
+                /*for (DataSnapshot datas : snapshot.getChildren()) {*/
+
+                    MyLog.e(TAG, "list>>snap>>fun>>" +  snapshot.child(headerList1.getHeader()).getValue().toString());
+
+                    ItemList list =  (snapshot.child(headerList1.getHeader())).getValue(ItemList.class);
+                MyLog.e(TAG, "list>>snap>>fun>>list>>" +  list.getItem());
+                    itemLists=new ArrayList<>();
+                    ItemList itemLists1 = new ItemList(
+                            list.getItem());
+                    itemLists.add(itemLists1);
+                    size++;
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                MyLog.e(TAG, "list>>snap>>fun>>Fail to get data.");
+            }
+        });
+    }
+
     private void GetFun() {
         databaseReference = firebaseDatabase.getReference("Items").child("Function");
 
@@ -175,7 +228,7 @@ public class HomeFragment extends Fragment {
                     size++;
 
                 }
-                funAdapter=new FunAdapter(getContext(),funLists,getFragment);
+                funAdapter=new FunAdapter(getContext(),funLists,getfunFragment);
                 recyclerview_fun.setAdapter(funAdapter);
 
             }
@@ -212,7 +265,7 @@ public class HomeFragment extends Fragment {
 
                 }
 
-                headerAdapter=new HeaderAdapter(getContext(),headerList);
+                headerAdapter=new HeaderAdapter(getContext(),headerList,getheaderFragment);
                 recyclerview_header.setAdapter(headerAdapter);
 
             }

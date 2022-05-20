@@ -22,9 +22,15 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private Context context;
     private List<HeaderList>headerLists;
     private String TAG="HeaderAdapter";
-    public HeaderAdapter(Context context, List<HeaderList> headerLists) {
+    HeaderAdapter.GetHeaderFragment getHeaderFragment;
+    public interface GetHeaderFragment
+    {
+        void getheaderFragment(HeaderList headerList1);
+    }
+    public HeaderAdapter(Context context, List<HeaderList> headerLists,GetHeaderFragment getHeaderFragment) {
         this.context=context;
         this.headerLists=headerLists;
+        this.getHeaderFragment=getHeaderFragment;
 
     }
 
@@ -42,7 +48,12 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
         //img update soon
         //holder.header_img.setText(funList1.getUsername());
         holder.header_title.setText(headerList1.getHeader());
-
+        holder.header_linear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getHeaderFragment.getheaderFragment(headerList1);
+            }
+        });
 
     }
 

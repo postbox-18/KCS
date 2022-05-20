@@ -24,12 +24,12 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
     private Context context;
     private List<FunList>funLists;
     private String TAG="FunAdapter";
-    FunAdapter.GetFragment getFragment;
-    public interface GetFragment
+    FunAdapter.GetFunFragment getFragment;
+    public interface GetFunFragment
     {
-        void getFragment(FunList funList1);
+        void getfunFragment(FunList funList1);
     }
-    public FunAdapter(Context context, List<FunList> funLists, GetFragment getFragment) {
+    public FunAdapter(Context context, List<FunList> funLists, GetFunFragment getFragment) {
         this.context=context;
         this.funLists=funLists;
         this.getFragment=getFragment;
@@ -53,7 +53,7 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
         holder.fun_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragment.getFragment(funList1);
+                getFragment.getfunFragment(funList1);
             }
         });
     }
