@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.R;
@@ -94,6 +95,7 @@ public class HeaderFragment extends Fragment {
         recyclerview_header=view.findViewById(R.id.recyclerview_header);
         fun_title=view.findViewById(R.id.fun_title);
         back_btn=view.findViewById(R.id.back_btn);
+        MyLog.e(TAG, "Data>>header list>>" + funList.getFun());
         fun_title.setText(funList.getFun());
         //recyclerview_header
         recyclerview_header.setHasFixedSize(true);

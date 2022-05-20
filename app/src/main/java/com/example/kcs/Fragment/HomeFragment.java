@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -84,8 +85,15 @@ public class HomeFragment extends Fragment {
         @Override
         public void getheaderFragment(HeaderList headerList1) {
             GetItem(headerList1);
-            Fragment fragment=new ItemFragment(headerList1,itemLists);
-            myViewModel.setI_value(2,fragment);
+            MyLog.e(TAG, "Data>>header home>>" + headerList1.getHeader());
+            myViewModel.setHeaderList(headerList1);
+            myViewModel.setItemLists(itemLists);
+
+
+            myViewModel.setI_value(2);
+
+            /*Fragment fragment=new ItemFragment(headerList1,itemLists);
+            myViewModel.setI_value(2,fragment);*/
            // SetToFragment(fragment);
 
 
@@ -101,8 +109,14 @@ public class HomeFragment extends Fragment {
         @Override
         public void getfunFragment(FunList funList1) {
             GetHeader();
-            Fragment fragment=new HeaderFragment(funList1,headerList,getheaderFragment);
-            SetToFragment(fragment);
+            MyLog.e(TAG, "Data>>fun home>>" + funList1.getFun());
+            myViewModel.setFunList(funList1);
+            myViewModel.setHeaderLists(headerList);
+            myViewModel.setGetHeaderFragment(getheaderFragment);
+
+            myViewModel.setI_value(1);
+            /*Fragment fragment=new HeaderFragment(funList1,headerList,getheaderFragment);
+            SetToFragment(fragment);*/
 
         }
     };
@@ -119,6 +133,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -164,9 +179,10 @@ public class HomeFragment extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment=new ProfileFragment();
+                myViewModel.setI_value(3);
+                /*Fragment fragment=new ProfileFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/
             }
         });
         return view;
