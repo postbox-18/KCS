@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment;
+package com.example.kcs.Fragment.Func;
 
 public class FunList {
     private final String fun;

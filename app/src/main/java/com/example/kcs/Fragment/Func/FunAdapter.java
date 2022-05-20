@@ -1,7 +1,6 @@
-package com.example.kcs.Fragment;
+package com.example.kcs.Fragment.Func;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.R;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
