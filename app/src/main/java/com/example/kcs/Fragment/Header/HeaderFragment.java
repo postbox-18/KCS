@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.HomeFragment;
+import com.example.kcs.Fragment.MyViewModel;
 import com.example.kcs.R;
 
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class HeaderFragment extends Fragment {
     private ImageView back_btn;
     HeaderAdapter.GetHeaderFragment getheaderFragment;
     private List<HeaderList> headerList=new ArrayList<>();
+    private MyViewModel myViewModel;
 
     private String TAG="HeaderFragment";
     public HeaderFragment(FunList funList1, List<HeaderList> headerList, HeaderAdapter.GetHeaderFragment getheaderFragment) {
@@ -81,6 +84,7 @@ public class HeaderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -106,9 +110,10 @@ public class HeaderFragment extends Fragment {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment=new HomeFragment();
+                myViewModel.setI_value(0);
+               /* Fragment fragment=new HomeFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/
             }
         });
 
