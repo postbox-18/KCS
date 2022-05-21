@@ -2,11 +2,17 @@ package com.example.adm.Fragments.Orders;
 
 public class OrderLists {
     private final String s_user_name,  func,  header,  list;
-    public OrderLists(String s_user_name, String func, String header,String list) {
+    private final int size;
+    public OrderLists(String s_user_name, String func, String header, String list, int size) {
         this.s_user_name = s_user_name;
         this.func = func;
         this.header = header;
+        this.size = size;
         this.list = list;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public String getList() {

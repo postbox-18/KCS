@@ -99,6 +99,7 @@ public class OrdersFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "snap>>" + snapshot);
+                int size=0;
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     MyLog.e(TAG, "snap>>snap childern>>" + snapshot.getValue().toString());
                     MyLog.e(TAG, "snap>>snap childern>>" + snapshot.getKey());
@@ -113,14 +114,16 @@ public class OrdersFragment extends Fragment {
                             for (DataSnapshot data : shot.getChildren()) {
                                 MyLog.e(TAG, "snap>>data>>" + data);
                                 item+=data.getValue().toString()+" ";
-
+                                size++;
                             }
                             OrderLists orderLists1 = new OrderLists(
                                     s_user_name,
                                     func,
                                     header,
-                                    item
+                                    item,
+                                    size
                             );
+                            size=0;
                             orderLists.add(orderLists1);
                         }
                     }

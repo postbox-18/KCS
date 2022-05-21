@@ -39,11 +39,12 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         holder.user_name.setText(orderLists1.getS_user_name());
         holder.header.setText(orderLists1.getHeader());
         holder.func.setText(orderLists1.getFunc());
-        String[] arr=(orderLists1.getList()).split(" ");
-        for(String i:arr) {
+       /* String[] arr=(orderLists1.getList()).split(" ");*/
+        holder.item_size.setText(String.valueOf(orderLists1.getSize()));
+        /*for(String i:arr) {
             MyLog.e(TAG,"deta>>"+i);
             holder.item.setText(i);
-        }
+        }*/
     }
 
 
@@ -56,7 +57,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profile;
-        private TextView user_name, header, func,item;
+        private TextView user_name, header, func,item_size;
 
         public ViewHolder(View view) {
             super(view);
@@ -64,7 +65,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
             user_name = view.findViewById(R.id.user_name);
             header = view.findViewById(R.id.header);
             func = view.findViewById(R.id.func);
-            item = view.findViewById(R.id.item);
+            item_size = view.findViewById(R.id.item_size);
 
 
         }
