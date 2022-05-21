@@ -80,23 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users-Id");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "snap>>" + snapshot);
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                  /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*/
-                }
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         Top_Bg();
         //lottie
@@ -138,7 +122,18 @@ public class RegisterActivity extends AppCompatActivity {
                                                 .show();
 
                                         loadingDialog.dismiss();
+                                        databaseReference.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                MyLog.e(TAG, "snap>>" + snapshot);
+                                                //databaseReference.child(s_user_name).setValue()
+                                            }
 
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                         //Next Screen Login
                                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                     } else {

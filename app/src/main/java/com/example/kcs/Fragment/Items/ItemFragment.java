@@ -1,7 +1,11 @@
 package com.example.kcs.Fragment.Items;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -22,7 +26,13 @@ import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Fragment.ItemList;
 import com.example.kcs.Fragment.MyViewModel;
+import com.example.kcs.MainActivity;
 import com.example.kcs.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -59,8 +69,11 @@ public class ItemFragment extends Fragment {
     private List<CheckedList> checkedLists = new ArrayList<>();
     private ItemListAdapater itemListAdapater;
     private MyViewModel myViewModel;
-
+    private AppCompatButton order_btn,cancel_btn;
     private String TAG="ItemFragment";
+    //firebase database retrieve
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
 
     public ItemFragment(HeaderList headerList, List<ItemList> itemLists) {
         this.headerList = headerList;
@@ -99,6 +112,12 @@ public class ItemFragment extends Fragment {
         header_title = view.findViewById(R.id.header_title);
         recyclerview_item = view.findViewById(R.id.recyclerview_item);
         back_btn = view.findViewById(R.id.back_btn);
+        cancel_btn = view.findViewById(R.id.cancel_btn);
+        order_btn = view.findViewById(R.id.order_btn);
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+
         header_title.setText(headerList.getHeader());
         recyclerview_item.setHasFixedSize(true);
         recyclerview_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -112,21 +131,123 @@ public class ItemFragment extends Fragment {
             public void onChanged(List<CheckedList> checkedLists1) {
                 checkedLists=new ArrayList<>();
                 checkedLists=checkedLists1;
-                MyLog.e(TAG, "Checkitem>>>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
+
+                //MyLog.e(TAG, "Checkitem>>>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
             }
         });
 
+        order_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(checkedLists.size()>0)
+                {
+                    GetOrderBtn(checkedLists);
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "Empty List", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new HomeFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+                myViewModel.setI_value(0);
+               /* if(myViewModel.getFunList().getFun()==null)
+                {
+                    myViewModel.setI_value(0);
+                }
+                else
+                {
+                    myViewModel.setI_value(1);
+                }*/
             }
         });
         return view;
     }
 
+    private void GetOrderBtn(List<CheckedList> checkedLists) {
 
+
+        databaseReference = firebaseDatabase.getReference("Orders");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String user_name=new SharedPreferences_data(getContext()).getS_user_name();
+
+                for(int i=0;i<checkedLists.size();i++ ) {
+                    //getFunc
+                    databaseReference.child(user_name).child("Function").child(headerList.getHeader()).child(String.valueOf(i)).setValue(checkedLists.get(i).getItemList());
+                }
+                Toast.makeText(getContext(), "data added", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if the data is not added or it is cancelled then
+                // we are displaying a failure toast message.
+                Toast.makeText(getContext(), "Fail to add data " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+        
+        
+        
+        /*if(myViewModel.getFunList().getFun()==null)
+        {
+            showAlertDialog(checkedLists);
+        }
+        else
+        {
+            myViewModel.setI_value(1);
+        }*/
+    }
+
+    private void showAlertDialog(List<CheckedList> checkedLists) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+        alertDialog.setTitle("Please select Function Type!");
+        String[] str=new String[checkedLists.size()];
+        for (int i = 0; i < checkedLists.size(); i++) {
+            str[i] = checkedLists.get(i).getItemList();
+        }
+        MyLog.e(TAG,"dialog>>"+str);
+        //String[] items = {"java","android","Data Structures","HTML","CSS"};
+        boolean[] checkedItems = {false, false, false, false, false,false};
+        alertDialog.setMultiChoiceItems(str, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                switch (which) {
+                    case 0:
+                        if(isChecked)
+                            dialog.dismiss();
+                            //Toast.makeText(getContext(), "Clicked on java", Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        if(isChecked)
+                            dialog.dismiss();
+                            //Toast.makeText(getContext(), "Clicked on android",Toast.LENGTH_LONG).show();
+                        break;
+                    case 2:
+                        if(isChecked)
+                            dialog.dismiss();
+                            //Toast.makeText(getContext(), "Clicked on Data Structures", Toast.LENGTH_LONG).show();
+                        break;
+                    case 3:
+                        if(isChecked)
+                            dialog.dismiss();
+                            //Toast.makeText(getContext(), "Clicked on HTML", Toast.LENGTH_LONG).show();
+                        break;
+                    case 4:
+                        if(isChecked)
+                            dialog.dismiss();
+                            //Toast.makeText(getContext(), "Clicked on CSS", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
 }
