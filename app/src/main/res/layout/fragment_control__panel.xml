@@ -21,7 +21,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 app:cardBackgroundColor="@color/light_blue_color"
                 android:orientation="horizontal"
                 app:cardCornerRadius="10dp"
@@ -37,6 +37,8 @@
                 tools:listitem="@layout/header_cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+            <include
+                layout="@layout/update_btn_layout"/>
             </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
@@ -48,7 +50,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 app:cardBackgroundColor="@color/light_orange_color"
                 android:orientation="horizontal"
                 app:cardCornerRadius="10dp"
@@ -63,6 +65,8 @@
                 tools:itemCount="2"
                 tools:listitem="@layout/func_cardview"
                 android:layout_height="wrap_content" />
+                <include
+                    layout="@layout/update_btn_layout"/>
             </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
@@ -74,7 +78,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 app:cardBackgroundColor="@color/light_red_pink"
                 android:orientation="horizontal"
                 app:cardCornerRadius="10dp"
@@ -89,6 +93,8 @@
                 tools:itemCount="2"
                 tools:listitem="@layout/item_cardview"
                 android:layout_height="wrap_content" />
+                <include
+                    layout="@layout/update_btn_layout"/>
             </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
