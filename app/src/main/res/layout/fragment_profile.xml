@@ -56,6 +56,37 @@
            </LinearLayout>
        </LinearLayout>
        <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_margin="10dp"
+           android:orientation="vertical"
+           >
+           <androidx.cardview.widget.CardView
+               android:id="@+id/control_panel_card"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_margin="5dp"
+               android:orientation="horizontal"
+               app:cardCornerRadius="10dp"
+               app:cardElevation="3dp">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:orientation="vertical"
+                   android:padding="15dp"
+                   >
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:textSize="18dp"
+                       android:textColor="@color/colorPrimary"
+                       android:textStyle="bold|italic"
+                       android:text="Control Panel"/>
+
+               </LinearLayout>
+           </androidx.cardview.widget.CardView>
+       </LinearLayout>
+       <LinearLayout
 
        android:layout_width="match_parent"
        android:layout_height="wrap_content"

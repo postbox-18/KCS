@@ -5,9 +5,15 @@
       <map>
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/drawable/fork_indicator.xml" value="0.1765" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/drawable/ic_utensils_solid.xml" value="0.1765" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/back_btn_layout.xml" value="0.25" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/fragment_control__panel.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/fragment_orders.xml" value="0.25" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/fragment_user.xml" value="0.25" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/func_cardview.xml" value="0.20512820512820512" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/header_cardview.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/item_card.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/item_cardview.xml" value="0.20427350427350427" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/order_cardview.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/user_details_cardview.xml" value="0.25" />
         <entry key="app/src/main/res/drawable-v24/mytabs.xml" value="0.1235" />

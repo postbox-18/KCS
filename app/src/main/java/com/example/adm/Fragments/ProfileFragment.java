@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SharedPreferences_data;
+import com.example.adm.Fragments.Control_Panel.Control_PanelFragment;
 import com.example.adm.Login_Register.LoginActivity;
 import com.example.adm.R;
 
@@ -38,7 +39,7 @@ public class ProfileFragment extends Fragment {
     //primary field's
     private ImageView pic;
     private TextView user_name,email;
-    private CardView log_out;
+    private CardView log_out,control_panel_card;
     private ImageView back_btn;
 
     public ProfileFragment() {
@@ -83,6 +84,8 @@ public class ProfileFragment extends Fragment {
         user_name=view.findViewById(R.id.user_name);
         email=view.findViewById(R.id.email);
         log_out=view.findViewById(R.id.logout);
+        log_out=view.findViewById(R.id.logout);
+        control_panel_card=view.findViewById(R.id.control_panel_card);
         back_btn=view.findViewById(R.id.back_btn);
 
         //setText
@@ -106,6 +109,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment fragment=new HomeFragment();
+                FragmentManager fragmentManager = getParentFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+            }
+        });
+        control_panel_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment=new Control_PanelFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
             }
