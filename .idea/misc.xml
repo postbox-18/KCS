@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/drawable/fork_indicator.xml" value="0.1765" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/drawable/ic_utensils_solid.xml" value="0.1765" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/fragment_orders.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/fragment_user.xml" value="0.25" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/item_card.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/order_cardview.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/user_details_cardview.xml" value="0.25" />
         <entry key="app/src/main/res/drawable-v24/mytabs.xml" value="0.1235" />

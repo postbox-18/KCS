@@ -81,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
         lottie_loading = findViewById(R.id.lottie_loading);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Users-Id");
+       /* databaseReference = firebaseDatabase.getReference("Users-Id");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -98,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         Top_Bg();
         //lottie
@@ -140,7 +140,21 @@ public class RegisterActivity extends AppCompatActivity {
                                                 .show();
 
                                         loadingDialog.dismiss();
+                                        databaseReference = firebaseDatabase.getReference("Users-Id");
+                                        databaseReference.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                MyLog.e(TAG, "snap>>" + snapshot);
+                                                databaseReference.child(s_phone_number).child("email").setValue(s_email);
+                                                databaseReference.child(s_phone_number).child("phone_number").setValue(s_phone_number);
+                                                databaseReference.child(s_phone_number).child("username").setValue(s_user_name);
+                                            }
 
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                         //Next Screen Login
                                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                     } else {

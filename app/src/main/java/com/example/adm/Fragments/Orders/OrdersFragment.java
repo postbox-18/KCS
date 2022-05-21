@@ -1,10 +1,9 @@
-package com.example.adm.Fragments.Users;
+package com.example.adm.Fragments.Orders;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,9 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
-import com.example.adm.Classes.SharedPreferences_data;
-import com.example.adm.Fragments.Orders.OrderAdapters;
-import com.example.adm.Fragments.Orders.OrderLists;
 import com.example.adm.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
