@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.example.adm.Fragments.OrdersFragment;
+import com.example.adm.Fragments.Users.OrdersFragment;
 import com.example.adm.Fragments.Users.UserFragment;
 
 public class MyFragments_Adapter extends FragmentStatePagerAdapter {

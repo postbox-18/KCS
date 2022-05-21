@@ -5,4 +5,6 @@
     <string name="user_name">user_name</string>
     <string name="usermailid_gmail_com">usermailid@gmail.com</string>
     <string name="phone_number">phone_number</string>
+    <string name="wedding">Wedding</string>
+    <string name="Veg">Veg</string>
 </resources>
