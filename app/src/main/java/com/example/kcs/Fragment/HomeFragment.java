@@ -213,7 +213,7 @@ public class HomeFragment extends Fragment {
                                 i);
                         itemLists.add(itemLists1);
                     }
-                    MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
+                    //MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     size++;
 
 

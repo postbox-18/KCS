@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,12 +14,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Fragment.ItemList;
+import com.example.kcs.Fragment.MyViewModel;
 import com.example.kcs.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,22 +50,26 @@ public class ItemFragment extends Fragment {
     private String mParam2;
 
 
-
     private TextView header_title;
     private ImageView back_btn;
 
     private HeaderList headerList;
     private RecyclerView recyclerview_item;
-    private List<ItemList> itemLists=new ArrayList<>();
+    private List<ItemList> itemLists = new ArrayList<>();
+    private List<CheckedList> checkedLists = new ArrayList<>();
     private ItemListAdapater itemListAdapater;
+    private MyViewModel myViewModel;
+
+    private String TAG="ItemFragment";
+
     public ItemFragment(HeaderList headerList, List<ItemList> itemLists) {
-        this.headerList=headerList;
-        this.itemLists=itemLists;
+        this.headerList = headerList;
+        this.itemLists = itemLists;
         // Required empty public constructor
     }
 
 
-    public static ItemFragment newInstance(String param1, String param2,HeaderList headerList1,List<ItemList> itemLists) {
+    public static ItemFragment newInstance(String param1, String param2, HeaderList headerList1, List<ItemList> itemLists) {
         ItemFragment fragment = new ItemFragment(headerList1, itemLists);
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -69,6 +83,7 @@ public class ItemFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -79,20 +94,33 @@ public class ItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_item, container, false);
+        View view = inflater.inflate(R.layout.fragment_item, container, false);
 
-        header_title=view.findViewById(R.id.header_title);
-        recyclerview_item=view.findViewById(R.id.recyclerview_item);
-        back_btn=view.findViewById(R.id.back_btn);
+        header_title = view.findViewById(R.id.header_title);
+        recyclerview_item = view.findViewById(R.id.recyclerview_item);
+        back_btn = view.findViewById(R.id.back_btn);
         header_title.setText(headerList.getHeader());
         recyclerview_item.setHasFixedSize(true);
         recyclerview_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        itemListAdapater=new ItemListAdapater(getContext(),itemLists);
+
+        itemListAdapater = new ItemListAdapater(getContext(), itemLists);
         recyclerview_item.setAdapter(itemListAdapater);
+        itemListAdapater.notifyDataSetChanged();
+
+        myViewModel.getCheckedListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<CheckedList>>() {
+            @Override
+            public void onChanged(List<CheckedList> checkedLists1) {
+                checkedLists=new ArrayList<>();
+                checkedLists=checkedLists1;
+                MyLog.e(TAG, "Checkitem>>>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
+            }
+        });
+
+
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment=new HomeFragment();
+                Fragment fragment = new HomeFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
             }

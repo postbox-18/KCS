@@ -84,5 +84,9 @@ public class SplashActivity extends AppCompatActivity {
 
             }
         }, 5000);
+
+        //share preferences data set empty
+        new SharedPreferences_data(getApplicationContext()).setChecked_item_list("");
+
     }
 }

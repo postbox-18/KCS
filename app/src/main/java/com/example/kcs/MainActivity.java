@@ -45,12 +45,12 @@ public class MainActivity extends AppCompatActivity {
                         fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
                         break;
                     case 1:
-                        MyLog.e(TAG, "Data>>fun list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getHeaderLists()));
+                        //MyLog.e(TAG, "Data>>fun list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getHeaderLists()));
                         fragment = new HeaderFragment((myViewModel.getFunList()), (myViewModel.getHeaderLists()), (myViewModel.getGetHeaderFragment()));
                         fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
                         break;
                     case 2:
-                        MyLog.e(TAG, "Data>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getItemLists()));
+                        //MyLog.e(TAG, "Data>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getItemLists()));
                         fragment = new ItemFragment((myViewModel.getHeaderList()), (myViewModel.getItemLists()));
                         fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
                         break;

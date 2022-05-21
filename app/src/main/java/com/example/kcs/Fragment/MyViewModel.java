@@ -2,40 +2,44 @@ package com.example.kcs.Fragment;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunAdapter;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
-import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.Header.HeaderList;
-import com.example.kcs.Fragment.Items.ItemFragment;
-import com.example.kcs.R;
+import com.example.kcs.Fragment.Items.CheckedList;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyViewModel extends AndroidViewModel {
-    private MutableLiveData<Integer> value=new MutableLiveData<>();
+    private MutableLiveData<Integer> value = new MutableLiveData<>();
     private Integer i_value;
 
     private Fragment fragment;
-    private MutableLiveData<Fragment> fragmentMutableLiveData=new MutableLiveData<>();
+    private MutableLiveData<Fragment> fragmentMutableLiveData = new MutableLiveData<>();
 
     private Context context;
 
     private HeaderList headerList;
-    private MutableLiveData<HeaderList> headerListMutableLiveData=new MutableLiveData<>();
-    private MutableLiveData<FunList> funListMutableLiveData=new MutableLiveData<>();
+    private MutableLiveData<HeaderList> headerListMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<FunList> funListMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<CheckedList>> checkedListMutableLiveData = new MutableLiveData<List<CheckedList>>();
     private FunList funList;
-    private List<HeaderList> headerLists=new ArrayList<>();
-    private List<ItemList> itemLists=new ArrayList<>();
-    private List<FunList> funLists=new ArrayList<>();
+    private List<HeaderList> headerLists = new ArrayList<>();
+    private List<ItemList> itemLists = new ArrayList<>();
+    private List<FunList> funLists = new ArrayList<>();
+    private List<CheckedList> checkedLists = new ArrayList<>();
     private HeaderAdapter.GetHeaderFragment getHeaderFragment;
     private FunAdapter.GetFunFragment getfunFragment;
 
@@ -44,6 +48,17 @@ public class MyViewModel extends AndroidViewModel {
 
         this.headerListMutableLiveData.postValue(headerList);
         this.funListMutableLiveData.postValue(funList);
+        String json=new SharedPreferences_data(application).getChecked_item_list();
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<CheckedList>>() {}.getType();
+        if(json==null||json.isEmpty())
+        {
+
+        }
+        else {
+            checkedLists = gson.fromJson(json, type);
+            this.checkedListMutableLiveData.postValue(checkedLists);
+        }
 
     }
 
@@ -51,7 +66,6 @@ public class MyViewModel extends AndroidViewModel {
     public MutableLiveData<Integer> getValue() {
         return value;
     }
-
 
 
     public Integer getI_value() {
@@ -136,6 +150,24 @@ public class MyViewModel extends AndroidViewModel {
 
     public List<ItemList> getItemLists() {
         return itemLists;
+    }
+
+    public MutableLiveData<List<CheckedList>> getCheckedListMutableLiveData() {
+        return checkedListMutableLiveData;
+    }
+
+    public void setCheckedListMutableLiveData(MutableLiveData<List<CheckedList>> checkedListMutableLiveData) {
+        this.checkedListMutableLiveData = checkedListMutableLiveData;
+    }
+
+    public List<CheckedList> getCheckedLists() {
+        return checkedLists;
+    }
+
+    public void setCheckedLists(List<CheckedList> checkedLists) {
+        this.checkedLists = checkedLists;
+        this.checkedListMutableLiveData.postValue(checkedLists);
+
     }
 
     public void setItemLists(List<ItemList> itemLists) {
