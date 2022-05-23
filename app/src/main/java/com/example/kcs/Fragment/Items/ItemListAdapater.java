@@ -13,12 +13,15 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.MyViewModel;
 import com.example.kcs.R;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.ViewHolder>  {
@@ -27,11 +30,15 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
     private List<CheckedList> checkedLists=new ArrayList<>();
     private String TAG="ItemListAdapater";
     private MyViewModel myViewModel;
+    private LinkedHashMap<String,List<CheckedList>> f_map=new LinkedHashMap<>();
+    private List<LinkedHashMap<String,List<CheckedList>>> s_map=new ArrayList<>();
+    private String header;
     ItemListAdapater.Unchecked unchecked;
+
     public interface Unchecked {
         void getUnchecked(String item);
     }
-    public ItemListAdapater(Context context, List<ItemList> itemLists) {
+    public ItemListAdapater(Context context, List<ItemList> itemLists, String header) {
         this.context=context;
         this.itemLists=itemLists;
         //cartViewModel = ViewModelProviders.of((FragmentActivity) context).get(CartViewModel.class);
@@ -63,15 +70,19 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                                 itemList1.getItem()
                         );
                         checkedLists.add(checkedLists1);
+                        f_map.put(header,checkedLists);
+
                         myViewModel.setCheckedLists(checkedLists);
                         //notifyDataSetChanged();
-                       // MyLog.e(TAG, "Check>>header itemadapter :::if>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     } else {
                         //unchecked.getUnchecked(itemList1.getItem());
                         GetUncheckList(itemList1.getItem());
 
                         //MyLog.e(TAG, "Check>>header itemadapter:::else>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     }
+                    s_map.add(f_map);
+                    MyLog.e(TAG, "hash map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
+
                     //MyLog.e(TAG, "Check>>header itemadapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     Gson gson = new Gson();
                     String json = gson.toJson(checkedLists);

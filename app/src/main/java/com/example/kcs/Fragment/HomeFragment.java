@@ -34,8 +34,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -84,21 +86,39 @@ public class HomeFragment extends Fragment {
     }
     private HeaderAdapter.GetHeaderFragment getheaderFragment=new HeaderAdapter.GetHeaderFragment() {
         @Override
-        public void getheaderFragment(HeaderList headerList1) {
+        public void getheaderFragment(HeaderList headerList1, int position) {
           // loadingDialog.show(getParentFragmentManager(),"Loading dailog");
-            GetItem(headerList1);
+           /* GetItem(headerList1);
             MyLog.e(TAG, "Data>>header home>>" + headerList1.getHeader());
             myViewModel.setHeaderList(headerList1);
             if(itemLists.size()>0) {
                 myViewModel.setItemLists(itemLists);
-                myViewModel.setI_value(2);
+
                // loadingDialog.dismiss();
             }
             else
             {
-                Toast.makeText(getContext(),    "empty response", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"empty response", Toast.LENGTH_SHORT).show();
                // loadingDialog.dismiss();
-            }
+            }*/
+            getViewModel.getS_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>() {
+                @Override
+                public void onChanged(List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
+                    //check if headerlist1 data's value is empty or not
+                    //MyLog.e(TAG, "hashmap>>data>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps.get(0).get(headerList1.getHeader())));
+                    List<ItemList> itemLists=linkedHashMaps.get(0).get(headerList1.getHeader());
+                    MyLog.e(TAG, "hashmap>>data>>" + new GsonBuilder().setPrettyPrinting().create()
+                            .toJson(itemLists));
+                    if(itemLists.size()>0) {
+                        myViewModel.setI_value(2);
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), "Empty Response", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
 
         }
     };

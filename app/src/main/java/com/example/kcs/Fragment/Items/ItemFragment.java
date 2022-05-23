@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -66,6 +67,7 @@ public class ItemFragment extends Fragment {
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+
 
     public ItemFragment(HeaderList headerList, List<ItemList> itemLists) {
         this.headerList = headerList;
@@ -114,7 +116,7 @@ public class ItemFragment extends Fragment {
         recyclerview_item.setHasFixedSize(true);
         recyclerview_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        itemListAdapater = new ItemListAdapater(getContext(), itemLists);
+        itemListAdapater = new ItemListAdapater(getContext(), itemLists,headerList.getHeader());
         recyclerview_item.setAdapter(itemListAdapater);
         itemListAdapater.notifyDataSetChanged();
 
@@ -173,6 +175,8 @@ public class ItemFragment extends Fragment {
                     //getFunc
                     databaseReference.child(user_name).child("Function").child(headerList.getHeader()).child(String.valueOf(i)).setValue(checkedLists.get(i).getItemList());
                 }
+
+
                 Toast.makeText(getContext(), "data added", Toast.LENGTH_SHORT).show();
             }
 

@@ -1,5 +1,6 @@
 package com.example.kcs.Fragment.Header;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +10,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.Items.ItemList;
+import com.example.kcs.MyViewModel;
 import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder>  {
@@ -20,14 +30,18 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private List<HeaderList>headerLists;
     private String TAG="HeaderAdapter";
     HeaderAdapter.GetHeaderFragment getHeaderFragment;
+    private GetViewModel getViewModel;
+    private MyViewModel myViewModel;
     public interface GetHeaderFragment
     {
-        void getheaderFragment(HeaderList headerList1);
+        void getheaderFragment(HeaderList headerList1, int position);
     }
     public HeaderAdapter(Context context, List<HeaderList> headerLists,GetHeaderFragment getHeaderFragment) {
         this.context=context;
         this.headerLists=headerLists;
         this.getHeaderFragment=getHeaderFragment;
+        getViewModel= new ViewModelProvider((FragmentActivity)context).get(GetViewModel.class);
+        myViewModel= new ViewModelProvider((FragmentActivity)context).get(MyViewModel.class);
 
     }
 
@@ -40,7 +54,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HeaderAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull HeaderAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         final HeaderList headerList1 = headerLists.get(position);
         //img update soon
         //holder.header_img.setText(funList1.getUsername());
@@ -49,7 +63,9 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
             @Override
             public void onClick(View view) {
 
-                getHeaderFragment.getheaderFragment(headerList1);
+
+
+                getHeaderFragment.getheaderFragment(headerList1,position);
             }
         });
 
