@@ -17,6 +17,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.MyViewModel;
 import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,7 @@ public class HeaderFragment extends Fragment {
     HeaderAdapter.GetHeaderFragment getheaderFragment;
     private List<HeaderList> headerList=new ArrayList<>();
     private MyViewModel myViewModel;
+    private GetViewModel getViewModel;
 
     private String TAG="HeaderFragment";
     public HeaderFragment(FunList funList1, List<HeaderList> headerList, HeaderAdapter.GetHeaderFragment getheaderFragment) {
@@ -83,6 +85,7 @@ public class HeaderFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
+        getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);

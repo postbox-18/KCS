@@ -117,6 +117,7 @@ public class HomeFragment extends Fragment {
             myViewModel.setGetHeaderFragment(getheaderFragment);
 
             myViewModel.setI_value(1);
+
             /*Fragment fragment=new HeaderFragment(funList1,headerList,getheaderFragment);
             SetToFragment(fragment);*/
 

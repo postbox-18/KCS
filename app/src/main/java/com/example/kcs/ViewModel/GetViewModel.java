@@ -25,6 +25,7 @@ public class GetViewModel extends AndroidViewModel {
     //Header List
     private MutableLiveData<List<HeaderList>> headerMutableList=new MutableLiveData<>();
     private List<HeaderList> headerList=new ArrayList<>();
+
     //func List
     private MutableLiveData<List<FunList>> funMutableList=new MutableLiveData<>();
     private List<FunList> funLists=new ArrayList<>();
@@ -33,9 +34,15 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> EmailMutable=new MutableLiveData<>();
     private String email;
     private boolean check_email=false;
+
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+
+    //Header Fragment
+    private FunList fun_title;
+    private MutableLiveData<HeaderList> headerListMutableLiveData = new MutableLiveData<>();
+
     private String TAG="ViewClassModel";
 
     public GetViewModel(@NonNull Application application) {
