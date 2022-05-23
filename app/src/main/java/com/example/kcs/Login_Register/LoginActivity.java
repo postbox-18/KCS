@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
@@ -24,6 +26,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.MainActivity;
 import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -59,10 +62,12 @@ public class LoginActivity extends AppCompatActivity {
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private GetViewModel getViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
 
         //id's
         email = findViewById(R.id.email);
@@ -75,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         remember_me = findViewById(R.id.remember_me);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Users-Id");
+
 
         Top_Bg();
         //checkBox remember me
@@ -116,8 +121,16 @@ public class LoginActivity extends AppCompatActivity {
                                         public void onComplete(
                                                 @NonNull Task<AuthResult> task)
                                         {
-                                            FireseBaseDataDetails(s_email);
-                                            if (task.isSuccessful()&&check_email) {
+                                            /*FireseBaseDataDetails(s_email);
+                                            getViewModel.setEmail(s_email);
+                                            getViewModel.getEmailMutable().observe(LoginActivity.this, new Observer<Boolean>() {
+                                                @Override
+                                                public void onChanged(Boolean aBoolean) {
+                                                    check_email=aBoolean;
+                                                }
+                                            });
+                                            if (task.isSuccessful()&&check_email) {*/
+                                            if (task.isSuccessful()) {
                                                 Toast.makeText(getApplicationContext(),
                                                         "Login successful!!",
                                                         Toast.LENGTH_LONG)
@@ -171,15 +184,15 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void FireseBaseDataDetails(String s_email) {
-
+    /*private void FireseBaseDataDetails(String s_email) {
+        databaseReference = firebaseDatabase.getReference("Users-Id");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "snap>>" + snapshot);
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                  /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());*/
+                  *//*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
+                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());*//*
                     MyLog.e(TAG, "error>>at firebase  emails " + datas.child("email").getValue().toString());
                     if(Objects.equals(s_email, datas.child("email").getValue().toString())) {
                         new SharedPreferences_data(getApplicationContext()).setS_email(datas.child("email").getValue().toString());
@@ -206,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }*/
 
     private void login() {
         // if sign-in is successful

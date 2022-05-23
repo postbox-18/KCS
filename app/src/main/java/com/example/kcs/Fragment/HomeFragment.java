@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.kcs.Classes.LoadingDialogs;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunAdapter;
 import com.example.kcs.Fragment.Func.FunList;
@@ -27,6 +27,7 @@ import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.MyViewModel;
 import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -70,13 +71,13 @@ public class HomeFragment extends Fragment {
     //anim
     private Animation slide_down_anim,slide_up_anim,fade_in_anim;
     private ConstraintLayout bg_banner,head_layout;
-    //private LoadingDialogs loadingDialog=new LoadingDialogs();
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private List<ItemList> itemLists=new ArrayList<>();
     private String TAG="HomeFragment";
     private MyViewModel myViewModel;
+    private GetViewModel getViewModel;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -98,10 +99,6 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(),    "empty response", Toast.LENGTH_SHORT).show();
                // loadingDialog.dismiss();
             }
-            /*Fragment fragment=new ItemFragment(headerList1,itemLists);
-            myViewModel.setI_value(2,fragment);*/
-           // SetToFragment(fragment);
-
 
         }
     };
@@ -114,7 +111,6 @@ public class HomeFragment extends Fragment {
     private FunAdapter.GetFunFragment getfunFragment=new FunAdapter.GetFunFragment() {
         @Override
         public void getfunFragment(FunList funList1) {
-            GetHeader();
             MyLog.e(TAG, "Data>>fun home>>" + funList1.getFun());
             myViewModel.setFunList(funList1);
             myViewModel.setHeaderLists(headerList);
@@ -140,6 +136,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
+        getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -158,13 +155,7 @@ public class HomeFragment extends Fragment {
         recyclerview_fun=view.findViewById(R.id.recyclerview_fun);
         recyclerview_img=view.findViewById(R.id.recyclerview_img);
 
-        //recyclerview_header
-        recyclerview_header.setHasFixedSize(true);
-        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        //recyclerview_fun
-        recyclerview_fun.setHasFixedSize(true);
-        recyclerview_fun.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         //recyclerview_img
         //update soon
@@ -177,18 +168,39 @@ public class HomeFragment extends Fragment {
 
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
-        GetHeader();
-        GetFun();
+        /*GetHeader();
+        GetFun();*/
 
+        getViewModel.getListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
+            @Override
+            public void onChanged(List<HeaderList> headerLists1) {
+                headerList=headerLists1;
+                //recyclerview_header
+                recyclerview_header.setHasFixedSize(true);
+                recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+                headerAdapter=new HeaderAdapter(getContext(),headerList,getheaderFragment);
+                recyclerview_header.setAdapter(headerAdapter);
+                //MyLog.e(TAG, "model>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerLists));
+            }
+        });
+        getViewModel.getFunMutableList().observe(getViewLifecycleOwner(), new Observer<List<FunList>>() {
+            @Override
+            public void onChanged(List<FunList> funList1) {
+                funLists=funList1;
+                //recyclerview_fun
+                recyclerview_fun.setHasFixedSize(true);
+                recyclerview_fun.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                funAdapter=new FunAdapter(getContext(),funLists,getfunFragment);
+                recyclerview_fun.setAdapter(funAdapter);
+            }
+        });
+        
         
         
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 myViewModel.setI_value(3);
-                /*Fragment fragment=new ProfileFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/
             }
         });
         return view;
@@ -227,7 +239,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void GetFun() {
+    /*private void GetFun() {
         databaseReference = firebaseDatabase.getReference("Items").child("Function");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -238,9 +250,9 @@ public class HomeFragment extends Fragment {
                 funLists=new ArrayList<>();
 
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                  /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
+                  *//*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
                     MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*/
+                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*//*
                     String path=""+size;
                     MyLog.e(TAG, "home>>snap>>fun>>" +  path);
                     //MyLog.e(TAG, "home>>snap>>fun>>" +  datas.child("0").getValue().toString());
@@ -272,8 +284,8 @@ public class HomeFragment extends Fragment {
                 int size=0;
                 headerList=new ArrayList<>();
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                  /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());*/
+                  *//*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
+                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());*//*
                     String path=""+size;
                     MyLog.e(TAG, "home>>snap>>" +  path);
                     MyLog.e(TAG, "home>>snap>>" +  datas.getValue().toString());
@@ -298,6 +310,6 @@ public class HomeFragment extends Fragment {
                 MyLog.e(TAG, "home>>snap>>Fail to get data.");
             }
         });
-    }
+    }*/
 
 }
