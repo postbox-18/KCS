@@ -23,9 +23,9 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunAdapter;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
-import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.Header.HeaderList;
-import com.example.kcs.Fragment.Items.ItemFragment;
+import com.example.kcs.Fragment.Items.ItemList;
+import com.example.kcs.MyViewModel;
 import com.example.kcs.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,11 +33,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -73,7 +70,7 @@ public class HomeFragment extends Fragment {
     //anim
     private Animation slide_down_anim,slide_up_anim,fade_in_anim;
     private ConstraintLayout bg_banner,head_layout;
-    private LoadingDialogs loadingDialog=new LoadingDialogs();
+    //private LoadingDialogs loadingDialog=new LoadingDialogs();
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -87,14 +84,20 @@ public class HomeFragment extends Fragment {
     private HeaderAdapter.GetHeaderFragment getheaderFragment=new HeaderAdapter.GetHeaderFragment() {
         @Override
         public void getheaderFragment(HeaderList headerList1) {
+          // loadingDialog.show(getParentFragmentManager(),"Loading dailog");
             GetItem(headerList1);
             MyLog.e(TAG, "Data>>header home>>" + headerList1.getHeader());
             myViewModel.setHeaderList(headerList1);
-            myViewModel.setItemLists(itemLists);
-
-
-            myViewModel.setI_value(2);
-
+            if(itemLists.size()>0) {
+                myViewModel.setItemLists(itemLists);
+                myViewModel.setI_value(2);
+               // loadingDialog.dismiss();
+            }
+            else
+            {
+                Toast.makeText(getContext(),    "empty response", Toast.LENGTH_SHORT).show();
+               // loadingDialog.dismiss();
+            }
             /*Fragment fragment=new ItemFragment(headerList1,itemLists);
             myViewModel.setI_value(2,fragment);*/
            // SetToFragment(fragment);
@@ -199,12 +202,8 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "list>>snap>>" + snapshot);
                 int size=0;
-
-
-
-
                     MyLog.e(TAG, "list>>snap>>fun>>" + snapshot.child(headerList1.getHeader()).getValue());
-
+                    itemLists=new ArrayList<>();
                     ArrayList<String> str = new ArrayList<>();
                     str= (ArrayList<String>) snapshot.child(headerList1.getHeader()).getValue();
                     for(String i:str) {

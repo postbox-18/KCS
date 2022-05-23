@@ -7,16 +7,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Fragment.Items.ItemFragment;
-import com.example.kcs.Fragment.MyViewModel;
 import com.example.kcs.Fragment.ProfileFragment;
-import com.google.gson.GsonBuilder;
 
 public class MainActivity extends AppCompatActivity {
     private String TAG = "MainActivity";
@@ -51,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         //MyLog.e(TAG, "Data>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getItemLists()));
+
                         fragment = new ItemFragment((myViewModel.getHeaderList()), (myViewModel.getItemLists()));
                         fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
                         break;

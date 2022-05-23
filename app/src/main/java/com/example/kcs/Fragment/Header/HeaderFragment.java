@@ -3,7 +3,6 @@ package com.example.kcs.Fragment.Header;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +15,7 @@ import android.widget.TextView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunList;
-import com.example.kcs.Fragment.HomeFragment;
-import com.example.kcs.Fragment.MyViewModel;
+import com.example.kcs.MyViewModel;
 import com.example.kcs.R;
 
 import java.util.ArrayList;

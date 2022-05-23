@@ -1,8 +1,7 @@
-package com.example.kcs.Fragment;
+package com.example.kcs;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -14,6 +13,7 @@ import com.example.kcs.Fragment.Func.FunAdapter;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
 import com.example.kcs.Fragment.Header.HeaderList;
+import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
