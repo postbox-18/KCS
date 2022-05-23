@@ -179,17 +179,21 @@ public class LoginActivity extends AppCompatActivity {
                 MyLog.e(TAG, "snap>>" + snapshot);
                 for (DataSnapshot datas : snapshot.getChildren()) {
                   /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*/
+                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());*/
+                    MyLog.e(TAG, "error>>at firebase  emails " + datas.child("email").getValue().toString());
                     if(Objects.equals(s_email, datas.child("email").getValue().toString())) {
                         new SharedPreferences_data(getApplicationContext()).setS_email(datas.child("email").getValue().toString());
                         new SharedPreferences_data(getApplicationContext()).setS_user_name(datas.child("username").getValue().toString());
                         new SharedPreferences_data(getApplicationContext()).setS_phone_number(datas.child("phone_number").getValue().toString());
-                        check_email=true;
+
+                                check_email=true;
+                        MyLog.e(TAG, "error>>at firebase  emails "+check_email);
+                        break;
                     }
                     else
                     {
                         check_email=false;
+                        MyLog.e(TAG, "error>>at firebase  emails "+check_email);
                     }
 
                 }
@@ -220,18 +224,22 @@ public class LoginActivity extends AppCompatActivity {
         //check details
         if (!isValidEmail(s_email))
         {
+            MyLog.e(TAG, "error>>e_email is not valid");
             email.setError("Please enter valid Email id");
         }
         else if(s_password.isEmpty() )
         {
+            MyLog.e(TAG, "error>>password is empty");
             password.setError("Please enter a password");
         }
         else if(s_password.length()<7)
         {
+            MyLog.e(TAG, "error>>pass is <7");
             password.setError("Please enter a valid password");
         }
         else
         {
+            MyLog.e(TAG, "error>>success");
             loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
 
            return true;

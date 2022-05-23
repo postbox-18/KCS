@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,8 +23,9 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunAdapter;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
-import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.Header.HeaderList;
+import com.example.kcs.Fragment.Items.ItemList;
+import com.example.kcs.MyViewModel;
 import com.example.kcs.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -68,25 +70,63 @@ public class HomeFragment extends Fragment {
     //anim
     private Animation slide_down_anim,slide_up_anim,fade_in_anim;
     private ConstraintLayout bg_banner,head_layout;
-    private LoadingDialogs loadingDialog=new LoadingDialogs();
+    //private LoadingDialogs loadingDialog=new LoadingDialogs();
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private List<ItemList> itemLists=new ArrayList<>();
     private String TAG="HomeFragment";
+    private MyViewModel myViewModel;
 
     public HomeFragment() {
         // Required empty public constructor
     }
-    private FunAdapter.GetFragment getFragment=new FunAdapter.GetFragment() {
+    private HeaderAdapter.GetHeaderFragment getheaderFragment=new HeaderAdapter.GetHeaderFragment() {
         @Override
-        public void getFragment(FunList funList1) {
-            GetHeader();
-            Fragment fragment=new HeaderFragment(funList1,headerList);
-            FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+        public void getheaderFragment(HeaderList headerList1) {
+          // loadingDialog.show(getParentFragmentManager(),"Loading dailog");
+            GetItem(headerList1);
+            MyLog.e(TAG, "Data>>header home>>" + headerList1.getHeader());
+            myViewModel.setHeaderList(headerList1);
+            if(itemLists.size()>0) {
+                myViewModel.setItemLists(itemLists);
+                myViewModel.setI_value(2);
+               // loadingDialog.dismiss();
+            }
+            else
+            {
+                Toast.makeText(getContext(),    "empty response", Toast.LENGTH_SHORT).show();
+               // loadingDialog.dismiss();
+            }
+            /*Fragment fragment=new ItemFragment(headerList1,itemLists);
+            myViewModel.setI_value(2,fragment);*/
+           // SetToFragment(fragment);
+
 
         }
     };
+
+    private void SetToFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+    }
+
+    private FunAdapter.GetFunFragment getfunFragment=new FunAdapter.GetFunFragment() {
+        @Override
+        public void getfunFragment(FunList funList1) {
+            GetHeader();
+            MyLog.e(TAG, "Data>>fun home>>" + funList1.getFun());
+            myViewModel.setFunList(funList1);
+            myViewModel.setHeaderLists(headerList);
+            myViewModel.setGetHeaderFragment(getheaderFragment);
+
+            myViewModel.setI_value(1);
+            /*Fragment fragment=new HeaderFragment(funList1,headerList,getheaderFragment);
+            SetToFragment(fragment);*/
+
+        }
+    };
+
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -99,6 +139,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -144,12 +185,46 @@ public class HomeFragment extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment=new ProfileFragment();
+                myViewModel.setI_value(3);
+                /*Fragment fragment=new ProfileFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/
             }
         });
         return view;
+    }
+
+    private void GetItem(HeaderList headerList1) {
+        databaseReference = firebaseDatabase.getReference("Items").child("List");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "list>>snap>>" + snapshot);
+                int size=0;
+                    MyLog.e(TAG, "list>>snap>>fun>>" + snapshot.child(headerList1.getHeader()).getValue());
+                    itemLists=new ArrayList<>();
+                    ArrayList<String> str = new ArrayList<>();
+                    str= (ArrayList<String>) snapshot.child(headerList1.getHeader()).getValue();
+                    for(String i:str) {
+                        MyLog.e(TAG,"list>>"+i);
+                        ItemList itemLists1 = new ItemList(
+                                i);
+                        itemLists.add(itemLists1);
+                    }
+                    //MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
+                    size++;
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                MyLog.e(TAG, "list>>snap>>fun>>Fail to get data.");
+            }
+        });
     }
 
     private void GetFun() {
@@ -175,7 +250,7 @@ public class HomeFragment extends Fragment {
                     size++;
 
                 }
-                funAdapter=new FunAdapter(getContext(),funLists,getFragment);
+                funAdapter=new FunAdapter(getContext(),funLists,getfunFragment);
                 recyclerview_fun.setAdapter(funAdapter);
 
             }
@@ -212,7 +287,7 @@ public class HomeFragment extends Fragment {
 
                 }
 
-                headerAdapter=new HeaderAdapter(getContext(),headerList);
+                headerAdapter=new HeaderAdapter(getContext(),headerList,getheaderFragment);
                 recyclerview_header.setAdapter(headerAdapter);
 
             }

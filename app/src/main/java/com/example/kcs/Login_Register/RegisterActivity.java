@@ -79,24 +79,8 @@ public class RegisterActivity extends AppCompatActivity {
         lottie_loading = findViewById(R.id.lottie_loading);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Users-Id");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "snap>>" + snapshot);
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                  /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*/
-                }
 
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         Top_Bg();
         //lottie
@@ -137,8 +121,22 @@ public class RegisterActivity extends AppCompatActivity {
                                                 Toast.LENGTH_LONG)
                                                 .show();
 
-                                        loadingDialog.dismiss();
+                                        //loadingDialog.dismiss();
+                                        databaseReference = firebaseDatabase.getReference("Users-Id");
+                                        databaseReference.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                MyLog.e(TAG, "snap>>" + snapshot);
+                                                databaseReference.child(s_phone_number).child("email").setValue(s_email);
+                                                databaseReference.child(s_phone_number).child("phone_number").setValue(s_phone_number);
+                                                databaseReference.child(s_phone_number).child("username").setValue(s_user_name);
+                                            }
 
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                         //Next Screen Login
                                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                     } else {
@@ -152,12 +150,12 @@ public class RegisterActivity extends AppCompatActivity {
                                                 .show();
 
                                         // hide the progress bar
-                                        loadingDialog.dismiss();
+                                        //loadingDialog.dismiss();
                                     }
                                 }
                             });
                 } else {
-                    loadingDialog.dismiss();
+                    //loadingDialog.dismiss();
                     Toast.makeText(RegisterActivity.this, "Check the Details", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -219,7 +217,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else {
             //shared-preferences
-            loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
+            //loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
             new SharedPreferences_data(this).setS_user_name(s_user_name);
             new SharedPreferences_data(this).setS_phone_number(s_phone_number);
             new SharedPreferences_data(this).setS_password(s_password);
