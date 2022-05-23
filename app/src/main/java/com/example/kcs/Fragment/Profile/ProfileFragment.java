@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment;
+package com.example.kcs.Fragment.Profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,18 +6,19 @@ import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Login_Register.LoginActivity;
-import com.example.kcs.MainActivity;
+import com.example.kcs.MyViewModel;
 import com.example.kcs.R;
 
 /**
@@ -42,7 +43,8 @@ public class ProfileFragment extends Fragment {
     private TextView user_name,email;
     private CardView log_out;
     private ImageView back_btn;
-
+    private CardView my_orders_card;
+    private MyViewModel myViewModel;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -68,6 +70,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -86,6 +89,7 @@ public class ProfileFragment extends Fragment {
         email=view.findViewById(R.id.email);
         log_out=view.findViewById(R.id.logout);
         back_btn=view.findViewById(R.id.back_btn);
+        my_orders_card=view.findViewById(R.id.my_orders_card);
 
         //setText
         user_name.setText(new SharedPreferences_data(getContext()).getS_user_name());
@@ -107,12 +111,18 @@ public class ProfileFragment extends Fragment {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment=new HomeFragment();
+                myViewModel.setI_value(0);
+               /* Fragment fragment=new HomeFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/
             }
         });
-
+        my_orders_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myViewModel.setI_value(4);
+            }
+        });
 
         return view;
     }

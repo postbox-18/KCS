@@ -17,4 +17,8 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="profile">Profile</string>
+    <string name="my_orders">My Orders</string>
+    <string name="user_name">User name</string>
+    <string name="wedding">wedding</string>
+    <string name="Veg">Veg</string>
 </resources>

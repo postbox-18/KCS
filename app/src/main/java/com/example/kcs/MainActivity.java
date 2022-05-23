@@ -12,7 +12,8 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Fragment.Items.ItemFragment;
-import com.example.kcs.Fragment.ProfileFragment;
+import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersFragment;
+import com.example.kcs.Fragment.Profile.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
     private String TAG = "MainActivity";
@@ -53,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 3:
                         fragment = new ProfileFragment();
+                        fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+                        break;
+                    case 4:
+                        fragment = new MyOrdersFragment();
                         fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
                         break;
                     default:
