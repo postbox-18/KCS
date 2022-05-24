@@ -17,7 +17,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -106,7 +105,6 @@ public class GetViewModel extends AndroidViewModel {
         super(application);
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
-        GetUserDeatils(email);
         GetOrdesList();
         GetUserList();
         /*GetHeader();
@@ -265,7 +263,7 @@ public class GetViewModel extends AndroidViewModel {
     public void setEmail(String email) {
         GetUserDeatils(email);
         this.email = email;
-        this.EmailMutable.postValue(check_email);
+
     }
 
     public MutableLiveData<Boolean> getEmailMutable() {
@@ -317,8 +315,9 @@ public class GetViewModel extends AndroidViewModel {
         });
     }*/
 
-    private void GetUserDeatils(String email) {
-        databaseReference = firebaseDatabase.getReference("Users-Id");
+    public boolean GetUserDeatils(String email) {
+
+        databaseReference = firebaseDatabase.getReference("Admin");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -330,14 +329,17 @@ public class GetViewModel extends AndroidViewModel {
                         new SharedPreferences_data(getApplication()).setS_user_name(datas.child("username").getValue().toString());
                         new SharedPreferences_data(getApplication()).setS_phone_number(datas.child("phone_number").getValue().toString());
                         check_email=true;
-                        MyLog.e(TAG, "error>>at firebase  emails "+check_email);
+                        EmailMutable.postValue(check_email);
+                        MyLog.e(TAG, "boolean>>at firebase  emails "+check_email);
                         break;
                     }
                     else
                     {
                         continue;
+
                         //MyLog.e(TAG, "error>>at firebase  emails "+check_email);
                     }
+
 
                 }
 
@@ -348,6 +350,8 @@ public class GetViewModel extends AndroidViewModel {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
             }
         });
+        MyLog.e(TAG, "boolean>>at return "+check_email);
+        return check_email;
     }
 
    /* public MutableLiveData<List<HeaderList>> getListMutableLiveData() {

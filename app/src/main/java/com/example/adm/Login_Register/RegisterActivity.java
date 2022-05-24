@@ -122,7 +122,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 .show();
 
                                         //loadingDialog.dismiss();
-                                        databaseReference = firebaseDatabase.getReference("Users-Id");
+                                        databaseReference = firebaseDatabase.getReference("Admin");
                                         databaseReference.addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -199,7 +199,7 @@ public class RegisterActivity extends AppCompatActivity {
             password.setError("Please enter a password");
             re_password.setError("Please enter a password");
         }
-        else if(currentUser!=null)
+        /*else if(currentUser!=null)
         {
             AlertDialog.Builder alert =new AlertDialog.Builder(this);
             alert.setMessage("This id is Already Login");
@@ -214,7 +214,7 @@ public class RegisterActivity extends AppCompatActivity {
             });
             AlertDialog alertDialog=alert.create();
             alertDialog.show();
-        }
+        }*/
         else {
             //shared-preferences
             //loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
