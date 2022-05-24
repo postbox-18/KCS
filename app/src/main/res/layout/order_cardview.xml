@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,31 +49,12 @@
                         android:layout_height="wrap_content"
                         android:text="@string/wedding" />
 
-                    <LinearLayout
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/itemList"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/header"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/Veg"
-                            android:textSize="16dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/item_size"
-                            android:layout_width="wrap_content"
-                            android:layout_margin="5dp"
-                            android:text="50"
-                            android:layout_height="wrap_content"/>
-                            <!--android:drawableStart="@drawable/ic_utensils_solid"
-                            android:drawablePadding="5dp"
-                            android:paddingStart="15dp"
-                            android:text="50" />-->
-
-                    </LinearLayout>
+                        tools:itemCount="2"
+                        tools:listitem="@layout/list_cardview"
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
 
             </LinearLayout>

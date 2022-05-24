@@ -96,6 +96,7 @@ public class OrdersFragment extends Fragment {
                 recyclerView_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                 orderAdapters=new OrderAdapters(getContext(),orderLists,getViewModel);
                 recyclerView_order_list.setAdapter(orderAdapters);
+                //MyLog.e(TAG,"order>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderLists));
             }
         });
 

@@ -56,7 +56,7 @@ public class SplashActivity extends AppCompatActivity {
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        MyLog.e(TAG, "snap>>" + snapshot);
+                        //MyLog.e(TAG, "snap>>" + snapshot);
                         for (DataSnapshot datas : snapshot.getChildren()) {
                            /* MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
                             MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());

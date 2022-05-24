@@ -17,6 +17,7 @@ import com.example.adm.Classes.MyLog;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     private Context context;
     private GetViewModel getViewModel;
     private String TAG = "OrderAdapters";
+    private List<UserItemList> userItemLists=new ArrayList<>();
 
     public OrderAdapters(Context context, List<OrderLists> orderLists, GetViewModel getViewModel) {
         this.orderLists = orderLists;
@@ -46,17 +48,18 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         final OrderLists orderLists1 = orderLists.get(position);
         holder.user_name.setText(orderLists1.getS_user_name());
         holder.func.setText(orderLists1.getFunc());
-        holder.header.setText(orderLists1.getHeader());
+        MyLog.e(TAG,"item>>name outside>"+orderLists1.getS_user_name());
         /* String[] arr=(orderLists1.getList()).split(" ");*/
-
         /* recyclerView_order_list.setHasFixedSize(true);
                 recyclerView_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));*/
         getViewModel.getS_mapMutable().observe((LifecycleOwner) context, new Observer<List<LinkedHashMap<String, List<UserItemList>>>>() {
             @Override
             public void onChanged(List<LinkedHashMap<String, List<UserItemList>>> linkedHashMaps) {
+                MyLog.e(TAG,"item>>name inside>"+orderLists1.getS_user_name());
+                userItemLists=linkedHashMaps.get(0).get(orderLists1.getS_user_name());
                 holder.itemList.setHasFixedSize(true);
                 holder.itemList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                UserItemListAdapters itemListAdapters = new UserItemListAdapters(context, orderLists1.getHeader(), orderLists1.getList(),getViewModel,linkedHashMaps);
+                UserItemListAdapters itemListAdapters = new UserItemListAdapters(context,getViewModel,userItemLists);
                 holder.itemList.setAdapter(itemListAdapters);
             }
         });
@@ -78,7 +81,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profile;
-        private TextView user_name, func,header;
+        private TextView user_name, func;
         private RecyclerView itemList;
 
         public ViewHolder(View view) {
@@ -86,7 +89,6 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
             profile = view.findViewById(R.id.profile);
             user_name = view.findViewById(R.id.user_name);
             func = view.findViewById(R.id.func);
-            header = view.findViewById(R.id.header);
             itemList = view.findViewById(R.id.itemList);
 
 

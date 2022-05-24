@@ -151,7 +151,7 @@ public class Control_PanelFragment extends Fragment {
                }
                itemAdapter=new ItemAdapter(getContext(),itemList);
                recyclerView_item.setAdapter(itemAdapter);
-                MyLog.e(TAG, "data>>item>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemList));
+                //MyLog.e(TAG, "data>>item>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemList));
                 size++;
 
 
@@ -188,7 +188,7 @@ public class Control_PanelFragment extends Fragment {
                 }
                 funcAdapter=new FuncAdapter(getContext(),funcList);
                 recyclerView_func.setAdapter(funcAdapter);
-                MyLog.e(TAG, "data>>func>>" + new GsonBuilder().setPrettyPrinting().create().toJson(funcList));
+                //MyLog.e(TAG, "data>>func>>" + new GsonBuilder().setPrettyPrinting().create().toJson(funcList));
 
             }
 
@@ -224,7 +224,7 @@ public class Control_PanelFragment extends Fragment {
 
                 headerAdapter=new HeaderAdapter(getContext(),headerList);
                 recyclerView_header.setAdapter(headerAdapter);
-                MyLog.e(TAG, "data>>header>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerList));
+               // MyLog.e(TAG, "data>>header>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerList));
 
             }
 

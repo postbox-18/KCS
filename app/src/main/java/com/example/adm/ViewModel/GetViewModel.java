@@ -85,6 +85,8 @@ public class GetViewModel extends AndroidViewModel {
     private List<UserDetailsList> userLists=new ArrayList<>();
     private MutableLiveData<List<UserDetailsList>> UserListMutable=new MutableLiveData<>();
 
+
+
     //user-item list
     private List<UserItemList> userItemLists=new ArrayList<>();
 
@@ -114,6 +116,8 @@ public class GetViewModel extends AndroidViewModel {
 
 
     }
+
+
 
     public MutableLiveData<List<UserDetailsList>> getUserListMutable() {
         return UserListMutable;
@@ -157,49 +161,50 @@ public class GetViewModel extends AndroidViewModel {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "snap>>" + snapshot);
+
                 int size=0;
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                    MyLog.e(TAG, "snap>>snap childern>>" + snapshot.getValue().toString());
-                    MyLog.e(TAG, "snap>>snap childern>>" + snapshot.getKey());
                     MyLog.e(TAG, "snap>>datas>>" + datas);
+                    MyLog.e(TAG, "snap>>datas>>" + datas.getKey().toString());
+                    userItemLists=new ArrayList<>();
                     s_user_name=datas.getKey().toString();
                     for (DataSnapshot dataSnapshot : datas.getChildren()) {
                         func=dataSnapshot.getKey().toString();
                         MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot);
+                        MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot.getKey().toString());
                         for (DataSnapshot shot : dataSnapshot.getChildren()) {
                             header=shot.getKey().toString();
                             MyLog.e(TAG, "snap>>shots>>" + shot);
-                            for (DataSnapshot data : shot.getChildren()) {
-                                MyLog.e(TAG, "snap>>data>>" + data);
-                                UserItemList itemList=new UserItemList(
-                                        data.getValue().toString()
-                                );
-                                userItemLists.add(itemList);
-                                f_map.put(header,userItemLists);
-                                item+=data.getValue().toString()+" ";
-                                size++;
-                            }
-                            OrderLists orderLists1 = new OrderLists(
-                                    s_user_name,
-                                    func,
+                            MyLog.e(TAG, "snap>>shots>>" + shot.getKey().toString());
+                                size=0;
+                                for(DataSnapshot data:shot.getChildren())
+                                {
+                                    size++;
+                                }
+                            MyLog.e(TAG,"snap>>size>"+size);
+                            UserItemList itemList=new UserItemList(
                                     header,
-                                    item,
                                     size
                             );
                             size=0;
-                            orderLists.add(orderLists1);
+                            userItemLists.add(itemList);
+                            f_map.put(s_user_name,userItemLists);
+                            //MyLog.e(TAG,"snap>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
+
                         }
+                        OrderLists orderLists1 = new OrderLists(
+                                s_user_name,
+                                func
+                        );
+                        orderLists.add(orderLists1);
+
                     }
 
                 }
                 orderListsMutable.postValue(orderLists);
                 s_map.add(f_map);
                 s_mapMutable.postValue(s_map);
-                MyLog.e(TAG,"map>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
-
-
-
+                //MyLog.e(TAG,"map>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
             }
 
             @Override
@@ -317,7 +322,7 @@ public class GetViewModel extends AndroidViewModel {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "snap>>" + snapshot);
+               // MyLog.e(TAG, "snap>>" + snapshot);
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     MyLog.e(TAG, "error>>at firebase  emails " + datas.child("email").getValue().toString());
                     if(Objects.equals(email, datas.child("email").getValue().toString())) {
