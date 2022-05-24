@@ -1,5 +1,7 @@
 package com.example.kcs.Login_Register;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -114,62 +117,9 @@ public class LoginActivity extends AppCompatActivity {
                 s_password = password.getText().toString();
                 if (CheckDeatils()) {
 
-                    mAuth.signInWithEmailAndPassword(s_email, s_password)
-                            .addOnCompleteListener(
-                                    new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(
-                                                @NonNull Task<AuthResult> task)
-                                        {
-                                            /*FireseBaseDataDetails(s_email);
-                                            getViewModel.setEmail(s_email);
-                                            getViewModel.getEmailMutable().observe(LoginActivity.this, new Observer<Boolean>() {
-                                                @Override
-                                                public void onChanged(Boolean aBoolean) {
-                                                    check_email=aBoolean;
-                                                }
-                                            });
-                                            if (task.isSuccessful()&&check_email) {*/
-                                            if (task.isSuccessful()) {
-                                                Toast.makeText(getApplicationContext(),
-                                                        "Login successful!!",
-                                                        Toast.LENGTH_LONG)
-                                                        .show();
-
-                                                loadingDialog.dismiss();
-
-
-                                                if(remember_me.isChecked())
-                                                {
-                                                    MyLog.e(TAG,"logout>> remember me is checked");
-                                                    MyLog.e(TAG,"logout>>Check box checked>>"+remember_me.isChecked());
-                                                    check_password=true;
-
-                                                }
-                                                else
-                                                {
-                                                    MyLog.e(TAG,"logout>>Check box not checked>>"+remember_me.isChecked());
-                                                    SharedPreferences_data.logout_User();
-
-                                                }
-                                                
-                                                login();
-                                            }
-
-                                            else {
-
-                                                // sign-in failed
-                                                Toast.makeText(getApplicationContext(),
-                                                        "Login failed!!",
-                                                        Toast.LENGTH_LONG)
-                                                        .show();
-
-                                                loadingDialog.dismiss();
-                                            }
-                                        }
-                                    });
-                } else {
-                    loadingDialog.dismiss();
+                }
+                else {
+                    //loadingDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Please check the values", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -181,7 +131,92 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
+        getViewModel.getEmailMutable().observe(LoginActivity.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                //check details
+                if (!aBoolean)
+                {
+                    AlertDialog.Builder alert =new AlertDialog.Builder(LoginActivity.this);
+                    alert.setMessage("Something Went Problem Please Try Again Later");
+                    alert.setTitle("Problem");
+                    alert.setCancelable(false);
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @SuppressLint("NotifyDataSetChanged")
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alertDialog=alert.create();
+                    alertDialog.show();
+                }
+                else {
+                    Auth();
+                }
 
+            }
+        });
+
+    }
+
+    private void Auth() {
+        mAuth.signInWithEmailAndPassword(s_email, s_password)
+                .addOnCompleteListener(
+                        new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(
+                                    @NonNull Task<AuthResult> task)
+                            {
+                                            /*FireseBaseDataDetails(s_email);
+                                            getViewModel.setEmail(s_email);
+                                            getViewModel.getEmailMutable().observe(LoginActivity.this, new Observer<Boolean>() {
+                                                @Override
+                                                public void onChanged(Boolean aBoolean) {
+                                                    check_email=aBoolean;
+                                                }
+                                            });
+                                            if (task.isSuccessful()&&check_email) {*/
+
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(getApplicationContext(),
+                                                    "Login successful!!",
+                                                    Toast.LENGTH_LONG)
+                                            .show();
+
+                                    //loadingDialog.dismiss();
+
+                                    if(remember_me.isChecked())
+                                    {
+                                        MyLog.e(TAG,"logout>> remember me is checked");
+                                        MyLog.e(TAG,"logout>>Check box checked>>"+remember_me.isChecked());
+                                        check_password=true;
+
+                                    }
+                                    else
+                                    {
+                                        MyLog.e(TAG,"logout>>Check box not checked>>"+remember_me.isChecked());
+                                        SharedPreferences_data.logout_User();
+
+                                    }
+
+                                    login();
+                                }
+
+                                else {
+
+                                    // sign-in failed
+                                    Toast.makeText(getApplicationContext(),
+                                                    "Login failed!!",
+                                                    Toast.LENGTH_LONG)
+                                            .show();
+
+                                    //loadingDialog.dismiss();
+                                }
+
+
+                            }
+                        });
     }
 
     /*private void FireseBaseDataDetails(String s_email) {

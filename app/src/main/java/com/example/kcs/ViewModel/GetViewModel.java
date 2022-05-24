@@ -85,7 +85,6 @@ public class GetViewModel extends AndroidViewModel {
         super(application);
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
-        GetUserDeatils(email);
         GetHeader();
         GetFun();
         GetItem();
@@ -144,12 +143,14 @@ public class GetViewModel extends AndroidViewModel {
     public void setEmail(String email) {
         GetUserDeatils(email);
         this.email = email;
-        this.EmailMutable.postValue(check_email);
+
     }
 
     public MutableLiveData<Boolean> getEmailMutable() {
         return EmailMutable;
     }
+
+
 
     public MutableLiveData<List<LinkedHashMap<String, List<ItemList>>>> getS_mapMutable() {
         return s_mapMutable;
@@ -209,6 +210,7 @@ public class GetViewModel extends AndroidViewModel {
                         new SharedPreferences_data(getApplication()).setS_user_name(datas.child("username").getValue().toString());
                         new SharedPreferences_data(getApplication()).setS_phone_number(datas.child("phone_number").getValue().toString());
                         check_email=true;
+                        EmailMutable.postValue(check_email);
                         MyLog.e(TAG, "error>>at firebase  emails "+check_email);
                         break;
                     }

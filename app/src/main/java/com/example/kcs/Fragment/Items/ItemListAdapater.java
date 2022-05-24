@@ -72,7 +72,8 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                 if(itemList1.getItem()!=null) {
                     if (holder.item_check.isChecked()) {
                         CheckedList checkedLists1 = new CheckedList(
-                                itemList1.getItem()
+                                itemList1.getItem(),
+                                position
                         );
                         checkedLists.add(checkedLists1);
                         f_map.put(header,checkedLists);
