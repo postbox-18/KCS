@@ -15,8 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
-import com.example.kcs.MyViewModel;
+
 import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -29,7 +30,8 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
     private List<ItemList> itemLists;
     private List<CheckedList> checkedLists=new ArrayList<>();
     private String TAG="ItemListAdapater";
-    private MyViewModel myViewModel;
+    //private MyViewModel myViewModel;
+    private GetViewModel getViewModel;
     private LinkedHashMap<String,List<CheckedList>> f_map=new LinkedHashMap<>();
     private List<LinkedHashMap<String,List<CheckedList>>> s_map=new ArrayList<>();
     private String header;
@@ -38,11 +40,13 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
     public interface Unchecked {
         void getUnchecked(String item);
     }
-    public ItemListAdapater(Context context, List<ItemList> itemLists, String header) {
+    public ItemListAdapater(Context context, List<ItemList> itemLists, String header,GetViewModel getViewModel) {
         this.context=context;
         this.itemLists=itemLists;
+        this.getViewModel=getViewModel;
         //cartViewModel = ViewModelProviders.of((FragmentActivity) context).get(CartViewModel.class);
-       myViewModel= new ViewModelProvider((FragmentActivity)context).get(MyViewModel.class);
+       //myViewModel= new ViewModelProvider((FragmentActivity)context).get(MyViewModel.class);
+
     }
 
     @NonNull
@@ -56,6 +60,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
 
     @Override
     public void onBindViewHolder(@NonNull ItemListAdapater.ViewHolder holder, int position) {
+
         final ItemList itemList1 = itemLists.get(position);
         //img update soon
         //holder.header_img.setText(funList1.getUsername());
@@ -72,7 +77,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         checkedLists.add(checkedLists1);
                         f_map.put(header,checkedLists);
 
-                        myViewModel.setCheckedLists(checkedLists);
+                        getViewModel.setCheckedLists(checkedLists);
                         //notifyDataSetChanged();
                     } else {
                         //unchecked.getUnchecked(itemList1.getItem());
@@ -81,7 +86,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         //MyLog.e(TAG, "Check>>header itemadapter:::else>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     }
                     s_map.add(f_map);
-                    MyLog.e(TAG, "hash map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
+                    //MyLog.e(TAG, "hash map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
 
                     //MyLog.e(TAG, "Check>>header itemadapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     Gson gson = new Gson();

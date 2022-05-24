@@ -8,19 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Items.ItemList;
-import com.example.kcs.MyViewModel;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,19 +25,22 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private Context context;
     private List<HeaderList>headerLists;
     private String TAG="HeaderAdapter";
-    HeaderAdapter.GetHeaderFragment getHeaderFragment;
+    //HeaderAdapter.GetHeaderFragment getHeaderFragment;
     private GetViewModel getViewModel;
-    private MyViewModel myViewModel;
-    public interface GetHeaderFragment
+    //private MyViewModel myViewModel;
+    private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
+    /*public interface GetHeaderFragment
     {
         void getheaderFragment(HeaderList headerList1, int position);
-    }
-    public HeaderAdapter(Context context, List<HeaderList> headerLists,GetHeaderFragment getHeaderFragment) {
+    }*/
+    public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
         this.context=context;
         this.headerLists=headerLists;
-        this.getHeaderFragment=getHeaderFragment;
-        getViewModel= new ViewModelProvider((FragmentActivity)context).get(GetViewModel.class);
-        myViewModel= new ViewModelProvider((FragmentActivity)context).get(MyViewModel.class);
+        this.getViewModel=getViewModel;
+        this.linkedHashMaps=linkedHashMaps;
+        //this.getHeaderFragment=getHeaderFragment;
+        //getViewModel= new ViewModelProvider((FragmentActivity)context).get(GetViewModel.class);
+
 
     }
 
@@ -62,10 +61,9 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
         holder.header_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //getHeaderFragment.getheaderFragment(headerList1,position);.
+                getViewModel.getheaderFragment(headerList1.getHeader(),position,linkedHashMaps);
 
-
-
-                getHeaderFragment.getheaderFragment(headerList1,position);
             }
         });
 

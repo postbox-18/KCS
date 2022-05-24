@@ -14,21 +14,21 @@ import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Fragment.Items.ItemFragment;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Profile.ProfileFragment;
+import com.example.kcs.ViewModel.GetViewModel;
 
 public class MainActivity extends AppCompatActivity {
     private String TAG = "MainActivity";
-    private MyViewModel myViewModel;
+    private GetViewModel getViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+        getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
         MyLog.e(TAG, "logout>> main activity ");
-        /*Fragment fragment = new HomeFragment();*/
-        myViewModel.setI_value(0);
-        MyLog.e(TAG, "integer>>" + myViewModel.getI_value());
-        myViewModel.getValue().observe(this, new Observer<Integer>() {
+
+        getViewModel.setI_value(0);
+        getViewModel.getValue().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
                 MyLog.e(TAG, "integer>>" + integer);
@@ -43,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 1:
                         //MyLog.e(TAG, "Data>>fun list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getHeaderLists()));
-                        fragment = new HeaderFragment((myViewModel.getFunList()), (myViewModel.getHeaderLists()), (myViewModel.getGetHeaderFragment()));
+                        fragment = new HeaderFragment();
                         fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
                         break;
                     case 2:
                         //MyLog.e(TAG, "Data>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getItemLists()));
 
-                        fragment = new ItemFragment((myViewModel.getHeaderList()), (myViewModel.getItemLists()));
+                        fragment = new ItemFragment();
                         fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
                         break;
                     case 3:

@@ -16,8 +16,9 @@ import android.widget.Toast;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
-import com.example.kcs.MyViewModel;
+
 import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,7 +46,7 @@ public class MyOrdersFragment extends Fragment {
     private String mParam2;
 
     private ImageView back_btn;
-    private MyViewModel myViewModel;
+    private GetViewModel getViewModel;
     private RecyclerView recyclerview_my_orders;
     private List<MyOrdersList> myOrdersList=new ArrayList<>();
     private MyOrdersAdapter myOrdersAdapter;
@@ -80,7 +81,7 @@ public class MyOrdersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
+        getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -131,7 +132,7 @@ public class MyOrdersFragment extends Fragment {
                     }
 
                 }
-                MyLog.e(TAG,"deta>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
+                //MyLog.e(TAG,"deta>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
                 myOrdersAdapter=new MyOrdersAdapter(getContext(),myOrdersList);
                 recyclerview_my_orders.setAdapter(myOrdersAdapter);
 
@@ -150,7 +151,7 @@ public class MyOrdersFragment extends Fragment {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myViewModel.setI_value(3);
+                getViewModel.setI_value(3);
                /* Fragment fragment=new HomeFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/

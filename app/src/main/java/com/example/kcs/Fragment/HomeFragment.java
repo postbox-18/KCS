@@ -25,7 +25,7 @@ import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
 import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.ItemList;
-import com.example.kcs.MyViewModel;
+
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +34,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -78,39 +77,31 @@ public class HomeFragment extends Fragment {
     private DatabaseReference databaseReference;
     private List<ItemList> itemLists=new ArrayList<>();
     private String TAG="HomeFragment";
-    private MyViewModel myViewModel;
+    //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
+    private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
 
     public HomeFragment() {
         // Required empty public constructor
     }
-    private HeaderAdapter.GetHeaderFragment getheaderFragment=new HeaderAdapter.GetHeaderFragment() {
+    /*private HeaderAdapter.GetHeaderFragment getheaderFragment=new HeaderAdapter.GetHeaderFragment() {
         @Override
         public void getheaderFragment(HeaderList headerList1, int position) {
-          // loadingDialog.show(getParentFragmentManager(),"Loading dailog");
-           /* GetItem(headerList1);
-            MyLog.e(TAG, "Data>>header home>>" + headerList1.getHeader());
-            myViewModel.setHeaderList(headerList1);
-            if(itemLists.size()>0) {
-                myViewModel.setItemLists(itemLists);
 
-               // loadingDialog.dismiss();
-            }
-            else
-            {
-                Toast.makeText(getContext(),"empty response", Toast.LENGTH_SHORT).show();
-               // loadingDialog.dismiss();
-            }*/
+            myViewModel.setHeaderList(headerList1);
             getViewModel.getS_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>() {
                 @Override
                 public void onChanged(List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
                     //check if headerlist1 data's value is empty or not
                     //MyLog.e(TAG, "hashmap>>data>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps.get(0).get(headerList1.getHeader())));
                     List<ItemList> itemLists=linkedHashMaps.get(0).get(headerList1.getHeader());
+                    //itemLists=itemLists1;
+                    myViewModel.setItemLists(itemLists);
                     MyLog.e(TAG, "hashmap>>data>>" + new GsonBuilder().setPrettyPrinting().create()
                             .toJson(itemLists));
                     if(itemLists.size()>0) {
                         myViewModel.setI_value(2);
+
                     }
                     else
                     {
@@ -121,28 +112,31 @@ public class HomeFragment extends Fragment {
 
 
         }
-    };
+    };*/
+
 
     private void SetToFragment(Fragment fragment) {
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
     }
 
-    private FunAdapter.GetFunFragment getfunFragment=new FunAdapter.GetFunFragment() {
+    /*private FunAdapter.GetFunFragment getfunFragment=new FunAdapter.GetFunFragment() {
         @Override
         public void getfunFragment(FunList funList1) {
             MyLog.e(TAG, "Data>>fun home>>" + funList1.getFun());
-            myViewModel.setFunList(funList1);
-            myViewModel.setHeaderLists(headerList);
-            myViewModel.setGetHeaderFragment(getheaderFragment);
+           // myViewModel.setFunList(funList1);
+            //header list
+            //myViewModel.setHeaderLists(headerList);
+            //myViewModel.setI_value(1);
 
-            myViewModel.setI_value(1);
+            getViewModel.setI_value(1);
+            getViewModel.setFunc_title(funList1.getFun());
 
-            /*Fragment fragment=new HeaderFragment(funList1,headerList,getheaderFragment);
-            SetToFragment(fragment);*/
+            *//*Fragment fragment=new HeaderFragment(funList1,headerList,getheaderFragment);
+            SetToFragment(fragment);*//*
 
         }
-    };
+    };*/
 
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
@@ -156,7 +150,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
+        //myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
         getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -192,6 +186,12 @@ public class HomeFragment extends Fragment {
         /*GetHeader();
         GetFun();*/
 
+        getViewModel.getS_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>() {
+            @Override
+            public void onChanged(List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps1) {
+                linkedHashMaps=linkedHashMaps1;
+            }
+        });
         getViewModel.getListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
             @Override
             public void onChanged(List<HeaderList> headerLists1) {
@@ -199,8 +199,9 @@ public class HomeFragment extends Fragment {
                 //recyclerview_header
                 recyclerview_header.setHasFixedSize(true);
                 recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                headerAdapter=new HeaderAdapter(getContext(),headerList,getheaderFragment);
+                headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,linkedHashMaps);
                 recyclerview_header.setAdapter(headerAdapter);
+
                 //MyLog.e(TAG, "model>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerLists));
             }
         });
@@ -211,7 +212,7 @@ public class HomeFragment extends Fragment {
                 //recyclerview_fun
                 recyclerview_fun.setHasFixedSize(true);
                 recyclerview_fun.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                funAdapter=new FunAdapter(getContext(),funLists,getfunFragment);
+                funAdapter=new FunAdapter(getContext(),funLists,getViewModel);
                 recyclerview_fun.setAdapter(funAdapter);
             }
         });
@@ -221,7 +222,7 @@ public class HomeFragment extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myViewModel.setI_value(3);
+                getViewModel.setI_value(3);
             }
         });
         return view;

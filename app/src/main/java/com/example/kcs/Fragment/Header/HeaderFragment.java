@@ -3,6 +3,7 @@ package com.example.kcs.Fragment.Header;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,11 +16,13 @@ import android.widget.TextView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunList;
-import com.example.kcs.MyViewModel;
+import com.example.kcs.Fragment.Items.ItemList;
+
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -33,30 +36,25 @@ public class HeaderFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final String HEADER_LIST = "HEADER_LIST";
-    private static final String FUN_LIST = "FUN_LIST";
-    private static final String GET_HEADER_FRAGMENT = "GET_HEADER_FRAGMENT";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     //call from FunAdapter
-    private FunList funList;
+    private String funList_title;
     private TextView fun_title;
     //Header
     private RecyclerView recyclerview_header;
     private HeaderAdapter headerAdapter;
     private ImageView back_btn;
-    HeaderAdapter.GetHeaderFragment getheaderFragment;
+    //HeaderAdapter.GetHeaderFragment getheaderFragment;
     private List<HeaderList> headerList=new ArrayList<>();
-    private MyViewModel myViewModel;
+    //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
 
     private String TAG="HeaderFragment";
-    public HeaderFragment(FunList funList1, List<HeaderList> headerList, HeaderAdapter.GetHeaderFragment getheaderFragment) {
-        this.funList=funList1;
-        this.headerList=headerList;
-        this.getheaderFragment=getheaderFragment;
+    public HeaderFragment() {
+
         // Required empty public constructor
     }
 
@@ -69,14 +67,12 @@ public class HeaderFragment extends Fragment {
      * @return A new instance of fragment HeaderFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HeaderFragment newInstance(String param1, String param2, FunList funList, List<HeaderList> headerList, HeaderAdapter.GetHeaderFragment getheaderFragment) {
-        HeaderFragment fragment = new HeaderFragment(funList, headerList, getheaderFragment);
+    public static HeaderFragment newInstance(String param1, String param2){
+        HeaderFragment fragment = new HeaderFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
-        args.putString(FUN_LIST, String.valueOf(funList));
-        args.putString(HEADER_LIST, String.valueOf(headerList));
-        args.putString(GET_HEADER_FRAGMENT, String.valueOf(getheaderFragment));
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,7 +80,7 @@ public class HeaderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
+      //  myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
         getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -100,18 +96,42 @@ public class HeaderFragment extends Fragment {
         recyclerview_header=view.findViewById(R.id.recyclerview_header);
         fun_title=view.findViewById(R.id.fun_title);
         back_btn=view.findViewById(R.id.back_btn);
-        MyLog.e(TAG, "Data>>header list>>" + funList.getFun());
-        fun_title.setText(funList.getFun());
-        //recyclerview_header
-        recyclerview_header.setHasFixedSize(true);
-        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        headerAdapter=new HeaderAdapter(getContext(),headerList,getheaderFragment);
-        recyclerview_header.setAdapter(headerAdapter);
+
+        //get view model
+        getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                funList_title=s;
+                fun_title.setText(funList_title);
+            }
+        });
+
+        getViewModel.getHeaderListMutableList().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
+            @Override
+            public void onChanged(List<HeaderList> headerLists) {
+                headerList=headerLists;
+            }
+        });
+
+
+
+
+        getViewModel.getS_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>() {
+            @Override
+            public void onChanged(List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
+                //recyclerview_header
+                recyclerview_header.setHasFixedSize(true);
+                recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,linkedHashMaps);
+                recyclerview_header.setAdapter(headerAdapter);
+            }
+        });
+
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myViewModel.setI_value(0);
+                getViewModel.setI_value(0);
                /* Fragment fragment=new HomeFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/

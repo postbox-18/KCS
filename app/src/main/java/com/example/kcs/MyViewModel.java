@@ -1,13 +1,18 @@
+/*
 package com.example.kcs;
+
+import static androidx.fragment.app.FragmentManager.TAG;
 
 import android.app.Application;
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunAdapter;
 import com.example.kcs.Fragment.Func.FunList;
@@ -16,10 +21,12 @@ import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MyViewModel extends AndroidViewModel {
@@ -32,22 +39,27 @@ public class MyViewModel extends AndroidViewModel {
     private Context context;
 
     private HeaderList headerList;
-    private MutableLiveData<HeaderList> headerListMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<HeaderList> headerMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<FunList> funListMutableLiveData = new MutableLiveData<>();
+
     private MutableLiveData<List<CheckedList>> checkedListMutableLiveData = new MutableLiveData<List<CheckedList>>();
+    private MutableLiveData<List<ItemList>> itemListMutableLiveData = new MutableLiveData<List<ItemList>>();
+    private MutableLiveData<List<HeaderList>> headerlistMutableLiveData = new MutableLiveData<List<HeaderList>>();
     private FunList funList;
     private List<HeaderList> headerLists = new ArrayList<>();
     private List<ItemList> itemLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
     private List<CheckedList> checkedLists = new ArrayList<>();
-    private HeaderAdapter.GetHeaderFragment getHeaderFragment;
-    private FunAdapter.GetFunFragment getfunFragment;
+    //private HeaderAdapter.GetHeaderFragment getHeaderFragment;
+
 
     public MyViewModel(@NonNull Application application) {
         super(application);
 
-        this.headerListMutableLiveData.postValue(headerList);
-        this.funListMutableLiveData.postValue(funList);
+        */
+/*this.headerMutableLiveData.postValue(headerList);
+        this.funListMutableLiveData.postValue(funList);*//*
+
         String json=new SharedPreferences_data(application).getChecked_item_list();
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<CheckedList>>() {}.getType();
@@ -62,6 +74,9 @@ public class MyViewModel extends AndroidViewModel {
 
     }
 
+    public MutableLiveData<List<ItemList>> getItemListMutableLiveData() {
+        return itemListMutableLiveData;
+    }
 
     public MutableLiveData<Integer> getValue() {
         return value;
@@ -106,17 +121,17 @@ public class MyViewModel extends AndroidViewModel {
         return headerList;
     }
 
-    public void setHeaderList(HeaderList headerList) {
+    public void setHeader(HeaderList headerList) {
         this.headerList = headerList;
-        this.headerListMutableLiveData.postValue(headerList);
+
     }
 
     public FunList getFunList() {
         return funList;
     }
 
-    public MutableLiveData<HeaderList> getHeaderListMutableLiveData() {
-        return headerListMutableLiveData;
+    public MutableLiveData<HeaderList> getHeaderMutableLiveData() {
+        return headerMutableLiveData;
     }
 
     public MutableLiveData<FunList> getFunListMutableLiveData() {
@@ -128,7 +143,7 @@ public class MyViewModel extends AndroidViewModel {
     }
 
     public void setHeaderListMutableLiveData(MutableLiveData<HeaderList> headerListMutableLiveData) {
-        this.headerListMutableLiveData = headerListMutableLiveData;
+        this.headerMutableLiveData = headerListMutableLiveData;
     }
 
     public void setFunListMutableLiveData(MutableLiveData<FunList> funListMutableLiveData) {
@@ -144,9 +159,7 @@ public class MyViewModel extends AndroidViewModel {
         return headerLists;
     }
 
-    public void setHeaderLists(List<HeaderList> headerLists) {
-        this.headerLists = headerLists;
-    }
+
 
     public List<ItemList> getItemLists() {
         return itemLists;
@@ -172,6 +185,17 @@ public class MyViewModel extends AndroidViewModel {
 
     public void setItemLists(List<ItemList> itemLists) {
         this.itemLists = itemLists;
+        itemListMutableLiveData.postValue(itemLists);
+
+    }
+
+    public void setHeaderLists(List<HeaderList> headerLists) {
+        this.headerLists = headerLists;
+        this.headerlistMutableLiveData.postValue(headerLists);
+    }
+
+    public MutableLiveData<List<HeaderList>> getHeaderlistMutableLiveData() {
+        return headerlistMutableLiveData;
     }
 
     public List<FunList> getFunLists() {
@@ -182,19 +206,28 @@ public class MyViewModel extends AndroidViewModel {
         this.funLists = funLists;
     }
 
-    public HeaderAdapter.GetHeaderFragment getGetHeaderFragment() {
-        return getHeaderFragment;
-    }
 
-    public void setGetHeaderFragment(HeaderAdapter.GetHeaderFragment getHeaderFragment) {
-        this.getHeaderFragment = getHeaderFragment;
-    }
 
-    public FunAdapter.GetFunFragment getGetfunFragment() {
-        return getfunFragment;
-    }
 
-    public void setGetfunFragment(FunAdapter.GetFunFragment getfunFragment) {
-        this.getfunFragment = getfunFragment;
-    }
+
+    public void getheaderFragment(HeaderList headerList1, int position, List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
+
+        this.headerMutableLiveData.postValue(headerList1);
+            List<ItemList> itemLists=linkedHashMaps.get(0).get(headerList1.getHeader());
+            //itemLists=itemLists1;
+        itemListMutableLiveData.postValue(itemLists);
+
+            if(itemLists.size()>0) {
+                i_value=2;
+                this.value.postValue(i_value);
+            }
+            else
+            {
+                Toast.makeText(getApplication(), "Empty Response", Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+
 }
+*/

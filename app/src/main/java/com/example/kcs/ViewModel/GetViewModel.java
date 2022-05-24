@@ -27,7 +27,7 @@ import java.util.Objects;
 
 public class GetViewModel extends AndroidViewModel {
     //Header List
-    private MutableLiveData<List<HeaderList>> headerMutableList=new MutableLiveData<>();
+    private MutableLiveData<List<HeaderList>> headerListMutableList=new MutableLiveData<>();
     private List<HeaderList> headerList=new ArrayList<>();
 
     //func List
@@ -37,6 +37,16 @@ public class GetViewModel extends AndroidViewModel {
     //item list
     private MutableLiveData<List<ItemList>> itemMutable=new MutableLiveData<>();
     private List<ItemList> itemLists=new ArrayList<>();
+
+
+    //checked list
+    private MutableLiveData<List<CheckedList>> checkedList_Mutable=new MutableLiveData<>();
+    private List<CheckedList> checkedLists=new ArrayList<>();
+
+    //item list-get header
+    private MutableLiveData<List<ItemList>> itemHeaderMutable=new MutableLiveData<>();
+    private List<ItemList> itemHeaderLists=new ArrayList<>();
+
     //Linked HashMap
     private LinkedHashMap<String,List<ItemList>> f_map=new LinkedHashMap<>();
     private List<LinkedHashMap<String,List<ItemList>>> s_map=new ArrayList<>();
@@ -55,7 +65,21 @@ public class GetViewModel extends AndroidViewModel {
     private FunList fun_title;
     private MutableLiveData<HeaderList> headerListMutableLiveData = new MutableLiveData<>();
 
+    //Selected Header
+    private String header_title;
+    private MutableLiveData<String> header_title_Mutable=new MutableLiveData<>();
+
+    //Selected Func
+    private String func_title;
+    private MutableLiveData<String> func_title_Mutable=new MutableLiveData<>();
+
+    //fragment
+    private Integer i_value;
+    private MutableLiveData<Integer> value = new MutableLiveData<>();
+
     private String TAG="ViewClassModel";
+
+
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -67,9 +91,55 @@ public class GetViewModel extends AndroidViewModel {
         GetItem();
 
 
+
     }
 
+    public MutableLiveData<List<ItemList>> getItemMutable() {
+        return itemMutable;
+    }
 
+    public MutableLiveData<List<CheckedList>> getCheckedList_Mutable() {
+        return checkedList_Mutable;
+    }
+
+    public void setCheckedLists(List<CheckedList> checkedLists) {
+        this.checkedLists = checkedLists;
+        this.checkedList_Mutable.postValue(checkedLists);
+    }
+
+    public MutableLiveData<List<HeaderList>> getHeaderListMutableList() {
+        return headerListMutableList;
+    }
+
+    public MutableLiveData<Integer> getValue() {
+        return value;
+    }
+
+    public void setFunc_title(String func_title) {
+        this.func_title = func_title;
+        func_title_Mutable.postValue(func_title);
+    }
+
+    public MutableLiveData<String> getFunc_title_Mutable() {
+        return func_title_Mutable;
+    }
+
+    public void setI_value(Integer i_value) {
+        this.i_value = i_value;
+        this.value.postValue(i_value);
+    }
+
+    public MutableLiveData<List<ItemList>> getItemHeaderMutable() {
+        return itemHeaderMutable;
+    }
+
+    public void setHeader_title(String header_title) {
+        this.header_title = header_title;
+    }
+
+    public MutableLiveData<String> getHeader_title_Mutable() {
+        return header_title_Mutable;
+    }
 
     public void setEmail(String email) {
         GetUserDeatils(email);
@@ -104,6 +174,7 @@ public class GetViewModel extends AndroidViewModel {
                                 i);
                         itemLists.add(itemLists1);
                     }
+                    itemMutable.postValue(itemLists);
                     f_map.put(headerList.get(k).getHeader(),itemLists);
                     //MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     size++;
@@ -159,7 +230,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<List<HeaderList>> getListMutableLiveData() {
-        return headerMutableList;
+        return headerListMutableList;
     }
 
     public MutableLiveData<List<FunList>> getFunMutableList() {
@@ -224,7 +295,7 @@ public class GetViewModel extends AndroidViewModel {
                     size++;
 
                 }
-                headerMutableList.postValue(headerList);
+                headerListMutableList.postValue(headerList);
 
             }
 
@@ -234,5 +305,29 @@ public class GetViewModel extends AndroidViewModel {
                 MyLog.e(TAG, "home>>snap>>Fail to get data.");
             }
         });
+    }
+
+
+    public void getheaderFragment(String header, int position, List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
+        header_title_Mutable.postValue(header);
+        List<ItemList> itemLists=s_map.get(0).get(header);
+        //itemLists=itemLists1;
+        this.itemHeaderMutable.postValue(itemLists);
+        MyLog.e(TAG,"itm>nut>>"+itemLists.size());
+        //MyLog.e(TAG, "hashmap>>data>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
+        if(itemLists.size()>0) {
+            value.postValue(2);
+
+        }
+        else
+        {
+
+            Toast.makeText(getApplication(), "Empty Response", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void getfunFragment(String fun) {
+        this.setI_value(1);
+        this.func_title_Mutable.postValue(fun);
     }
 }
