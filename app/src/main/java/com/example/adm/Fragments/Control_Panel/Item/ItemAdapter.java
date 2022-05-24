@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,10 +15,10 @@ import com.example.adm.R;
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
-    private List<ItemList> item;
+    private List<ItemArrayList> item;
     private Context context;
     private String TAG="ItemAdapter";
-    public ItemAdapter(Context context, List<ItemList> item) {
+    public ItemAdapter(Context context, List<ItemArrayList> item) {
         this.item = item;
         this.context = context;
     }
@@ -36,7 +34,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ItemAdapter.ViewHolder holder, int position) {
-        final ItemList item1 = item.get(position);
+        final ItemArrayList item1 = item.get(position);
         holder.item_title.setText(item1.getItem());
     }
 

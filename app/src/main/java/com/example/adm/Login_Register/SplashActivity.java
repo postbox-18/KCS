@@ -58,9 +58,9 @@ public class SplashActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         MyLog.e(TAG, "snap>>" + snapshot);
                         for (DataSnapshot datas : snapshot.getChildren()) {
-                            MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
+                           /* MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
                             MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
-                            MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());
+                            MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*/
                             String check=new SharedPreferences_data(SplashActivity.this).getS_email();
                             if(check==null||check.isEmpty()) {
                                 Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
@@ -83,5 +83,8 @@ public class SplashActivity extends AppCompatActivity {
 
             }
         }, 5000);
+
+
+
     }
 }

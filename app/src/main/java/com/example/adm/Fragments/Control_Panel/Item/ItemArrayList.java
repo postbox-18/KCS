@@ -1,8 +1,8 @@
 package com.example.adm.Fragments.Control_Panel.Item;
 
-public class ItemList {
+public class ItemArrayList {
     private final String item;
-    public ItemList(String item) {
+    public ItemArrayList(String item) {
         this.item = item;
     }
 

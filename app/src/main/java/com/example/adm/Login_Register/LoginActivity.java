@@ -16,26 +16,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
-
 import com.example.adm.Classes.LoadingDialogs;
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SharedPreferences_data;
 import com.example.adm.MainActivity;
 import com.example.adm.R;
+import com.example.adm.ViewModel.GetViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     //primary field
@@ -60,10 +56,12 @@ public class LoginActivity extends AppCompatActivity {
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private GetViewModel getViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
 
         //id's
         email = findViewById(R.id.email);
@@ -76,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         remember_me = findViewById(R.id.remember_me);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Users-Id");
+
 
         Top_Bg();
         //checkBox remember me
@@ -117,8 +115,16 @@ public class LoginActivity extends AppCompatActivity {
                                         public void onComplete(
                                                 @NonNull Task<AuthResult> task)
                                         {
-                                            FireseBaseDataDetails(s_email);
-                                            if (task.isSuccessful()&&check_email) {
+                                            /*FireseBaseDataDetails(s_email);
+                                            getViewModel.setEmail(s_email);
+                                            getViewModel.getEmailMutable().observe(LoginActivity.this, new Observer<Boolean>() {
+                                                @Override
+                                                public void onChanged(Boolean aBoolean) {
+                                                    check_email=aBoolean;
+                                                }
+                                            });
+                                            if (task.isSuccessful()&&check_email) {*/
+                                            if (task.isSuccessful()) {
                                                 Toast.makeText(getApplicationContext(),
                                                         "Login successful!!",
                                                         Toast.LENGTH_LONG)
@@ -172,27 +178,29 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void FireseBaseDataDetails(String s_email) {
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
+    /*private void FireseBaseDataDetails(String s_email) {
         databaseReference = firebaseDatabase.getReference("Users-Id");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "snap>>" + snapshot);
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                    MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());
+                  *//*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
+                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());*//*
+                    MyLog.e(TAG, "error>>at firebase  emails " + datas.child("email").getValue().toString());
                     if(Objects.equals(s_email, datas.child("email").getValue().toString())) {
                         new SharedPreferences_data(getApplicationContext()).setS_email(datas.child("email").getValue().toString());
                         new SharedPreferences_data(getApplicationContext()).setS_user_name(datas.child("username").getValue().toString());
                         new SharedPreferences_data(getApplicationContext()).setS_phone_number(datas.child("phone_number").getValue().toString());
-                        check_email=true;
+
+                                check_email=true;
+                        MyLog.e(TAG, "error>>at firebase  emails "+check_email);
+                        break;
                     }
                     else
                     {
                         check_email=false;
+                        MyLog.e(TAG, "error>>at firebase  emails "+check_email);
                     }
 
                 }
@@ -205,7 +213,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }*/
 
     private void login() {
         // if sign-in is successful
@@ -223,18 +231,22 @@ public class LoginActivity extends AppCompatActivity {
         //check details
         if (!isValidEmail(s_email))
         {
+            MyLog.e(TAG, "error>>e_email is not valid");
             email.setError("Please enter valid Email id");
         }
         else if(s_password.isEmpty() )
         {
+            MyLog.e(TAG, "error>>password is empty");
             password.setError("Please enter a password");
         }
         else if(s_password.length()<7)
         {
+            MyLog.e(TAG, "error>>pass is <7");
             password.setError("Please enter a valid password");
         }
         else
         {
+            MyLog.e(TAG, "error>>success");
             loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
 
            return true;

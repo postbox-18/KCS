@@ -10,12 +10,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SharedPreferences_data;
 import com.example.adm.R;
+import com.example.adm.ViewModel.GetViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,16 +45,12 @@ public class UserFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    //firebase database retrieve
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-    private TextView user_name, phone_number, email;
-    private String s_user_name, s_phone_number, s_email;
     private String TAG = "UserFragment";
 
-    private List<UserDetailsList> userDetails;
+
     private UserDetailsAdapter userDetailsAdapter;
     private RecyclerView user_details_recyclerview;
+    private GetViewModel getViewModel;
 
     public UserFragment() {
         // Required empty public constructor
@@ -78,6 +77,7 @@ public class UserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -91,48 +91,20 @@ public class UserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         user_details_recyclerview = view.findViewById(R.id.user_details_recyclerview);
-        user_details_recyclerview.setHasFixedSize(true);
-        user_details_recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        user_name = view.findViewById(R.id.user_name);
-        email = view.findViewById(R.id.email);
-        phone_number = view.findViewById(R.id.phone_number);
-        userDetails = new ArrayList<>();
-        s_user_name = new SharedPreferences_data(getContext()).getS_user_name();
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Users-Id");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        getViewModel.getUserListMutable().observe(getViewLifecycleOwner(), new Observer<List<UserDetailsList>>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //MyLog.e(TAG, "snap>>" + snapshot);
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                  /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());
-                  */  UserDetailsList userList = new UserDetailsList(
-                            datas.child("username").getValue().toString(),
-                            datas.child("email").getValue().toString(),
-                            datas.child("phone_number").getValue().toString()
-                    );
-                    userDetails.add(userList);
-                }
-
-                userDetailsAdapter=new UserDetailsAdapter(getContext(),userDetails);
+            public void onChanged(List<UserDetailsList> userDetailsLists) {
+                user_details_recyclerview.setHasFixedSize(true);
+                user_details_recyclerview.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                userDetailsAdapter=new UserDetailsAdapter(getContext(),userDetailsLists);
                 user_details_recyclerview.setAdapter(userDetailsAdapter);
-
-                /*String value = snapshot.getValue(String.class);
-                retrieve_data.setText(value);*/
-               /* user_name.setText(snapshot.child("username").getValue().toString());
-                email.setText(snapshot.child("email").getValue().toString());
-                phone_number.setText(snapshot.child("phone_number").getValue().toString());*/
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+
+
         return view;
     }
 }

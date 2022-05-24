@@ -20,7 +20,7 @@ import com.example.adm.Fragments.Control_Panel.Func.FuncList;
 import com.example.adm.Fragments.Control_Panel.Header.HeaderAdapter;
 import com.example.adm.Fragments.Control_Panel.Header.HeaderList;
 import com.example.adm.Fragments.Control_Panel.Item.ItemAdapter;
-import com.example.adm.Fragments.Control_Panel.Item.ItemList;
+import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
 import com.example.adm.Fragments.HomeFragment;
 import com.example.adm.R;
 import com.google.firebase.database.DataSnapshot;
@@ -56,7 +56,7 @@ public class Control_PanelFragment extends Fragment {
     private FuncAdapter funcAdapter;
     private RecyclerView recyclerView_item;
     private ItemAdapter itemAdapter;
-    private List<ItemList> itemList=new ArrayList<>();
+    private List<ItemArrayList> itemList=new ArrayList<>();
     private ImageView back_btn;
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
@@ -144,7 +144,7 @@ public class Control_PanelFragment extends Fragment {
                for(DataSnapshot dataSnapshot: snapshot.getChildren())
                {
                    itemList=new ArrayList<>();
-                   ItemList itemList1=new ItemList(
+                   ItemArrayList itemList1=new ItemArrayList(
                            dataSnapshot.getValue().toString()
                    );
                    itemList.add(itemList1);

@@ -8,20 +8,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.R;
+import com.example.adm.ViewModel.GetViewModel;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder> {
     private List<OrderLists> orderLists;
     private Context context;
-    private String TAG="OrderAdapters";
-    public OrderAdapters(Context context, List<OrderLists> orderLists) {
+    private GetViewModel getViewModel;
+    private String TAG = "OrderAdapters";
+
+    public OrderAdapters(Context context, List<OrderLists> orderLists, GetViewModel getViewModel) {
         this.orderLists = orderLists;
         this.context = context;
+        this.getViewModel = getViewModel;
     }
 
     @NonNull
@@ -37,10 +45,23 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     public void onBindViewHolder(@NonNull OrderAdapters.ViewHolder holder, int position) {
         final OrderLists orderLists1 = orderLists.get(position);
         holder.user_name.setText(orderLists1.getS_user_name());
-        holder.header.setText(orderLists1.getHeader());
         holder.func.setText(orderLists1.getFunc());
-       /* String[] arr=(orderLists1.getList()).split(" ");*/
-        holder.item_size.setText(String.valueOf(orderLists1.getSize()));
+        holder.header.setText(orderLists1.getHeader());
+        /* String[] arr=(orderLists1.getList()).split(" ");*/
+
+        /* recyclerView_order_list.setHasFixedSize(true);
+                recyclerView_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));*/
+        getViewModel.getS_mapMutable().observe((LifecycleOwner) context, new Observer<List<LinkedHashMap<String, List<UserItemList>>>>() {
+            @Override
+            public void onChanged(List<LinkedHashMap<String, List<UserItemList>>> linkedHashMaps) {
+                holder.itemList.setHasFixedSize(true);
+                holder.itemList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                UserItemListAdapters itemListAdapters = new UserItemListAdapters(context, orderLists1.getHeader(), orderLists1.getList(),getViewModel,linkedHashMaps);
+                holder.itemList.setAdapter(itemListAdapters);
+            }
+        });
+
+
         /*for(String i:arr) {
             MyLog.e(TAG,"deta>>"+i);
             holder.item.setText(i);
@@ -57,15 +78,16 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profile;
-        private TextView user_name, header, func,item_size;
+        private TextView user_name, func,header;
+        private RecyclerView itemList;
 
         public ViewHolder(View view) {
             super(view);
             profile = view.findViewById(R.id.profile);
             user_name = view.findViewById(R.id.user_name);
-            header = view.findViewById(R.id.header);
             func = view.findViewById(R.id.func);
-            item_size = view.findViewById(R.id.item_size);
+            header = view.findViewById(R.id.header);
+            itemList = view.findViewById(R.id.itemList);
 
 
         }

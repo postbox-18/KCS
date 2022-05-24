@@ -8,11 +8,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.R;
+import com.example.adm.ViewModel.GetViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,16 +41,13 @@ public class OrdersFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    //firebase database retrieve
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
+
     private String TAG = "OrdersFragment";
 
-    private List<OrderLists> orderLists;
     private OrderAdapters orderAdapters;
     private RecyclerView recyclerView_order_list;
-    private String header,func,s_user_name;
-    private String item="";
+
+    private GetViewModel getViewModel;
 
     public OrdersFragment() {
         // Required empty public constructor
@@ -74,6 +74,7 @@ public class OrdersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getViewModel=new ViewModelProvider(getActivity()).get(GetViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -85,11 +86,21 @@ public class OrdersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_orders, container, false);
+
         recyclerView_order_list = view.findViewById(R.id.recyclerview_order_list);
-        recyclerView_order_list.setHasFixedSize(true);
-        recyclerView_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        orderLists = new ArrayList<>();
-        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        getViewModel.getOrderListsMutable().observe(getViewLifecycleOwner(), new Observer<List<OrderLists>>() {
+            @Override
+            public void onChanged(List<OrderLists> orderLists) {
+                recyclerView_order_list.setHasFixedSize(true);
+                recyclerView_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                orderAdapters=new OrderAdapters(getContext(),orderLists,getViewModel);
+                recyclerView_order_list.setAdapter(orderAdapters);
+            }
+        });
+
+
+        /*firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -136,7 +147,7 @@ public class OrdersFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
         return view;
     }
 }
