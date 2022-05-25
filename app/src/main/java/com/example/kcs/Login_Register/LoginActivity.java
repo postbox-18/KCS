@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (CheckDeatils()) {
 
                 } else {
-                    //loadingDialog.dismiss();
+                    loadingDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Please check the values", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onChanged(Boolean aBoolean) {
                 //check details
                 if (!aBoolean) {
-                    //loadingDialog.dismiss();
+                    loadingDialog.dismiss();
                     AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
                     alert.setMessage("Something Went Problem Please Try Again Later");
                     alert.setTitle("Problem");
@@ -184,7 +184,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     Toast.LENGTH_LONG)
                                             .show();
 
-                                    //loadingDialog.dismiss();
+                                    loadingDialog.dismiss();
 
                                     if (remember_me.isChecked()) {
                                         MyLog.e(TAG, "logout>> remember me is checked");
@@ -206,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     Toast.LENGTH_LONG)
                                             .show();
 
-                                    //loadingDialog.dismiss();
+                                    loadingDialog.dismiss();
                                 }
 
 
@@ -257,24 +257,24 @@ public class LoginActivity extends AppCompatActivity {
 
         new SharedPreferences_data(getApplicationContext()).setEnter_password(s_password);
         new SharedPreferences_data(getApplicationContext()).setBoolen_check(String.valueOf(check_password));
-      /*  Intent intent = new Intent(LoginActivity.this,
+        Intent intent = new Intent(LoginActivity.this,
                 MainActivity.class);
-        startActivity(intent);*/
+        startActivity(intent);
 
     }
 
     private boolean CheckDeatils() {
         //check details
         if (!isValidEmail(s_email)) {
-            //loadingDialog.dismiss();
+            loadingDialog.dismiss();
             MyLog.e(TAG, "error>>e_email is not valid");
             email.setError("Please enter valid Email id");
         } else if (s_password.isEmpty()) {
-            //loadingDialog.dismiss();
+            loadingDialog.dismiss();
             MyLog.e(TAG, "error>>password is empty");
             password.setError("Please enter a password");
         } else if (s_password.length() < 7) {
-            //loadingDialog.dismiss();
+            loadingDialog.dismiss();
             MyLog.e(TAG, "error>>pass is <7");
             password.setError("Please enter a valid password");
         } else {
