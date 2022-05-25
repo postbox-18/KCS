@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderList;
 
 import com.example.kcs.R;
@@ -57,10 +58,11 @@ public class ItemFragment extends Fragment {
     private TextView header_title;
     private ImageView back_btn;
 
-    private String headerList_title;
+    private String headerList_title,func_title;
     private RecyclerView recyclerview_item;
     private List<ItemList> itemLists = new ArrayList<>();
     private List<CheckedList> checkedLists = new ArrayList<>();
+    private List<FunList> funLists = new ArrayList<>();
     private ItemListAdapater itemListAdapater;
     //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
@@ -129,6 +131,7 @@ public class ItemFragment extends Fragment {
             }
         });
 
+        //item lsit
         getViewModel.getItemHeaderMutable().observe(getViewLifecycleOwner(), new Observer<List<ItemList>>() {
             @Override
             public void onChanged(List<ItemList> itemLists1) {
@@ -140,6 +143,17 @@ public class ItemFragment extends Fragment {
                 itemListAdapater.notifyDataSetChanged();
             }
         });
+
+        //func title
+        getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                func_title=s;
+                MyLog.e(TAG,"title>>out"+func_title);
+            }
+        });
+
+        //checked list
         getViewModel.getCheckedList_Mutable().observe(getViewLifecycleOwner(), new Observer<List<CheckedList>>() {
             @Override
             public void onChanged(List<CheckedList> checkedLists1) {
@@ -149,7 +163,7 @@ public class ItemFragment extends Fragment {
                     public void onClick(View view) {
                         if(checkedLists.size()>0)
                         {
-                            GetOrderBtn(checkedLists);
+                            GetOrderBtn(checkedLists,func_title);
                         }
                         else
                         {
@@ -166,6 +180,7 @@ public class ItemFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 MyLog.e(TAG,"int>>btn clicked");
+                //fragment
                 getViewModel.getI_fragmentMutable().observe(getViewLifecycleOwner(), new Observer<Integer>() {
                     @Override
                     public void onChanged(Integer integer) {
@@ -187,9 +202,46 @@ public class ItemFragment extends Fragment {
         return view;
     }
 
-    private void GetOrderBtn(List<CheckedList> checkedLists) {
+    private void GetOrderBtn(List<CheckedList> checkedLists,String func_title) {
+
+        //get func list
+        getViewModel.getFunMutableList().observe(getViewLifecycleOwner(), new Observer<List<FunList>>() {
+            @Override
+            public void onChanged(List<FunList> funLists1) {
+                funLists=funLists1;
+                MyLog.e(TAG,"fun>>in"+funLists.size());
+            }
+        });
+
+        //fragment
+        getViewModel.getI_fragmentMutable().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+
+                MyLog.e(TAG,"int>>"+integer);
+                if(integer==1)
+                {
+                    MyLog.e(TAG,"title>>out"+func_title);
+                    SaveOrders(func_title);
+                }
+                else
+                {
+                    MyLog.e(TAG,"fun>>out"+funLists.size());
+                    showAlertDialog(funLists);
+
+                }
+
+            }
+        });
 
 
+        
+        
+        
+
+    }
+
+    private void SaveOrders(String func_title) {
         databaseReference = firebaseDatabase.getReference("Orders");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -198,7 +250,7 @@ public class ItemFragment extends Fragment {
 
                 for(int i=0;i<checkedLists.size();i++ ) {
                     //getFunc
-                    databaseReference.child(user_name).child("Function").child(headerList_title).child(String.valueOf(i)).setValue(checkedLists.get(i).getItemList());
+                    databaseReference.child(user_name).child(func_title).child(ItemFragment.this.headerList_title).child(String.valueOf(i)).setValue(checkedLists.get(i).getItemList());
                 }
 
 
@@ -212,25 +264,14 @@ public class ItemFragment extends Fragment {
                 Toast.makeText(getContext(), "Fail to add data " + error, Toast.LENGTH_SHORT).show();
             }
         });
-        
-        
-        
-        /*if(myViewModel.getFunList().getFun()==null)
-        {
-            showAlertDialog(checkedLists);
-        }
-        else
-        {
-            myViewModel.setI_value(1);
-        }*/
     }
 
-    private void showAlertDialog(List<CheckedList> checkedLists) {
+    private void showAlertDialog(List<FunList> funLists) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
         alertDialog.setTitle("Please select Function Type!");
-        String[] str=new String[checkedLists.size()];
-        for (int i = 0; i < checkedLists.size(); i++) {
-            str[i] = checkedLists.get(i).getItemList();
+        String[] str=new String[funLists.size()];
+        for (int i = 0; i < funLists.size(); i++) {
+            str[i] = funLists.get(i).getFun();
         }
         MyLog.e(TAG,"dialog>>"+str);
         //String[] items = {"java","android","Data Structures","HTML","CSS"};
@@ -238,32 +279,19 @@ public class ItemFragment extends Fragment {
         alertDialog.setMultiChoiceItems(str, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                switch (which) {
-                    case 0:
-                        if(isChecked)
-                            dialog.dismiss();
-                            //Toast.makeText(getContext(), "Clicked on java", Toast.LENGTH_LONG).show();
+                for (int i=0;i<funLists.size();i++)
+                {
+                    if (which==i)
+                    {
+                        getViewModel.setFunc_title(str[i]);
+                        dialog.dismiss();
+                        SaveOrders(str[i]);
                         break;
-                    case 1:
-                        if(isChecked)
-                            dialog.dismiss();
-                            //Toast.makeText(getContext(), "Clicked on android",Toast.LENGTH_LONG).show();
-                        break;
-                    case 2:
-                        if(isChecked)
-                            dialog.dismiss();
-                            //Toast.makeText(getContext(), "Clicked on Data Structures", Toast.LENGTH_LONG).show();
-                        break;
-                    case 3:
-                        if(isChecked)
-                            dialog.dismiss();
-                            //Toast.makeText(getContext(), "Clicked on HTML", Toast.LENGTH_LONG).show();
-                        break;
-                    case 4:
-                        if(isChecked)
-                            dialog.dismiss();
-                            //Toast.makeText(getContext(), "Clicked on CSS", Toast.LENGTH_LONG).show();
-                        break;
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
         });
