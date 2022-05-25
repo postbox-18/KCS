@@ -2,6 +2,7 @@ package com.example.kcs.Fragment.Items;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ import com.example.kcs.Fragment.Header.HeaderList;
 
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -110,8 +113,7 @@ public class ItemFragment extends Fragment {
         header_title = view.findViewById(R.id.header_title);
         recyclerview_item = view.findViewById(R.id.recyclerview_item);
         back_btn = view.findViewById(R.id.back_btn);
-        cancel_btn = view.findViewById(R.id.cancel_btn);
-        order_btn = view.findViewById(R.id.order_btn);
+
 
         firebaseDatabase = FirebaseDatabase.getInstance();
 
@@ -158,20 +160,33 @@ public class ItemFragment extends Fragment {
             @Override
             public void onChanged(List<CheckedList> checkedLists1) {
                 checkedLists=checkedLists1;
-                order_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(checkedLists.size()>0)
-                        {
-                            GetOrderBtn(checkedLists,func_title);
-                        }
-                        else
-                        {
-                            Toast.makeText(getContext(), "Empty List", Toast.LENGTH_SHORT).show();
-                        }
+                final Snackbar snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG);
+                View customSnackView = getLayoutInflater().inflate(R.layout.custom_snackbar_view, null);
+                snackbar.getView().setBackgroundColor(Color.TRANSPARENT);
+                Snackbar.SnackbarLayout snackbarLayout = (Snackbar.SnackbarLayout) snackbar.getView();
+                snackbarLayout.setPadding(0, 0, 0, 0);
+                cancel_btn = customSnackView.findViewById(R.id.cancel_btn);
+                order_btn = customSnackView.findViewById(R.id.order_btn);
+                snackbarLayout.addView(customSnackView, 0);
+                if(checkedLists.size()>0) {
+                    snackbar.show();
 
-                    }
-                });
+                    order_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (checkedLists.size() > 0) {
+                                GetOrderBtn(checkedLists, func_title);
+                            } else {
+                                Toast.makeText(getContext(), "Empty List", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+                }
+                else
+                {
+                    snackbar.dismiss();
+                }
             }
         });
 

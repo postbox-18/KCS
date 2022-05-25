@@ -5,9 +5,10 @@ pending
 
 1-alert check box to select the func
 2-save orders and place final orders
-3-bottom sheet to place an order
+3-snack bar to place an order
 4-click on order btn open new fragment and list the selected item to place an order
 5-search to find the item
 6-when check box is checked bottom sheet open
 7-My orders cancel my order or edit my order
+8-My orders view to see selected list
 
