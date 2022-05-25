@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps = new ArrayList<>();
     private List<UserItemList> userItemLists = new ArrayList<>();
     private UserItemListAdapters userItemListAdapters;
-    private String headerList_title,func_title;
+    private String headerList_title, func_title;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
 
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getFunc_title_Mutable().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                func_title=s;
+                func_title = s;
             }
         });
 
@@ -103,9 +104,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerview_selected_count.setLayoutManager(new LinearLayoutManager(getApplication(), LinearLayoutManager.HORIZONTAL, false));
 
 
-
-
-
         //get hash map checked list
         getViewModel.getCheck_s_mapMutable().observe(this, new Observer<List<LinkedHashMap<String, List<CheckedList>>>>() {
             @Override
@@ -121,15 +119,12 @@ public class MainActivity extends AppCompatActivity {
                 );
                 userItemLists.add(userItemList);
                 getViewModel.setUserItemLists(userItemLists);
-                if(userItemList.getList_size()>0)
-                {
+                if (userItemList.getList_size() > 0) {
                     snackbar.show();
-                }
-                else
-                {
+                } else {
                     snackbar.dismiss();
                 }
-               // MyLog.e(TAG, "items>>userList>>" + new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
+                // MyLog.e(TAG, "items>>userList>>" + new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
 
             }
         });
@@ -150,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<CheckedList> checkedLists1) {
                 checkedLists = checkedLists1;
-
 
 
                 snackbar.show();
@@ -181,42 +175,78 @@ public class MainActivity extends AppCompatActivity {
                 MyLog.e(TAG, "integer>>" + integer);
                 Fragment fragment = new Fragment();
                 FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction;
+                fragmentTransaction = fragmentManager.beginTransaction();
 
+                String fragmentTAg = "";
 
                 switch (integer) {
                     case 0:
                         fragment = new HomeFragment();
-                        fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+
+                        fragmentTAg = "HomeFragment";
                         break;
                     case 1:
                         //MyLog.e(TAG, "Data>>fun list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getHeaderLists()));
                         fragment = new HeaderFragment();
-                        fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+
+                        fragmentTAg = "HeaderFragment";
                         break;
                     case 2:
                         //MyLog.e(TAG, "Data>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getItemLists()));
                         fragment = new ItemFragment();
-                        fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+
+                        fragmentTAg = "ItemFragment";
                         break;
                     case 3:
                         fragment = new ProfileFragment();
-                        fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+
+                        fragmentTAg = "ProfileFragment";
                         break;
                     case 4:
                         fragment = new MyOrdersFragment();
-                        fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+
+                        fragmentTAg = "MyOrdersFragment";
                         break;
                     default:
                         fragment = new HomeFragment();
-                        fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+
+                        fragmentTAg = "HomeFragment";
                         break;
 
 
                 }
-
+                fragmentTransaction.replace(R.id.Fragment, fragment);
+                fragmentTransaction.addToBackStack(fragmentTAg);
+                fragmentTransaction.commit();
             }
         });
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        /*if (supportFragmentManager.backStackEntryCount > 0) {
+///val done=supportFragmentManager.popBackStackImmediate()
+MyLog.i(TAG, "onBackPressedAct:onBackPressed pop:")
+super.onBackPressed()
+} else {
+
+//snack
+
+}*/
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            ///val done=supportFragmentManager.popBackStackImmediate()
+            MyLog.i(TAG, "onBackPressedAct:onBackPressed pop:");
+            //super.onBackPressed();
+            getSupportFragmentManager().popBackStackImmediate();
+        } else {
+            super.onBackPressed();
+            MyLog.i(TAG, "onBackPressedAct:onBackPressed in:");
+            //snack
+
+        }
 
     }
 
@@ -250,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
     private void SaveOrders(String func_title) {
         databaseReference = firebaseDatabase.getReference("Orders");
         databaseReference.addValueEventListener(new ValueEventListener() {
