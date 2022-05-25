@@ -112,10 +112,10 @@ public class LoginActivity extends AppCompatActivity {
                 s_email = email.getText().toString();
                 s_password = password.getText().toString();
                 if (CheckDeatils()) {
-
-                }
+                    
+                } 
                 else {
-                    //loadingDialog.dismiss();
+                    loadingDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Please check the values", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                 else {
                     Auth();
                 }
-
+                
             }
         });
     }
@@ -179,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     Toast.LENGTH_LONG)
                                             .show();
 
-                                    //loadingDialog.dismiss();
+                                    loadingDialog.dismiss();
 
                                     if(remember_me.isChecked())
                                     {
@@ -206,7 +206,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     Toast.LENGTH_LONG)
                                             .show();
 
-                                    //loadingDialog.dismiss();
+                                    loadingDialog.dismiss();
                                 }
 
 
@@ -283,7 +283,7 @@ public class LoginActivity extends AppCompatActivity {
         else
         {
             MyLog.e(TAG, "error>>success");
-            //loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
+            loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
             getViewModel.setEmail(s_email);
             return true;
         }

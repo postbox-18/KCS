@@ -117,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (CheckDetails()) {
 
                 } else {
-                    //loadingDialog.dismiss();
+                    loadingDialog.dismiss();
                     Toast.makeText(RegisterActivity.this, "Check the Details", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -169,7 +169,7 @@ public class RegisterActivity extends AppCompatActivity {
                                             Toast.LENGTH_LONG)
                                     .show();
 
-                            //loadingDialog.dismiss();
+                            loadingDialog.dismiss();
                             databaseReference = firebaseDatabase.getReference("Admin");
                             databaseReference.addValueEventListener(new ValueEventListener() {
                                 @Override
@@ -198,7 +198,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     .show();
 
                             // hide the progress bar
-                            //loadingDialog.dismiss();
+                            loadingDialog.dismiss();
                         }
                     }
                 });
@@ -251,7 +251,7 @@ public class RegisterActivity extends AppCompatActivity {
         }*/
         else {
             //shared-preferences
-            //loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
+            loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
             new SharedPreferences_data(this).setS_user_name(s_user_name);
             new SharedPreferences_data(this).setS_phone_number(s_phone_number);
             new SharedPreferences_data(this).setS_password(s_password);

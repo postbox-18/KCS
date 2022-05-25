@@ -53,7 +53,6 @@
                         android:id="@+id/itemList"
                         android:layout_width="match_parent"
                         tools:itemCount="2"
-
                         tools:listitem="@layout/list_cardview"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
