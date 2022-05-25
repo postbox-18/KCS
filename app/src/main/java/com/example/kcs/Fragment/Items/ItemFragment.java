@@ -165,15 +165,23 @@ public class ItemFragment extends Fragment {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getViewModel.setI_value(0);
-               /* if(myViewModel.getFunList().getFun()==null)
-                {
-                    myViewModel.setI_value(0);
-                }
-                else
-                {
-                    myViewModel.setI_value(1);
-                }*/
+                MyLog.e(TAG,"int>>btn clicked");
+                getViewModel.getI_fragmentMutable().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+                    @Override
+                    public void onChanged(Integer integer) {
+                        MyLog.e(TAG,"int>>"+integer);
+                        if(integer==1)
+                        {
+                            getViewModel.setI_value(1);
+                        }
+                        else
+                        {
+                            getViewModel.setI_value(0);
+                        }
+
+                    }
+                });
+
             }
         });
         return view;

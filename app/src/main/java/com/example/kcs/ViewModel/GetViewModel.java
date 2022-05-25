@@ -73,9 +73,15 @@ public class GetViewModel extends AndroidViewModel {
     private String func_title;
     private MutableLiveData<String> func_title_Mutable=new MutableLiveData<>();
 
-    //fragment
+    //Fragment to pass
     private Integer i_value;
     private MutableLiveData<Integer> value = new MutableLiveData<>();
+
+    //item Fragment
+    private Integer i_fragment;
+    private MutableLiveData<Integer> i_fragmentMutable = new MutableLiveData<>();
+
+
 
     private String TAG="ViewClassModel";
 
@@ -91,6 +97,15 @@ public class GetViewModel extends AndroidViewModel {
 
 
 
+    }
+
+    public MutableLiveData<Integer> getI_fragmentMutable() {
+        return i_fragmentMutable;
+    }
+
+    public void setI_fragment(Integer i_fragment) {
+        this.i_fragment = i_fragment;
+        this.i_fragmentMutable.postValue(i_fragment);
     }
 
     public MutableLiveData<List<ItemList>> getItemMutable() {

@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         //MyLog.e(TAG, "Data>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getItemLists()));
-
                         fragment = new ItemFragment();
                         fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
                         break;

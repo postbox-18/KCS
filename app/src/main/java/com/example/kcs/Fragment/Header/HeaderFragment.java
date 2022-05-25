@@ -123,6 +123,7 @@ public class HeaderFragment extends Fragment {
                 recyclerview_header.setHasFixedSize(true);
                 recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                 headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,linkedHashMaps);
+                getViewModel.setI_fragment(1);
                 recyclerview_header.setAdapter(headerAdapter);
             }
         });

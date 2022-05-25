@@ -200,6 +200,7 @@ public class HomeFragment extends Fragment {
                 recyclerview_header.setHasFixedSize(true);
                 recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                 headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,linkedHashMaps);
+                getViewModel.setI_fragment(0);
                 recyclerview_header.setAdapter(headerAdapter);
 
                 //MyLog.e(TAG, "model>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerLists));
