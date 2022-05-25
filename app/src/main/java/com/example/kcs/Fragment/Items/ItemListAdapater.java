@@ -44,6 +44,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         this.context=context;
         this.itemLists=itemLists;
         this.getViewModel=getViewModel;
+        this.header=header;
         //cartViewModel = ViewModelProviders.of((FragmentActivity) context).get(CartViewModel.class);
        //myViewModel= new ViewModelProvider((FragmentActivity)context).get(MyViewModel.class);
 
@@ -77,7 +78,6 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         );
                         checkedLists.add(checkedLists1);
                         f_map.put(header,checkedLists);
-
                         getViewModel.setCheckedLists(checkedLists);
                         //notifyDataSetChanged();
                     } else {
@@ -87,6 +87,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         //MyLog.e(TAG, "Check>>header itemadapter:::else>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     }
                     s_map.add(f_map);
+                    getViewModel.setCheck_s_map(s_map);
                     //MyLog.e(TAG, "hash map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
 
                     //MyLog.e(TAG, "Check>>header itemadapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));

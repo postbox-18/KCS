@@ -3,7 +3,7 @@ https://www.techotopia.com/index.php/Working_with_Firebase_Realtime_Database_Lis
 pending
 1-alert check box to select the func (OK and CANCEL btn)
 2-save orders and place final orders
-3-snack bar to place an order(EVERY PAGE)
+3-snack bar recyclerview number of headers list
 4-click on(VIEW CART) order btn open new fragment and list the selected item to place an order
 5-search to find the item
 7-My orders cancel my order or edit my order
@@ -13,3 +13,4 @@ finished
 1-alert check box to select the func
 3-snack bar to place an order
 6-when snack bar is checked bottom sheet open
+3-snack bar to place an order(EVERY PAGE)

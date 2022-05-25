@@ -13,6 +13,7 @@ import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemList;
+import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,11 +44,15 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<CheckedList>> checkedList_Mutable=new MutableLiveData<>();
     private List<CheckedList> checkedLists=new ArrayList<>();
 
+    //Linked HashMap item list
+    private List<LinkedHashMap<String,List<CheckedList>>> check_s_map=new ArrayList<>();
+    private MutableLiveData<List<LinkedHashMap<String,List<CheckedList>>>> check_s_mapMutable=new MutableLiveData<>();
+
     //item list-get header
     private MutableLiveData<List<ItemList>> itemHeaderMutable=new MutableLiveData<>();
     private List<ItemList> itemHeaderLists=new ArrayList<>();
 
-    //Linked HashMap
+    //Linked HashMap item list
     private LinkedHashMap<String,List<ItemList>> f_map=new LinkedHashMap<>();
     private List<LinkedHashMap<String,List<ItemList>>> s_map=new ArrayList<>();
     private MutableLiveData<List<LinkedHashMap<String,List<ItemList>>>> s_mapMutable=new MutableLiveData<>();
@@ -81,7 +86,9 @@ public class GetViewModel extends AndroidViewModel {
     private Integer i_fragment;
     private MutableLiveData<Integer> i_fragmentMutable = new MutableLiveData<>();
 
-
+    //user selected list
+    private List<UserItemList> userItemLists=new ArrayList<>();
+    private MutableLiveData<List<UserItemList>> userItemListsMutableLiveData=new MutableLiveData<>();
 
     private String TAG="ViewClassModel";
 
@@ -97,6 +104,24 @@ public class GetViewModel extends AndroidViewModel {
 
 
 
+    }
+
+    public void setUserItemLists(List<UserItemList> userItemLists) {
+        this.userItemLists = userItemLists;
+        this.userItemListsMutableLiveData.postValue(userItemLists);
+    }
+
+    public MutableLiveData<List<UserItemList>> getUserItemListsMutableLiveData() {
+        return userItemListsMutableLiveData;
+    }
+
+    public void setCheck_s_map(List<LinkedHashMap<String, List<CheckedList>>> check_s_map) {
+        this.check_s_map = check_s_map;
+        this.check_s_mapMutable.postValue(check_s_map);
+    }
+
+    public MutableLiveData<List<LinkedHashMap<String, List<CheckedList>>>> getCheck_s_mapMutable() {
+        return check_s_mapMutable;
     }
 
     public MutableLiveData<Integer> getI_fragmentMutable() {

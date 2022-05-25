@@ -45,10 +45,12 @@
         <entry key="app/src/main/res/layout/header_layout.xml" value="0.1" />
         <entry key="app/src/main/res/layout/img_activity.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/item_checkbox_list.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/list_cardview.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/myorder_cardview.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/nav_header_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/nav_header_home__sample.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/search_bar.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/select_item_count.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/topic_activity.xml" value="0.19375" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.19375" />
         <entry key="app/src/main/res/menu/home.xml" value="0.22" />
