@@ -71,7 +71,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
        // MyLog.e(TAG, "Data>>header itemadapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemList1));
 
         //check if checked list item selected
-        MyLog.e(TAG, "hashmap>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
+       // MyLog.e(TAG, "hashmap>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
         if(selected_s_map.size()>0) {
             for(int k=0;k<selected_s_map.size();k++) {
                 selected_checkedLists = selected_s_map.get(k).get(header);
@@ -121,7 +121,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                     }
                     selected_s_map.add(f_map);
                     getViewModel.setCheck_s_map(selected_s_map);
-                    MyLog.e(TAG, "hashmap>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
+                    //MyLog.e(TAG, "hashmap>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
 
                     //MyLog.e(TAG, "Check>>header itemadapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     Gson gson = new Gson();

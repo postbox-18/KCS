@@ -118,15 +118,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps1) {
                 linkedHashMaps = linkedHashMaps1;
-                userItemLists = new ArrayList<>();
                 //MyLog.e(TAG, "s_map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
                 List<CheckedList> list = new ArrayList<>();
-                MyLog.e(TAG, "maps>>s_map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
+               // MyLog.e(TAG, "maps>>s_map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
                 MyLog.e(TAG, "maps>>title>>" +headerList_title);
+                MyLog.e(TAG,"chs>>before"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
                 for (int k = 0; k < linkedHashMaps.size(); k++) {
                     list = linkedHashMaps.get(k).get(headerList_title);
                     if (list != null) {
-                        MyLog.e(TAG, "maps>>checked list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(list));
+                        //MyLog.e(TAG, "maps>>checked list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(list));
                         UserItemList userItemList = new UserItemList(
                                 headerList_title,
                                 list.size()
@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         MyLog.e(TAG, "maps>>checked list is null");
                     }
                 }
+                MyLog.e(TAG,"chs>>after"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
 
 
                 }
