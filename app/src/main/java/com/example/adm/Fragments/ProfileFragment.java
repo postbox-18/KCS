@@ -11,12 +11,14 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SharedPreferences_data;
 import com.example.adm.Fragments.Control_Panel.Control_PanelFragment;
 import com.example.adm.Login_Register.LoginActivity;
 import com.example.adm.R;
+import com.example.adm.ViewModel.GetViewModel;
 
 
 /**
@@ -42,6 +44,7 @@ public class ProfileFragment extends Fragment {
     private CardView log_out,control_panel_card;
     private ImageView back_btn;
 
+    private GetViewModel getViewModel;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -78,6 +81,7 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_profile, container, false);
+        getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
 
         //id's
         pic=view.findViewById(R.id.pic);
@@ -108,17 +112,13 @@ public class ProfileFragment extends Fragment {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment=new HomeFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+                getViewModel.setI_value(0);
             }
         });
         control_panel_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment=new Control_PanelFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+               getViewModel.setI_value(1);
             }
         });
 

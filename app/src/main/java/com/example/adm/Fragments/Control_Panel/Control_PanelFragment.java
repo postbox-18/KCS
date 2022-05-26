@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +24,7 @@ import com.example.adm.Fragments.Control_Panel.Item.ItemAdapter;
 import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
 import com.example.adm.Fragments.HomeFragment;
 import com.example.adm.R;
+import com.example.adm.ViewModel.GetViewModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,6 +63,7 @@ public class Control_PanelFragment extends Fragment {
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private GetViewModel getViewModel;
     private String TAG="Control_PanelFragment";
     public Control_PanelFragment() {
         // Required empty public constructor
@@ -98,6 +101,7 @@ public class Control_PanelFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_control__panel, container, false);
+        getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
 
         back_btn=view.findViewById(R.id.back_btn);
 
@@ -124,9 +128,7 @@ public class Control_PanelFragment extends Fragment {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment=new HomeFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+               getViewModel.setI_value(0);
             }
         });
         return view;

@@ -8,10 +8,12 @@ import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.adm.MyFragments_Adapter;
 import com.example.adm.R;
+import com.example.adm.ViewModel.GetViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 
@@ -35,7 +37,7 @@ public class HomeFragment extends Fragment {
     //primary field's
     private TabLayout tabLayout;
     private ViewPager viewPager;
-
+    private GetViewModel getViewModel;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -72,6 +74,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_home, container, false);
+        getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
+
         //id's
         profile=view.findViewById(R.id.profile);
         tabLayout= (TabLayout) view.findViewById(R.id.tabLayout);
@@ -107,9 +111,7 @@ public class HomeFragment extends Fragment {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment=new ProfileFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
+               getViewModel.setI_value(2);
             }
         });
         return view;
