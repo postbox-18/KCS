@@ -22,6 +22,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderFragment;
+import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemFragment;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private String headerList_title, func_title;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
+    private List<HeaderList> headerLists = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,13 @@ public class MainActivity extends AppCompatActivity {
                 func_title = s;
             }
         });
+        //get header list
+        getViewModel.getHeaderListMutableList().observe(this, new Observer<List<HeaderList>>() {
+            @Override
+            public void onChanged(List<HeaderList> headerLists1) {
+                headerLists=headerLists1;
+            }
+        });
 
         //snack bar
         final Snackbar snackbar = Snackbar.make(parentLayout, "", Snackbar.LENGTH_INDEFINITE);
@@ -112,21 +121,33 @@ public class MainActivity extends AppCompatActivity {
                 userItemLists = new ArrayList<>();
                 //MyLog.e(TAG, "s_map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
                 List<CheckedList> list = new ArrayList<>();
-                list = linkedHashMaps.get(0).get(headerList_title);
-                UserItemList userItemList = new UserItemList(
-                        headerList_title,
-                        list.size()
-                );
-                userItemLists.add(userItemList);
-                getViewModel.setUserItemLists(userItemLists);
-                if (userItemList.getList_size() > 0) {
-                    snackbar.show();
-                } else {
-                    snackbar.dismiss();
+                MyLog.e(TAG, "maps>>s_map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
+                MyLog.e(TAG, "maps>>title>>" +headerList_title);
+                for (int k = 0; k < linkedHashMaps.size(); k++) {
+                    list = linkedHashMaps.get(k).get(headerList_title);
+                    if (list != null) {
+                        MyLog.e(TAG, "maps>>checked list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(list));
+                        UserItemList userItemList = new UserItemList(
+                                headerList_title,
+                                list.size()
+                        );
+                        userItemLists.add(userItemList);
+                        getViewModel.setUserItemLists(userItemLists);
+                        if (userItemList.getList_size() > 0) {
+                            snackbar.show();
+                        } else {
+                            snackbar.dismiss();
+                        }
+                    } else {
+                        MyLog.e(TAG, "maps>>checked list is null");
+                    }
+                }
+
+
                 }
                 // MyLog.e(TAG, "items>>userList>>" + new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
 
-            }
+
         });
 
         //get user-item list
