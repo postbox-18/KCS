@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
 
 import java.util.List;
@@ -24,15 +25,13 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
     private Context context;
     private List<FunList>funLists;
     private String TAG="FunAdapter";
-    FunAdapter.GetFunFragment getFragment;
-    public interface GetFunFragment
-    {
-        void getfunFragment(FunList funList1);
-    }
-    public FunAdapter(Context context, List<FunList> funLists, GetFunFragment getFragment) {
+
+    private GetViewModel getViewModel;
+
+    public FunAdapter(Context context, List<FunList> funLists, GetViewModel getViewModel) {
         this.context=context;
         this.funLists=funLists;
-        this.getFragment=getFragment;
+        this.getViewModel=getViewModel;
 
     }
 
@@ -53,7 +52,7 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
         holder.fun_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragment.getfunFragment(funList1);
+                getViewModel.getfunFragment(funList1.getFun());
             }
         });
     }

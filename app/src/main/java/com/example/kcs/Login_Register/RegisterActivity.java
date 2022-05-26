@@ -1,7 +1,6 @@
 package com.example.kcs.Login_Register;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,16 +14,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
+
 import com.example.kcs.Classes.LoadingDialogs;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -61,11 +65,13 @@ public class RegisterActivity extends AppCompatActivity {
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private GetViewModel getViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
         //id's
         user_name = findViewById(R.id.user_name);
         email = findViewById(R.id.email);
@@ -110,50 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 //check the details
                 if (CheckDetails()) {
-                    mAuth.createUserWithEmailAndPassword(s_email, s_password)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(getApplicationContext(),
-                                                "Registration successful!",
-                                                Toast.LENGTH_LONG)
-                                                .show();
-
-                                        //loadingDialog.dismiss();
-                                        databaseReference = firebaseDatabase.getReference("Users-Id");
-                                        databaseReference.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                MyLog.e(TAG, "snap>>" + snapshot);
-                                                databaseReference.child(s_phone_number).child("email").setValue(s_email);
-                                                databaseReference.child(s_phone_number).child("phone_number").setValue(s_phone_number);
-                                                databaseReference.child(s_phone_number).child("username").setValue(s_user_name);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-                                                Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                        //Next Screen Login
-                                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                    } else {
-
-                                        // Registration failed
-                                        Toast.makeText(
-                                                getApplicationContext(),
-                                                "Registration failed!!"
-                                                        + " Please try again later",
-                                                Toast.LENGTH_LONG)
-                                                .show();
-
-                                        // hide the progress bar
-                                        //loadingDialog.dismiss();
-                                    }
-                                }
-                            });
                 } else {
                     //loadingDialog.dismiss();
                     Toast.makeText(RegisterActivity.this, "Check the Details", Toast.LENGTH_SHORT).show();
@@ -167,7 +130,79 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             }
         });
+        getViewModel.getEmailMutable().observe(RegisterActivity.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                //check details
+                if (!aBoolean)
+                {
+                    AlertDialog.Builder alert =new AlertDialog.Builder(RegisterActivity.this);
+                    alert.setMessage("Something Went Problem Please Try Again Later");
+                    alert.setTitle("Problem");
+                    alert.setCancelable(false);
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @SuppressLint("NotifyDataSetChanged")
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alertDialog=alert.create();
+                    alertDialog.show();
+                }
+                else {
+                    Auth();
+                }
 
+            }
+        });
+    }
+
+    private void Auth() {
+        mAuth.createUserWithEmailAndPassword(s_email, s_password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(),
+                                            "Registration successful!",
+                                            Toast.LENGTH_LONG)
+                                    .show();
+
+                            //loadingDialog.dismiss();
+                            databaseReference = firebaseDatabase.getReference("Admin");
+                            databaseReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    MyLog.e(TAG, "snap>>" + snapshot);
+                                    databaseReference.child(s_phone_number).child("email").setValue(s_email);
+                                    databaseReference.child(s_phone_number).child("phone_number").setValue(s_phone_number);
+                                    databaseReference.child(s_phone_number).child("username").setValue(s_user_name);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            //Next Screen Login
+                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        } else {
+
+                            // Registration failed
+                            Toast.makeText(
+                                            getApplicationContext(),
+                                            "Registration failed!!"
+                                                    + " Please try again later",
+                                            Toast.LENGTH_LONG)
+                                    .show();
+
+                            // hide the progress bar
+                            //loadingDialog.dismiss();
+                        }
+                    }
+                });
     }
 
     private boolean CheckDetails() {
@@ -199,7 +234,7 @@ public class RegisterActivity extends AppCompatActivity {
             password.setError("Please enter a password");
             re_password.setError("Please enter a password");
         }
-        else if(currentUser!=null)
+        /*else if(currentUser!=null)
         {
             AlertDialog.Builder alert =new AlertDialog.Builder(this);
             alert.setMessage("This id is Already Login");
@@ -214,7 +249,7 @@ public class RegisterActivity extends AppCompatActivity {
             });
             AlertDialog alertDialog=alert.create();
             alertDialog.show();
-        }
+        }*/
         else {
             //shared-preferences
             //loadingDialog.show(getSupportFragmentManager(),"Loading dailog");

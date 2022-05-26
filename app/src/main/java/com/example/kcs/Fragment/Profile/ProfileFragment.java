@@ -18,8 +18,8 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Login_Register.LoginActivity;
-import com.example.kcs.MyViewModel;
 import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +44,7 @@ public class ProfileFragment extends Fragment {
     private CardView log_out;
     private ImageView back_btn;
     private CardView my_orders_card;
-    private MyViewModel myViewModel;
+    private GetViewModel getViewModel;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -70,7 +70,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myViewModel = new ViewModelProvider(getActivity()).get(MyViewModel.class);
+        getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -111,7 +111,7 @@ public class ProfileFragment extends Fragment {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myViewModel.setI_value(0);
+                getViewModel.setI_value(0);
                /* Fragment fragment=new HomeFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/
@@ -120,7 +120,7 @@ public class ProfileFragment extends Fragment {
         my_orders_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myViewModel.setI_value(4);
+                getViewModel.setI_value(4);
             }
         });
 
