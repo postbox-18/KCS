@@ -74,6 +74,7 @@ public class ItemFragment extends Fragment {
     private ItemListAdapater itemListAdapater;
     //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
+    private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps=new ArrayList<>();
 
     private String TAG = "ItemFragment";
 
@@ -129,6 +130,17 @@ public class ItemFragment extends Fragment {
             }
         });*/
 
+
+        //get Checked list hash map
+        getViewModel.getCheck_s_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<CheckedList>>>>() {
+            @Override
+            public void onChanged(List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps1) {
+                linkedHashMaps=linkedHashMaps1;
+
+            }
+        });
+
+
         //get view model data
         getViewModel.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -145,7 +157,7 @@ public class ItemFragment extends Fragment {
                 itemLists = itemLists1;
                 recyclerview_item.setHasFixedSize(true);
                 recyclerview_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                itemListAdapater = new ItemListAdapater(getContext(), itemLists, headerList_title, getViewModel);
+                itemListAdapater = new ItemListAdapater(getContext(), itemLists, headerList_title, getViewModel,linkedHashMaps);
                 recyclerview_item.setAdapter(itemListAdapater);
                 itemListAdapater.notifyDataSetChanged();
             }

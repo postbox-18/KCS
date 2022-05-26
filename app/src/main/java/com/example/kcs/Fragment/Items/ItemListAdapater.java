@@ -29,22 +29,25 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
     private Context context;
     private List<ItemList> itemLists;
     private List<CheckedList> checkedLists=new ArrayList<>();
+    private List<CheckedList> selected_checkedLists=new ArrayList<>();
     private String TAG="ItemListAdapater";
     //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
     private LinkedHashMap<String,List<CheckedList>> f_map=new LinkedHashMap<>();
     private List<LinkedHashMap<String,List<CheckedList>>> s_map=new ArrayList<>();
+    private List<LinkedHashMap<String,List<CheckedList>>> selected_s_map=new ArrayList<>();
     private String header;
     ItemListAdapater.Unchecked unchecked;
 
     public interface Unchecked {
         void getUnchecked(String item);
     }
-    public ItemListAdapater(Context context, List<ItemList> itemLists, String header,GetViewModel getViewModel) {
+    public ItemListAdapater(Context context, List<ItemList> itemLists, String header, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps) {
         this.context=context;
         this.itemLists=itemLists;
         this.getViewModel=getViewModel;
         this.header=header;
+        this.selected_s_map=linkedHashMaps;
         //cartViewModel = ViewModelProviders.of((FragmentActivity) context).get(CartViewModel.class);
        //myViewModel= new ViewModelProvider((FragmentActivity)context).get(MyViewModel.class);
 
@@ -66,6 +69,33 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         //img update soon
         //holder.header_img.setText(funList1.getUsername());
        // MyLog.e(TAG, "Data>>header itemadapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemList1));
+
+        //check if checked list item selected
+        if(selected_s_map.size()>0) {
+            selected_checkedLists = selected_s_map.get(0).get(header);
+            if(selected_checkedLists!=null) {
+                for (int i = 0; i < selected_checkedLists.size(); i++) {
+                    final CheckedList selected_checkedLists1 = selected_checkedLists.get(i);
+                   /* MyLog.e(TAG, "checked>>" + selected_checkedLists1.getPosition());
+                    MyLog.e(TAG, "checked>>" + position);*/
+                    if (selected_checkedLists1.getPosition() == position) {
+                        //MyLog.e(TAG, "checked>>" + selected_checkedLists1.getItemList());
+                        holder.item_check.setChecked(true);
+
+                    }
+                }
+            }
+            else
+            {
+                MyLog.e(TAG, "checked>> selected size is null>>");
+            }
+        }
+        else
+        {
+            MyLog.e(TAG, "checked>>selected  map size is null>>");
+        }
+
+
         holder.item_check.setText(itemList1.getItem());
         holder.item_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
