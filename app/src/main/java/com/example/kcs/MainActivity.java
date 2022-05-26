@@ -2,7 +2,7 @@ package com.example.kcs;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,6 +28,7 @@ import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemFragment;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemListAdapters;
+import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Profile.ProfileFragment;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     //snack bar
     private RecyclerView recyclerview_selected_count;
-    private AppCompatButton order_btn, cancel_btn;
+    //private AppCompatButton order_btn, cancel_btn;
     private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps = new ArrayList<>();
     private List<UserItemList> userItemLists = new ArrayList<>();
     private UserItemListAdapters userItemListAdapters;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
+    private CardView view_cart_cardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +106,11 @@ public class MainActivity extends AppCompatActivity {
         Snackbar.SnackbarLayout snackbarLayout = (Snackbar.SnackbarLayout) snackbar.getView();
         snackbarLayout.addView(customSnackView, 0);
         snackbarLayout.setPadding(0, 0, 0, 0);
-        cancel_btn = customSnackView.findViewById(R.id.cancel_btn);
-        order_btn = customSnackView.findViewById(R.id.order_btn);
+
+        /*cancel_btn = customSnackView.findViewById(R.id.cancel_btn);
+        order_btn = customSnackView.findViewById(R.id.order_btn);*/
+
+        view_cart_cardView = customSnackView.findViewById(R.id.view_cart_cardView);
         recyclerview_selected_count = customSnackView.findViewById(R.id.recyclerview_selected_count);
 
 
@@ -171,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
                 snackbar.show();
                 //order btn
-                order_btn.setOnClickListener(new View.OnClickListener() {
+               /* order_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (checkedLists.size() > 0) {
@@ -180,6 +185,15 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(MainActivity.this, "Empty List", Toast.LENGTH_SHORT).show();
                         }
 
+                    }
+                });*/
+
+                //View Cart Btn
+                view_cart_cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        snackbar.dismiss();
+                        getViewModel.setI_value(5);
                     }
                 });
 
@@ -229,6 +243,11 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new MyOrdersFragment();
 
                         fragmentTAg = "MyOrdersFragment";
+                        break;
+                    case 5:
+                        fragment = new PlaceOrderFragment();
+
+                        fragmentTAg = "OrderFragment";
                         break;
                     default:
                         fragment = new HomeFragment();
