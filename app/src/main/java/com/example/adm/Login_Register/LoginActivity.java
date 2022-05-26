@@ -36,7 +36,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.GsonBuilder;
 
 public class LoginActivity extends AppCompatActivity {
     //primary field
@@ -45,23 +44,24 @@ public class LoginActivity extends AppCompatActivity {
     private AppCompatButton login_btn;
     private TextView no_account;
     private String s_email, s_password;
-    private String TAG="LoginActivity";
+    private String TAG = "LoginActivity";
     private CheckBox remember_me;
-    private boolean check_password=false;
-    public boolean check_email=false;
+    private boolean check_password = false;
+    private boolean check_email = false;
     private String s_check_box;
     //firebase auth
     private FirebaseAuth mAuth;
     //Lottie anim
     private LottieAnimationView lottie_loading;
     //anim
-    private Animation slide_down_anim,slide_up_anim,fade_in_anim;
-    private ConstraintLayout bg_banner,head_layout;
-    private LoadingDialogs loadingDialog=new LoadingDialogs();
+    private Animation slide_down_anim, slide_up_anim, fade_in_anim;
+    private ConstraintLayout bg_banner, head_layout;
+    private LoadingDialogs loadingDialog = new LoadingDialogs();
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private GetViewModel getViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,15 +83,15 @@ public class LoginActivity extends AppCompatActivity {
 
         Top_Bg();
         //checkBox remember me
-        s_check_box=new SharedPreferences_data(LoginActivity.this).getBoolen_check();
-        if(s_check_box!=null) {
+        s_check_box = new SharedPreferences_data(LoginActivity.this).getBoolen_check();
+        if (s_check_box != null) {
             if (s_check_box.equals("true")) {
                 MyLog.e(TAG, "logout>>Check condition>>" + s_check_box);
                 login();
             } else if (s_check_box.equals("false")) {
                 MyLog.e(TAG, "logout>>Check is condition>>" + s_check_box);
                 SharedPreferences_data.logout_User();
-                
+
             }
         }
 
@@ -111,10 +111,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 s_email = email.getText().toString();
                 s_password = password.getText().toString();
+                loadingDialog.show(getSupportFragmentManager(), "Loading dailog");
                 if (CheckDeatils()) {
-                    
-                } 
-                else {
+
+                } else {
                     loadingDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Please check the values", Toast.LENGTH_SHORT).show();
                 }
@@ -131,9 +131,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onChanged(Boolean aBoolean) {
                 //check details
-                if (!aBoolean)
-                {
-                    AlertDialog.Builder alert =new AlertDialog.Builder(LoginActivity.this);
+                if (!aBoolean) {
+                    loadingDialog.dismiss();
+                    AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
                     alert.setMessage("Something Went Problem Please Try Again Later");
                     alert.setTitle("Problem");
                     alert.setCancelable(false);
@@ -144,15 +144,16 @@ public class LoginActivity extends AppCompatActivity {
                             dialog.cancel();
                         }
                     });
-                    AlertDialog alertDialog=alert.create();
+                    AlertDialog alertDialog = alert.create();
                     alertDialog.show();
-                }
-                else {
+                } else {
+                    MyLog.e(TAG, "login>>" + aBoolean);
                     Auth();
                 }
-                
+
             }
         });
+
     }
 
     private void Auth() {
@@ -161,8 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                         new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(
-                                    @NonNull Task<AuthResult> task)
-                            {
+                                    @NonNull Task<AuthResult> task) {
                                             /*FireseBaseDataDetails(s_email);
                                             getViewModel.setEmail(s_email);
                                             getViewModel.getEmailMutable().observe(LoginActivity.this, new Observer<Boolean>() {
@@ -181,24 +181,19 @@ public class LoginActivity extends AppCompatActivity {
 
                                     loadingDialog.dismiss();
 
-                                    if(remember_me.isChecked())
-                                    {
-                                        MyLog.e(TAG,"logout>> remember me is checked");
-                                        MyLog.e(TAG,"logout>>Check box checked>>"+remember_me.isChecked());
-                                        check_password=true;
+                                    if (remember_me.isChecked()) {
+                                        MyLog.e(TAG, "logout>> remember me is checked");
+                                        MyLog.e(TAG, "logout>>Check box checked>>" + remember_me.isChecked());
+                                        check_password = true;
 
-                                    }
-                                    else
-                                    {
-                                        MyLog.e(TAG,"logout>>Check box not checked>>"+remember_me.isChecked());
+                                    } else {
+                                        MyLog.e(TAG, "logout>>Check box not checked>>" + remember_me.isChecked());
                                         SharedPreferences_data.logout_User();
 
                                     }
 
                                     login();
-                                }
-
-                                else {
+                                } else {
 
                                     // sign-in failed
                                     Toast.makeText(getApplicationContext(),
@@ -254,7 +249,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         // if sign-in is successful
         // intent to home activity
-      
+
         new SharedPreferences_data(getApplicationContext()).setEnter_password(s_password);
         new SharedPreferences_data(getApplicationContext()).setBoolen_check(String.valueOf(check_password));
         Intent intent = new Intent(LoginActivity.this,
@@ -265,31 +260,24 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean CheckDeatils() {
         //check details
-        if (!isValidEmail(s_email))
-        {
+        if (!isValidEmail(s_email)) {
+            loadingDialog.dismiss();
             MyLog.e(TAG, "error>>e_email is not valid");
             email.setError("Please enter valid Email id");
-        }
-        else if(s_password.isEmpty() )
-        {
+        } else if (s_password.isEmpty()) {
+            loadingDialog.dismiss();
             MyLog.e(TAG, "error>>password is empty");
             password.setError("Please enter a password");
-        }
-        else if(s_password.length()<7)
-        {
+        } else if (s_password.length() < 7) {
+            loadingDialog.dismiss();
             MyLog.e(TAG, "error>>pass is <7");
             password.setError("Please enter a valid password");
-        }
-        else
-        {
+        } else {
             MyLog.e(TAG, "error>>success");
-            loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
             getViewModel.setEmail(s_email);
             return true;
         }
-
-
-            return false;
+        return false;
     }
 
     //check valid email id
@@ -302,6 +290,7 @@ public class LoginActivity extends AppCompatActivity {
         return android.util.Patterns.PHONE.matcher(s_phone_number).matches();
 
     }
+
     //anim
     private void Top_Bg() {
         slide_down_anim = AnimationUtils.loadAnimation(getApplicationContext(),
