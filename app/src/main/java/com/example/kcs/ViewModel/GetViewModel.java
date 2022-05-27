@@ -44,7 +44,11 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<CheckedList>> checkedList_Mutable=new MutableLiveData<>();
     private List<CheckedList> checkedLists=new ArrayList<>();
 
-    //Linked HashMap item list
+    //Linked HashMap item checked list
+    private LinkedHashMap<String,List<CheckedList>> f_map=new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String,List<CheckedList>>> f_mapMutable=new MutableLiveData<>();
+
+    // item checked list Linked HashMap
     private List<LinkedHashMap<String,List<CheckedList>>> check_s_map=new ArrayList<>();
     private MutableLiveData<List<LinkedHashMap<String,List<CheckedList>>>> check_s_mapMutable=new MutableLiveData<>();
 
@@ -53,7 +57,7 @@ public class GetViewModel extends AndroidViewModel {
     private List<ItemList> itemHeaderLists=new ArrayList<>();
 
     //Linked HashMap item list
-    private LinkedHashMap<String,List<ItemList>> f_map=new LinkedHashMap<>();
+    private LinkedHashMap<String,List<ItemList>> f_maps=new LinkedHashMap<>();
     private List<LinkedHashMap<String,List<ItemList>>> s_map=new ArrayList<>();
     private MutableLiveData<List<LinkedHashMap<String,List<ItemList>>>> s_mapMutable=new MutableLiveData<>();
 
@@ -104,6 +108,15 @@ public class GetViewModel extends AndroidViewModel {
 
 
 
+    }
+
+    public void setF_map(LinkedHashMap<String, List<CheckedList>> f_map) {
+        this.f_map = f_map;
+        this.f_mapMutable.postValue(f_map);
+    }
+
+    public MutableLiveData<LinkedHashMap<String, List<CheckedList>>> getF_mapMutable() {
+        return f_mapMutable;
     }
 
     public void setUserItemLists(List<UserItemList> userItemLists) {
@@ -216,11 +229,11 @@ public class GetViewModel extends AndroidViewModel {
                         itemLists.add(itemLists1);
                     }
                     itemMutable.postValue(itemLists);
-                    f_map.put(headerList.get(k).getHeader(),itemLists);
+                    f_maps.put(headerList.get(k).getHeader(),itemLists);
                     //MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     size++;
                 }
-                s_map.add(f_map);
+                s_map.add(f_maps);
                 s_mapMutable.postValue(s_map);
                 //MyLog.e(TAG, "hashmap>>item list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
 

@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
     //snack bar
     private RecyclerView recyclerview_selected_count;
     //private AppCompatButton order_btn, cancel_btn;
-    private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps = new ArrayList<>();
+    //private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps = new ArrayList<>();
+    private  LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
     private List<UserItemList> userItemLists = new ArrayList<>();
     private UserItemListAdapters userItemListAdapters;
     private String headerList_title, func_title;
@@ -117,19 +118,17 @@ public class MainActivity extends AppCompatActivity {
         recyclerview_selected_count.setHasFixedSize(true);
         recyclerview_selected_count.setLayoutManager(new LinearLayoutManager(getApplication(), LinearLayoutManager.HORIZONTAL, false));
 
-
-        //get hash map checked list
-        getViewModel.getCheck_s_mapMutable().observe(this, new Observer<List<LinkedHashMap<String, List<CheckedList>>>>() {
+        //linked hash map of checked list
+        getViewModel.getF_mapMutable().observe(this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
             @Override
-            public void onChanged(List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps1) {
-                linkedHashMaps = linkedHashMaps1;
-                //MyLog.e(TAG, "s_map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
+            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
+                stringListLinkedHashMap=stringListLinkedHashMap1;
                 List<CheckedList> list = new ArrayList<>();
-               // MyLog.e(TAG, "maps>>s_map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
                 MyLog.e(TAG, "maps>>title>>" +headerList_title);
+                MyLog.e(TAG,"chs>>stringListLinkedHashMap before"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 MyLog.e(TAG,"chs>>before"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
-                for (int k = 0; k < linkedHashMaps.size(); k++) {
-                    list = linkedHashMaps.get(k).get(headerList_title);
+                for (int k = 0; k < stringListLinkedHashMap.size(); k++) {
+                    list = stringListLinkedHashMap.get(headerList_title);
                     if (list != null) {
                         //MyLog.e(TAG, "maps>>checked list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(list));
                         UserItemList userItemList = new UserItemList(
@@ -149,12 +148,17 @@ public class MainActivity extends AppCompatActivity {
                 }
                 MyLog.e(TAG,"chs>>after"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
 
+            }
+        });
 
+        //get hash map checked list
+        /*getViewModel.getCheck_s_mapMutable().observe(this, new Observer<List<LinkedHashMap<String, List<CheckedList>>>>() {
+            @Override
+            public void onChanged(List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps1) {
+                linkedHashMaps = linkedHashMaps1;
                 }
                 // MyLog.e(TAG, "items>>userList>>" + new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
-
-
-        });
+        });*/
 
         //get user-item list
         getViewModel.getUserItemListsMutableLiveData().observe(this, new Observer<List<UserItemList>>() {
@@ -172,8 +176,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<CheckedList> checkedLists1) {
                 checkedLists = checkedLists1;
-
-
                 snackbar.show();
                 //order btn
                /* order_btn.setOnClickListener(new View.OnClickListener() {
@@ -200,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
 
 
         getViewModel.setI_value(0);
