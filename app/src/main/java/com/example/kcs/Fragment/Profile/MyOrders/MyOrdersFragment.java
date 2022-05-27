@@ -55,6 +55,8 @@ public class MyOrdersFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private String TAG = "MyOrdersFragment";
+    //my orders list
+    private List<MyOrdersList> myOrdersLists=new ArrayList<>();
 
     public MyOrdersFragment() {
         // Required empty public constructor
@@ -104,44 +106,51 @@ public class MyOrdersFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         s_user_name=new SharedPreferences_data(getContext()).getS_user_name();
 
+        firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "snap>>" + snapshot);
+
                 int size=0;
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                    MyLog.e(TAG, "snap>>snap childern>>" + snapshot.getValue().toString());
-                    MyLog.e(TAG, "snap>>snap childern>>" + snapshot.getKey());
-                    MyLog.e(TAG, "snap>>datas>>" + datas);
+                    MyLog.e(TAG, "onData>>datas>>" + datas);
+                    MyLog.e(TAG, "onData>>datas>>" + datas.getKey().toString());
                     func=datas.getKey().toString();
                     for (DataSnapshot dataSnapshot : datas.getChildren()) {
-                        header=dataSnapshot.getKey().toString();
-                        MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot);
-                        item+=dataSnapshot.getValue().toString()+" ";
-                        size++;
+                        String header=dataSnapshot.getKey().toString();
+                        MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
+                        MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot.getKey().toString());
 
-                        MyOrdersList orderLists1 = new MyOrdersList(
+                        size=0;
+                        for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                            MyLog.e(TAG, "onData>>shots>>" + shot);
+                            MyLog.e(TAG, "onData>>shots>>" + shot.getKey().toString());
+                                size++;
+                            MyLog.e(TAG,"onData>>size>"+size);
+
+                        }
+                        MyOrdersList itemList=new MyOrdersList(
                                 func,
                                 header,
-                                item,
                                 size
                         );
+                        myOrdersLists.add(itemList);
                         size=0;
-                        myOrdersList.add(orderLists1);
+
+
+                        MyLog.e(TAG,"onData>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersLists));
+
+
                     }
 
                 }
-                //MyLog.e(TAG,"deta>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
-                myOrdersAdapter=new MyOrdersAdapter(getContext(),myOrdersList);
-                recyclerview_my_orders.setAdapter(myOrdersAdapter);
-
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext() ,"Fail to get data.", Toast.LENGTH_SHORT).show();
             }
         });
 

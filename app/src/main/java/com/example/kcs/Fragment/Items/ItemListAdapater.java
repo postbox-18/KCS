@@ -69,9 +69,10 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
     public void onBindViewHolder(@NonNull ItemListAdapater.ViewHolder holder, int position) {
 
         final ItemList itemList1 = itemLists.get(position);
+
         //img update soon
-        //holder.header_img.setText(funList1.getUsername());
-        // MyLog.e(TAG, "Data>>header itemadapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemList1));
+        //holder.header_img.setText(funList1.getImg());
+
 
         //check if checked list item selected
         // MyLog.e(TAG, "hashmap>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
@@ -103,7 +104,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         holder.item_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                MyLog.e(TAG, "f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                MyLog.e(TAG, "stringListLinkedHashMap>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 MyLog.e(TAG, "selected_s_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
                 if (itemList1.getItem() != null) {
                     if (holder.item_check.isChecked()) {
@@ -124,7 +125,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         //MyLog.e(TAG, "Check>>header itemadapter:::else>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     }
                     getViewModel.setF_map(stringListLinkedHashMap);
-                    MyLog.e(TAG, "f_maps>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                    MyLog.e(TAG, "stringListLinkedHashMap>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                     MyLog.e(TAG, "selected_s_map>>size>>" + selected_s_map.size());
                     selected_s_map.add(stringListLinkedHashMap);
                     getViewModel.setCheck_s_map(selected_s_map);

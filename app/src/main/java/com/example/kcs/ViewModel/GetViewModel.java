@@ -14,6 +14,7 @@ import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
+import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -94,12 +95,15 @@ public class GetViewModel extends AndroidViewModel {
     private List<UserItemList> userItemLists=new ArrayList<>();
     private MutableLiveData<List<UserItemList>> userItemListsMutableLiveData=new MutableLiveData<>();
 
+
     private String TAG="ViewClassModel";
 
 
 
     public GetViewModel(@NonNull Application application) {
         super(application);
+        String s_user_name=new SharedPreferences_data(application).getS_user_name();
+
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
         GetHeader();
@@ -109,6 +113,7 @@ public class GetViewModel extends AndroidViewModel {
 
 
     }
+
 
     public void setF_map(LinkedHashMap<String, List<CheckedList>> f_map) {
         MyLog.e(TAG, "f_maps>>set>>" + new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
