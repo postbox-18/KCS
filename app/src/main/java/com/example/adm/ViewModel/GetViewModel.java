@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -91,8 +92,10 @@ public class GetViewModel extends AndroidViewModel {
 
     //Linked HashMap
     private LinkedHashMap<String,List<UserItemList>> f_map=new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String,List<UserItemList>>> f_mapMutable=new MutableLiveData<>();
     private List<LinkedHashMap<String,List<UserItemList>>> s_map=new ArrayList<>();
     private MutableLiveData<List<LinkedHashMap<String,List<UserItemList>>>> s_mapMutable=new MutableLiveData<>();
+
 
     private String TAG="ViewClassModel";
     String s_user_name,func,header,item;
@@ -119,6 +122,10 @@ public class GetViewModel extends AndroidViewModel {
 
     public MutableLiveData<List<UserDetailsList>> getUserListMutable() {
         return UserListMutable;
+    }
+
+    public MutableLiveData<LinkedHashMap<String, List<UserItemList>>> getF_mapMutable() {
+        return f_mapMutable;
     }
 
     private void GetUserList() {
@@ -170,6 +177,7 @@ public class GetViewModel extends AndroidViewModel {
                         func=dataSnapshot.getKey().toString();
                         MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot);
                         MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot.getKey().toString());
+                        userItemLists=new ArrayList<>();
                         for (DataSnapshot shot : dataSnapshot.getChildren()) {
                             header=shot.getKey().toString();
                             MyLog.e(TAG, "snap>>shots>>" + shot);
@@ -177,6 +185,8 @@ public class GetViewModel extends AndroidViewModel {
                                 size=0;
                                 for(DataSnapshot data:shot.getChildren())
                                 {
+                                    MyLog.e(TAG, "snap>>data ss>>" + data.getKey().toString());
+
                                     size++;
                                 }
                             MyLog.e(TAG,"snap>>size>"+size);
@@ -186,7 +196,8 @@ public class GetViewModel extends AndroidViewModel {
                             );
                             size=0;
                             userItemLists.add(itemList);
-                            f_map.put(s_user_name,userItemLists);
+                            String s=s_user_name+" "+func;
+                            f_map.put(s,userItemLists);
                             //MyLog.e(TAG,"snap>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
 
                         }
@@ -200,9 +211,10 @@ public class GetViewModel extends AndroidViewModel {
 
                 }
                 orderListsMutable.postValue(orderLists);
+                f_mapMutable.postValue(f_map);
                 s_map.add(f_map);
                 s_mapMutable.postValue(s_map);
-                //MyLog.e(TAG,"map>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
+                MyLog.e(TAG,"f_maps>>map get>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
             }
 
             @Override

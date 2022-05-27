@@ -18,6 +18,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_order_list"
                 android:layout_width="match_parent"
+                tools:itemCount="5"
+                tools:listitem="@layout/order_cardview"
                 android:layout_height="match_parent"/>
         </LinearLayout>
     </LinearLayout>

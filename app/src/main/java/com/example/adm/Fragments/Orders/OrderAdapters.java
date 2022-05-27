@@ -16,10 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.adm.Classes.MyLog;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder> {
     private List<OrderLists> orderLists;
@@ -27,6 +30,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     private GetViewModel getViewModel;
     private String TAG = "OrderAdapters";
     private List<UserItemList> userItemLists=new ArrayList<>();
+    private LinkedHashMap<String, List<UserItemList>> stringListLinkedHashMap=new LinkedHashMap<>();
 
     public OrderAdapters(Context context, List<OrderLists> orderLists, GetViewModel getViewModel) {
         this.orderLists = orderLists;
@@ -52,18 +56,38 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         /* String[] arr=(orderLists1.getList()).split(" ");*/
         /* recyclerView_order_list.setHasFixedSize(true);
                 recyclerView_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));*/
+
+        //get checked list in hash map
         getViewModel.getS_mapMutable().observe((LifecycleOwner) context, new Observer<List<LinkedHashMap<String, List<UserItemList>>>>() {
             @Override
             public void onChanged(List<LinkedHashMap<String, List<UserItemList>>> linkedHashMaps) {
                 MyLog.e(TAG,"item>>name inside>"+orderLists1.getS_user_name());
-                userItemLists=linkedHashMaps.get(0).get(orderLists1.getS_user_name());
-                holder.itemList.setHasFixedSize(true);
-                holder.itemList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                UserItemListAdapters itemListAdapters = new UserItemListAdapters(context,getViewModel,userItemLists);
-                holder.itemList.setAdapter(itemListAdapters);
+                //MyLog.e(TAG,"f_map>>before"+new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
+                userItemLists=new ArrayList<>();
+                MyLog.e(TAG,"f_maps>>map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
+                for(int i=0;i<linkedHashMaps.size();i++) {
+               /*     Set<String> stringSet=stringListLinkedHashMap.keySet();
+                    List<String> aList = new ArrayList<String>(stringSet.size());
+                    for (String x : stringSet)
+                        aList.add(x);*/
+                    userItemLists = linkedHashMaps.get(i).get(orderLists1.getS_user_name()+" "+ orderLists1.getFunc());
+                    MyLog.e(TAG,"f_map>>"+orderLists1.getS_user_name());
+                    MyLog.e(TAG,"f_map>>after"+new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
+                    holder.itemList.setHasFixedSize(true);
+                    holder.itemList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                    UserItemListAdapters itemListAdapters = new UserItemListAdapters(context, getViewModel, userItemLists);
+                    holder.itemList.setAdapter(itemListAdapters);
+                }
             }
         });
+        //get linked hash map checked
+        getViewModel.getF_mapMutable().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<UserItemList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<UserItemList>> stringListLinkedHashMap1) {
+                stringListLinkedHashMap=stringListLinkedHashMap1;
 
+            }
+        });
 
         /*for(String i:arr) {
             MyLog.e(TAG,"deta>>"+i);
