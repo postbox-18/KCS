@@ -111,6 +111,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void setF_map(LinkedHashMap<String, List<CheckedList>> f_map) {
+        MyLog.e(TAG, "f_maps>>set>>" + new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
         this.f_map = f_map;
         this.f_mapMutable.postValue(f_map);
     }

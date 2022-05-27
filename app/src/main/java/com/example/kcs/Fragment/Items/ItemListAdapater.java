@@ -114,7 +114,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         checkedLists.add(checkedLists1);
 
                         stringListLinkedHashMap.put(header, checkedLists);
-                        getViewModel.setF_map(stringListLinkedHashMap);
+
                         getViewModel.setCheckedLists(checkedLists);
                         //notifyDataSetChanged();
                     } else {
@@ -123,11 +123,12 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
 
                         //MyLog.e(TAG, "Check>>header itemadapter:::else>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     }
-                    MyLog.e(TAG, "f_map>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                    getViewModel.setF_map(stringListLinkedHashMap);
+                    MyLog.e(TAG, "f_maps>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                     MyLog.e(TAG, "selected_s_map>>size>>" + selected_s_map.size());
                     selected_s_map.add(stringListLinkedHashMap);
                     getViewModel.setCheck_s_map(selected_s_map);
-                    MyLog.e(TAG, "selected_s_map>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
+                    //MyLog.e(TAG, "selected_s_map>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
 
                     //MyLog.e(TAG, "Check>>header itemadapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     Gson gson = new Gson();

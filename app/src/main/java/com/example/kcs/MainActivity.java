@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
                 stringListLinkedHashMap=stringListLinkedHashMap1;
                 MyLog.e(TAG,"chs>>keyset>>"+ stringListLinkedHashMap.keySet());
-                MyLog.e(TAG,"chs>>"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                MyLog.e(TAG,"f_map main>>"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 MyLog.e(TAG,"chs>>before"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
                 Set<String> stringSet=stringListLinkedHashMap.keySet();
                 List<String> aList = new ArrayList<String>(stringSet.size());
