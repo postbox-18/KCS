@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -106,56 +107,15 @@ public class MyOrdersFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         s_user_name=new SharedPreferences_data(getContext()).getS_user_name();
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        //get hash map value to pass myorderlist
+        getViewModel.getMyordersHashMapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<MyOrdersList>>>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onChanged(LinkedHashMap<String, List<MyOrdersList>> stringListLinkedHashMap) {
 
-                int size=0;
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                    MyLog.e(TAG, "onData>>datas>>" + datas);
-                    MyLog.e(TAG, "onData>>datas>>" + datas.getKey().toString());
-                    func=datas.getKey().toString();
-                    for (DataSnapshot dataSnapshot : datas.getChildren()) {
-                        String header=dataSnapshot.getKey().toString();
-                        MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
-                        MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot.getKey().toString());
-
-                        size=0;
-                        for (DataSnapshot shot : dataSnapshot.getChildren()) {
-                            MyLog.e(TAG, "onData>>shots>>" + shot);
-                            MyLog.e(TAG, "onData>>shots>>" + shot.getKey().toString());
-                                size++;
-                            MyLog.e(TAG,"onData>>size>"+size);
-
-                        }
-                        MyOrdersList itemList=new MyOrdersList(
-                                header,
-                                size
-                        );
-                        myOrdersList.add(itemList);
-                        myordersHashMap.put(func,myOrdersList);
-                        getViewModel.setMyOrdersLists(myOrdersList);
-                        size=0;
-
-
-                        MyLog.e(TAG,"onData>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
-
-
-                    }
-
-                }
-                myOrdersAdapter=new MyOrdersAdapter(getContext(),myOrdersList,myordersHashMap);
+                myOrdersAdapter=new MyOrdersAdapter(getContext(),myOrdersList);
                 recyclerview_my_orders.setAdapter(myOrdersAdapter);
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext() ,"Fail to get data.", Toast.LENGTH_SHORT).show();
-            }
         });
-
 
 
 

@@ -20,11 +20,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
     private List<MyOrdersList> myOrdersList;
     private Context context;
     private String TAG="MyOrdersAdapter";
-    private LinkedHashMap<String, List<MyOrdersList>> myordersHashMap;
-    public MyOrdersAdapter(Context context, List<MyOrdersList> myOrdersList, LinkedHashMap<String, List<MyOrdersList>> myordersHashMap) {
+    public MyOrdersAdapter(Context context, List<MyOrdersList> myOrdersList) {
         this.myOrdersList = myOrdersList;
         this.context = context;
-        this.myordersHashMap = myordersHashMap;
     }
 
     @NonNull
