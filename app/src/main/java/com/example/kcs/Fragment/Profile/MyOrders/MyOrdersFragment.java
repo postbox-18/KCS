@@ -55,8 +55,6 @@ public class MyOrdersFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private String TAG = "MyOrdersFragment";
-    //my orders list
-    private List<MyOrdersList> myOrdersLists=new ArrayList<>();
 
     public MyOrdersFragment() {
         // Required empty public constructor
@@ -135,17 +133,18 @@ public class MyOrdersFragment extends Fragment {
                                 header,
                                 size
                         );
-                        myOrdersLists.add(itemList);
+                        myOrdersList.add(itemList);
                         size=0;
 
 
-                        MyLog.e(TAG,"onData>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersLists));
+                        MyLog.e(TAG,"onData>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
 
 
                     }
 
                 }
-
+                myOrdersAdapter=new MyOrdersAdapter(getContext(),myOrdersList);
+                recyclerview_my_orders.setAdapter(myOrdersAdapter);
             }
 
             @Override
