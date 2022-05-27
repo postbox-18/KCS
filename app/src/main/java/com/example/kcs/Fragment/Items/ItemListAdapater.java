@@ -102,6 +102,8 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         holder.item_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                //MyLog.e(TAG, "f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
+                f_map=new LinkedHashMap<>();
                 if(itemList1.getItem()!=null) {
                     if (holder.item_check.isChecked()) {
                         CheckedList checkedLists1 = new CheckedList(
@@ -119,6 +121,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
 
                         //MyLog.e(TAG, "Check>>header itemadapter:::else>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     }
+                    //MyLog.e(TAG, "f_map>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
                     selected_s_map.add(f_map);
                     getViewModel.setCheck_s_map(selected_s_map);
                     //MyLog.e(TAG, "hashmap>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
