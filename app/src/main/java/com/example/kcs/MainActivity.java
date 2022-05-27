@@ -43,6 +43,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private String TAG = "MainActivity";
@@ -123,30 +124,44 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
                 stringListLinkedHashMap=stringListLinkedHashMap1;
-                List<CheckedList> list = new ArrayList<>();
-                MyLog.e(TAG, "maps>>title>>" +headerList_title);
-                MyLog.e(TAG,"chs>>stringListLinkedHashMap before"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                MyLog.e(TAG,"chs>>keyset>>"+ stringListLinkedHashMap.keySet());
+                MyLog.e(TAG,"chs>>"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 MyLog.e(TAG,"chs>>before"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
-                for (int k = 0; k < stringListLinkedHashMap.size(); k++) {
+                Set<String> stringSet=stringListLinkedHashMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+                //MyLog.e(TAG,"chs>>list "+ new GsonBuilder().setPrettyPrinting().create().toJson(aList));
+
+                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                userItemLists.clear();
+                for(int i=0;i<aList.size();i++) {
+                    MyLog.e(TAG,"chs>>list header>> "+ aList.get(i));
+                    MyLog.e(TAG,"chs>>list size "+ stringListLinkedHashMap.get(aList.get(i)).size());
+                    UserItemList userItemList = new UserItemList(
+                            aList.get(i),
+                            stringListLinkedHashMap.get(aList.get(i)).size()
+                    );
+                    userItemLists.add(userItemList);
+                }
+                MyLog.e(TAG,"chs>>after"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
+                getViewModel.setUserItemLists(userItemLists);
+                if (userItemLists.size() > 0) {
+                    snackbar.show();
+                } else {
+                    snackbar.dismiss();
+                }
+
+               /* for (int k = 0; k < stringListLinkedHashMap.size(); k++) {
                     list = stringListLinkedHashMap.get(headerList_title);
                     if (list != null) {
                         //MyLog.e(TAG, "maps>>checked list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(list));
-                        UserItemList userItemList = new UserItemList(
-                                headerList_title,
-                                list.size()
-                        );
-                        userItemLists.add(userItemList);
-                        getViewModel.setUserItemLists(userItemLists);
-                        if (userItemList.getList_size() > 0) {
-                            snackbar.show();
-                        } else {
-                            snackbar.dismiss();
-                        }
+
                     } else {
                         MyLog.e(TAG, "maps>>checked list is null");
                     }
-                }
-                MyLog.e(TAG,"chs>>after"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
+                }*/
+
 
             }
         });
