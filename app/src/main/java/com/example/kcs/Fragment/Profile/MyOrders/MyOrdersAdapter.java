@@ -13,15 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.R;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHolder> {
     private List<MyOrdersList> myOrdersList;
     private Context context;
     private String TAG="MyOrdersAdapter";
-    public MyOrdersAdapter(Context context, List<MyOrdersList> myOrdersList) {
+    private LinkedHashMap<String, List<MyOrdersList>> myordersHashMap;
+    public MyOrdersAdapter(Context context, List<MyOrdersList> myOrdersList, LinkedHashMap<String, List<MyOrdersList>> myordersHashMap) {
         this.myOrdersList = myOrdersList;
         this.context = context;
+        this.myordersHashMap = myordersHashMap;
     }
 
     @NonNull
@@ -36,15 +39,13 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull MyOrdersAdapter.ViewHolder holder, int position) {
         final MyOrdersList myOrdersList1 = myOrdersList.get(position);
-        //holder.user_name.setText(myOrdersList1.getS_user_name());
+
+        //get data func,header,list item size from hash map
         holder.header.setText(myOrdersList1.getHeader());
-        holder.func.setText(myOrdersList1.getFunc());
-        /* String[] arr=(myOrdersList1.getList()).split(" ");*/
+        /*holder.func.setText(myOrdersList1.getFunc());*/
+
         holder.item_size.setText(String.valueOf(myOrdersList1.getSize()));
-        /*for(String i:arr) {
-            MyLog.e(TAG,"deta>>"+i);
-            holder.item.setText(i);
-        }*/
+
     }
 
 

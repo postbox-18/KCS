@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -55,6 +56,7 @@ public class MyOrdersFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private String TAG = "MyOrdersFragment";
+    private LinkedHashMap<String,List<MyOrdersList>> myordersHashMap=new LinkedHashMap<>();
 
     public MyOrdersFragment() {
         // Required empty public constructor
@@ -129,11 +131,12 @@ public class MyOrdersFragment extends Fragment {
 
                         }
                         MyOrdersList itemList=new MyOrdersList(
-                                func,
                                 header,
                                 size
                         );
                         myOrdersList.add(itemList);
+                        myordersHashMap.put(func,myOrdersList);
+                        getViewModel.setMyOrdersLists(myOrdersList);
                         size=0;
 
 
@@ -143,7 +146,7 @@ public class MyOrdersFragment extends Fragment {
                     }
 
                 }
-                myOrdersAdapter=new MyOrdersAdapter(getContext(),myOrdersList);
+                myOrdersAdapter=new MyOrdersAdapter(getContext(),myOrdersList,myordersHashMap);
                 recyclerview_my_orders.setAdapter(myOrdersAdapter);
             }
 

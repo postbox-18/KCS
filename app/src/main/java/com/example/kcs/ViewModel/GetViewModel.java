@@ -95,6 +95,9 @@ public class GetViewModel extends AndroidViewModel {
     private List<UserItemList> userItemLists=new ArrayList<>();
     private MutableLiveData<List<UserItemList>> userItemListsMutableLiveData=new MutableLiveData<>();
 
+    //my orders list
+    private List<MyOrdersList> myOrdersLists=new ArrayList<>();
+    private MutableLiveData<List<MyOrdersList>> myOrdersListsMutableLiveData=new MutableLiveData<>();
 
     private String TAG="ViewClassModel";
 
@@ -114,6 +117,14 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
+    public void setMyOrdersLists(List<MyOrdersList> myOrdersLists) {
+        this.myOrdersLists = myOrdersLists;
+        this.myOrdersListsMutableLiveData.postValue(myOrdersLists);
+    }
+
+    public MutableLiveData<List<MyOrdersList>> getMyOrdersListsMutableLiveData() {
+        return myOrdersListsMutableLiveData;
+    }
 
     public void setF_map(LinkedHashMap<String, List<CheckedList>> f_map) {
         MyLog.e(TAG, "f_maps>>set>>" + new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
