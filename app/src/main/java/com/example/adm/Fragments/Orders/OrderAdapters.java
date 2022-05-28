@@ -54,6 +54,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         holder.func.setText(orderLists1.getFunc());
         MyLog.e(TAG,"item>>name outside>"+orderLists1.getS_user_name());
         /* String[] arr=(orderLists1.getList()).split(" ");*/
+
         /* recyclerView_order_list.setHasFixedSize(true);
                 recyclerView_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));*/
 
