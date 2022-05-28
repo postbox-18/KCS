@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.R;
+import com.example.adm.ViewModel.GetViewModel;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private List<ItemArrayList> item;
     private Context context;
     private String TAG="ItemAdapter";
-    public ItemAdapter(Context context, List<ItemArrayList> item) {
+    public ItemAdapter(Context context, List<ItemArrayList> item, GetViewModel getViewModel) {
         this.item = item;
         this.context = context;
     }

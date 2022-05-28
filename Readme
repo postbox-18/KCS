@@ -1,4 +1,10 @@
 Pending
+1-Control Panel update header and also change in database which have data
+3-add marquee in orderadapter
+https://aliahmedbd.github.io/Ticker-Using-Recycler-View-Android/
+https://stackoverflow.com/questions/31253555/how-do-i-create-a-circular-endless-recyclerview
+
+Solved
 1-add phone to order save list in base
         999999999
         |
@@ -10,6 +16,3 @@ Pending
         ----fun
         |
         ----nv
-3-add marquee in orderadapter
-https://aliahmedbd.github.io/Ticker-Using-Recycler-View-Android/
-https://stackoverflow.com/questions/31253555/how-do-i-create-a-circular-endless-recyclerview

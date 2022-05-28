@@ -9,9 +9,17 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SharedPreferences_data;
+import com.example.adm.Fragments.Control_Panel.Func.FuncAdapter;
+import com.example.adm.Fragments.Control_Panel.Func.FuncList;
+import com.example.adm.Fragments.Control_Panel.Header.HeaderAdapter;
+import com.example.adm.Fragments.Control_Panel.Header.HeaderList;
+import com.example.adm.Fragments.Control_Panel.Item.ItemAdapter;
+import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
+import com.example.adm.Fragments.Control_Panel.UpdatedList;
 import com.example.adm.Fragments.Orders.UserItemList;
 import com.example.adm.Fragments.Orders.OrderLists;
 import com.example.adm.Fragments.Users.UserDetailsList;
+import com.example.adm.Login_Register.RegisterActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -96,6 +104,21 @@ public class GetViewModel extends AndroidViewModel {
     private List<LinkedHashMap<String,List<UserItemList>>> s_map=new ArrayList<>();
     private MutableLiveData<List<LinkedHashMap<String,List<UserItemList>>>> s_mapMutable=new MutableLiveData<>();
 
+    //get Data from Firebase database
+    //header list
+    private List<HeaderList> headerList=new ArrayList<>();
+    private MutableLiveData<List<HeaderList>> headerListMutableLiveData=new MutableLiveData<>();
+    //func list
+    private List<FuncList> funcList=new ArrayList<>();
+    private MutableLiveData<List<FuncList>> funcListMutableLiveData=new MutableLiveData<>();
+    //item list
+    private List<ItemArrayList> itemList=new ArrayList<>();
+    private MutableLiveData<List<ItemArrayList>> itemListMutableLiveData=new MutableLiveData<>();
+
+    //updated list
+    private List<UpdatedList> updatedLists=new ArrayList<>();
+    private MutableLiveData<List<UpdatedList>> updatedListsMutableLiveData=new MutableLiveData<>();
+
 
     private String TAG="ViewClassModel";
     String s_user_name,func,header,item;
@@ -113,11 +136,138 @@ public class GetViewModel extends AndroidViewModel {
         /*GetHeader();
         GetFun();
         GetItem();*/
+        GetUpdateHeader();
+        GetUpdateFun();
+        GetUpdateItem();
 
 
 
     }
 
+    public void setUpdatedLists(List<UpdatedList> updatedLists) {
+        this.updatedLists = updatedLists;
+        this.updatedListsMutableLiveData.postValue(updatedLists);
+    }
+
+    public MutableLiveData<List<UpdatedList>> getUpdatedListsMutableLiveData() {
+        return updatedListsMutableLiveData;
+    }
+
+    public MutableLiveData<List<HeaderList>> getHeaderListMutableLiveData() {
+        return headerListMutableLiveData;
+    }
+
+    public MutableLiveData<List<FuncList>> getFuncListMutableLiveData() {
+        return funcListMutableLiveData;
+    }
+
+    public MutableLiveData<List<ItemArrayList>> getItemListMutableLiveData() {
+        return itemListMutableLiveData;
+    }
+
+    private void GetUpdateItem() {
+        databaseReference = firebaseDatabase.getReference("Items").child("List");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "list>>snap>>" + snapshot);
+                int size=0;
+
+
+                for(DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    itemList=new ArrayList<>();
+                    ItemArrayList itemList1=new ItemArrayList(
+                            dataSnapshot.getValue().toString()
+                    );
+                    itemList.add(itemList1);
+                }
+
+                itemListMutableLiveData.postValue(itemList);
+                //MyLog.e(TAG, "data>>item>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemList));
+                size++;
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                MyLog.e(TAG, "list>>snap>>fun>>Fail to get data.");
+            }
+        });
+    }
+
+    private void GetUpdateFun() {
+        databaseReference = firebaseDatabase.getReference("Items").child("Function");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "home>>snap>>fun>>" + snapshot);
+                int size=0;
+                funcList=new ArrayList<>();
+
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                    String path=""+size;
+                    MyLog.e(TAG, "home>>snap>>fun>>" +  path);
+                    //MyLog.e(TAG, "home>>snap>>fun>>" +  datas.child("0").getValue().toString());
+                    FuncList funList1 = new FuncList(
+                            datas.getValue().toString());
+                    funcList.add(funList1);
+                    size++;
+
+                }
+                funcListMutableLiveData.postValue(funcList);
+                //MyLog.e(TAG, "data>>func>>" + new GsonBuilder().setPrettyPrinting().create().toJson(funcList));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                MyLog.e(TAG, "home>>snap>>fun>>Fail to get data.");
+            }
+        });
+    }
+    private void GetUpdateHeader() {
+        databaseReference = firebaseDatabase.getReference("Items").child("Category");
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "home>>snap>>" + snapshot);
+                int size=0;
+                headerList=new ArrayList<>();
+                for (DataSnapshot datas : snapshot.getChildren()) {
+
+                    String path=""+size;
+
+                    //MyLog.e(TAG, "home>>snap>>" +  datas.child("a").getValue().toString());
+
+                    HeaderList headerList1 = new HeaderList(
+                            datas.getValue().toString()
+                    );
+                    headerList.add(headerList1);
+                    size++;
+
+                }
+
+               headerListMutableLiveData.postValue(headerList);
+                // MyLog.e(TAG, "data>>header>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerList));
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                MyLog.e(TAG, "home>>snap>>Fail to get data.");
+            }
+        });
+    }
 
 
     public MutableLiveData<List<UserDetailsList>> getUserListMutable() {
@@ -467,4 +617,31 @@ public class GetViewModel extends AndroidViewModel {
         this.setI_value(1);
         this.func_title_Mutable.postValue(fun);
     }
+
+    public void UpdateListBase() {
+        for(int i=0;i<updatedLists.size();i++) {
+            int n=updatedLists.get(i).getPosition();
+            databaseReference = firebaseDatabase.getReference("DUMMY").child(updatedLists.get(i).getTitle());
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    MyLog.e(TAG, "updatesnap>>" + snapshot);
+                    MyLog.e(TAG, "updatesnap>>value>>" + snapshot.getValue());
+                    databaseReference.setValue("CREAM");
+
+                    Toast.makeText(getApplication(), "Successfully updated data.", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getApplication(), "Fail to update data.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+
+
+    }
+
+
 }
