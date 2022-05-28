@@ -158,7 +158,7 @@ public class GetViewModel extends AndroidViewModel {
                         size=0;
 
 
-                        MyLog.e(TAG,"onData>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
+                       // MyLog.e(TAG,"onData>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
 
                         //get func name into list
                         MyOrderFuncList list=new MyOrderFuncList(
@@ -200,7 +200,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void setF_map(LinkedHashMap<String, List<CheckedList>> f_map) {
-        MyLog.e(TAG, "f_maps>>set>>" + new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
+        //MyLog.e(TAG, "f_maps>>set>>" + new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
         this.f_map = f_map;
         this.f_mapMutable.postValue(f_map);
     }

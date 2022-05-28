@@ -130,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
                 stringListLinkedHashMap=stringListLinkedHashMap1;
                 MyLog.e(TAG,"chs>>keyset>>"+ stringListLinkedHashMap.keySet());
-                MyLog.e(TAG,"f_map main>>"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                MyLog.e(TAG,"chs>>before"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
+                //MyLog.e(TAG,"f_map main>>"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                //MyLog.e(TAG,"chs>>before"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
                 Set<String> stringSet=stringListLinkedHashMap.keySet();
                 List<String> aList = new ArrayList<String>(stringSet.size());
                 for (String x : stringSet)
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     );
                     userItemLists.add(userItemList);
                 }
-                MyLog.e(TAG,"chs>>after"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
+                //MyLog.e(TAG,"chs>>after"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
                 getViewModel.setUserItemLists(userItemLists);
                 if (userItemLists.size() > 0) {
                     snackbar.show();
@@ -215,7 +215,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         snackbar.dismiss();
-                        getViewModel.setI_value(5);
+                        //get func title is selected
+                        GetFuncTitleList();
+
                     }
                 });
 
@@ -289,6 +291,34 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void GetFuncTitleList() {
+        //get func list
+        getViewModel.getFunMutableList().observe(this, new Observer<List<FunList>>() {
+            @Override
+            public void onChanged(List<FunList> funLists1) {
+                funLists = funLists1;
+                MyLog.e(TAG, "fun>>in" + funLists.size());
+            }
+        });
+
+        //which fragment going to pass
+        getViewModel.getI_fragmentMutable().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+
+                MyLog.e(TAG, "int>>" + integer);
+                if (integer == 1) {
+                    MyLog.e(TAG, "title>>out" + func_title);
+                    getViewModel.setI_value(5);
+                } else {
+                    MyLog.e(TAG, "fun>>out" + funLists.size());
+                    showAlertDialog(funLists);
+                }
+
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         /*if (supportFragmentManager.backStackEntryCount > 0) {
@@ -325,7 +355,7 @@ super.onBackPressed()
             }
         });
 
-        //fragment
+        //which fragment going to pass
         getViewModel.getI_fragmentMutable().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
@@ -387,7 +417,7 @@ super.onBackPressed()
                     if (which == i) {
                         getViewModel.setFunc_title(str[i]);
                         dialog.dismiss();
-                        SaveOrders(str[i]);
+                        getViewModel.setI_value(5);
                         break;
                     } else {
                         continue;

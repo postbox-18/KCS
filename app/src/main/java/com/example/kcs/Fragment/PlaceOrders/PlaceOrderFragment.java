@@ -2,13 +2,28 @@ package com.example.kcs.Fragment.PlaceOrders;
 
 import android.os.Bundle;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.Func.FunList;
+import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +41,17 @@ public class PlaceOrderFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private RecyclerView recyclerview_order_list;
+    private ViewCartAdapterHeader viewCartAdapter;
+    private AppCompatButton order_btn;
+
+    private List<FunList> funLists=new ArrayList<>();
+    private List<CheckedList> checkedLists=new ArrayList<>();
+    private GetViewModel getViewModel;
+    private String func_title;
+    private String TAG="PlaceOrderFragment";
+
+
     public PlaceOrderFragment() {
         // Required empty public constructor
     }
@@ -42,6 +68,7 @@ public class PlaceOrderFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -54,6 +81,80 @@ public class PlaceOrderFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_place_order, container, false);
 
+        recyclerview_order_list=view.findViewById(R.id.recyclerview_order_list);
+        order_btn=view.findViewById(R.id.order_btn);
+
+
+        recyclerview_order_list.setHasFixedSize(true);
+        recyclerview_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+
+        //get Func_title
+        getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                func_title=s;
+            }
+        });
+
+        //get Checked list hash map
+        getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
+                MyLog.e(TAG, "cart>>f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                Set<String> stringSet=stringListLinkedHashMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+                for(int i=0;i< aList.size();i++) {
+
+                    checkedLists=stringListLinkedHashMap.get(aList.get(i));
+                    MyLog.e(TAG, "cart>>list " +  new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
+                    viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,aList,checkedLists);
+                    recyclerview_order_list.setAdapter(viewCartAdapter);
+
+                }
+
+
+            }
+        });
+
+        //order btn click
+        order_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+            }
+        });
+
         return view;
     }
+
+
+    private void SaveOrders(String func_title) {
+        /*databaseReference = firebaseDatabase.getReference("Orders");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
+                for (int i = 0; i < checkedLists.size(); i++) {
+                    //getFunc
+                    databaseReference.child(user_name).child(func_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists.get(i).getItemList());
+                }
+
+
+                Toast.makeText(MainActivity.this, "data added", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if the data is not added or it is cancelled then
+                // we are displaying a failure toast message.
+                Toast.makeText(MainActivity.this, "Fail to add data " + error, Toast.LENGTH_SHORT).show();
+            }
+        });*/
+    }
+
 }
