@@ -96,9 +96,14 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<UserItemList>> userItemListsMutableLiveData=new MutableLiveData<>();
 
     //my orders list
-    private List<MyOrdersList> myOrdersLists=new ArrayList<>();
+    private List<MyOrdersList> myOrdersList=new ArrayList<>();
     private MutableLiveData<List<MyOrdersList>> myOrdersListsMutableLiveData=new MutableLiveData<>();
     private  MutableLiveData<LinkedHashMap<String, List<MyOrdersList>>> myordersHashMapMutable=new MutableLiveData<>();
+    private LinkedHashMap<String, List<MyOrdersList>> f_mapMyorders=new LinkedHashMap<>();
+    private List<MyOrderFuncList> myOrderFuncLists=new ArrayList<>();
+    private MutableLiveData<List<MyOrderFuncList>> myOrderFuncListsMutableLiveData=new MutableLiveData<>();
+    private String func;
+
     private String TAG="ViewClassModel";
 
 
@@ -112,13 +117,10 @@ public class GetViewModel extends AndroidViewModel {
         GetHeader();
         GetFun();
         GetItem();
-        GetMyOrdersDetails(s_user_name);
-
-
 
     }
 
-    private void GetMyOrdersDetails(String s_user_name) {
+    public void GetMyOrdersDetails(String s_user_name) {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
@@ -148,14 +150,22 @@ public class GetViewModel extends AndroidViewModel {
                                 size
                         );
                         myOrdersList.add(itemList);
-                        myordersHashMap.put(func,myOrdersList);
-                        getViewModel.setMyOrdersLists(myOrdersList);
-                        myOrdersListsMutableLiveData.postValue(myOrdersLists);
+                        f_mapMyorders.put(func,myOrdersList);
+
+                        myordersHashMapMutable.postValue(f_mapMyorders);
+
+
                         size=0;
 
 
                         MyLog.e(TAG,"onData>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
 
+                        //get func name into list
+                        MyOrderFuncList list=new MyOrderFuncList(
+                                func
+                        );
+                        myOrderFuncLists.add(list);
+                        myOrderFuncListsMutableLiveData.postValue(myOrderFuncLists);
 
                     }
 
@@ -165,19 +175,24 @@ public class GetViewModel extends AndroidViewModel {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext() ,"Fail to get data.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplication(),"Fail to get data.", Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
+
+    public MutableLiveData<List<MyOrderFuncList>> getMyOrderFuncListsMutableLiveData() {
+        return myOrderFuncListsMutableLiveData;
     }
 
     public MutableLiveData<LinkedHashMap<String, List<MyOrdersList>>> getMyordersHashMapMutable() {
         return myordersHashMapMutable;
     }
 
-    public void setMyOrdersLists(List<MyOrdersList> myOrdersLists) {
-        this.myOrdersLists = myOrdersLists;
-        this.myOrdersListsMutableLiveData.postValue(myOrdersLists);
+
+    public void setMyOrdersList(List<MyOrdersList> myOrdersList) {
+        this.myOrdersList = myOrdersList;
+        this.myOrdersListsMutableLiveData.postValue(myOrdersList);
     }
 
     public MutableLiveData<List<MyOrdersList>> getMyOrdersListsMutableLiveData() {

@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private List<FunList> funLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
     private CardView view_cart_cardView;
+    private String user_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
+
+        user_name = new SharedPreferences_data(getApplication()).getS_user_name();
+        //get MyOrder Details
+        getViewModel.GetMyOrdersDetails(user_name);
 
         //get header title
         getViewModel.getHeader_title_Mutable().observe(this, new Observer<String>() {
@@ -345,7 +350,7 @@ super.onBackPressed()
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String user_name = new SharedPreferences_data(getApplication()).getS_user_name();
+
 
                 for (int i = 0; i < checkedLists.size(); i++) {
                     //getFunc
