@@ -3,8 +3,10 @@ package com.example.adm.Fragments.Control_Panel;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,10 +62,15 @@ public class Control_PanelFragment extends Fragment {
     private ItemAdapter itemAdapter;
     private List<ItemArrayList> itemList=new ArrayList<>();
     private ImageView back_btn;
+
+    private GetViewModel getViewModel;
+
+    //Update Data in firebase
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private GetViewModel getViewModel;
+    private AppCompatButton update_btn;
+
     private String TAG="Control_PanelFragment";
     public Control_PanelFragment() {
         // Required empty public constructor
@@ -105,6 +112,8 @@ public class Control_PanelFragment extends Fragment {
 
         back_btn=view.findViewById(R.id.back_btn);
 
+        update_btn=view.findViewById(R.id.update_btn);
+
         recyclerView_header=view.findViewById(R.id.recyclerview_header);
         recyclerView_header.setHasFixedSize(true);
         recyclerView_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -120,9 +129,46 @@ public class Control_PanelFragment extends Fragment {
         itemList=new ArrayList<>();
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
-        GetHeader();
-        GetFun();
-        GetItem();
+        /*GetUpdateHeader();
+        GetUpdateFun();
+        GetUpdateItem();*/
+
+        //get header list
+        getViewModel.getHeaderListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
+            @Override
+            public void onChanged(List<HeaderList> headerLists) {
+                headerAdapter=new HeaderAdapter(getContext(),headerLists,getViewModel);
+                recyclerView_header.setAdapter(headerAdapter);
+            }
+        });
+
+        //get item list
+        getViewModel.getItemListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<ItemArrayList>>() {
+            @Override
+            public void onChanged(List<ItemArrayList> itemArrayLists) {
+
+                itemAdapter=new ItemAdapter(getContext(),itemArrayLists,getViewModel);
+                recyclerView_item.setAdapter(itemAdapter);
+            }
+        });
+
+        //get func list
+        getViewModel.getFuncListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<FuncList>>() {
+            @Override
+            public void onChanged(List<FuncList> funcLists) {
+                funcAdapter=new FuncAdapter(getContext(),funcLists,getViewModel);
+                recyclerView_func.setAdapter(funcAdapter);
+            }
+        });
+
+
+        //click update btn
+        update_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getViewModel.UpdateListBase();
+            }
+        });
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -131,9 +177,12 @@ public class Control_PanelFragment extends Fragment {
                getViewModel.setI_value(0);
             }
         });
+
+
+
         return view;
     }
-    private void GetItem() {
+    /*private void GetUpdateItem() {
         databaseReference = firebaseDatabase.getReference("Items").child("List");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -168,7 +217,7 @@ public class Control_PanelFragment extends Fragment {
         });
     }
 
-    private void GetFun() {
+    private void GetUpdateFun() {
         databaseReference = firebaseDatabase.getReference("Items").child("Function");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -201,7 +250,7 @@ public class Control_PanelFragment extends Fragment {
             }
         });
     }
-    private void GetHeader() {
+    private void GetUpdateHeader() {
         databaseReference = firebaseDatabase.getReference("Items").child("Category");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -237,5 +286,5 @@ public class Control_PanelFragment extends Fragment {
                 MyLog.e(TAG, "home>>snap>>Fail to get data.");
             }
         });
-    }
+    }*/
 }

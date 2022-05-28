@@ -1,0 +1,72 @@
+{
+  "Admin": {
+    "8971383568": {
+      "email": "post18@gmail.com",
+      "phone_number": "8971383568",
+      "username": "post18"
+    }
+  },
+  "Items": {
+    "Category": [
+      null,
+      "NV",
+      "V",
+      "DE"
+    ],
+    "Function": [
+      null,
+      "WE",
+      "TE",
+      "BI"
+    ],
+    "List": {
+      "DE": [
+        "ppp",
+        "yyyy"
+      ],
+      "NV": [
+        "aaa",
+        "bbbb",
+        "ccc"
+      ],
+      "V": [
+        "qqqw",
+        "wwww",
+        "eeee"
+      ]
+    }
+  },
+  "Orders": {
+    "email": {
+      "TE": {
+        "V": [
+          "qqqw",
+          "wwww",
+          "eeee"
+        ]
+      },
+      "WE": {
+        "DE": [
+          "ppp",
+          "yyyy"
+        ],
+        "NV": [
+          "aaa",
+          "bbbb"
+        ]
+      }
+    }
+  },
+  "Users-Id": {
+    "8976328460": {
+      "email": "aravinth@gmail.com",
+      "phone_number": "8976328460",
+      "username": "aravinth"
+    },
+    "9875632863": {
+      "email": "email@gmail.com",
+      "phone_number": "9875632863",
+      "username": "email"
+    }
+  }
+}

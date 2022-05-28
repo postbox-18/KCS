@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.adm.Classes.MyLog;
 
 import com.example.adm.R;
+import com.example.adm.ViewModel.GetViewModel;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private List<HeaderList> headerLists;
     private Context context;
     private String TAG="HeaderAdapter";
-    public HeaderAdapter(Context context, List<HeaderList> headerLists) {
+    public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel) {
         this.headerLists = headerLists;
         this.context = context;
     }

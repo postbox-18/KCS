@@ -7,6 +7,7 @@
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/drawable/ic_utensils_solid.xml" value="0.1765" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/drawable/order_btn.xml" value="0.1765" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/back_btn_layout.xml" value="0.25" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/dialog_loading.xml" value="0.10989583333333333" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/fragment_control__panel.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/fragment_orders.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/fragment_profile.xml" value="0.25" />
@@ -17,6 +18,7 @@
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/item_cardview.xml" value="0.20427350427350427" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/order_btn_layout.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/order_cardview.xml" value="0.25" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/update_btn_layout.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/user_details_cardview.xml" value="0.25" />
         <entry key="app/src/main/res/drawable-v24/mytabs.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/bg_banner.xml" value="0.1235" />
@@ -40,9 +42,7 @@
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_user.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/img_activity.xml" value="0.19375" />
-        <entry key="app/src/main/res/layout/list_cardview.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/nav_header_home__sample.xml" value="0.19375" />
-        <entry key="app/src/main/res/layout/order_cardview.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/search_bar.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/topic_activity.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/user_details_cardview.xml" value="0.1" />
