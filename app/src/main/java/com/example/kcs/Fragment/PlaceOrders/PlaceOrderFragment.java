@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +65,7 @@ public class PlaceOrderFragment extends Fragment {
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private ImageView back_btn;
 
 
     public PlaceOrderFragment() {
@@ -96,6 +98,7 @@ public class PlaceOrderFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_place_order, container, false);
 
         recyclerview_order_list=view.findViewById(R.id.recyclerview_order_list);
+        back_btn=view.findViewById(R.id.back_btn);
         order_btn=view.findViewById(R.id.order_btn);
         func_title_view=view.findViewById(R.id.func_title);
 
@@ -122,31 +125,6 @@ public class PlaceOrderFragment extends Fragment {
                 recyclerview_order_list.setAdapter(viewCartAdapter);
             }
         });
-
-
-        //get Checked list hash map
-       /* getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
-                MyLog.e(TAG, "cart>>f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                Set<String> stringSet=stringListLinkedHashMap.keySet();
-
-                for(String a:stringSet)
-                {
-                    SelectedHeader aList=new SelectedHeader(
-                            a
-                    );
-                    selectedHeadersList.add(aList);
-
-                }
-                MyLog.e(TAG, "cart>>list " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
-
-                viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,selectedHeadersList);
-                recyclerview_order_list.setAdapter(viewCartAdapter);
-
-
-            }
-        });*/
 
         //order btn click
         order_btn.setOnClickListener(new View.OnClickListener() {
@@ -180,6 +158,14 @@ public class PlaceOrderFragment extends Fragment {
                 
                 //get selected checked list
                 
+
+            }
+        });
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getViewModel.setI_value(0);
 
             }
         });

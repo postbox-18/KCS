@@ -116,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
         snackbarLayout.addView(customSnackView, 0);
         snackbarLayout.setPadding(0, 0, 0, 0);
 
-        /*cancel_btn = customSnackView.findViewById(R.id.cancel_btn);
-        order_btn = customSnackView.findViewById(R.id.order_btn);*/
 
         view_cart_cardView = customSnackView.findViewById(R.id.view_cart_cardView);
         recyclerview_selected_count = customSnackView.findViewById(R.id.recyclerview_selected_count);
@@ -159,28 +157,12 @@ public class MainActivity extends AppCompatActivity {
                     snackbar.dismiss();
                 }
 
-               /* for (int k = 0; k < stringListLinkedHashMap.size(); k++) {
-                    list = stringListLinkedHashMap.get(headerList_title);
-                    if (list != null) {
-                        //MyLog.e(TAG, "maps>>checked list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(list));
-
-                    } else {
-                        MyLog.e(TAG, "maps>>checked list is null");
-                    }
-                }*/
 
 
             }
         });
 
-        //get hash map checked list
-        /*getViewModel.getCheck_s_mapMutable().observe(this, new Observer<List<LinkedHashMap<String, List<CheckedList>>>>() {
-            @Override
-            public void onChanged(List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps1) {
-                linkedHashMaps = linkedHashMaps1;
-                }
-                // MyLog.e(TAG, "items>>userList>>" + new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
-        });*/
+
 
         //get user-item list
         getViewModel.getUserItemListsMutableLiveData().observe(this, new Observer<List<UserItemList>>() {
@@ -331,18 +313,20 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getI_fragmentMutable().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-
-                MyLog.e(TAG, "int>>" + integer);
+                MyLog.e(TAG, "integer>>int>>" + integer);
                 if (integer == 1) {
-                    MyLog.e(TAG, "title>>out" + func_title);
+                    MyLog.e(TAG, "integer>>title>>out>>" + func_title);
                     getViewModel.setI_value(5);
                 } else {
-                    MyLog.e(TAG, "fun>>out" + funLists.size());
+                    MyLog.e(TAG, "integer>>fun>>out>>" + funLists.size());
                     showAlertDialog(funLists);
+                    MyLog.e(TAG, "integer>>fun_list" + new GsonBuilder().setPrettyPrinting().create().toJson(funLists));
                 }
-
             }
         });
+
+
+
     }
 
     @Override
@@ -370,64 +354,9 @@ super.onBackPressed()
 
     }
 
-    private void GetOrderBtn(List<CheckedList> checkedLists, String func_title) {
-
-        //get func list
-        getViewModel.getFunMutableList().observe(this, new Observer<List<FunList>>() {
-            @Override
-            public void onChanged(List<FunList> funLists1) {
-                funLists = funLists1;
-                MyLog.e(TAG, "fun>>in" + funLists.size());
-            }
-        });
-
-        //which fragment going to pass
-        getViewModel.getI_fragmentMutable().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-
-                MyLog.e(TAG, "int>>" + integer);
-                if (integer == 1) {
-                    MyLog.e(TAG, "title>>out" + func_title);
-                    SaveOrders(func_title);
-                } else {
-                    MyLog.e(TAG, "fun>>out" + funLists.size());
-                    showAlertDialog(funLists);
-
-                }
-
-            }
-        });
-
-    }
-
-    private void SaveOrders(String func_title) {
-        databaseReference = firebaseDatabase.getReference("Orders");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-
-                for (int i = 0; i < checkedLists.size(); i++) {
-                    //getFunc
-                    databaseReference.child(user_name).child(func_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists.get(i).getItemList());
-                }
-
-
-                Toast.makeText(MainActivity.this, "data added", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // if the data is not added or it is cancelled then
-                // we are displaying a failure toast message.
-                Toast.makeText(MainActivity.this, "Fail to add data " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void showAlertDialog(List<FunList> funLists) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplication());
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
         alertDialog.setTitle("Please select Function Type!");
         String[] str = new String[funLists.size()];
         for (int i = 0; i < funLists.size(); i++) {
