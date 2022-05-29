@@ -14,6 +14,7 @@ import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
+import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -104,6 +105,11 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<MyOrderFuncList>> myOrderFuncListsMutableLiveData=new MutableLiveData<>();
     private String func;
 
+    //selected header and item list to view list
+    private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
+    private   MutableLiveData<List<SelectedHeader>> selectedHeadersListMutableLiveData = new MutableLiveData<>();
+
+
     private String TAG="ViewClassModel";
 
 
@@ -119,6 +125,7 @@ public class GetViewModel extends AndroidViewModel {
         GetItem();
 
     }
+
 
     public void GetMyOrdersDetails(String s_user_name) {
 
@@ -179,6 +186,15 @@ public class GetViewModel extends AndroidViewModel {
             }
         });
 
+    }
+
+    public void setSelectedHeadersList(List<SelectedHeader> headerList) {
+        this.selectedHeadersList = headerList;
+        this.selectedHeadersListMutableLiveData.postValue(headerList);
+    }
+
+    public MutableLiveData<List<SelectedHeader>> getSelectedHeadersListMutableLiveData() {
+        return selectedHeadersListMutableLiveData;
     }
 
     public MutableLiveData<List<MyOrderFuncList>> getMyOrderFuncListsMutableLiveData() {

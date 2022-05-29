@@ -29,6 +29,7 @@ import com.example.kcs.Fragment.Items.ItemFragment;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemListAdapters;
 import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
+import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Profile.ProfileFragment;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     //private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps = new ArrayList<>();
     private  LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
     private List<UserItemList> userItemLists = new ArrayList<>();
+    private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private UserItemListAdapters userItemListAdapters;
     private String headerList_title, func_title;
     private List<CheckedList> checkedLists = new ArrayList<>();
@@ -300,6 +302,30 @@ public class MainActivity extends AppCompatActivity {
                 MyLog.e(TAG, "fun>>in" + funLists.size());
             }
         });
+
+        //get linked hasp map to view item list
+        //get Checked list hash map
+        getViewModel.getF_mapMutable().observe(this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
+                //MyLog.e(TAG, "cart>>f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                Set<String> stringSet=stringListLinkedHashMap.keySet();
+
+                for(String a:stringSet)
+                {
+                    SelectedHeader aList=new SelectedHeader(
+                            a
+                    );
+                    selectedHeadersList.add(aList);
+
+                }
+                getViewModel.setSelectedHeadersList(selectedHeadersList);
+                //MyLog.e(TAG, "cart>>list " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
+
+            }
+        });
+
+
 
         //which fragment going to pass
         getViewModel.getI_fragmentMutable().observe(this, new Observer<Integer>() {

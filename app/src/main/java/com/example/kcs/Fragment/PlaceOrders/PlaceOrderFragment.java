@@ -101,8 +101,19 @@ public class PlaceOrderFragment extends Fragment {
             }
         });
 
+
+        //get selected header list
+        getViewModel.getSelectedHeadersListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SelectedHeader>>() {
+            @Override
+            public void onChanged(List<SelectedHeader> selectedHeaders) {
+                viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,selectedHeaders);
+                recyclerview_order_list.setAdapter(viewCartAdapter);
+            }
+        });
+
+
         //get Checked list hash map
-        getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+       /* getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
                 MyLog.e(TAG, "cart>>f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
@@ -123,7 +134,7 @@ public class PlaceOrderFragment extends Fragment {
 
 
             }
-        });
+        });*/
 
         //order btn click
         order_btn.setOnClickListener(new View.OnClickListener() {

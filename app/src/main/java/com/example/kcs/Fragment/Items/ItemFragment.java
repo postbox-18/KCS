@@ -27,6 +27,8 @@ import com.example.kcs.Fragment.Header.HeaderList;
 
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemListAdapters;
+import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
+import com.example.kcs.Fragment.PlaceOrders.ViewCartAdapterHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -41,6 +43,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,6 +79,7 @@ public class ItemFragment extends Fragment {
     private GetViewModel getViewModel;
     private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps=new ArrayList<>();
     private  LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
+    private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
 
     private String TAG = "ItemFragment";
 
@@ -180,6 +184,7 @@ public class ItemFragment extends Fragment {
                 MyLog.e(TAG, "title>>out" + func_title);
             }
         });
+
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {
