@@ -47,6 +47,7 @@ public class PlaceOrderFragment extends Fragment {
 
     private List<FunList> funLists=new ArrayList<>();
     private List<CheckedList> checkedLists=new ArrayList<>();
+    private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
     private String func_title;
     private String TAG="PlaceOrderFragment";
@@ -102,17 +103,19 @@ public class PlaceOrderFragment extends Fragment {
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
                 MyLog.e(TAG, "cart>>f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 Set<String> stringSet=stringListLinkedHashMap.keySet();
-                List<String> aList = new ArrayList<String>(stringSet.size());
-                for (String x : stringSet)
-                    aList.add(x);
-                for(int i=0;i< aList.size();i++) {
 
-                    checkedLists=stringListLinkedHashMap.get(aList.get(i));
-                    MyLog.e(TAG, "cart>>list " +  new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
-                    viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,aList,checkedLists);
-                    recyclerview_order_list.setAdapter(viewCartAdapter);
+                for(String a:stringSet)
+                {
+                    SelectedHeader aList=new SelectedHeader(
+                            a
+                    );
+                    selectedHeadersList.add(aList);
 
                 }
+                MyLog.e(TAG, "cart>>list " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
+
+                viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,selectedHeadersList);
+                recyclerview_order_list.setAdapter(viewCartAdapter);
 
 
             }

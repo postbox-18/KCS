@@ -7,16 +7,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Items.CheckedList;
 
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterHeader.ViewHolder> {
     private Context context;
@@ -25,14 +31,13 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private String TAG = "ViewCartAdapter";
 
     private GetViewModel getViewModel;
-    private List<String> header;
+    private List<SelectedHeader> header=new ArrayList<>();
 
 
-    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<String> header, List<CheckedList> checkedLists) {
+    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList) {
         this.context=context;
         this.getViewModel=getViewModel;
-        this.header=header;
-        this.checkedLists=checkedLists;
+        this.header=selectedHeadersList;
     }
 
 
@@ -48,12 +53,27 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
     @Override
     public void onBindViewHolder(@NonNull ViewCartAdapterHeader.ViewHolder holder, int position) {
-        final String list=header.get(position);
-        holder.header.setText(list);
-        holder.recyclerview_item_list.setHasFixedSize(true);
-        holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        viewCartAdapter=new ViewCartAdapter(context,getViewModel,checkedLists);
-        holder.recyclerview_item_list.setAdapter(viewCartAdapter);
+        final SelectedHeader list=header.get(position);
+        holder.header.setText(list.getHeader());
+        //get Checked list hash map
+        getViewModel.getF_mapMutable().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
+                //MyLog.e(TAG, "cart>>adapter>>f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+
+                    checkedLists=stringListLinkedHashMap.get(list.getHeader());
+                    MyLog.e(TAG, "cart>>adapter>>list " +  new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
+
+                    holder.recyclerview_item_list.setHasFixedSize(true);
+                    holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+                    viewCartAdapter=new ViewCartAdapter(context,getViewModel,checkedLists);
+                    holder.recyclerview_item_list.setAdapter(viewCartAdapter);
+
+
+
+
+            }
+        });
 
 
     }
@@ -61,7 +81,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
     @Override
     public int getItemCount() {
-        return 1;
+        return header.size();
     }
 
 
