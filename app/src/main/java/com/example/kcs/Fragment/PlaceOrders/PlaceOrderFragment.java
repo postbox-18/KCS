@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunList;
@@ -50,6 +51,7 @@ public class PlaceOrderFragment extends Fragment {
     private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
     private String func_title;
+    private TextView func_title_view;
     private String TAG="PlaceOrderFragment";
 
 
@@ -84,6 +86,7 @@ public class PlaceOrderFragment extends Fragment {
 
         recyclerview_order_list=view.findViewById(R.id.recyclerview_order_list);
         order_btn=view.findViewById(R.id.order_btn);
+        func_title_view=view.findViewById(R.id.func_title);
 
 
         recyclerview_order_list.setHasFixedSize(true);
@@ -94,6 +97,7 @@ public class PlaceOrderFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 func_title=s;
+                func_title_view.setText(func_title);
             }
         });
 
