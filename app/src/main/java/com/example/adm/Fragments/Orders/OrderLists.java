@@ -8,8 +8,6 @@ public class OrderLists {
 
     }
 
-
-
     public String getS_user_name() {
         return s_user_name;
     }

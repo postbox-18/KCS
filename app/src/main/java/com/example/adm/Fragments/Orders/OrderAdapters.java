@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.adm.Classes.MyLog;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -53,24 +55,16 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         holder.user_name.setText(orderLists1.getS_user_name());
         holder.func.setText(orderLists1.getFunc());
         MyLog.e(TAG,"item>>name outside>"+orderLists1.getS_user_name());
-        /* String[] arr=(orderLists1.getList()).split(" ");*/
-
-        /* recyclerView_order_list.setHasFixedSize(true);
-                recyclerView_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));*/
 
         //get checked list in hash map
         getViewModel.getS_mapMutable().observe((LifecycleOwner) context, new Observer<List<LinkedHashMap<String, List<UserItemList>>>>() {
             @Override
             public void onChanged(List<LinkedHashMap<String, List<UserItemList>>> linkedHashMaps) {
-                MyLog.e(TAG,"item>>name inside>"+orderLists1.getS_user_name());
-                //MyLog.e(TAG,"f_map>>before"+new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
+
                 userItemLists=new ArrayList<>();
-                MyLog.e(TAG,"f_maps>>map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
+
                 for(int i=0;i<linkedHashMaps.size();i++) {
-               /*     Set<String> stringSet=stringListLinkedHashMap.keySet();
-                    List<String> aList = new ArrayList<String>(stringSet.size());
-                    for (String x : stringSet)
-                        aList.add(x);*/
+
                     userItemLists = linkedHashMaps.get(i).get(orderLists1.getS_user_name()+" "+ orderLists1.getFunc());
                     MyLog.e(TAG,"f_map>>"+orderLists1.getS_user_name());
                     MyLog.e(TAG,"f_map>>after"+new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
@@ -81,6 +75,16 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
                 }
             }
         });
+
+        //view click
+        holder.item_cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getViewModel.setFunc_title(orderLists1.getFunc());
+                getViewModel.setOrderListsView(orderLists1);
+            }
+        });
+
         //get linked hash map checked
         getViewModel.getF_mapMutable().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<UserItemList>>>() {
             @Override
@@ -90,10 +94,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
             }
         });
 
-        /*for(String i:arr) {
-            MyLog.e(TAG,"deta>>"+i);
-            holder.item.setText(i);
-        }*/
+
     }
 
 
@@ -108,6 +109,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         private ImageView profile;
         private TextView user_name, func;
         private RecyclerView itemList;
+        private CardView item_cardView;
 
         public ViewHolder(View view) {
             super(view);
@@ -115,6 +117,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
             user_name = view.findViewById(R.id.user_name);
             func = view.findViewById(R.id.func);
             itemList = view.findViewById(R.id.itemList);
+            item_cardView = view.findViewById(R.id.item_cardView);
 
 
         }

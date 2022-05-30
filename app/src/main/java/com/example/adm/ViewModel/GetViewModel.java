@@ -9,17 +9,15 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SharedPreferences_data;
-import com.example.adm.Fragments.Control_Panel.Func.FuncAdapter;
 import com.example.adm.Fragments.Control_Panel.Func.FuncList;
-import com.example.adm.Fragments.Control_Panel.Header.HeaderAdapter;
 import com.example.adm.Fragments.Control_Panel.Header.HeaderList;
-import com.example.adm.Fragments.Control_Panel.Item.ItemAdapter;
 import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
 import com.example.adm.Fragments.Control_Panel.UpdatedList;
+import com.example.adm.Fragments.Orders.BottomSheet.OrderItemLists;
+import com.example.adm.Fragments.Orders.BottomSheet.SelectedHeader;
 import com.example.adm.Fragments.Orders.UserItemList;
 import com.example.adm.Fragments.Orders.OrderLists;
 import com.example.adm.Fragments.Users.UserDetailsList;
-import com.example.adm.Login_Register.RegisterActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,10 +25,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.GsonBuilder;
 
+import java.nio.channels.SelectableChannel;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class GetViewModel extends AndroidViewModel {
     /*//Header List
@@ -60,72 +60,78 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<LinkedHashMap<String,List<ItemList>>>> s_mapMutable=new MutableLiveData<>();*/
 
     //check user login
-    private MutableLiveData<Boolean> EmailMutable=new MutableLiveData<>();
+    private MutableLiveData<Boolean> EmailMutable = new MutableLiveData<>();
     private String email;
-    private boolean check_email=false;
+    private boolean check_email = false;
 
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
 
-  /*  //Header Fragment
-    private FunList fun_title;
-    private MutableLiveData<HeaderList> headerListMutableLiveData = new MutableLiveData<>();*/
 
     //Selected Header
     private String header_title;
-    private MutableLiveData<String> header_title_Mutable=new MutableLiveData<>();
+    private MutableLiveData<String> header_title_Mutable = new MutableLiveData<>();
 
     //Selected Func
     private String func_title;
-    private MutableLiveData<String> func_title_Mutable=new MutableLiveData<>();
+    private MutableLiveData<String> func_title_Mutable = new MutableLiveData<>();
 
     //fragment
     private Integer i_value;
     private MutableLiveData<Integer> value = new MutableLiveData<>();
 
     //Orders list
-    private List<OrderLists> orderLists=new ArrayList<>();
-    private MutableLiveData<List<OrderLists>> orderListsMutable=new MutableLiveData<>();
+    private List<OrderLists> orderLists = new ArrayList<>();
+    private MutableLiveData<List<OrderLists>> orderListsMutable = new MutableLiveData<>();
 
 
     //User list
-    private List<UserDetailsList> userLists=new ArrayList<>();
-    private MutableLiveData<List<UserDetailsList>> UserListMutable=new MutableLiveData<>();
-
+    private List<UserDetailsList> userLists = new ArrayList<>();
+    private MutableLiveData<List<UserDetailsList>> UserListMutable = new MutableLiveData<>();
 
 
     //user-item list
-    private List<UserItemList> userItemLists=new ArrayList<>();
+    private List<UserItemList> userItemLists = new ArrayList<>();
 
     //Linked HashMap
-    private LinkedHashMap<String,List<UserItemList>> f_map=new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String,List<UserItemList>>> f_mapMutable=new MutableLiveData<>();
-    private List<LinkedHashMap<String,List<UserItemList>>> s_map=new ArrayList<>();
-    private MutableLiveData<List<LinkedHashMap<String,List<UserItemList>>>> s_mapMutable=new MutableLiveData<>();
+    private LinkedHashMap<String, List<UserItemList>> f_map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<UserItemList>>> f_mapMutable = new MutableLiveData<>();
+    private List<LinkedHashMap<String, List<UserItemList>>> s_map = new ArrayList<>();
+    private MutableLiveData<List<LinkedHashMap<String, List<UserItemList>>>> s_mapMutable = new MutableLiveData<>();
 
     //get Data from Firebase database
     //header list
-    private List<HeaderList> headerList=new ArrayList<>();
-    private MutableLiveData<List<HeaderList>> headerListMutableLiveData=new MutableLiveData<>();
+    private List<HeaderList> headerList = new ArrayList<>();
+    private MutableLiveData<List<HeaderList>> headerListMutableLiveData = new MutableLiveData<>();
     //func list
-    private List<FuncList> funcList=new ArrayList<>();
-    private MutableLiveData<List<FuncList>> funcListMutableLiveData=new MutableLiveData<>();
+    private List<FuncList> funcList = new ArrayList<>();
+    private MutableLiveData<List<FuncList>> funcListMutableLiveData = new MutableLiveData<>();
     //item list
-    private List<ItemArrayList> itemList=new ArrayList<>();
-    private MutableLiveData<List<ItemArrayList>> itemListMutableLiveData=new MutableLiveData<>();
+    private List<ItemArrayList> itemList = new ArrayList<>();
+    private MutableLiveData<List<ItemArrayList>> itemListMutableLiveData = new MutableLiveData<>();
 
     //updated list
-    private List<UpdatedList> updatedLists=new ArrayList<>();
-    private MutableLiveData<List<UpdatedList>> updatedListsMutableLiveData=new MutableLiveData<>();
+    private List<UpdatedList> updatedLists = new ArrayList<>();
+    private MutableLiveData<List<UpdatedList>> updatedListsMutableLiveData = new MutableLiveData<>();
 
+    //selected Item list
+    private List<OrderItemLists> orderItemLists = new ArrayList<>();
+    private MutableLiveData<List<OrderItemLists>> orderItemListsMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, List<OrderItemLists>> orderItemList_f_map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> orderItemList_f_mapMutableLiveData = new MutableLiveData<>();
 
-    private String TAG="ViewClassModel";
-    String s_user_name,func,header,item;
+    //orderlist to get item list view
+    private OrderLists orderListsView;
+    private MutableLiveData<OrderLists> orderListsViewMutableLiveData = new MutableLiveData<>();
 
-    public MutableLiveData<List<LinkedHashMap<String, List<UserItemList>>>> getS_mapMutable() {
-        return s_mapMutable;
-    }
+    //selected list
+    private List<SelectedHeader> selectedHeaders=new ArrayList<>();
+    private MutableLiveData<List<SelectedHeader>> selectedHeadersMutableLiveData=new MutableLiveData<>();
+
+    private String TAG = "ViewClassModel";
+    String s_user_name, func, header, item;
+
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -140,8 +146,32 @@ public class GetViewModel extends AndroidViewModel {
         GetUpdateFun();
         GetUpdateItem();
 
+    }
+
+    public MutableLiveData<List<SelectedHeader>> getSelectedHeadersMutableLiveData() {
+        return selectedHeadersMutableLiveData;
+    }
+
+    public void setOrderListsView(OrderLists orderListsView) {
+        this.orderListsView = orderListsView;
+        this.orderListsViewMutableLiveData.postValue(orderListsView);
+    }
+
+    public MutableLiveData<OrderLists> getOrderListsViewMutableLiveData() {
+        return orderListsViewMutableLiveData;
+    }
+
+    public MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> getOrderItemList_f_mapMutableLiveData() {
+        return orderItemList_f_mapMutableLiveData;
+    }
+
+    public MutableLiveData<List<OrderItemLists>> getOrderItemListsMutableLiveData() {
+        return orderItemListsMutableLiveData;
+    }
 
 
+    public MutableLiveData<List<LinkedHashMap<String, List<UserItemList>>>> getS_mapMutable() {
+        return s_mapMutable;
     }
 
     public void setUpdatedLists(List<UpdatedList> updatedLists) {
@@ -172,13 +202,12 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "list>>snap>>" + snapshot);
-                int size=0;
+                int size = 0;
 
 
-                for(DataSnapshot dataSnapshot: snapshot.getChildren())
-                {
-                    itemList=new ArrayList<>();
-                    ItemArrayList itemList1=new ItemArrayList(
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    itemList = new ArrayList<>();
+                    ItemArrayList itemList1 = new ItemArrayList(
                             dataSnapshot.getValue().toString()
                     );
                     itemList.add(itemList1);
@@ -187,7 +216,6 @@ public class GetViewModel extends AndroidViewModel {
                 itemListMutableLiveData.postValue(itemList);
                 //MyLog.e(TAG, "data>>item>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemList));
                 size++;
-
 
 
             }
@@ -207,12 +235,12 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "home>>snap>>fun>>" + snapshot);
-                int size=0;
-                funcList=new ArrayList<>();
+                int size = 0;
+                funcList = new ArrayList<>();
 
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                    String path=""+size;
-                    MyLog.e(TAG, "home>>snap>>fun>>" +  path);
+                    String path = "" + size;
+                    MyLog.e(TAG, "home>>snap>>fun>>" + path);
                     //MyLog.e(TAG, "home>>snap>>fun>>" +  datas.child("0").getValue().toString());
                     FuncList funList1 = new FuncList(
                             datas.getValue().toString());
@@ -232,6 +260,7 @@ public class GetViewModel extends AndroidViewModel {
             }
         });
     }
+
     private void GetUpdateHeader() {
         databaseReference = firebaseDatabase.getReference("Items").child("Category");
 
@@ -239,11 +268,11 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "home>>snap>>" + snapshot);
-                int size=0;
-                headerList=new ArrayList<>();
+                int size = 0;
+                headerList = new ArrayList<>();
                 for (DataSnapshot datas : snapshot.getChildren()) {
 
-                    String path=""+size;
+                    String path = "" + size;
 
                     //MyLog.e(TAG, "home>>snap>>" +  datas.child("a").getValue().toString());
 
@@ -255,7 +284,7 @@ public class GetViewModel extends AndroidViewModel {
 
                 }
 
-               headerListMutableLiveData.postValue(headerList);
+                headerListMutableLiveData.postValue(headerList);
                 // MyLog.e(TAG, "data>>header>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerList));
 
             }
@@ -289,7 +318,8 @@ public class GetViewModel extends AndroidViewModel {
                   /*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
                     MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
                     MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());
-                  */  UserDetailsList userList = new UserDetailsList(
+                  */
+                    UserDetailsList userList = new UserDetailsList(
                             datas.child("username").getValue().toString(),
                             datas.child("email").getValue().toString(),
                             datas.child("phone_number").getValue().toString()
@@ -317,37 +347,37 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                int size=0;
+                int size = 0;
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     MyLog.e(TAG, "snap>>datas>>" + datas);
                     MyLog.e(TAG, "snap>>datas>>" + datas.getKey().toString());
-                    userItemLists=new ArrayList<>();
-                    s_user_name=datas.getKey().toString();
+                    userItemLists = new ArrayList<>();
+                    s_user_name = datas.getKey().toString();
                     for (DataSnapshot dataSnapshot : datas.getChildren()) {
-                        func=dataSnapshot.getKey().toString();
+                        func = dataSnapshot.getKey().toString();
                         MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot);
                         MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot.getKey().toString());
-                        userItemLists=new ArrayList<>();
+                        userItemLists = new ArrayList<>();
                         for (DataSnapshot shot : dataSnapshot.getChildren()) {
-                            header=shot.getKey().toString();
+                            header = shot.getKey().toString();
                             MyLog.e(TAG, "snap>>shots>>" + shot);
                             MyLog.e(TAG, "snap>>shots>>" + shot.getKey().toString());
-                                size=0;
-                                for(DataSnapshot data:shot.getChildren())
-                                {
-                                    MyLog.e(TAG, "snap>>data ss>>" + data.getKey().toString());
+                            size = 0;
+                            for (DataSnapshot data : shot.getChildren()) {
+                                MyLog.e(TAG, "snap>>data ss>>" + data.getKey().toString());
 
-                                    size++;
-                                }
-                            MyLog.e(TAG,"snap>>size>"+size);
-                            UserItemList itemList=new UserItemList(
+                                size++;
+                            }
+
+                            MyLog.e(TAG, "snap>>size>" + size);
+                            UserItemList itemList = new UserItemList(
                                     header,
                                     size
                             );
-                            size=0;
+                            size = 0;
                             userItemLists.add(itemList);
-                            String s=s_user_name+" "+func;
-                            f_map.put(s,userItemLists);
+                            String s = s_user_name + " " + func;
+                            f_map.put(s, userItemLists);
                             //MyLog.e(TAG,"snap>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
 
                         }
@@ -360,11 +390,12 @@ public class GetViewModel extends AndroidViewModel {
                     }
 
                 }
+
                 orderListsMutable.postValue(orderLists);
                 f_mapMutable.postValue(f_map);
                 s_map.add(f_map);
                 s_mapMutable.postValue(s_map);
-                MyLog.e(TAG,"f_maps>>map get>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
+                //MyLog.e(TAG,"f_maps>>map get>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
             }
 
             @Override
@@ -483,20 +514,18 @@ public class GetViewModel extends AndroidViewModel {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               // MyLog.e(TAG, "snap>>" + snapshot);
+                // MyLog.e(TAG, "snap>>" + snapshot);
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     MyLog.e(TAG, "error>>at firebase  emails " + datas.child("email").getValue().toString());
-                    if(Objects.equals(email, datas.child("email").getValue().toString())) {
+                    if (Objects.equals(email, datas.child("email").getValue().toString())) {
                         new SharedPreferences_data(getApplication()).setS_email(datas.child("email").getValue().toString());
                         new SharedPreferences_data(getApplication()).setS_user_name(datas.child("username").getValue().toString());
                         new SharedPreferences_data(getApplication()).setS_phone_number(datas.child("phone_number").getValue().toString());
-                        check_email=true;
+                        check_email = true;
                         EmailMutable.postValue(check_email);
-                        MyLog.e(TAG, "boolean>>at firebase  emails "+check_email);
+                        MyLog.e(TAG, "boolean>>at firebase  emails " + check_email);
                         break;
-                    }
-                    else
-                    {
+                    } else {
                         continue;
 
                         //MyLog.e(TAG, "error>>at firebase  emails "+check_email);
@@ -512,7 +541,7 @@ public class GetViewModel extends AndroidViewModel {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
             }
         });
-        MyLog.e(TAG, "boolean>>at return "+check_email);
+        MyLog.e(TAG, "boolean>>at return " + check_email);
         return check_email;
     }
 
@@ -524,18 +553,18 @@ public class GetViewModel extends AndroidViewModel {
         return funMutableList;
     }*/
 
-   /* private void GetFun() {
-        databaseReference = firebaseDatabase.getReference("Items").child("Function");
+    /* private void GetFun() {
+         databaseReference = firebaseDatabase.getReference("Items").child("Function");
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "home>>snap>>fun>>" + snapshot);
-                int size=0;
-                funLists=new ArrayList<>();
+         databaseReference.addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                 MyLog.e(TAG, "home>>snap>>fun>>" + snapshot);
+                 int size=0;
+                 funLists=new ArrayList<>();
 
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                  *//*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
+                 for (DataSnapshot datas : snapshot.getChildren()) {
+                   *//*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
                     MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
                     MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*//*
                     String path=""+size;
@@ -619,8 +648,8 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void UpdateListBase() {
-        for(int i=0;i<updatedLists.size();i++) {
-            int n=updatedLists.get(i).getPosition();
+        for (int i = 0; i < updatedLists.size(); i++) {
+            int n = updatedLists.get(i).getPosition();
             databaseReference = firebaseDatabase.getReference("DUMMY").child(updatedLists.get(i).getTitle());
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -643,5 +672,61 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
+
+    public void GetViewList(OrderLists orderLists) {
+        MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list before11>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
+        orderItemList_f_map.clear();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Orders").child(orderLists.getS_user_name()).child(orderLists.getFunc());
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int size = 0;
+
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                    orderItemLists=new ArrayList<>();
+                    header = datas.getKey().toString();
+                    MyLog.e(TAG, "itemlists>>datas>>" + datas);
+                    MyLog.e(TAG, "orderItemList_f_map>>datas>>" + datas.getKey().toString());
+                    for (DataSnapshot dataSnapshot : datas.getChildren()) {
+                        MyLog.e(TAG, "itemlists>>datasnap>>" + dataSnapshot);
+                        MyLog.e(TAG, "orderItemList_f_map>>datasnap>>" + dataSnapshot.getKey().toString()+"\t==\t"+dataSnapshot.getValue().toString());
+                        OrderItemLists itemLists = new OrderItemLists(
+                                dataSnapshot.getValue().toString()
+                        );
+                        orderItemLists.add(itemLists);
+                        MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list before>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
+                        orderItemList_f_map.put(header,orderItemLists);
+                        MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list after>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
+                        size++;
+                    }
+
+                }
+                orderItemList_f_mapMutableLiveData.postValue(orderItemList_f_map);
+                //get selected header list
+                //get linked hasp map to view item list
+                selectedHeaders.clear();
+                Set<String> stringSet = orderItemList_f_map.keySet();
+
+                for (String a : stringSet) {
+                    SelectedHeader aList = new SelectedHeader(
+                            a
+                    );
+                    selectedHeaders.add(aList);
+
+                }
+                selectedHeadersMutableLiveData.postValue(selectedHeaders);
+
+
+                MyLog.e(TAG,"itemlists>>f_maps>>map get>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }

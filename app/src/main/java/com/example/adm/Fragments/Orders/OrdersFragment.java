@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
+import com.example.adm.Fragments.Orders.BottomSheet.SelectedHeader;
+import com.example.adm.Fragments.Orders.BottomSheet.ViewCartAdapterHeader;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +49,10 @@ public class OrdersFragment extends Fragment {
 
     private OrderAdapters orderAdapters;
     private RecyclerView recyclerView_order_list;
+
+    //bottom sheet view
+    RecyclerView recyclerview_order_item_details;
+
 
     private GetViewModel getViewModel;
 
@@ -100,55 +107,45 @@ public class OrdersFragment extends Fragment {
             }
         });
 
+        //Bottom sheet
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
+        View bottom_view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_order_details, null);
+        recyclerview_order_item_details = bottom_view.findViewById(R.id.recyclerview_order_item_details);
+        recyclerview_order_item_details.setHasFixedSize(true);
+        recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        /*firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Orders");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+        //get orderItem list to view item list
+        getViewModel.getOrderListsViewMutableLiveData().observe(getViewLifecycleOwner(), new Observer<OrderLists>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "snap>>" + snapshot);
-                int size=0;
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                    MyLog.e(TAG, "snap>>snap childern>>" + snapshot.getValue().toString());
-                    MyLog.e(TAG, "snap>>snap childern>>" + snapshot.getKey());
-                    MyLog.e(TAG, "snap>>datas>>" + datas);
-                    s_user_name=datas.getKey().toString();
-                    for (DataSnapshot dataSnapshot : datas.getChildren()) {
-                        func=dataSnapshot.getKey().toString();
-                        MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot);
-                        for (DataSnapshot shot : dataSnapshot.getChildren()) {
-                            header=shot.getKey().toString();
-                            MyLog.e(TAG, "snap>>shots>>" + shot);
-                            for (DataSnapshot data : shot.getChildren()) {
-                                MyLog.e(TAG, "snap>>data>>" + data);
-                                item+=data.getValue().toString()+" ";
-                                size++;
-                            }
-                            OrderLists orderLists1 = new OrderLists(
-                                    s_user_name,
-                                    func,
-                                    header,
-                                    item,
-                                    size
-                            );
-                            size=0;
-                            orderLists.add(orderLists1);
-                        }
-                    }
+            public void onChanged(OrderLists orderLists) {
+                if(orderLists!=null) {
+                    getViewModel.GetViewList(orderLists);
+                    bottomSheet.setContentView(bottom_view);
+                    bottomSheet.show();
+
 
                 }
-                MyLog.e(TAG,"deta>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderLists));
-                orderAdapters=new OrderAdapters(getContext(),orderLists);
-                recyclerView_order_list.setAdapter(orderAdapters);
-
-
+                else
+                {
+                    MyLog.e(TAG,"itemAd>> orderItemView list null");
+                }
             }
+        });
 
+        //get selected List
+        getViewModel.getSelectedHeadersMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SelectedHeader>>() {
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+            public void onChanged(List<SelectedHeader> selectedHeaders) {
+                ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,selectedHeaders);
+                recyclerview_order_item_details.setAdapter(viewCartAdapter);
             }
-        });*/
+        });
+
+
+
+
+
         return view;
     }
 }
