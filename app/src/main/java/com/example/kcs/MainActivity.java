@@ -374,6 +374,7 @@ super.onBackPressed()
                         getViewModel.setFunc_title(str[i]);
                         dialog.dismiss();
                         getViewModel.setI_value(5);
+
                         break;
                     } else {
                         continue;
