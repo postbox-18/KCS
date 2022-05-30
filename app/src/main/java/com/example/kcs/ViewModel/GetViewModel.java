@@ -330,15 +330,23 @@ public class GetViewModel extends AndroidViewModel {
                     str = (ArrayList<String>) snapshot.child(headerList.get(k).getHeader()).getValue();
                     for (String i : str) {
                         MyLog.e(TAG, "list>>" + i);
-                        ItemList itemLists1 = new ItemList(
-                                i);
-                        itemLists.add(itemLists1);
+                        if(i!=null) {
+                            ItemList itemLists1 = new ItemList(
+                                    i);
+                            itemLists.add(itemLists1);
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
                     itemMutable.postValue(itemLists);
+                    MyLog.e(TAG, "stringListLinkedHashMap1>>set item>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     f_maps.put(headerList.get(k).getHeader(),itemLists);
                     //MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     size++;
                 }
+
                 s_map.add(f_maps);
                 s_mapMutable.postValue(s_map);
                 //MyLog.e(TAG, "hashmap>>item list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
@@ -473,6 +481,7 @@ public class GetViewModel extends AndroidViewModel {
         header_title_Mutable.postValue(header);
         List<ItemList> itemLists=s_map.get(0).get(header);
         //itemLists=itemLists1;
+        MyLog.e(TAG, "stringListLinkedHashMap1>>set>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
         this.itemHeaderMutable.postValue(itemLists);
         MyLog.e(TAG,"itm>nut>>"+itemLists.size());
         //MyLog.e(TAG, "hashmap>>data>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));

@@ -149,6 +149,7 @@ public class ItemFragment extends Fragment {
         getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
+
                 stringListLinkedHashMap=stringListLinkedHashMap1;
             }
         });
@@ -168,6 +169,7 @@ public class ItemFragment extends Fragment {
             @Override
             public void onChanged(List<ItemList> itemLists1) {
                 itemLists = itemLists1;
+                MyLog.e(TAG, "stringListLinkedHashMap1>>get>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                 recyclerview_item.setHasFixedSize(true);
                 recyclerview_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                 itemListAdapater = new ItemListAdapater(getContext(), itemLists, headerList_title, getViewModel,linkedHashMaps,stringListLinkedHashMap);
