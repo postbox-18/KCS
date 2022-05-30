@@ -11,6 +11,7 @@ public class SharedPreferences_data {
     private static final String s_password="s_password";
     private static final String enter_password="enter_password";
     private static final String boolen_check="boolen_check";
+    private static final String checked_item_list="checked_item_list";
 
     private static final String s_email="s_email";
     public SharedPreferences_data(Context context) {
@@ -86,6 +87,13 @@ public class SharedPreferences_data {
     }
     public static String getBoolen_check() {
         return sharedPreferences.getString(boolen_check, null);
+    }
+  public void setChecked_item_list(String checked_item_list1){
+        sharedPreferences.edit().putString(checked_item_list, checked_item_list1).commit();
+
+    }
+    public static String getChecked_item_list() {
+        return sharedPreferences.getString(checked_item_list, null);
     }
 
 
