@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="func-title"
                 android:textAlignment="center"
+                android:fontFamily="@font/robotomediumitalic"
                 android:textColor="@color/colorSecondary"
                 android:textSize="18dp"
                 android:textStyle="bold|italic" />

@@ -37,6 +37,7 @@
                         android:layout_height="wrap_content"
                         android:paddingStart="10dp"
                         android:text="func-title"
+                        android:fontFamily="@font/robotothinitalic"
                         android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/colorPrimary"
                         android:textSize="12dp" />

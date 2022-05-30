@@ -42,6 +42,7 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:textSize="25dp"
+               android:fontFamily="@font/bebaskai"
                android:textColor="@color/colorSecondary"
                android:textStyle="bold|italic"
                android:text="sdfg"/>
@@ -50,6 +51,7 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:textSize="22dp"
+                   android:fontFamily="@font/bebaskai"
                android:textColor="@color/colorSecondary"
                android:textStyle="italic"
                android:text="sdfg"/>
@@ -78,6 +80,7 @@
                    android:text="@string/my_orders"
                    android:padding="15dp"
                    android:textSize="18dp"
+                   android:fontFamily="@font/robotoblack"
                    android:textColor="@color/colorPrimary"
                    android:textStyle="bold|italic"/>
            </androidx.cardview.widget.CardView>
@@ -103,6 +106,7 @@
                    android:layout_width="match_parent"
                    android:layout_height="match_parent"
                    android:text="LOG OUT"
+                   android:fontFamily="@font/robotocondensedbold"
                    android:textColor="@color/White"
                     android:drawableStart="@drawable/ic_box_arrow_right"
                    android:drawablePadding="15dp"
