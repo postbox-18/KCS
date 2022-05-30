@@ -58,9 +58,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerview_selected_count;
     //private AppCompatButton order_btn, cancel_btn;
     //private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps = new ArrayList<>();
-    private  LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
+    private LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap = new LinkedHashMap<>();
     private List<UserItemList> userItemLists = new ArrayList<>();
-    private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
+    private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private UserItemListAdapters userItemListAdapters;
     private String headerList_title, func_title;
     private List<CheckedList> checkedLists = new ArrayList<>();
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private List<HeaderList> headerLists = new ArrayList<>();
     private CardView view_cart_cardView;
     private String user_name;
+    private Integer integer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getHeaderListMutableList().observe(this, new Observer<List<HeaderList>>() {
             @Override
             public void onChanged(List<HeaderList> headerLists1) {
-                headerLists=headerLists1;
+                headerLists = headerLists1;
             }
         });
 
@@ -128,11 +129,11 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getF_mapMutable().observe(this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
-                stringListLinkedHashMap=stringListLinkedHashMap1;
-                MyLog.e(TAG,"chs>>keyset>>"+ stringListLinkedHashMap.keySet());
+                stringListLinkedHashMap = stringListLinkedHashMap1;
+                MyLog.e(TAG, "chs>>keyset>>" + stringListLinkedHashMap.keySet());
                 //MyLog.e(TAG,"f_map main>>"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 //MyLog.e(TAG,"chs>>before"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
-                Set<String> stringSet=stringListLinkedHashMap.keySet();
+                Set<String> stringSet = stringListLinkedHashMap.keySet();
                 List<String> aList = new ArrayList<String>(stringSet.size());
                 for (String x : stringSet)
                     aList.add(x);
@@ -140,9 +141,9 @@ public class MainActivity extends AppCompatActivity {
 
                 //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
                 userItemLists.clear();
-                for(int i=0;i<aList.size();i++) {
-                    MyLog.e(TAG,"chs>>list header>> "+ aList.get(i));
-                    MyLog.e(TAG,"chs>>list size "+ stringListLinkedHashMap.get(aList.get(i)).size());
+                for (int i = 0; i < aList.size(); i++) {
+                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                    MyLog.e(TAG, "chs>>list size " + stringListLinkedHashMap.get(aList.get(i)).size());
                     UserItemList userItemList = new UserItemList(
                             aList.get(i),
                             stringListLinkedHashMap.get(aList.get(i)).size()
@@ -158,10 +159,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-
             }
         });
-
 
 
         //get user-item list
@@ -194,13 +193,45 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });*/
 
-                //View Cart Btn
+                //get View Cart Btn details
+                //get func list
+                getViewModel.getFunMutableList().observe(MainActivity.this, new Observer<List<FunList>>() {
+                    @Override
+                    public void onChanged(List<FunList> funLists1) {
+                        funLists = funLists1;
+                        MyLog.e(TAG, "fun>>in" + funLists.size());
+                    }
+                });
+
+                //get linked hasp map to view item list
+                //get Checked list hash map
+                getViewModel.getF_mapMutable().observe(MainActivity.this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+                    @Override
+                    public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
+                        //MyLog.e(TAG, "cart>>f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                        stringListLinkedHashMap = stringListLinkedHashMap1;
+
+                        //MyLog.e(TAG, "cart>>list " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
+
+                    }
+                });
+
+
+                //which fragment going to pass
+                getViewModel.getI_fragmentMutable().observe(MainActivity.this, new Observer<Integer>() {
+                    @Override
+                    public void onChanged(Integer integer1) {
+                        integer = integer1;
+
+                    }
+                });
+
                 view_cart_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         snackbar.dismiss();
                         //get func title is selected
-                        GetFuncTitleList();
+                        GetFuncTitleList(funLists, stringListLinkedHashMap, integer);
 
                     }
                 });
@@ -208,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
 
 
         getViewModel.setI_value(0);
@@ -255,7 +285,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 5:
                         fragment = new PlaceOrderFragment();
-
                         fragmentTAg = "OrderFragment";
                         break;
                     default:
@@ -275,56 +304,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void GetFuncTitleList() {
-        //get func list
-        getViewModel.getFunMutableList().observe(this, new Observer<List<FunList>>() {
-            @Override
-            public void onChanged(List<FunList> funLists1) {
-                funLists = funLists1;
-                MyLog.e(TAG, "fun>>in" + funLists.size());
-            }
-        });
+    private void GetFuncTitleList(List<FunList> funLists, LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap, Integer integer) {
 
         //get linked hasp map to view item list
-        //get Checked list hash map
-        getViewModel.getF_mapMutable().observe(this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
-                //MyLog.e(TAG, "cart>>f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                Set<String> stringSet=stringListLinkedHashMap.keySet();
+        Set<String> stringSet = stringListLinkedHashMap.keySet();
 
-                for(String a:stringSet)
-                {
-                    SelectedHeader aList=new SelectedHeader(
-                            a
-                    );
-                    selectedHeadersList.add(aList);
+        for (String a : stringSet) {
+            SelectedHeader aList = new SelectedHeader(
+                    a
+            );
+            selectedHeadersList.add(aList);
 
-                }
-                getViewModel.setSelectedHeadersList(selectedHeadersList);
-                //MyLog.e(TAG, "cart>>list " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
-
-            }
-        });
-
-
-
-        //which fragment going to pass
-        getViewModel.getI_fragmentMutable().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                MyLog.e(TAG, "integer>>int>>" + integer);
-                if (integer == 1) {
-                    MyLog.e(TAG, "integer>>title>>out>>" + func_title);
-                    getViewModel.setI_value(5);
-                } else {
-                    MyLog.e(TAG, "integer>>fun>>out>>" + funLists.size());
-                    showAlertDialog(funLists);
-                    MyLog.e(TAG, "integer>>fun_list" + new GsonBuilder().setPrettyPrinting().create().toJson(funLists));
-                }
-            }
-        });
-
+        }
+        getViewModel.setSelectedHeadersList(selectedHeadersList);
+        MyLog.e(TAG, "integer>>int>>" + integer);
+        if (integer == 1) {
+            MyLog.e(TAG, "integer>>title>>out>>" + func_title);
+            getViewModel.setI_value(5);
+        } else {
+            MyLog.e(TAG, "integer>>fun>>out>>" + funLists.size());
+            showAlertDialog(funLists);
+            MyLog.e(TAG, "integer>>fun_list" + new GsonBuilder().setPrettyPrinting().create().toJson(funLists));
+        }
 
 
     }
