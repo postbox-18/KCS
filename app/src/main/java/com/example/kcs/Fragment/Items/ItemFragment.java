@@ -27,6 +27,8 @@ import com.example.kcs.Fragment.Header.HeaderList;
 
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemListAdapters;
+import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
+import com.example.kcs.Fragment.PlaceOrders.ViewCartAdapterHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -41,6 +43,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,6 +78,8 @@ public class ItemFragment extends Fragment {
     //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
     private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps=new ArrayList<>();
+    private  LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
+    private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
 
     private String TAG = "ItemFragment";
 
@@ -140,6 +145,14 @@ public class ItemFragment extends Fragment {
             }
         });
 
+        //linked hash map of checked list
+        getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
+                stringListLinkedHashMap=stringListLinkedHashMap1;
+            }
+        });
+
 
         //get view model data
         getViewModel.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -157,7 +170,7 @@ public class ItemFragment extends Fragment {
                 itemLists = itemLists1;
                 recyclerview_item.setHasFixedSize(true);
                 recyclerview_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                itemListAdapater = new ItemListAdapater(getContext(), itemLists, headerList_title, getViewModel,linkedHashMaps);
+                itemListAdapater = new ItemListAdapater(getContext(), itemLists, headerList_title, getViewModel,linkedHashMaps,stringListLinkedHashMap);
                 recyclerview_item.setAdapter(itemListAdapater);
                 itemListAdapater.notifyDataSetChanged();
             }
@@ -171,6 +184,7 @@ public class ItemFragment extends Fragment {
                 MyLog.e(TAG, "title>>out" + func_title);
             }
         });
+
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {

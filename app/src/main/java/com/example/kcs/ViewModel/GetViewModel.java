@@ -14,6 +14,8 @@ import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
+import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
+import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,7 +46,11 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<CheckedList>> checkedList_Mutable=new MutableLiveData<>();
     private List<CheckedList> checkedLists=new ArrayList<>();
 
-    //Linked HashMap item list
+    //Linked HashMap item checked list
+    private LinkedHashMap<String,List<CheckedList>> f_map=new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String,List<CheckedList>>> f_mapMutable=new MutableLiveData<>();
+
+    // item checked list Linked HashMap
     private List<LinkedHashMap<String,List<CheckedList>>> check_s_map=new ArrayList<>();
     private MutableLiveData<List<LinkedHashMap<String,List<CheckedList>>>> check_s_mapMutable=new MutableLiveData<>();
 
@@ -53,7 +59,7 @@ public class GetViewModel extends AndroidViewModel {
     private List<ItemList> itemHeaderLists=new ArrayList<>();
 
     //Linked HashMap item list
-    private LinkedHashMap<String,List<ItemList>> f_map=new LinkedHashMap<>();
+    private LinkedHashMap<String,List<ItemList>> f_maps=new LinkedHashMap<>();
     private List<LinkedHashMap<String,List<ItemList>>> s_map=new ArrayList<>();
     private MutableLiveData<List<LinkedHashMap<String,List<ItemList>>>> s_mapMutable=new MutableLiveData<>();
 
@@ -90,20 +96,133 @@ public class GetViewModel extends AndroidViewModel {
     private List<UserItemList> userItemLists=new ArrayList<>();
     private MutableLiveData<List<UserItemList>> userItemListsMutableLiveData=new MutableLiveData<>();
 
+    //my orders list
+    private List<MyOrdersList> myOrdersList=new ArrayList<>();
+    private MutableLiveData<List<MyOrdersList>> myOrdersListsMutableLiveData=new MutableLiveData<>();
+    private  MutableLiveData<LinkedHashMap<String, List<MyOrdersList>>> myordersHashMapMutable=new MutableLiveData<>();
+    private LinkedHashMap<String, List<MyOrdersList>> f_mapMyorders=new LinkedHashMap<>();
+    private List<MyOrderFuncList> myOrderFuncLists=new ArrayList<>();
+    private MutableLiveData<List<MyOrderFuncList>> myOrderFuncListsMutableLiveData=new MutableLiveData<>();
+    private String func;
+
+    //selected header and item list to view list
+    private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
+    private   MutableLiveData<List<SelectedHeader>> selectedHeadersListMutableLiveData = new MutableLiveData<>();
+
+
     private String TAG="ViewClassModel";
 
 
 
     public GetViewModel(@NonNull Application application) {
         super(application);
+        String s_user_name=new SharedPreferences_data(application).getS_user_name();
+
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
         GetHeader();
         GetFun();
         GetItem();
 
+    }
 
 
+    public void GetMyOrdersDetails(String s_user_name) {
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int size=0;
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                    MyLog.e(TAG, "onData>>datas>>" + datas);
+                    MyLog.e(TAG, "onData>>datas>>" + datas.getKey().toString());
+                    func=datas.getKey().toString();
+                    for (DataSnapshot dataSnapshot : datas.getChildren()) {
+                        String header=dataSnapshot.getKey().toString();
+                        MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
+                        MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot.getKey().toString());
+
+                        size=0;
+                        for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                            MyLog.e(TAG, "onData>>shots>>" + shot);
+                            MyLog.e(TAG, "onData>>shots>>" + shot.getKey().toString());
+                            size++;
+                            MyLog.e(TAG,"onData>>size>"+size);
+
+                        }
+                        MyOrdersList itemList=new MyOrdersList(
+                                header,
+                                size
+                        );
+                        myOrdersList.add(itemList);
+                        f_mapMyorders.put(func,myOrdersList);
+
+                        myordersHashMapMutable.postValue(f_mapMyorders);
+
+
+                        size=0;
+
+
+                       // MyLog.e(TAG,"onData>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
+
+                        //get func name into list
+                        MyOrderFuncList list=new MyOrderFuncList(
+                                func
+                        );
+                        myOrderFuncLists.add(list);
+                        myOrderFuncListsMutableLiveData.postValue(myOrderFuncLists);
+
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(),"Fail to get data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    public void setSelectedHeadersList(List<SelectedHeader> headerList) {
+        this.selectedHeadersList = headerList;
+        this.selectedHeadersListMutableLiveData.postValue(headerList);
+    }
+
+    public MutableLiveData<List<SelectedHeader>> getSelectedHeadersListMutableLiveData() {
+        return selectedHeadersListMutableLiveData;
+    }
+
+    public MutableLiveData<List<MyOrderFuncList>> getMyOrderFuncListsMutableLiveData() {
+        return myOrderFuncListsMutableLiveData;
+    }
+
+    public MutableLiveData<LinkedHashMap<String, List<MyOrdersList>>> getMyordersHashMapMutable() {
+        return myordersHashMapMutable;
+    }
+
+
+    public void setMyOrdersList(List<MyOrdersList> myOrdersList) {
+        this.myOrdersList = myOrdersList;
+        this.myOrdersListsMutableLiveData.postValue(myOrdersList);
+    }
+
+    public MutableLiveData<List<MyOrdersList>> getMyOrdersListsMutableLiveData() {
+        return myOrdersListsMutableLiveData;
+    }
+
+    public void setF_map(LinkedHashMap<String, List<CheckedList>> f_map) {
+        //MyLog.e(TAG, "f_maps>>set>>" + new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
+        this.f_map = f_map;
+        this.f_mapMutable.postValue(f_map);
+    }
+
+    public MutableLiveData<LinkedHashMap<String, List<CheckedList>>> getF_mapMutable() {
+        return f_mapMutable;
     }
 
     public void setUserItemLists(List<UserItemList> userItemLists) {
@@ -216,11 +335,11 @@ public class GetViewModel extends AndroidViewModel {
                         itemLists.add(itemLists1);
                     }
                     itemMutable.postValue(itemLists);
-                    f_map.put(headerList.get(k).getHeader(),itemLists);
+                    f_maps.put(headerList.get(k).getHeader(),itemLists);
                     //MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     size++;
                 }
-                s_map.add(f_map);
+                s_map.add(f_maps);
                 s_mapMutable.postValue(s_map);
                 //MyLog.e(TAG, "hashmap>>item list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
 

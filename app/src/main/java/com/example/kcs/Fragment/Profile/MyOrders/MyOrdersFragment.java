@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +18,10 @@ import android.widget.Toast;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 
+import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.MyOrderFuncList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,12 +54,14 @@ public class MyOrdersFragment extends Fragment {
     private GetViewModel getViewModel;
     private RecyclerView recyclerview_my_orders;
     private List<MyOrdersList> myOrdersList=new ArrayList<>();
+    private List<MyOrderFuncList> myOrderFuncLists=new ArrayList<>();
     private MyOrdersAdapter myOrdersAdapter;
     private String header,func,s_user_name;
     private String item="";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private String TAG = "MyOrdersFragment";
+    private LinkedHashMap<String,List<MyOrdersList>> myordersHashMap=new LinkedHashMap<>();
 
     public MyOrdersFragment() {
         // Required empty public constructor
@@ -104,46 +111,17 @@ public class MyOrdersFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance();
         s_user_name=new SharedPreferences_data(getContext()).getS_user_name();
 
-        databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        //get Func name list
+        getViewModel.getMyOrderFuncListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<MyOrderFuncList>>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "snap>>" + snapshot);
-                int size=0;
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                    MyLog.e(TAG, "snap>>snap childern>>" + snapshot.getValue().toString());
-                    MyLog.e(TAG, "snap>>snap childern>>" + snapshot.getKey());
-                    MyLog.e(TAG, "snap>>datas>>" + datas);
-                    func=datas.getKey().toString();
-                    for (DataSnapshot dataSnapshot : datas.getChildren()) {
-                        header=dataSnapshot.getKey().toString();
-                        MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot);
-                        item+=dataSnapshot.getValue().toString()+" ";
-                        size++;
-
-                        MyOrdersList orderLists1 = new MyOrdersList(
-                                func,
-                                header,
-                                item,
-                                size
-                        );
-                        size=0;
-                        myOrdersList.add(orderLists1);
-                    }
-
-                }
-                //MyLog.e(TAG,"deta>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
-                myOrdersAdapter=new MyOrdersAdapter(getContext(),myOrdersList);
+            public void onChanged(List<MyOrderFuncList> myOrderFuncLists1) {
+                myOrderFuncLists=myOrderFuncLists1;
+                myOrdersAdapter=new MyOrdersAdapter(getContext(),myOrderFuncLists,getViewModel);
                 recyclerview_my_orders.setAdapter(myOrdersAdapter);
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
             }
         });
+
+
 
 
 

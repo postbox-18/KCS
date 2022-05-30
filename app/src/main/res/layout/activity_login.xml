@@ -179,6 +179,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/colorSecondary"
+                android:imeOptions="actionDone"
                 android:textColor="@color/colorPrimary"
                 android:fontFamily="@font/robotoblackitalic"
                 android:textStyle="bold|italic"
