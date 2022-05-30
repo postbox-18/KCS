@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/bg_white"
     tools:context=".Login_Register.RegisterActivity">
-
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/head_layout"
         android:layout_width="match_parent"
@@ -80,6 +82,43 @@
             app:layout_constraintTop_toBottomOf="@id/headings"
             app:layout_constraintVertical_weight="1.5"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorSecondary"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/bebaskai"
+                    android:textSize="28dp"
+                    
+                    android:gravity="center"
+                    android:text="HEALTH &amp; QUALITY.."/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:textColor="@color/heading_login"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/bebaskai"
+                    android:textSize="28dp"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="FOOD ON YOUR BUDGET...."/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/bebaskai"
+                    android:textSize="28dp"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="REGISTER"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -106,11 +145,12 @@
                 android:drawablePadding="10dp"
                 android:ems="10"
                 android:hint="User Name"
+                android:fontFamily="@font/robotoitalic"
                 android:textColorHint="@color/text_silver"
                 android:imeOptions="actionNext"
-                android:padding="25dp"
+                android:padding="15dp"
                 android:singleLine="true"
-                android:textColor="@color/colorSecondary" />
+                android:textColor="@color/black" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/email"
@@ -122,9 +162,10 @@
                 android:hint="useremailid@gmail.com"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailAddress"
-                android:padding="25dp"
+                android:padding="15dp"
                 android:singleLine="true"
-                android:textColor="@color/colorSecondary" />
+                android:fontFamily="@font/robotoitalic"
+                android:textColor="@color/black" />
 
             <AutoCompleteTextView
                 android:id="@+id/phone_number"
@@ -133,12 +174,13 @@
                 android:textColorHint="@color/text_silver"
                 android:drawablePadding="10dp"
                 android:hint="Phone Number"
+                android:fontFamily="@font/robotoitalic"
                 android:imeOptions="actionNext"
                 android:inputType="number"
                 android:maxLength="10"
-                android:padding="25dp"
+                android:padding="15dp"
                 android:singleLine="true"
-                android:textColor="@color/colorSecondary" />
+                android:textColor="@color/black" />
 
             <AutoCompleteTextView
                 android:id="@+id/password"
@@ -150,10 +192,10 @@
                 android:imeOptions="actionNext"
                 android:inputType="textPassword"
                 android:maxLength="8"
-                android:padding="25dp"
+                android:padding="15dp"
+                android:fontFamily="@font/robotoitalic"
                 android:singleLine="true"
-
-                android:textColor="@color/colorSecondary" />
+                android:textColor="@color/black" />
 
             <AutoCompleteTextView
                 android:id="@+id/re_password"
@@ -165,11 +207,12 @@
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:maxLength="8"
-                android:padding="25dp"
+                android:padding="15dp"
                 android:singleLine="true"
-                android:textColor="@color/colorSecondary" />
+                android:textColor="@color/black" />
 </LinearLayout>
     </androidx.cardview.widget.CardView>
+            </LinearLayout>
         </LinearLayout>
     <LinearLayout
         android:id="@+id/register_btn_layout"
@@ -189,6 +232,7 @@
             android:layout_margin="5dp"
             android:background="@drawable/register_btn"
             android:text="Register"
+            android:fontFamily="@font/robotocondensedbold"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textStyle="bold" />
@@ -199,7 +243,8 @@
             android:layout_height="wrap_content"
             android:text="Already have Account \n Sign in"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorSecondary"
+            android:fontFamily="@font/robotoblackitalic"
             android:textSize="15dp"
             android:textStyle="bold|italic" />
     </LinearLayout>
@@ -214,4 +259,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_rawRes="@raw/cooking" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+    
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -85,6 +85,38 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorSecondary"
+                android:textStyle="bold"
+                android:fontFamily="@font/bebaskai"
+                android:textSize="28dp"
+                android:gravity="center"
+                android:text="HEALTH &amp; QUALITY.."/>
+            <TextView
+                android:layout_width="match_parent"
+                android:textColor="@color/heading_login"
+                android:textStyle="bold"
+                android:fontFamily="@font/bebaskai"
+                android:textSize="28dp"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:text="FOOD ON YOUR BUDGET...."/>
+            <TextView
+                android:layout_width="match_parent"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:fontFamily="@font/bebaskai"
+                android:textSize="28dp"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:text="LOGIN"/>
+            </LinearLayout>
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,12 +143,13 @@
                     android:layout_margin="15dp"
                     android:drawablePadding="10dp"
                     android:ems="10"
+                    android:fontFamily="@font/robotoitalic"
                     android:hint="useremailid@gmail.com"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:padding="25dp"
                     android:singleLine="true"
-                    android:textColor="@color/colorSecondary" />
+                    android:textColor="@color/black" />
 
 
                 <AutoCompleteTextView
@@ -126,13 +159,13 @@
                     android:layout_margin="15dp"
                     android:drawablePadding="10dp"
                     android:hint="Password"
+                    android:fontFamily="@font/robotoitalic"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLength="8"
                     android:padding="25dp"
                     android:singleLine="true"
-
-                    android:textColor="@color/colorSecondary" />
+                    android:textColor="@color/black" />
 
 
             </LinearLayout>
@@ -147,6 +180,7 @@
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/colorSecondary"
                 android:textColor="@color/colorPrimary"
+                android:fontFamily="@font/robotoblackitalic"
                 android:textStyle="bold|italic"
                 android:text="Remember Me"/>
             </LinearLayout>
@@ -171,6 +205,7 @@
                 android:layout_margin="5dp"
                 android:background="@drawable/register_btn"
                 android:text="Login"
+                android:fontFamily="@font/robotocondensedbold"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
@@ -181,6 +216,7 @@
                 android:layout_height="wrap_content"
                 android:text="Can't have a Account \n Sign Up"
                 android:textAlignment="center"
+                android:fontFamily="@font/robotoblackitalic"
                 android:textColor="@color/colorSecondary"
                 android:textSize="15dp"
                 android:textStyle="bold|italic" />
