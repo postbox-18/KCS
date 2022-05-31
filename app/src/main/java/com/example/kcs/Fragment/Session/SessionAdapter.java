@@ -45,7 +45,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
             @Override
             public void onClick(View view) {
                 getViewModel.setI_value(1);
-
+                getViewModel.setSession_title(sessionList1.getSession_title());
             }
         });
 

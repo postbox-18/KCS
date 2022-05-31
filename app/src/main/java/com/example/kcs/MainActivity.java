@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.app.FragmentBreadCrumbs;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
@@ -58,27 +60,28 @@ public class MainActivity extends AppCompatActivity {
     private List<UserItemList> userItemLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private UserItemListAdapters userItemListAdapters;
-    private String headerList_title, func_title;
+    private String headerList_title, func_title,session_title;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
     private CardView view_cart_cardView;
     private String user_name;
     private Integer integer;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         View parentLayout = findViewById(android.R.id.content);
 
+
+
         MyLog.e(TAG, "logout>> main activity ");
-
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
-
         firebaseDatabase = FirebaseDatabase.getInstance();
-
         user_name = new SharedPreferences_data(getApplication()).getS_user_name();
+
+
+
         //get MyOrder Details
         getViewModel.GetMyOrdersDetails(user_name);
 
@@ -97,6 +100,16 @@ public class MainActivity extends AppCompatActivity {
                 func_title = s;
             }
         });
+
+        //get session_title
+        getViewModel.getSession_titleMutable().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                session_title=s;
+
+            }
+        });
+
         //get header list
         getViewModel.getHeaderListMutableList().observe(this, new Observer<List<HeaderList>>() {
             @Override
@@ -331,15 +344,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        /*if (supportFragmentManager.backStackEntryCount > 0) {
-///val done=supportFragmentManager.popBackStackImmediate()
-MyLog.i(TAG, "onBackPressedAct:onBackPressed pop:")
-super.onBackPressed()
-} else {
-
-//snack
-
-}*/
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             ///val done=supportFragmentManager.popBackStackImmediate()
             MyLog.i(TAG, "onBackPressedAct:onBackPressed pop:");

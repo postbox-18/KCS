@@ -81,11 +81,15 @@ public class GetViewModel extends AndroidViewModel {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
 
-    //Header Fragment
+    //Header Fragment title
     private FunList fun_title;
     private MutableLiveData<HeaderList> headerListMutableLiveData = new MutableLiveData<>();
 
-    //Selected Header
+    //Session Fragment title
+    private String session_title;
+    private MutableLiveData<String> session_titleMutable = new MutableLiveData<>();
+
+    //Selected Header title
     private String header_title;
     private MutableLiveData<String> header_title_Mutable=new MutableLiveData<>();
 
@@ -147,6 +151,14 @@ public class GetViewModel extends AndroidViewModel {
         return sessionListMutable;
     }
 
+    public void setSession_title(String session_title) {
+        this.session_title = session_title;
+        this.session_titleMutable.postValue(session_title);
+    }
+
+    public MutableLiveData<String> getSession_titleMutable() {
+        return session_titleMutable;
+    }
 
     private void GetSession() {
         databaseReference = firebaseDatabase.getReference("Items").child("Session");
