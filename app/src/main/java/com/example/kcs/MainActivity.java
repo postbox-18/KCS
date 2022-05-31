@@ -52,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
 
+    //Bread Crumbs
+    private RecyclerView recyclerview_breadcrumbs;
+    private BreadCrumbsAdapter breadCrumbsAdapter;
+    private List<BreadCrumbList> breadcrumbsList = new ArrayList<>();
+
     //snack bar
     private RecyclerView recyclerview_selected_count;
     //private AppCompatButton order_btn, cancel_btn;
@@ -60,26 +65,43 @@ public class MainActivity extends AppCompatActivity {
     private List<UserItemList> userItemLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private UserItemListAdapters userItemListAdapters;
-    private String headerList_title, func_title,session_title;
+    private String headerList_title, func_title, session_title;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
     private CardView view_cart_cardView;
     private String user_name;
-    private Integer integer;
+    private Integer integer, frag_integer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         View parentLayout = findViewById(android.R.id.content);
-
-
+        recyclerview_breadcrumbs = findViewById(R.id.recyclerview_breadcrumbs);
 
         MyLog.e(TAG, "logout>> main activity ");
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
         firebaseDatabase = FirebaseDatabase.getInstance();
         user_name = new SharedPreferences_data(getApplication()).getS_user_name();
 
+
+        recyclerview_breadcrumbs.setHasFixedSize(true);
+        recyclerview_breadcrumbs.setLayoutManager(new LinearLayoutManager(getApplication(), LinearLayoutManager.HORIZONTAL, false));
+
+
+        //get breadcrumbs list
+        getViewModel.getBreadCrumbListsMutableLiveData().observe(this, new Observer<List<BreadCrumbList>>() {
+            @Override
+            public void onChanged(List<BreadCrumbList> breadCrumbLists) {
+                breadcrumbsList=breadCrumbLists;
+                if (breadcrumbsList != null) {
+                    //MyLog.e(TAG, "breadcrumbs>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(breadcrumbsList));
+                    breadCrumbsAdapter = new BreadCrumbsAdapter(getApplicationContext(), getViewModel, breadcrumbsList);
+                    recyclerview_breadcrumbs.setAdapter(breadCrumbsAdapter);
+                }
+            }
+        });
 
 
         //get MyOrder Details
@@ -90,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
                 headerList_title = s;
+
             }
         });
 
@@ -98,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
                 func_title = s;
+
             }
         });
 
@@ -105,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getSession_titleMutable().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                session_title=s;
+                session_title = s;
 
             }
         });
@@ -256,6 +280,7 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getValue().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
+                frag_integer = integer;
                 MyLog.e(TAG, "integer>>" + integer);
                 Fragment fragment = new Fragment();
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -336,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             MyLog.e(TAG, "integer>>fun>>out>>" + funLists.size());
             showAlertDialog(funLists);
-            MyLog.e(TAG, "integer>>fun_list" + new GsonBuilder().setPrettyPrinting().create().toJson(funLists));
+            //MyLog.e(TAG, "integer>>fun_list" + new GsonBuilder().setPrettyPrinting().create().toJson(funLists));
         }
 
 
@@ -346,12 +371,14 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             ///val done=supportFragmentManager.popBackStackImmediate()
-            MyLog.i(TAG, "onBackPressedAct:onBackPressed pop:");
+            breadcrumbsList.remove(breadcrumbsList.size()-1);
+            getViewModel.setBreadCrumbLists(breadcrumbsList);
             //super.onBackPressed();
             getSupportFragmentManager().popBackStackImmediate();
         } else {
+
             super.onBackPressed();
-            MyLog.i(TAG, "onBackPressedAct:onBackPressed in:");
+            MyLog.e(TAG, "breadcrumbs>>onBackPressedAct:onBackPressed in:");
             //snack
 
         }

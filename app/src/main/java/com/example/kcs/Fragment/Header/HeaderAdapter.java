@@ -8,12 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -63,6 +61,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
             public void onClick(View view) {
                 //getHeaderFragment.getheaderFragment(headerList1,position);.
                 getViewModel.getheaderFragment(headerList1.getHeader(),position,linkedHashMaps);
+                getViewModel.SetBreadCrumsList(headerList1.getHeader(), 2);
 
             }
         });

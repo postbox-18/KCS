@@ -62,7 +62,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
                 //MyLog.e(TAG, "cart>>adapter>>f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
 
                     checkedLists=stringListLinkedHashMap.get(list.getHeader());
-                    MyLog.e(TAG, "cart>>adapter>>list " +  new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
+                    //MyLog.e(TAG, "cart>>adapter>>list " +  new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
 
                     holder.recyclerview_item_list.setHasFixedSize(true);
                     holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));

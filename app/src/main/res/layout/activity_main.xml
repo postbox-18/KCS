@@ -8,6 +8,18 @@
     android:background="@color/bg_white"
     android:orientation="vertical"
     tools:context=".MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/btn_gradient_light"
+        android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_breadcrumbs"
+            android:layout_width="match_parent"
+            tools:itemCount="2"
+            tools:listitem="@layout/layout_breadcrums"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 <FrameLayout
     android:id="@+id/Fragment"
     android:layout_width="match_parent"

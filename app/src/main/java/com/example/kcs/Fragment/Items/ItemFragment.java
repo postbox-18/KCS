@@ -169,7 +169,7 @@ public class ItemFragment extends Fragment {
             @Override
             public void onChanged(List<ItemList> itemLists1) {
                 itemLists = itemLists1;
-                MyLog.e(TAG, "stringListLinkedHashMap1>>get>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
+                //MyLog.e(TAG, "stringListLinkedHashMap1>>get>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                 recyclerview_item.setHasFixedSize(true);
                 recyclerview_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                 itemListAdapater = new ItemListAdapater(getContext(), itemLists, headerList_title, getViewModel,linkedHashMaps,stringListLinkedHashMap);

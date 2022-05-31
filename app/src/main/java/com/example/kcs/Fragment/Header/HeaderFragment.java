@@ -98,14 +98,14 @@ public class HeaderFragment extends Fragment {
         fun_title=view.findViewById(R.id.fun_title);
         back_btn=view.findViewById(R.id.back_btn);
 
-        //get view model
-        getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+        //get view model session title
+        getViewModel.getSession_titleMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                funList_title=s;
-                fun_title.setText(funList_title);
+                fun_title.setText(s);
             }
         });
+
 
         getViewModel.getHeaderListMutableList().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
             @Override

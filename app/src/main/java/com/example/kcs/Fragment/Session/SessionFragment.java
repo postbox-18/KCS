@@ -112,7 +112,7 @@ public class SessionFragment extends Fragment {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getViewModel.setI_value(6);
+                getViewModel.setI_value(0);
             }
         });
 

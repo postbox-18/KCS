@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHolder>  {
@@ -46,6 +45,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
             public void onClick(View view) {
                 getViewModel.setI_value(1);
                 getViewModel.setSession_title(sessionList1.getSession_title());
+                getViewModel.SetBreadCrumsList(sessionList1.getSession_title(), 1);
             }
         });
 

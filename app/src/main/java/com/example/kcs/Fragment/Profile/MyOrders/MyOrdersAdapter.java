@@ -18,12 +18,10 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.MyOrderFuncList;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHolder> {
     private Context context;
@@ -62,7 +60,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
                 {
                     myOrdersList=linkedHashMaps.get(i).get(myOrderFuncLists1.getFunc());
                     getViewModel.setMyOrdersList(myOrdersList);
-                    MyLog.e(TAG,"myorder>>myOrdersList>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
+                    //MyLog.e(TAG,"myorder>>myOrdersList>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
                     holder.recyclerview_item_list.setHasFixedSize(true);
                     holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                     MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
@@ -76,6 +74,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 getViewModel.setFunc_title(myOrderFuncLists1.getFunc());
+                getViewModel.SetBreadCrumsList(myOrderFuncLists1.getFunc(), 0);
             }
         });
 
