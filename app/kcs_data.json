@@ -1,0 +1,116 @@
+{
+  "Admin": {
+    "8971383568": {
+      "email": "post18@gmail.com",
+      "phone_number": "8971383568",
+      "username": "post18"
+    }
+  },
+  "Items": {
+    "Category": [
+      null,
+      "Non-Veg",
+      "Veg",
+      "Dessert"
+    ],
+    "Function": {
+      "1": "Wedding",
+      "2": "Birthday Party",
+      "3": "Temple Function",
+      "7": "Others",
+      "4:": "House Warming",
+      "5:": "Corporate Events",
+      "6:": "Outdoor Catering"
+    },
+    "List": {
+      "Dessert": [
+        null,
+        "Ice Creams",
+        "Milk Shakes",
+        "Juice",
+        "Cakes",
+        "Chocolates"
+      ],
+      "Non-Veg": [
+        null,
+        "Mutton",
+        "Chicken",
+        "Fish",
+        "Prawns",
+        "Crab"
+      ],
+      "Veg": [
+        null,
+        "Meals",
+        "Varitey Rices",
+        "Tiffun Items",
+        "Biryani",
+        "Gravy Recipies"
+      ]
+    }
+  },
+  "Orders": {
+    "aravinth": {
+      "Birthday Party": {
+        "Dessert": [
+          "Juice",
+          "Milk Shakes"
+        ],
+        "Non-Veg": [
+          "Chicken",
+          "Fish",
+          "Prawns",
+          "Mutton"
+        ],
+        "Veg": [
+          "Varitey Rices",
+          "Tiffun Items",
+          "Meals",
+          "Biryani"
+        ]
+      },
+      "TE": {
+        "NV": [
+          "aaa",
+          "bbbb",
+          "ccc"
+        ],
+        "V": [
+          "eeee",
+          "wwww"
+        ]
+      }
+    },
+    "email": {
+      "TE": {
+        "V": [
+          "qqqw",
+          "wwww",
+          "eeee"
+        ]
+      },
+      "WE": {
+        "DE": [
+          "ppp",
+          "yyyy"
+        ],
+        "NV": [
+          "aaa",
+          "bbbb"
+        ]
+      }
+    }
+  },
+  "Users-Id": {
+    "8976328460": {
+      "email": "aravinth@gmail.com",
+      "phone_number": "8976328460",
+      "username": "aravinth"
+    },
+    "9875632863": {
+      "email": "email@gmail.com",
+      "phone_number": "9875632863",
+      "username": "email"
+    }
+  }
+}
