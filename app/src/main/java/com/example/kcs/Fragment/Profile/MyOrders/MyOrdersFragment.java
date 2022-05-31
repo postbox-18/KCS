@@ -19,9 +19,12 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
+import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
+import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.ViewCartAdapterHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.MyOrderFuncList;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,6 +66,8 @@ public class MyOrdersFragment extends Fragment {
     private String TAG = "MyOrdersFragment";
     private LinkedHashMap<String,List<MyOrdersList>> myordersHashMap=new LinkedHashMap<>();
 
+    //bottom sheet view
+    RecyclerView recyclerview_order_item_details;
     public MyOrdersFragment() {
         // Required empty public constructor
     }
@@ -120,6 +125,41 @@ public class MyOrdersFragment extends Fragment {
                 recyclerview_my_orders.setAdapter(myOrdersAdapter);
             }
         });
+
+        //Bottom sheet
+        BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
+        View bottom_view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_order_details, null);
+        recyclerview_order_item_details = bottom_view.findViewById(R.id.recyclerview_order_item_details);
+        recyclerview_order_item_details.setHasFixedSize(true);
+        recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+
+
+
+        //get func_title  to view item list
+        getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                if(s!=null) {
+                    getViewModel.GetViewList(s_user_name,s);
+                    bottomSheet.setContentView(bottom_view);
+                    bottomSheet.show();
+
+                }
+                else
+                {
+                    MyLog.e(TAG,"itemAd>> orderItemView list null");
+                }            }
+        });
+
+        //get selected List
+        getViewModel.getSelectedHeadersListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SelectedHeader>>() {
+            @Override
+            public void onChanged(List<SelectedHeader> selectedHeaders) {
+                ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,selectedHeaders);
+                recyclerview_order_item_details.setAdapter(viewCartAdapter);
+            }
+        });
+
 
 
 

@@ -15,6 +15,7 @@ import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
+import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class GetViewModel extends AndroidViewModel {
     //Header List
@@ -111,6 +113,11 @@ public class GetViewModel extends AndroidViewModel {
     private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private   MutableLiveData<List<SelectedHeader>> selectedHeadersListMutableLiveData = new MutableLiveData<>();
 
+    //selected Item list
+    private List<OrderItemLists> orderItemLists = new ArrayList<>();
+    private MutableLiveData<List<OrderItemLists>> orderItemListsMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, List<OrderItemLists>> orderItemList_f_map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> orderItemList_f_mapMutableLiveData = new MutableLiveData<>();
 
     private String TAG="ViewClassModel";
 
@@ -189,6 +196,14 @@ public class GetViewModel extends AndroidViewModel {
             }
         });
 
+    }
+
+    public MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> getOrderItemList_f_mapMutableLiveData() {
+        return orderItemList_f_mapMutableLiveData;
+    }
+
+    public MutableLiveData<List<OrderItemLists>> getOrderItemListsMutableLiveData() {
+        return orderItemListsMutableLiveData;
     }
 
     public MutableLiveData<List<LinkedHashMap<String, List<MyOrdersList>>>> getS_mapMyordersMutableLiveData() {
@@ -506,5 +521,63 @@ public class GetViewModel extends AndroidViewModel {
     public void getfunFragment(String fun) {
         this.setI_value(1);
         this.func_title_Mutable.postValue(fun);
+    }
+
+    public void GetViewList(String s_user_name, String func_title) {
+
+            MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list before11>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
+            orderItemList_f_map.clear();
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name).child(func_title);
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int size = 0;
+
+                    for (DataSnapshot datas : snapshot.getChildren()) {
+                        orderItemLists=new ArrayList<>();
+                        header_title = datas.getKey().toString();
+                        MyLog.e(TAG, "itemlists>>datas>>" + datas);
+                        MyLog.e(TAG, "orderItemList_f_map>>datas>>" + datas.getKey().toString());
+                        for (DataSnapshot dataSnapshot : datas.getChildren()) {
+                            MyLog.e(TAG, "itemlists>>datasnap>>" + dataSnapshot);
+                            MyLog.e(TAG, "orderItemList_f_map>>datasnap>>" + dataSnapshot.getKey().toString()+"\t==\t"+dataSnapshot.getValue().toString());
+                            OrderItemLists itemLists = new OrderItemLists(
+                                    dataSnapshot.getValue().toString()
+                            );
+                            orderItemLists.add(itemLists);
+                            MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list before>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
+                            orderItemList_f_map.put(header_title,orderItemLists);
+                            MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list after>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
+                            size++;
+                        }
+
+                    }
+                    orderItemList_f_mapMutableLiveData.postValue(orderItemList_f_map);
+                    //get selected header list
+                    //get linked hasp map to view item list
+                    selectedHeadersList.clear();
+                    Set<String> stringSet = orderItemList_f_map.keySet();
+
+                    for (String a : stringSet) {
+                        SelectedHeader aList = new SelectedHeader(
+                                a
+                        );
+                        selectedHeadersList.add(aList);
+
+                    }
+                    selectedHeadersListMutableLiveData.postValue(selectedHeadersList);
+
+
+                    MyLog.e(TAG,"itemlists>>f_maps>>map get>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
     }
 }

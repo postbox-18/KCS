@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -70,6 +71,14 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
             }
         });
+
+        holder.card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getViewModel.setFunc_title(myOrderFuncLists1.getFunc());
+            }
+        });
+
     }
 
 
@@ -83,6 +92,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
         private ImageView profile;
         private TextView   func;
+        private CardView card_view;
         private RecyclerView recyclerview_item_list;
 
         public ViewHolder(View view) {
@@ -90,6 +100,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
             profile = view.findViewById(R.id.profile);
             recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
             func = view.findViewById(R.id.func);
+            card_view = view.findViewById(R.id.card_view);
 
 
         }
