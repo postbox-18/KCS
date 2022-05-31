@@ -52,38 +52,24 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         //get data func,header,list item size from hash map
         holder.func.setText(myOrderFuncLists1.getFunc());
 
-        //get linked hashmap
-        //get hash map value to pass myorderlist
-        getViewModel.getMyordersHashMapMutable().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<MyOrdersList>>>() {
+        //get list hash map of my orders list
+        getViewModel.getS_mapMyordersMutableLiveData().observe((LifecycleOwner) context, new Observer<List<LinkedHashMap<String, List<MyOrdersList>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<MyOrdersList>> stringListLinkedHashMap) {
-                //MyLog.e(TAG,"chs>>hahmap>> "+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                Set<String> stringSet=stringListLinkedHashMap.keySet();
+            public void onChanged(List<LinkedHashMap<String, List<MyOrdersList>>> linkedHashMaps) {
                 myOrdersList=new ArrayList<>();
-                List<String> aList = new ArrayList<String>(stringSet.size());
-                for (String x : stringSet)
-                    aList.add(x);
-                //MyLog.e(TAG,"chs>>list "+ new GsonBuilder().setPrettyPrinting().create().toJson(aList));
-                for(int i=0;i<aList.size();i++) {
-                    MyLog.e(TAG,"chs>>list header>> "+ aList.get(i));
-                    MyLog.e(TAG,"chs>>list size "+ stringListLinkedHashMap.get(aList.get(i)).size());
-                    MyOrdersList userItemList = new MyOrdersList(
-                            aList.get(i),
-                            stringListLinkedHashMap.get(aList.get(i)).size()
-                    );
-                    myOrdersList.add(userItemList);
+                for (int i=0;i<linkedHashMaps.size();i++)
+                {
+                    myOrdersList=linkedHashMaps.get(i).get(myOrderFuncLists1.getFunc());
+                    getViewModel.setMyOrdersList(myOrdersList);
+                    MyLog.e(TAG,"myorder>>myOrdersList>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
+                    holder.recyclerview_item_list.setHasFixedSize(true);
+                    holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                    MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
+                    holder.recyclerview_item_list.setAdapter(itemListAdapters);
                 }
-
-                //MyLog.e(TAG,"chs>>myorders>> "+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
-                getViewModel.setMyOrdersList(myOrdersList);
-                holder.recyclerview_item_list.setHasFixedSize(true);
-                holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
-                holder.recyclerview_item_list.setAdapter(itemListAdapters);
 
             }
         });
-
     }
 
 

@@ -130,9 +130,6 @@ public class MyOrdersFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getViewModel.setI_value(3);
-               /* Fragment fragment=new HomeFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/
             }
         });
         return view;

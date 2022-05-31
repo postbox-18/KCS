@@ -101,6 +101,8 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<MyOrdersList>> myOrdersListsMutableLiveData=new MutableLiveData<>();
     private  MutableLiveData<LinkedHashMap<String, List<MyOrdersList>>> myordersHashMapMutable=new MutableLiveData<>();
     private LinkedHashMap<String, List<MyOrdersList>> f_mapMyorders=new LinkedHashMap<>();
+    private List<LinkedHashMap<String, List<MyOrdersList>>> s_mapMyorders=new ArrayList<>();
+    private MutableLiveData<List<LinkedHashMap<String, List<MyOrdersList>>>> s_mapMyordersMutableLiveData=new MutableLiveData<>();
     private List<MyOrderFuncList> myOrderFuncLists=new ArrayList<>();
     private MutableLiveData<List<MyOrderFuncList>> myOrderFuncListsMutableLiveData=new MutableLiveData<>();
     private String func;
@@ -135,48 +137,49 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int size=0;
+                MyLog.e(TAG, "onData>>snapshot>>" + snapshot);
+                myOrderFuncLists=new ArrayList<>();
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     MyLog.e(TAG, "onData>>datas>>" + datas);
-                    MyLog.e(TAG, "onData>>datas>>" + datas.getKey().toString());
+                    MyLog.e(TAG, "onData>>func>>" + datas.getKey().toString());
                     func=datas.getKey().toString();
+                    myOrdersList=new ArrayList<>();
                     for (DataSnapshot dataSnapshot : datas.getChildren()) {
-                        String header=dataSnapshot.getKey().toString();
-                        MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
-                        MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot.getKey().toString());
 
+                        header_title=dataSnapshot.getKey().toString();
+                        MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
+                        MyLog.e(TAG, "onData>>header_title>>" + dataSnapshot.getKey().toString());
                         size=0;
                         for (DataSnapshot shot : dataSnapshot.getChildren()) {
                             MyLog.e(TAG, "onData>>shots>>" + shot);
                             MyLog.e(TAG, "onData>>shots>>" + shot.getKey().toString());
                             size++;
-                            MyLog.e(TAG,"onData>>size>"+size);
-
                         }
+                        MyLog.e(TAG,"onData>>size>"+size);
                         MyOrdersList itemList=new MyOrdersList(
-                                header,
+                                header_title,
                                 size
                         );
+
                         myOrdersList.add(itemList);
                         f_mapMyorders.put(func,myOrdersList);
-
                         myordersHashMapMutable.postValue(f_mapMyorders);
 
-
-                        size=0;
-
-
-                       // MyLog.e(TAG,"onData>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
-
-                        //get func name into list
-                        MyOrderFuncList list=new MyOrderFuncList(
-                                func
-                        );
-                        myOrderFuncLists.add(list);
-                        myOrderFuncListsMutableLiveData.postValue(myOrderFuncLists);
-
                     }
+                    //get func name into list
+                    MyOrderFuncList list=new MyOrderFuncList(
+                            func
+                    );
+                    myOrderFuncLists.add(list);
+                    myOrderFuncListsMutableLiveData.postValue(myOrderFuncLists);
 
                 }
+                s_mapMyorders.add(f_mapMyorders);
+                s_mapMyordersMutableLiveData.postValue(s_mapMyorders);
+                //MyLog.e(TAG,"onData>>f_map>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(f_mapMyorders));
+                //MyLog.e(TAG,"onData>>myOrderFuncLists>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrderFuncLists));
+
+
 
             }
 
@@ -186,6 +189,10 @@ public class GetViewModel extends AndroidViewModel {
             }
         });
 
+    }
+
+    public MutableLiveData<List<LinkedHashMap<String, List<MyOrdersList>>>> getS_mapMyordersMutableLiveData() {
+        return s_mapMyordersMutableLiveData;
     }
 
     public void setSelectedHeadersList(List<SelectedHeader> headerList) {

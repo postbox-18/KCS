@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class MyorderItemListAdapters extends RecyclerView.Adapter<MyorderItemLis
     @Override
     public void onBindViewHolder(@NonNull MyorderItemListAdapters.ViewHolder holder, int position) {
 
-        //MyLog.e(TAG, "items>>userList adapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersLists));
+        MyLog.e(TAG,"myorder>>adapter::myOrdersList>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersLists));
         final MyOrdersList myOrdersList1 = myOrdersLists.get(position);
         MyLog.e(TAG, "items>>header>" + myOrdersList1.getHeader());
         MyLog.e(TAG, "items>>size>>" + myOrdersList1.getSize());
