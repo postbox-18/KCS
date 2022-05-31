@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderList;
@@ -42,6 +43,12 @@ public class GetViewModel extends AndroidViewModel {
     //item list
     private MutableLiveData<List<ItemList>> itemMutable=new MutableLiveData<>();
     private List<ItemList> itemLists=new ArrayList<>();
+
+
+
+    //item list
+    private MutableLiveData<List<SessionList>> sessionListMutable=new MutableLiveData<>();
+    private List<SessionList> sessionList=new ArrayList<>();
 
 
     //checked list
@@ -131,8 +138,44 @@ public class GetViewModel extends AndroidViewModel {
         firebaseDatabase = FirebaseDatabase.getInstance();
         GetHeader();
         GetFun();
+        GetSession();
         GetItem();
 
+    }
+
+    public MutableLiveData<List<SessionList>> getSessionListMutable() {
+        return sessionListMutable;
+    }
+
+
+    private void GetSession() {
+        databaseReference = firebaseDatabase.getReference("Items").child("Session");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "Session>>snap>>fun>>" + snapshot);
+                int size=0;
+                sessionList=new ArrayList<>();
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                    String path=""+size;
+                    MyLog.e(TAG, "Session>>snap>>fun>>" +  path);
+                    //MyLog.e(TAG, "home>>snap>>fun>>" +  datas.child("0").getValue().toString());
+                    SessionList sessionList1 = new SessionList(
+                            datas.getValue().toString());
+                    sessionList.add(sessionList1);
+                    size++;
+
+                }
+                sessionListMutable.postValue(sessionList);
+                MyLog.e(TAG,"session>>session_list>>"+new GsonBuilder().setPrettyPrinting().create().toJson(sessionList));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                MyLog.e(TAG, "home>>snap>>fun>>Fail to get data.");
+            }
+        });
     }
 
 
@@ -519,7 +562,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void getfunFragment(String fun) {
-        this.setI_value(1);
+        this.setI_value(6);
         this.func_title_Mutable.postValue(fun);
     }
 

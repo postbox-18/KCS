@@ -1,6 +1,5 @@
 package com.example.kcs;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -16,7 +15,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
@@ -32,13 +30,11 @@ import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
 import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Profile.ProfileFragment;
+import com.example.kcs.Fragment.Session.SessionFragment;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
@@ -258,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
                 switch (integer) {
                     case 0:
                         fragment = new HomeFragment();
-
                         fragmentTAg = "HomeFragment";
                         break;
                     case 1:
@@ -286,6 +281,10 @@ public class MainActivity extends AppCompatActivity {
                     case 5:
                         fragment = new PlaceOrderFragment();
                         fragmentTAg = "OrderFragment";
+                        break;
+                    case 6:
+                        fragment = new SessionFragment();
+                        fragmentTAg = "SessionFragment";
                         break;
                     default:
                         fragment = new HomeFragment();
