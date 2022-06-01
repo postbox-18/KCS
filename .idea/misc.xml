@@ -32,6 +32,9 @@
         <entry key="app/src/main/res/layout/list_cardview.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/myorder_cardview.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/myorderlist_cardview.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/select_item_count.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/select_session.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/select_session_cardview.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/selected_item_list_cardview.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/session_layout.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/view_cart_card_view.xml" value="0.19375" />

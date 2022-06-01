@@ -1,0 +1,106 @@
+package com.example.kcs.Fragment.Profile.MyOrders;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.Session.SessionList;
+import com.example.kcs.R;
+import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.MyOrderFuncList;
+import com.google.gson.GsonBuilder;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessiondapters.ViewHolder> {
+    private Context context;
+    private String TAG="MyorderSessiondapters";
+    private String func_title;
+    private List<MyOrdersList> myOrdersList;
+    private List<SessionList> sessionLists=new ArrayList<>();
+    private GetViewModel getViewModel;
+    public MyorderSessiondapters(Context context, String func_title, GetViewModel getViewModel, List<SessionList> sessionLists) {
+        this.func_title = func_title;
+        this.context = context;
+        this.sessionLists = sessionLists;
+        this.getViewModel = getViewModel;
+    }
+
+    @NonNull
+    @Override
+    public MyorderSessiondapters.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View view = layoutInflater.inflate(R.layout.select_session, parent, false);
+        return new MyorderSessiondapters.ViewHolder(view);
+        //return view;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyorderSessiondapters.ViewHolder holder, int position) {
+        final SessionList sessionLists1 = sessionLists.get(position);
+
+        //get data func,header,list item size from hash map
+        holder.session_title.setText(sessionLists1.getSession_title());
+
+        //get hash map of my orders list
+        getViewModel.getF_mapMyordersMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<MyOrdersList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<MyOrdersList>> stringListLinkedHashMap) {
+
+                MyLog.e(TAG,"myorders>>fun>>"+func_title+"\t\t"+sessionLists1.getSession_title());
+                MyLog.e(TAG,"myorders>>stringListLinkedHashMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                myOrdersList=stringListLinkedHashMap.get(func_title+"-"+sessionLists1.getSession_title());
+                getViewModel.setMyOrdersList(myOrdersList);
+                MyLog.e(TAG,"myorders>>myOrdersList>>"+new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
+                //MyLog.e(TAG,"myorder>>myOrdersList>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
+                holder.recyclerview_item_list.setHasFixedSize(true);
+                holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
+                holder.recyclerview_item_list.setAdapter(itemListAdapters);
+            }
+        });
+
+
+
+    }
+
+
+    @Override
+    public int getItemCount() {
+        MyLog.e(TAG, "sessionLists>>49>>" + sessionLists.size());
+        return sessionLists.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        private ImageView profile;
+        private TextView session_title;
+        private CardView card_view;
+        private RecyclerView recyclerview_item_list;
+
+        public ViewHolder(View view) {
+            super(view);
+            profile = view.findViewById(R.id.profile);
+            recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
+            session_title = view.findViewById(R.id.session_title);
+            card_view = view.findViewById(R.id.card_view);
+
+
+        }
+    }
+}
+
+

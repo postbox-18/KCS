@@ -50,11 +50,11 @@
                         android:text="@string/wedding" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerview_item_list"
+                        android:id="@+id/recyclerview_session"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:itemCount="2"
-                        tools:listitem="@layout/select_item_count"/>
+                        tools:listitem="@layout/select_session"/>
                 </LinearLayout>
 
             </LinearLayout>

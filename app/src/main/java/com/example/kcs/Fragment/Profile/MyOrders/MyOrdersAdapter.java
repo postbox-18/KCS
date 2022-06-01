@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.MyOrderFuncList;
@@ -51,8 +52,18 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         //get data func,header,list item size from hash map
         holder.func.setText(myOrderFuncLists1.getFunc());
 
+        //get session list
+        getViewModel.getSessionListMutable().observe((LifecycleOwner) context, new Observer<List<SessionList>>() {
+            @Override
+            public void onChanged(List<SessionList> sessionLists) {
+                holder.recyclerview_session.setHasFixedSize(true);
+                holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                MyorderSessiondapters itemListAdapters = new MyorderSessiondapters(context, myOrderFuncLists1.getFunc(),getViewModel,sessionLists);
+                holder.recyclerview_session.setAdapter(itemListAdapters);
+            }
+        });
         //get list hash map of my orders list
-        getViewModel.getS_mapMyordersMutableLiveData().observe((LifecycleOwner) context, new Observer<List<LinkedHashMap<String, List<MyOrdersList>>>>() {
+        /*getViewModel.getS_mapMyordersMutableLiveData().observe((LifecycleOwner) context, new Observer<List<LinkedHashMap<String, List<MyOrdersList>>>>() {
             @Override
             public void onChanged(List<LinkedHashMap<String, List<MyOrdersList>>> linkedHashMaps) {
                 myOrdersList=new ArrayList<>();
@@ -68,7 +79,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
                 }
 
             }
-        });
+        });*/
 
         holder.card_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,12 +103,12 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         private ImageView profile;
         private TextView   func;
         private CardView card_view;
-        private RecyclerView recyclerview_item_list;
+        private RecyclerView recyclerview_session;
 
         public ViewHolder(View view) {
             super(view);
             profile = view.findViewById(R.id.profile);
-            recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
+            recyclerview_session = view.findViewById(R.id.recyclerview_session);
             func = view.findViewById(R.id.func);
             card_view = view.findViewById(R.id.card_view);
 

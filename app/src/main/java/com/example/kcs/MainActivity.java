@@ -103,8 +103,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        //get MyOrder Details
-        getViewModel.GetMyOrdersDetails(user_name);
+
 
         //get header title
         getViewModel.getHeader_title_Mutable().observe(this, new Observer<String>() {
