@@ -12,8 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -38,6 +40,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull SessionAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        MyLog.e(TAG, "sessionLists>>list " + new GsonBuilder().setPrettyPrinting().create().toJson(sessionLists));
         final SessionList sessionList1 = sessionLists.get(position);
         holder.session_title.setText(sessionList1.getSession_title());
         holder.session_linear.setOnClickListener(new View.OnClickListener() {

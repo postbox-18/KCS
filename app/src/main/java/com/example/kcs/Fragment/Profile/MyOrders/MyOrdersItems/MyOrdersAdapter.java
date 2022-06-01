@@ -52,7 +52,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         holder.func.setText(myOrderFuncLists1.getFunc());
 
         //get session list
-        getViewModel.getSessionListMutable().observe((LifecycleOwner) context, new Observer<List<SessionList>>() {
+        getViewModel.getS_sessionListMutable().observe((LifecycleOwner) context, new Observer<List<SessionList>>() {
             @Override
             public void onChanged(List<SessionList> sessionLists) {
                 holder.recyclerview_session.setHasFixedSize(true);
@@ -64,6 +64,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         holder.card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 getViewModel.setFunc_title(myOrderFuncLists1.getFunc());
                 //getViewModel.SetBreadCrumsList(myOrderFuncLists1.getFunc(), 0);
             }

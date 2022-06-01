@@ -109,6 +109,8 @@ public class MyOrdersFragment extends Fragment {
         myOrdersList = new ArrayList<>();
         firebaseDatabase = FirebaseDatabase.getInstance();
         s_user_name = new SharedPreferences_data(getContext()).getS_user_name();
+        //to load data in my order details
+        getViewModel.GetMyOrdersDetails(s_user_name);
 
         //get Func name list
         getViewModel.getMyOrderFuncListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<MyOrderFuncList>>() {
@@ -128,36 +130,33 @@ public class MyOrdersFragment extends Fragment {
         recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         //get session list
-        getViewModel.getSessionListMutable().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
+        getViewModel.getS_sessionListMutable().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
             @Override
             public void onChanged(List<SessionList> sessionLists1) {
                 sessionLists=sessionLists1;
+
             }
         });
+
 
         //get func_title  to view item list
         getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if (s != null) {
+                if (s != null ) {
+
+                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel, sessionLists,s);
+                    recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
-                    getViewModel.GetViewList(s_user_name, s,sessionLists);
+
                 } else {
                     MyLog.e(TAG, "itemAd>> orderItemView list null");
                 }
+
             }
         });
 
-        //get selected session list
-        getViewModel.getSessionListMutable().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
-            @Override
-            public void onChanged(List<SessionList> sessionLists) {
-
-                ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel, sessionLists);
-                recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
-            }
-        });
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {

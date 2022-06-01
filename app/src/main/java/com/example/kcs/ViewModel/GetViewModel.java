@@ -46,9 +46,12 @@ public class GetViewModel extends AndroidViewModel {
     private List<ItemList> itemLists = new ArrayList<>();
 
 
-    //item list
+    //session list
     private MutableLiveData<List<SessionList>> sessionListMutable = new MutableLiveData<>();
     private List<SessionList> sessionList = new ArrayList<>();
+    //selected session list
+    private MutableLiveData<List<SessionList>> s_sessionListMutable = new MutableLiveData<>();
+    private List<SessionList> s_sessionList = new ArrayList<>();
 
 
     //checked list
@@ -135,16 +138,19 @@ public class GetViewModel extends AndroidViewModel {
 
     public GetViewModel(@NonNull Application application) {
         super(application);
-        String s_user_name = new SharedPreferences_data(application).getS_user_name();
-
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
-        GetHeader();
-        GetFun();
-        GetSession();
-        GetItem();
-        GetMyOrdersDetails(s_user_name);
 
+
+
+
+
+
+    }
+
+
+    public MutableLiveData<List<SessionList>> getS_sessionListMutable() {
+        return s_sessionListMutable;
     }
 
     public MutableLiveData<LinkedHashMap<String, List<MyOrdersList>>> getF_mapMyordersMutableLiveData() {
@@ -173,7 +179,8 @@ public class GetViewModel extends AndroidViewModel {
         return session_titleMutable;
     }
 
-    private void GetSession() {
+    public void GetSession() {
+
         databaseReference = firebaseDatabase.getReference("Items").child("Session");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -182,9 +189,6 @@ public class GetViewModel extends AndroidViewModel {
                 int size = 0;
                 sessionList = new ArrayList<>();
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                    String path = "" + size;
-                    MyLog.e(TAG, "Session>>snap>>fun>>" + path);
-                    //MyLog.e(TAG, "home>>snap>>fun>>" +  datas.child("0").getValue().toString());
                     SessionList sessionList1 = new SessionList(
                             datas.getValue().toString());
                     sessionList.add(sessionList1);
@@ -192,6 +196,7 @@ public class GetViewModel extends AndroidViewModel {
 
                 }
                 sessionListMutable.postValue(sessionList);
+                MyLog.e(TAG, "sessionLists>>sessionList " + new GsonBuilder().setPrettyPrinting().create().toJson(sessionList));
             }
 
             @Override
@@ -247,7 +252,7 @@ public class GetViewModel extends AndroidViewModel {
                         SessionList sessionList1=new SessionList(
                                 session_title
                         );
-                        sessionList.add(sessionList1);
+                        s_sessionList.add(sessionList1);
                     }
 
 
@@ -257,10 +262,11 @@ public class GetViewModel extends AndroidViewModel {
                     );
                     myOrderFuncLists.add(list);
                 }
+                //MyLog.e(TAG, "f_mapsorder>>list " + new GsonBuilder().setPrettyPrinting().create().toJson(f_mapMyorders));
                 //set func list
                 myOrderFuncListsMutableLiveData.postValue(myOrderFuncLists);
                 //set session list
-                sessionListMutable.postValue(sessionList);
+                s_sessionListMutable.postValue(s_sessionList);
                 //set f_mpa of my orders
                 f_mapMyordersMutableLiveData.postValue(f_mapMyorders);
 
@@ -409,7 +415,7 @@ public class GetViewModel extends AndroidViewModel {
         return s_mapMutable;
     }
 
-    private void GetItem() {
+    public void GetItem() {
         databaseReference = firebaseDatabase.getReference("Items").child("List");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -491,7 +497,7 @@ public class GetViewModel extends AndroidViewModel {
         return funMutableList;
     }
 
-    private void GetFun() {
+    public void GetFun() {
         databaseReference = firebaseDatabase.getReference("Items").child("Function");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -526,7 +532,7 @@ public class GetViewModel extends AndroidViewModel {
         });
     }
 
-    private void GetHeader() {
+    public void GetHeader() {
         databaseReference = firebaseDatabase.getReference("Items").child("Category");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -584,12 +590,11 @@ public class GetViewModel extends AndroidViewModel {
         this.func_title_Mutable.postValue(fun);
     }
 
-    public void GetViewList(String s_user_name, String func_title, List<SessionList> sessionLists) {
+    public void GetViewList(String s_user_name, String func_title, String session_title) {
 
         orderItemList_f_map.clear();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        for(int i=0;i<sessionLists.size();i++) {
-            databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name).child(func_title).child(sessionLists.get(i).getSession_title());
+            databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name).child(func_title).child(session_title);
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -611,23 +616,25 @@ public class GetViewModel extends AndroidViewModel {
 
                                 size++;
                             }
+                            //get selected header list
+                            //get linked hasp map to view item list
+                            selectedHeadersList.clear();
+                            Set<String> stringSet = orderItemList_f_map.keySet();
+
+                            for (String a : stringSet) {
+                                SelectedHeader aList = new SelectedHeader(
+                                        a
+                                );
+                                selectedHeadersList.add(aList);
+
+                            }
+                            selectedHeadersListMutableLiveData.postValue(selectedHeadersList);
+
 
                         }
-
                     orderItemList_f_mapMutableLiveData.postValue(orderItemList_f_map);
-                    //get selected header list
-                    //get linked hasp map to view item list
-                    selectedHeadersList.clear();
-                    Set<String> stringSet = orderItemList_f_map.keySet();
+                    MyLog.e(TAG, "f_mapsorder>>getview list " + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
 
-                    for (String a : stringSet) {
-                        SelectedHeader aList = new SelectedHeader(
-                                a
-                        );
-                        selectedHeadersList.add(aList);
-
-                    }
-                    selectedHeadersListMutableLiveData.postValue(selectedHeadersList);
 
                 }
 
@@ -636,7 +643,7 @@ public class GetViewModel extends AndroidViewModel {
                     Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
                 }
             });
-        }
+
 
     }
 

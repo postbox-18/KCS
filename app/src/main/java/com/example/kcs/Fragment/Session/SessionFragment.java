@@ -20,6 +20,7 @@ import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -101,6 +102,7 @@ public class SessionFragment extends Fragment {
         getViewModel.getSessionListMutable().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
             @Override
             public void onChanged(List<SessionList> sessionLists1) {
+                MyLog.e(TAG, "sessionLists>>fragment " + new GsonBuilder().setPrettyPrinting().create().toJson(sessionLists1));
                 sessionList=sessionLists1;
                 recyclerview_session.setHasFixedSize(true);
                 recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

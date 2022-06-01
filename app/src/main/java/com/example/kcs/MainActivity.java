@@ -84,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         user_name = new SharedPreferences_data(getApplication()).getS_user_name();
 
+        //to load data base
+        getViewModel.GetHeader();
+        getViewModel.GetFun();
+        getViewModel.GetSession();
+        getViewModel.GetItem();
+
 
         recyclerview_breadcrumbs.setHasFixedSize(true);
         recyclerview_breadcrumbs.setLayoutManager(new LinearLayoutManager(getApplication(), LinearLayoutManager.HORIZONTAL, false));
