@@ -48,13 +48,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/wedding" />
-
                     <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerview_session"
+                        android:layout_width="match_parent"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/session_cardview"
+                        android:layout_height="wrap_content"/>
+
+                   <!-- <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/itemList"
                         android:layout_width="match_parent"
                         tools:itemCount="2"
                         tools:listitem="@layout/list_cardview"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"/>-->
                 </LinearLayout>
 
             </LinearLayout>

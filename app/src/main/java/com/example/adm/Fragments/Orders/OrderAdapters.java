@@ -15,16 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
+import com.example.adm.Classes.SessionList;
+import com.example.adm.Fragments.Orders.BottomSheet.OrderLists;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder> {
     private List<OrderLists> orderLists;
@@ -56,25 +55,21 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         holder.func.setText(orderLists1.getFunc());
         MyLog.e(TAG,"item>>name outside>"+orderLists1.getS_user_name());
 
-        //get checked list in hash map
-        getViewModel.getS_mapMutable().observe((LifecycleOwner) context, new Observer<List<LinkedHashMap<String, List<UserItemList>>>>() {
+        //get session list
+        getViewModel.getSessionListsMutableLiveData().observe((LifecycleOwner) context, new Observer<List<SessionList>>() {
             @Override
-            public void onChanged(List<LinkedHashMap<String, List<UserItemList>>> linkedHashMaps) {
+            public void onChanged(List<SessionList> sessionLists) {
+                holder.recyclerview_session.setHasFixedSize(true);
+                holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                UserSessionListAdapter userSessionListAdapter=new UserSessionListAdapter(context,getViewModel,orderLists1,sessionLists);
+                holder.recyclerview_session.setAdapter(userSessionListAdapter);
 
-                userItemLists=new ArrayList<>();
-
-                for(int i=0;i<linkedHashMaps.size();i++) {
-
-                    userItemLists = linkedHashMaps.get(i).get(orderLists1.getS_user_name()+" "+ orderLists1.getFunc());
-                    MyLog.e(TAG,"f_map>>"+orderLists1.getS_user_name());
-                    MyLog.e(TAG,"f_map>>after"+new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
-                    holder.itemList.setHasFixedSize(true);
-                    holder.itemList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                    UserItemListAdapters itemListAdapters = new UserItemListAdapters(context, getViewModel, userItemLists);
-                    holder.itemList.setAdapter(itemListAdapters);
-                }
             }
         });
+
+
+
+
 
         //view click
         holder.item_cardView.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +103,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
 
         private ImageView profile;
         private TextView user_name, func;
-        private RecyclerView itemList;
+        private RecyclerView recyclerview_session;
         private CardView item_cardView;
 
         public ViewHolder(View view) {
@@ -116,7 +111,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
             profile = view.findViewById(R.id.profile);
             user_name = view.findViewById(R.id.user_name);
             func = view.findViewById(R.id.func);
-            itemList = view.findViewById(R.id.itemList);
+            recyclerview_session = view.findViewById(R.id.recyclerview_session);
             item_cardView = view.findViewById(R.id.item_cardView);
 
 

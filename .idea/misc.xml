@@ -49,9 +49,11 @@
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_user.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/img_activity.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/list_cardview.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/nav_header_home__sample.xml" value="0.19375" />
-        <entry key="app/src/main/res/layout/order_cardview.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/order_cardview.xml" value="0.21" />
         <entry key="app/src/main/res/layout/search_bar.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/session_cardview.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/topic_activity.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/user_details_cardview.xml" value="0.1" />
       </map>
