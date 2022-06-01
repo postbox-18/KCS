@@ -59,7 +59,7 @@ public class PlaceOrderFragment extends Fragment {
     private List<CheckedList> checkedLists=new ArrayList<>();
     private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
-    private String func_title,header_title,user_name;
+    private String func_title,header_title,user_name,session_title;
     private TextView func_title_view;
     private String TAG="PlaceOrderFragment";
     //firebase database retrieve
@@ -89,6 +89,7 @@ public class PlaceOrderFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -142,6 +143,14 @@ public class PlaceOrderFragment extends Fragment {
                 //get username
                 user_name=new SharedPreferences_data(getContext()).getS_user_name();
 
+                //get session list
+                getViewModel.getSession_titleMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        session_title=s;
+                    }
+                });
+
                 //get linked hash map checked list
                 getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
                     @Override
@@ -149,7 +158,7 @@ public class PlaceOrderFragment extends Fragment {
                         for(int i=0;i<selectedHeadersList.size();i++)
                         {
                             checkedLists=stringListLinkedHashMap.get(selectedHeadersList.get(i).getHeader());
-                            SaveOrders(func_title,user_name,selectedHeadersList.get(i).getHeader(),checkedLists);
+                            SaveOrders(func_title,user_name,selectedHeadersList.get(i).getHeader(),session_title,checkedLists);
 
                         }
                     }
@@ -174,7 +183,7 @@ public class PlaceOrderFragment extends Fragment {
     }
 
 
-    private void SaveOrders(String func_title, String user_name, String headerList_title, List<CheckedList> checkedLists1) {
+    private void SaveOrders(String func_title, String user_name, String headerList_title,String session_title ,List<CheckedList> checkedLists1) {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -184,7 +193,7 @@ public class PlaceOrderFragment extends Fragment {
 
                 for (int i = 0; i < checkedLists1.size(); i++) {
                     //getFunc
-                    databaseReference.child(user_name).child(func_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
+                    databaseReference.child(user_name).child(func_title).child(session_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
 
 

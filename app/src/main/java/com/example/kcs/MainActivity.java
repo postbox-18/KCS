@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.app.FragmentBreadCrumbs;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
+import com.example.kcs.BreadCrumbs.BreadCrumbList;
+import com.example.kcs.BreadCrumbs.BreadCrumbsAdapter;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
@@ -37,7 +37,6 @@ import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

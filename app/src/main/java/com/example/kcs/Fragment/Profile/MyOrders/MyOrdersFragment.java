@@ -141,8 +141,6 @@ public class MyOrdersFragment extends Fragment {
             public void onChanged(String s) {
                 if(s!=null) {
                     getViewModel.GetViewList(s_user_name,s);
-
-
                 }
                 else
                 {

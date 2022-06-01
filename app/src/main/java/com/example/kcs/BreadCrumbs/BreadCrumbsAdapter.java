@@ -1,4 +1,4 @@
-package com.example.kcs;
+package com.example.kcs.BreadCrumbs;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
 import java.util.ArrayList;

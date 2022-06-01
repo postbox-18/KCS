@@ -13,6 +13,8 @@ pending
 11-pending in MyOrders recyclerview
 12-problem in cart view fragment back btn
 13-back btn  <--  func>>session>>header using breadcrumbs
+14-BREADCRUMBS click to back to fragment
+15-lottie files for order saved
 
 finished
 1-alert check box to select the func

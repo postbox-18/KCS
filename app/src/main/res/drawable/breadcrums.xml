@@ -3,10 +3,7 @@
         <shape>
             <solid android:color="@color/btn_gradient_dark" />
             <corners
-                android:bottomLeftRadius="0dp"
-                android:bottomRightRadius="5dp"
-                android:topLeftRadius="0dp"
-                android:topRightRadius="5dp" />
+               android:radius="5dp" />
         </shape>
     </item>
     <item>
@@ -26,10 +23,7 @@
 
 
             <corners
-                android:bottomLeftRadius="0dp"
-                android:bottomRightRadius="10dp"
-                android:topLeftRadius="0dp"
-                android:topRightRadius="10dp" />
+                android:radius="10dp" />
         </shape>
     </item>
 </layer-list>

@@ -1,4 +1,4 @@
-package com.example.kcs;
+package com.example.kcs.BreadCrumbs;
 
 public class BreadCrumbList {
     private final String breadcrumbs;
