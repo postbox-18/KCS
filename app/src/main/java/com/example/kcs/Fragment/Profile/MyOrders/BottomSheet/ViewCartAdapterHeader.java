@@ -28,17 +28,18 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapterHeader";
-    private String session_title;
+    private String session_title,func_title;
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> header=new ArrayList<>();
 
 
-    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title) {
+    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title) {
         this.context=context;
         this.getViewModel=getViewModel;
         this.header=selectedHeadersList;
         this.session_title=session_title;
+        this.func_title=func_title;
     }
 
 
@@ -60,9 +61,10 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         getViewModel.getOrderItemList_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<OrderItemLists>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<OrderItemLists>> stringListLinkedHashMap) {
+                MyLog.e(TAG, "f_mapsorder>>stringListLinkedHashMap " + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 orderItemListss=new ArrayList<>();
-                MyLog.e(TAG,"f_mapsorder>>func>>"+session_title+"\t\t"+list.getHeader());
-                orderItemListss=stringListLinkedHashMap.get(list.getHeader());
+                MyLog.e(TAG,"f_mapsorder>>func>>"+func_title+"-"+session_title+"-"+list.getHeader());
+                orderItemListss=stringListLinkedHashMap.get(func_title+"-"+session_title+"-"+list.getHeader());
                 MyLog.e(TAG, "f_mapsorder>>orderItemListss " + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemListss));
                 holder.recyclerview_item_list.setHasFixedSize(true);
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));

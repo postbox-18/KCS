@@ -21,6 +21,7 @@ import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapterSession.ViewHolder> {
@@ -60,18 +61,30 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
         //get user name shared prefernces
         s_user_name=new SharedPreferences_data(context).getS_user_name();
-        getViewModel.GetViewList(s_user_name, func_title,list.getSession_title());
 
         //get selected header List
-        getViewModel.getSelectedHeadersListMutableLiveData().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
+        /*getViewModel.getSelectedHeadersListMutableLiveData().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
             @Override
             public void onChanged(List<SelectedHeader> selectedHeaders) {
-                MyLog.e(TAG, "f_mapsorder>>selectedHeaders " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeaders));
-                MyLog.e(TAG, "f_mapsorder>>sessionLists>> " + new GsonBuilder().setPrettyPrinting().create().toJson(sessionLists));
-                ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(context,getViewModel,selectedHeaders,list.getSession_title());
+                ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(context,getViewModel,selectedHeaders,list.getSession_title(),func_title);
                 holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
                 holder.recyclerview_order_item_details.setHasFixedSize(true);
                 holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+            }
+        });*/
+
+        //get selected session and header hashmap
+        getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
+                MyLog.e(TAG, "f_mapsorder>>selected header stringListLinkedHashMap " + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                selectedHeaders=stringListLinkedHashMap.get(list.getSession_title());
+                MyLog.e(TAG, "f_mapsorder>>selectedHeaders " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeaders));
+                ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(context,getViewModel,selectedHeaders,list.getSession_title(),func_title);
+                holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
+                holder.recyclerview_order_item_details.setHasFixedSize(true);
+                holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+
             }
         });
 

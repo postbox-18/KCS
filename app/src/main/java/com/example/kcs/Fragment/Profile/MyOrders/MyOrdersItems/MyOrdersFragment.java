@@ -109,6 +109,7 @@ public class MyOrdersFragment extends Fragment {
         myOrdersList = new ArrayList<>();
         firebaseDatabase = FirebaseDatabase.getInstance();
         s_user_name = new SharedPreferences_data(getContext()).getS_user_name();
+
         //to load data in my order details
         getViewModel.GetMyOrdersDetails(s_user_name);
 

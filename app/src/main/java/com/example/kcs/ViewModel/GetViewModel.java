@@ -49,6 +49,7 @@ public class GetViewModel extends AndroidViewModel {
     //session list
     private MutableLiveData<List<SessionList>> sessionListMutable = new MutableLiveData<>();
     private List<SessionList> sessionList = new ArrayList<>();
+
     //selected session list
     private MutableLiveData<List<SessionList>> s_sessionListMutable = new MutableLiveData<>();
     private List<SessionList> s_sessionList = new ArrayList<>();
@@ -123,6 +124,10 @@ public class GetViewModel extends AndroidViewModel {
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private MutableLiveData<List<SelectedHeader>> selectedHeadersListMutableLiveData = new MutableLiveData<>();
 
+    //selected session and header in hash map
+    private LinkedHashMap<String,List<SelectedHeader>> sh_f_map=new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String,List<SelectedHeader>>> sh_f_mapMutableLiveData=new MutableLiveData<>();
+
     //selected Item list
     private List<OrderItemLists> orderItemLists = new ArrayList<>();
     private MutableLiveData<List<OrderItemLists>> orderItemListsMutableLiveData = new MutableLiveData<>();
@@ -142,12 +147,11 @@ public class GetViewModel extends AndroidViewModel {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
 
-
-
-
-
     }
 
+    public MutableLiveData<LinkedHashMap<String, List<SelectedHeader>>> getSh_f_mapMutableLiveData() {
+        return sh_f_mapMutableLiveData;
+    }
 
     public MutableLiveData<List<SessionList>> getS_sessionListMutable() {
         return s_sessionListMutable;
@@ -209,7 +213,7 @@ public class GetViewModel extends AndroidViewModel {
 
 
     public void GetMyOrdersDetails(String s_user_name) {
-
+        orderItemList_f_map.clear();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -222,12 +226,14 @@ public class GetViewModel extends AndroidViewModel {
                     MyLog.e(TAG, "onData>>datas>>" + datas);
                     MyLog.e(TAG, "onData>>func>>" + datas.getKey().toString());
                     func = datas.getKey().toString();
-                    sessionList=new ArrayList<>();
+                    sessionList = new ArrayList<>();
                     for (DataSnapshot ondata : datas.getChildren()) {
-                        session_title=ondata.getKey().toString();
+                        session_title = ondata.getKey().toString();
                         myOrdersList = new ArrayList<>();
                         for (DataSnapshot dataSnapshot : ondata.getChildren()) {
-
+                            //get item list
+                            orderItemLists = new ArrayList<>();
+                            //////
                             header_title = dataSnapshot.getKey().toString();
                             MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
                             MyLog.e(TAG, "onData>>header_title>>" + dataSnapshot.getKey().toString());
@@ -235,8 +241,17 @@ public class GetViewModel extends AndroidViewModel {
                             for (DataSnapshot shot : dataSnapshot.getChildren()) {
                                 MyLog.e(TAG, "onData>>shots>>" + shot);
                                 MyLog.e(TAG, "onData>>shots>>" + shot.getKey().toString());
+                                //get item list
+                                OrderItemLists itemLists = new OrderItemLists(
+                                        shot.getValue().toString()
+                                );
+                                orderItemLists.add(itemLists);
+                                String s1 = func + "-" + session_title + "-" + header_title;
+                                orderItemList_f_map.put(s1, orderItemLists);
+                                ///////////////////////
                                 size++;
                             }
+
                             MyLog.e(TAG, "onData>>size>" + size);
                             MyOrdersList itemList = new MyOrdersList(
                                     header_title,
@@ -244,15 +259,23 @@ public class GetViewModel extends AndroidViewModel {
                             );
 
                             myOrdersList.add(itemList);
-                            String s=func+"/"+session_title;
+                            String s = func + "/" + session_title;
                             f_mapMyorders.put(s, myOrdersList);
                             myordersHashMapMutable.postValue(f_mapMyorders);
 
+                            //get item list
+                            SelectedHeader selectedHeader=new SelectedHeader(
+                                    header_title
+                            );
+                            selectedHeadersList.add(selectedHeader);
+                            sh_f_map.put(session_title,selectedHeadersList);
+
                         }
-                        SessionList sessionList1=new SessionList(
+                        SessionList sessionList1 = new SessionList(
                                 session_title
                         );
                         s_sessionList.add(sessionList1);
+
                     }
 
 
@@ -270,6 +293,16 @@ public class GetViewModel extends AndroidViewModel {
                 //set f_mpa of my orders
                 f_mapMyordersMutableLiveData.postValue(f_mapMyorders);
 
+                //get list item selector header
+                selectedHeadersListMutableLiveData.postValue(selectedHeadersList);
+                //get item list hash map
+                orderItemList_f_mapMutableLiveData.postValue(orderItemList_f_map);
+                //get item list hash map session and header
+                sh_f_mapMutableLiveData.postValue(sh_f_map);
+                MyLog.e(TAG, "f_mapsorder>>sh_f_map " + new GsonBuilder().setPrettyPrinting().create().toJson(sh_f_map));
+                MyLog.e(TAG, "f_mapsorder>>selectedHeadersList " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
+                MyLog.e(TAG, "f_mapsorder>>orderItemList_f_map " + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
+                MyLog.e(TAG, "f_mapsorder>>orderItemList_f_map size" +orderItemList_f_map.size());
 
             }
 
@@ -590,62 +623,6 @@ public class GetViewModel extends AndroidViewModel {
         this.func_title_Mutable.postValue(fun);
     }
 
-    public void GetViewList(String s_user_name, String func_title, String session_title) {
-
-        orderItemList_f_map.clear();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name).child(func_title).child(session_title);
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    int size = 0;
-
-                        for (DataSnapshot datas : snapshot.getChildren()) {
-                            orderItemLists = new ArrayList<>();
-                            header_title = datas.getKey().toString();
-                            MyLog.e(TAG, "itemlists>>datas>>" + datas);
-                            MyLog.e(TAG, "orderItemList_f_map>>datas>>" + datas.getKey().toString());
-                            for (DataSnapshot dataSnapshot : datas.getChildren()) {
-                                MyLog.e(TAG, "itemlists>>datasnap>>" + dataSnapshot);
-                                MyLog.e(TAG, "orderItemList_f_map>>datasnap>>" + dataSnapshot.getKey().toString() + "\t==\t" + dataSnapshot.getValue().toString());
-                                OrderItemLists itemLists = new OrderItemLists(
-                                        dataSnapshot.getValue().toString()
-                                );
-                                orderItemLists.add(itemLists);
-                                orderItemList_f_map.put(header_title, orderItemLists);
-
-                                size++;
-                            }
-                            //get selected header list
-                            //get linked hasp map to view item list
-                            selectedHeadersList.clear();
-                            Set<String> stringSet = orderItemList_f_map.keySet();
-
-                            for (String a : stringSet) {
-                                SelectedHeader aList = new SelectedHeader(
-                                        a
-                                );
-                                selectedHeadersList.add(aList);
-
-                            }
-                            selectedHeadersListMutableLiveData.postValue(selectedHeadersList);
-
-
-                        }
-                    orderItemList_f_mapMutableLiveData.postValue(orderItemList_f_map);
-                    MyLog.e(TAG, "f_mapsorder>>getview list " + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-
-    }
 
     public void SetBreadCrumsList(String s, int i) {
         if (i == 0) {
