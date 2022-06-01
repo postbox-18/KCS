@@ -192,7 +192,6 @@ public class GetViewModel extends AndroidViewModel {
 
                 }
                 sessionListMutable.postValue(sessionList);
-                //MyLog.e(TAG,"session>>session_list>>"+new GsonBuilder().setPrettyPrinting().create().toJson(sessionList));
             }
 
             @Override
@@ -264,9 +263,6 @@ public class GetViewModel extends AndroidViewModel {
                 sessionListMutable.postValue(sessionList);
                 //set f_mpa of my orders
                 f_mapMyordersMutableLiveData.postValue(f_mapMyorders);
-                //MyLog.e(TAG, "selected_list>>f_map>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(f_mapMyorders));
-                //MyLog.e(TAG, "selected_list>>sessionList>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionList));
-                //MyLog.e(TAG,"onData>>myOrderFuncLists>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrderFuncLists));
 
 
             }
@@ -316,7 +312,6 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void setF_map(LinkedHashMap<String, List<CheckedList>> f_map) {
-        //MyLog.e(TAG, "f_maps>>set>>" + new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
         this.f_map = f_map;
         this.f_mapMutable.postValue(f_map);
     }
@@ -438,15 +433,12 @@ public class GetViewModel extends AndroidViewModel {
                         }
                     }
                     itemMutable.postValue(itemLists);
-                    //MyLog.e(TAG, "stringListLinkedHashMap1>>set item>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     f_maps.put(headerList.get(k).getHeader(), itemLists);
-                    //MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     size++;
                 }
 
                 s_map.add(f_maps);
                 s_mapMutable.postValue(s_map);
-                //MyLog.e(TAG, "hashmap>>item list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
 
 
             }
@@ -576,10 +568,8 @@ public class GetViewModel extends AndroidViewModel {
         header_title_Mutable.postValue(header);
         List<ItemList> itemLists = s_map.get(0).get(header);
         //itemLists=itemLists1;
-        //MyLog.e(TAG, "stringListLinkedHashMap1>>set>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
         this.itemHeaderMutable.postValue(itemLists);
         MyLog.e(TAG, "itm>nut>>" + itemLists.size());
-        //MyLog.e(TAG, "hashmap>>data>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
         if (itemLists.size() > 0) {
             value.postValue(2);
 
@@ -596,7 +586,6 @@ public class GetViewModel extends AndroidViewModel {
 
     public void GetViewList(String s_user_name, String func_title, List<SessionList> sessionLists) {
 
-        //MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list before11>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
         orderItemList_f_map.clear();
         firebaseDatabase = FirebaseDatabase.getInstance();
         for(int i=0;i<sessionLists.size();i++) {
@@ -639,7 +628,6 @@ public class GetViewModel extends AndroidViewModel {
 
                     }
                     selectedHeadersListMutableLiveData.postValue(selectedHeadersList);
-                    //MyLog.e(TAG,"myorders>>f_maps>>map get>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
 
                 }
 

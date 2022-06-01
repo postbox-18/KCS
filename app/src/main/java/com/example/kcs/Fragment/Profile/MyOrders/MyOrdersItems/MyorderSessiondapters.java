@@ -59,12 +59,8 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             @Override
             public void onChanged(LinkedHashMap<String, List<MyOrdersList>> stringListLinkedHashMap) {
 
-                //MyLog.e(TAG,"myorders>>fun>>"+func_title+"\t\t"+sessionLists1.getSession_title());
-               // MyLog.e(TAG,"myorders>>stringListLinkedHashMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 myOrdersList=stringListLinkedHashMap.get(func_title+"/"+sessionLists1.getSession_title());
                 getViewModel.setMyOrdersList(myOrdersList);
-                //MyLog.e(TAG,"myorders>>myOrdersList>>"+new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
-                //MyLog.e(TAG,"myorder>>myOrdersList>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
                 holder.recyclerview_item_list.setHasFixedSize(true);
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                 MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);

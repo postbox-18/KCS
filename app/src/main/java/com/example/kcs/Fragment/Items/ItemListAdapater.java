@@ -75,7 +75,6 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
 
 
         //check if checked list item selected
-        // MyLog.e(TAG, "hashmap>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
         if (selected_s_map.size() > 0) {
             for (int k = 0; k < selected_s_map.size(); k++) {
                 selected_checkedLists = selected_s_map.get(k).get(header);
@@ -98,14 +97,11 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
             MyLog.e(TAG, "checked>>selected  map size is null>>");
         }
         MyLog.e(TAG, "hashmap>>size>>" + selected_s_map.size());
-        //MyLog.e(TAG, "hashmap>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
 
         holder.item_check.setText(itemList1.getItem());
         holder.item_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                //MyLog.e(TAG, "stringListLinkedHashMap>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                //MyLog.e(TAG, "selected_s_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
                 if (itemList1.getItem() != null) {
                     if (holder.item_check.isChecked()) {
                         CheckedList checkedLists1 = new CheckedList(
@@ -122,16 +118,13 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         //unchecked.getUnchecked(itemList1.getItem());
                         GetUncheckList(itemList1.getItem());
 
-                        //MyLog.e(TAG, "Check>>header itemadapter:::else>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     }
                     getViewModel.setF_map(stringListLinkedHashMap);
 
                     MyLog.e(TAG, "selected_s_map>>size>>" + selected_s_map.size());
                     selected_s_map.add(stringListLinkedHashMap);
                     getViewModel.setCheck_s_map(selected_s_map);
-                    //MyLog.e(TAG, "selected_s_map>>after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
 
-                    //MyLog.e(TAG, "Check>>header itemadapter>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     Gson gson = new Gson();
                     String json = gson.toJson(checkedLists);
                     new SharedPreferences_data(context).setChecked_item_list(json);

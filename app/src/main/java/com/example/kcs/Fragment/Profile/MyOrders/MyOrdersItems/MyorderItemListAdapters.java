@@ -39,7 +39,6 @@ public class MyorderItemListAdapters extends RecyclerView.Adapter<MyorderItemLis
     @Override
     public void onBindViewHolder(@NonNull MyorderItemListAdapters.ViewHolder holder, int position) {
 
-        //MyLog.e(TAG,"myorder>>adapter::myOrdersList>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersLists));
         final MyOrdersList myOrdersList1 = myOrdersLists.get(position);
         MyLog.e(TAG, "items>>header>" + myOrdersList1.getHeader());
         MyLog.e(TAG, "items>>size>>" + myOrdersList1.getSize());

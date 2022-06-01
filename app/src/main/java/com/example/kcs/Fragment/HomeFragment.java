@@ -151,7 +151,6 @@ public class HomeFragment extends Fragment {
                 getViewModel.setI_fragment(0);
                 recyclerview_header.setAdapter(headerAdapter);
 
-                //MyLog.e(TAG, "model>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerLists));
             }
         });
         getViewModel.getFunMutableList().observe(getViewLifecycleOwner(), new Observer<List<FunList>>() {
@@ -195,7 +194,6 @@ public class HomeFragment extends Fragment {
                                 i);
                         itemLists.add(itemLists1);
                     }
-                    //MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     size++;
 
 

@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<BreadCrumbList> breadCrumbLists) {
                 breadcrumbsList=breadCrumbLists;
                 if (breadcrumbsList != null) {
-                    //MyLog.e(TAG, "breadcrumbs>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(breadcrumbsList));
                     breadCrumbsAdapter = new BreadCrumbsAdapter(getApplicationContext(), getViewModel, breadcrumbsList);
                     recyclerview_breadcrumbs.setAdapter(breadCrumbsAdapter);
                 }
@@ -162,13 +161,10 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
                 stringListLinkedHashMap = stringListLinkedHashMap1;
                 MyLog.e(TAG, "chs>>keyset>>" + stringListLinkedHashMap.keySet());
-                //MyLog.e(TAG,"f_map main>>"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                //MyLog.e(TAG,"chs>>before"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
                 Set<String> stringSet = stringListLinkedHashMap.keySet();
                 List<String> aList = new ArrayList<String>(stringSet.size());
                 for (String x : stringSet)
                     aList.add(x);
-                //MyLog.e(TAG,"chs>>list "+ new GsonBuilder().setPrettyPrinting().create().toJson(aList));
 
                 //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
                 userItemLists.clear();
@@ -181,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
                     );
                     userItemLists.add(userItemList);
                 }
-                //MyLog.e(TAG,"chs>>after"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
                 getViewModel.setUserItemLists(userItemLists);
                 if (userItemLists.size() > 0) {
                     snackbar.show();
@@ -239,10 +234,8 @@ public class MainActivity extends AppCompatActivity {
                 getViewModel.getF_mapMutable().observe(MainActivity.this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
                     @Override
                     public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
-                        //MyLog.e(TAG, "cart>>f_map>>before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                         stringListLinkedHashMap = stringListLinkedHashMap1;
 
-                        //MyLog.e(TAG, "cart>>list " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
 
                     }
                 });
@@ -293,13 +286,11 @@ public class MainActivity extends AppCompatActivity {
                         fragmentTAg = "HomeFragment";
                         break;
                     case 1:
-                        //MyLog.e(TAG, "Data>>fun list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getHeaderLists()));
                         fragment = new HeaderFragment();
 
                         fragmentTAg = "HeaderFragment";
                         break;
                     case 2:
-                        //MyLog.e(TAG, "Data>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getItemLists()));
                         fragment = new ItemFragment();
 
                         fragmentTAg = "ItemFragment";
@@ -359,7 +350,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             MyLog.e(TAG, "integer>>fun>>out>>" + funLists.size());
             showAlertDialog(funLists);
-            //MyLog.e(TAG, "integer>>fun_list" + new GsonBuilder().setPrettyPrinting().create().toJson(funLists));
         }
 
 
