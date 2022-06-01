@@ -230,7 +230,8 @@ public class GetViewModel extends AndroidViewModel {
                     for (DataSnapshot ondata : datas.getChildren()) {
                         session_title = ondata.getKey().toString();
                         myOrdersList = new ArrayList<>();
-                        for (DataSnapshot dataSnapshot : ondata.getChildren()) {
+                        selectedHeadersList=new ArrayList<>();
+                    for (DataSnapshot dataSnapshot : ondata.getChildren()) {
                             //get item list
                             orderItemLists = new ArrayList<>();
                             //////
@@ -269,6 +270,7 @@ public class GetViewModel extends AndroidViewModel {
                             );
                             selectedHeadersList.add(selectedHeader);
                             sh_f_map.put(session_title,selectedHeadersList);
+                            MyLog.e(TAG, "f_mapsorder>>sh_f_map after>> " + new GsonBuilder().setPrettyPrinting().create().toJson(sh_f_map));
 
                         }
                         SessionList sessionList1 = new SessionList(
