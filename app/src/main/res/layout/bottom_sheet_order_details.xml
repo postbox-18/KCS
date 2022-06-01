@@ -25,12 +25,13 @@
                     android:textStyle="bold|italic"
                     android:textSize="18dp"
                     />
+
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerview_order_item_details"
+                    android:id="@+id/recyclerview_session_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:itemCount="5"
-                    tools:listitem="@layout/bottom_sheet_order_header" />
+                    tools:listitem="@layout/bottom_sheet_order_session" />
             </LinearLayout>
 
     </LinearLayout>

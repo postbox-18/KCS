@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
+import com.example.adm.Classes.SessionList;
 import com.example.adm.Fragments.Orders.BottomSheet.OrderLists;
 import com.example.adm.Fragments.Orders.BottomSheet.SelectedHeader;
 import com.example.adm.Fragments.Orders.BottomSheet.ViewCartAdapterHeader;
@@ -19,6 +20,7 @@ import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +45,8 @@ public class OrdersFragment extends Fragment {
     private RecyclerView recyclerView_order_list;
 
     //bottom sheet view
-    RecyclerView recyclerview_order_item_details;
+    private RecyclerView recyclerview_session_view;
+    private List<SessionList> sessionLists=new ArrayList<>();
 
 
     private GetViewModel getViewModel;
@@ -52,15 +55,7 @@ public class OrdersFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrdersFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static OrdersFragment newInstance(String param1, String param2) {
         OrdersFragment fragment = new OrdersFragment();
         Bundle args = new Bundle();
@@ -102,17 +97,25 @@ public class OrdersFragment extends Fragment {
         //Bottom sheet
         BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
         View bottom_view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_order_details, null);
-        recyclerview_order_item_details = bottom_view.findViewById(R.id.recyclerview_order_item_details);
-        recyclerview_order_item_details.setHasFixedSize(true);
-        recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerview_session_view = bottom_view.findViewById(R.id.recyclerview_session_view);
+        recyclerview_session_view.setHasFixedSize(true);
+        recyclerview_session_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
+
+        //get session list
+        getViewModel.getSessionListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
+            @Override
+            public void onChanged(List<SessionList> sessionLists1) {
+                sessionLists=sessionLists1;
+            }
+        });
 
         //get orderItem list to view item list
         getViewModel.getOrderListsViewMutableLiveData().observe(getViewLifecycleOwner(), new Observer<OrderLists>() {
             @Override
             public void onChanged(OrderLists orderLists) {
                 if(orderLists!=null) {
-                    getViewModel.GetViewList(orderLists);
+                    getViewModel.GetViewList(orderLists,sessionLists);
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
                 }
@@ -123,16 +126,23 @@ public class OrdersFragment extends Fragment {
             }
         });
 
-        //get selected List
+        /*//get selected List
         getViewModel.getSelectedHeadersMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SelectedHeader>>() {
             @Override
             public void onChanged(List<SelectedHeader> selectedHeaders) {
                 ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,selectedHeaders);
                 recyclerview_order_item_details.setAdapter(viewCartAdapter);
             }
+        });*/
+
+        //get session list
+        getViewModel.getSessionListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
+            @Override
+            public void onChanged(List<SessionList> sessionLists) {
+                ViewCartAdapterSession viewCartAdapter=new ViewCartAdapterSession(getContext(),getViewModel,sessionLists);
+                recyclerview_session_view.setAdapter(viewCartAdapter);
+            }
         });
-
-
 
 
 
