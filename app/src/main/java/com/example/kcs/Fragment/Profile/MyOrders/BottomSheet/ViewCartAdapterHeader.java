@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -25,16 +27,18 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private Context context;
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
-    private String TAG = "ViewCartAdapter";
+    private String TAG = "ViewCartAdapterHeader";
+    private String session_title;
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> header=new ArrayList<>();
 
 
-    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList) {
+    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title) {
         this.context=context;
         this.getViewModel=getViewModel;
         this.header=selectedHeadersList;
+        this.session_title=session_title;
     }
 
 
@@ -56,15 +60,20 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         getViewModel.getOrderItemList_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<OrderItemLists>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<OrderItemLists>> stringListLinkedHashMap) {
+                orderItemListss=new ArrayList<>();
+
+                MyLog.e(TAG,"myorders>>func>>"+session_title+"\t\t"+list.getHeader());
+                MyLog.e(TAG, "myorders>>stringListLinkedHashMap adapter>>list " +  new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 orderItemListss=stringListLinkedHashMap.get(list.getHeader());
-                //MyLog.e(TAG, "cart>>adapter>>list " +  new GsonBuilder().setPrettyPrinting().create().toJson(orderItemListss));
+                MyLog.e(TAG, "myorders>>header adapter>>list " +  new GsonBuilder().setPrettyPrinting().create().toJson(orderItemListss));
                 holder.recyclerview_item_list.setHasFixedSize(true);
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                viewCartAdapter=new ViewCartAdapter(context,getViewModel,orderItemListss);
-                holder.recyclerview_item_list.setAdapter(viewCartAdapter);
+                if(orderItemListss!=null) {
+                    viewCartAdapter = new ViewCartAdapter(context, getViewModel, orderItemListss);
+                    holder.recyclerview_item_list.setAdapter(viewCartAdapter);
+                }
             }
         });
-
 
 
     }

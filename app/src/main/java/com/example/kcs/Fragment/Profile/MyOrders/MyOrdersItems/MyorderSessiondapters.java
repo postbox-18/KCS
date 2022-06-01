@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.Profile.MyOrders;
+package com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -18,7 +18,6 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.MyOrderFuncList;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
@@ -60,11 +59,11 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             @Override
             public void onChanged(LinkedHashMap<String, List<MyOrdersList>> stringListLinkedHashMap) {
 
-                MyLog.e(TAG,"myorders>>fun>>"+func_title+"\t\t"+sessionLists1.getSession_title());
-                MyLog.e(TAG,"myorders>>stringListLinkedHashMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                myOrdersList=stringListLinkedHashMap.get(func_title+"-"+sessionLists1.getSession_title());
+                //MyLog.e(TAG,"myorders>>fun>>"+func_title+"\t\t"+sessionLists1.getSession_title());
+               // MyLog.e(TAG,"myorders>>stringListLinkedHashMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                myOrdersList=stringListLinkedHashMap.get(func_title+"/"+sessionLists1.getSession_title());
                 getViewModel.setMyOrdersList(myOrdersList);
-                MyLog.e(TAG,"myorders>>myOrdersList>>"+new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
+                //MyLog.e(TAG,"myorders>>myOrdersList>>"+new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
                 //MyLog.e(TAG,"myorder>>myOrdersList>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
                 holder.recyclerview_item_list.setHasFixedSize(true);
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));

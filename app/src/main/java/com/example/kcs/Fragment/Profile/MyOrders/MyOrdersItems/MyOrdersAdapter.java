@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.Profile.MyOrders;
+package com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -21,7 +21,6 @@ import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.MyOrderFuncList;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHolder> {
@@ -62,30 +61,11 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
                 holder.recyclerview_session.setAdapter(itemListAdapters);
             }
         });
-        //get list hash map of my orders list
-        /*getViewModel.getS_mapMyordersMutableLiveData().observe((LifecycleOwner) context, new Observer<List<LinkedHashMap<String, List<MyOrdersList>>>>() {
-            @Override
-            public void onChanged(List<LinkedHashMap<String, List<MyOrdersList>>> linkedHashMaps) {
-                myOrdersList=new ArrayList<>();
-                for (int i=0;i<linkedHashMaps.size();i++)
-                {
-                    myOrdersList=linkedHashMaps.get(i).get(myOrderFuncLists1.getFunc());
-                    getViewModel.setMyOrdersList(myOrdersList);
-                    //MyLog.e(TAG,"myorder>>myOrdersList>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
-                    holder.recyclerview_item_list.setHasFixedSize(true);
-                    holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                    MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
-                    holder.recyclerview_item_list.setAdapter(itemListAdapters);
-                }
-
-            }
-        });*/
-
         holder.card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getViewModel.setFunc_title(myOrderFuncLists1.getFunc());
-                getViewModel.SetBreadCrumsList(myOrderFuncLists1.getFunc(), 0);
+                //getViewModel.SetBreadCrumsList(myOrderFuncLists1.getFunc(), 0);
             }
         });
 

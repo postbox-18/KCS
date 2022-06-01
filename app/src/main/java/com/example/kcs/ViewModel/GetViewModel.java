@@ -18,7 +18,7 @@ import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
 import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.OrderItemLists;
-import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersList;
+import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems.MyOrdersList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -240,7 +240,7 @@ public class GetViewModel extends AndroidViewModel {
                             );
 
                             myOrdersList.add(itemList);
-                            String s=func+"-"+session_title;
+                            String s=func+"/"+session_title;
                             f_mapMyorders.put(s, myOrdersList);
                             myordersHashMapMutable.postValue(f_mapMyorders);
 
@@ -264,8 +264,8 @@ public class GetViewModel extends AndroidViewModel {
                 sessionListMutable.postValue(sessionList);
                 //set f_mpa of my orders
                 f_mapMyordersMutableLiveData.postValue(f_mapMyorders);
-                MyLog.e(TAG, "selected_list>>f_map>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(f_mapMyorders));
-                MyLog.e(TAG, "selected_list>>sessionList>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionList));
+                //MyLog.e(TAG, "selected_list>>f_map>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(f_mapMyorders));
+                //MyLog.e(TAG, "selected_list>>sessionList>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionList));
                 //MyLog.e(TAG,"onData>>myOrderFuncLists>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrderFuncLists));
 
 
@@ -594,61 +594,61 @@ public class GetViewModel extends AndroidViewModel {
         this.func_title_Mutable.postValue(fun);
     }
 
-    public void GetViewList(String s_user_name, String func_title) {
+    public void GetViewList(String s_user_name, String func_title, List<SessionList> sessionLists) {
 
         //MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list before11>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
         orderItemList_f_map.clear();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name).child(func_title);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int size = 0;
+        for(int i=0;i<sessionLists.size();i++) {
+            databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name).child(func_title).child(sessionLists.get(i).getSession_title());
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int size = 0;
 
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                    orderItemLists = new ArrayList<>();
-                    header_title = datas.getKey().toString();
-                    MyLog.e(TAG, "itemlists>>datas>>" + datas);
-                    MyLog.e(TAG, "orderItemList_f_map>>datas>>" + datas.getKey().toString());
-                    for (DataSnapshot dataSnapshot : datas.getChildren()) {
-                        MyLog.e(TAG, "itemlists>>datasnap>>" + dataSnapshot);
-                        MyLog.e(TAG, "orderItemList_f_map>>datasnap>>" + dataSnapshot.getKey().toString() + "\t==\t" + dataSnapshot.getValue().toString());
-                        OrderItemLists itemLists = new OrderItemLists(
-                                dataSnapshot.getValue().toString()
+                        for (DataSnapshot datas : snapshot.getChildren()) {
+                            orderItemLists = new ArrayList<>();
+                            header_title = datas.getKey().toString();
+                            MyLog.e(TAG, "itemlists>>datas>>" + datas);
+                            MyLog.e(TAG, "orderItemList_f_map>>datas>>" + datas.getKey().toString());
+                            for (DataSnapshot dataSnapshot : datas.getChildren()) {
+                                MyLog.e(TAG, "itemlists>>datasnap>>" + dataSnapshot);
+                                MyLog.e(TAG, "orderItemList_f_map>>datasnap>>" + dataSnapshot.getKey().toString() + "\t==\t" + dataSnapshot.getValue().toString());
+                                OrderItemLists itemLists = new OrderItemLists(
+                                        dataSnapshot.getValue().toString()
+                                );
+                                orderItemLists.add(itemLists);
+                                orderItemList_f_map.put(header_title, orderItemLists);
+
+                                size++;
+                            }
+
+                        }
+
+                    orderItemList_f_mapMutableLiveData.postValue(orderItemList_f_map);
+                    //get selected header list
+                    //get linked hasp map to view item list
+                    selectedHeadersList.clear();
+                    Set<String> stringSet = orderItemList_f_map.keySet();
+
+                    for (String a : stringSet) {
+                        SelectedHeader aList = new SelectedHeader(
+                                a
                         );
-                        orderItemLists.add(itemLists);
-                        //MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list before>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
-                        orderItemList_f_map.put(header_title, orderItemLists);
-                        //MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list after>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
-                        size++;
+                        selectedHeadersList.add(aList);
+
                     }
+                    selectedHeadersListMutableLiveData.postValue(selectedHeadersList);
+                    //MyLog.e(TAG,"myorders>>f_maps>>map get>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
 
                 }
-                orderItemList_f_mapMutableLiveData.postValue(orderItemList_f_map);
-                //get selected header list
-                //get linked hasp map to view item list
-                selectedHeadersList.clear();
-                Set<String> stringSet = orderItemList_f_map.keySet();
 
-                for (String a : stringSet) {
-                    SelectedHeader aList = new SelectedHeader(
-                            a
-                    );
-                    selectedHeadersList.add(aList);
-
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
                 }
-                selectedHeadersListMutableLiveData.postValue(selectedHeadersList);
-
-
-                // MyLog.e(TAG,"itemlists>>f_maps>>map get>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
+        }
 
     }
 

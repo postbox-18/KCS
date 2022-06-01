@@ -17,7 +17,9 @@
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
         <entry key="app/src/main/res/layout/back_btn_layout.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/bottom_sheet_order_details.xml" value="0.14744351961950058" />
+        <entry key="app/src/main/res/layout/bottom_sheet_order_header.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/bottom_sheet_order_item_list.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/bottom_sheet_order_session.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/fragment_header.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_item.xml" value="0.19375" />

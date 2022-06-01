@@ -1,8 +1,7 @@
-package com.example.kcs.Fragment.Profile.MyOrders;
+package com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,29 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 
-import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
-import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
-import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.ViewCartAdapterHeader;
+import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.ViewCartAdapterSession;
+import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.MyOrderFuncList;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,18 +48,20 @@ public class MyOrdersFragment extends Fragment {
     private ImageView back_btn;
     private GetViewModel getViewModel;
     private RecyclerView recyclerview_my_orders;
-    private List<MyOrdersList> myOrdersList=new ArrayList<>();
-    private List<MyOrderFuncList> myOrderFuncLists=new ArrayList<>();
+    private List<MyOrdersList> myOrdersList = new ArrayList<>();
+    private List<MyOrderFuncList> myOrderFuncLists = new ArrayList<>();
     private MyOrdersAdapter myOrdersAdapter;
-    private String header,func,s_user_name;
-    private String item="";
+    private String header, func, s_user_name;
+    private String item = "";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private String TAG = "MyOrdersFragment";
-    private LinkedHashMap<String,List<MyOrdersList>> myordersHashMap=new LinkedHashMap<>();
+    private LinkedHashMap<String, List<MyOrdersList>> myordersHashMap = new LinkedHashMap<>();
 
     //bottom sheet view
-    RecyclerView recyclerview_order_item_details;
+    private RecyclerView recyclerview_order_session_deatils;
+    private List<SessionList> sessionLists=new ArrayList<>();
+
     public MyOrdersFragment() {
         // Required empty public constructor
     }
@@ -104,24 +98,24 @@ public class MyOrdersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_my_orders, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_orders, container, false);
 
-        back_btn=view.findViewById(R.id.back_btn);
-        recyclerview_my_orders=view.findViewById(R.id.recyclerview_my_orders);
+        back_btn = view.findViewById(R.id.back_btn);
+        recyclerview_my_orders = view.findViewById(R.id.recyclerview_my_orders);
 
 
         recyclerview_my_orders.setHasFixedSize(true);
         recyclerview_my_orders.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        myOrdersList=new ArrayList<>();
+        myOrdersList = new ArrayList<>();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        s_user_name=new SharedPreferences_data(getContext()).getS_user_name();
+        s_user_name = new SharedPreferences_data(getContext()).getS_user_name();
 
         //get Func name list
         getViewModel.getMyOrderFuncListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<MyOrderFuncList>>() {
             @Override
             public void onChanged(List<MyOrderFuncList> myOrderFuncLists1) {
-                myOrderFuncLists=myOrderFuncLists1;
-                myOrdersAdapter=new MyOrdersAdapter(getContext(),myOrderFuncLists,getViewModel);
+                myOrderFuncLists = myOrderFuncLists1;
+                myOrdersAdapter = new MyOrdersAdapter(getContext(), myOrderFuncLists, getViewModel);
                 recyclerview_my_orders.setAdapter(myOrdersAdapter);
             }
         });
@@ -129,40 +123,41 @@ public class MyOrdersFragment extends Fragment {
         //Bottom sheet
         BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
         View bottom_view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_order_details, null);
-        recyclerview_order_item_details = bottom_view.findViewById(R.id.recyclerview_order_item_details);
-        recyclerview_order_item_details.setHasFixedSize(true);
-        recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerview_order_session_deatils = bottom_view.findViewById(R.id.recyclerview_order_session_deatils);
+        recyclerview_order_session_deatils.setHasFixedSize(true);
+        recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-
+        //get session list
+        getViewModel.getSessionListMutable().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
+            @Override
+            public void onChanged(List<SessionList> sessionLists1) {
+                sessionLists=sessionLists1;
+            }
+        });
 
         //get func_title  to view item list
         getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if(s!=null) {
-                    getViewModel.GetViewList(s_user_name,s);
+                if (s != null) {
+                    bottomSheet.setContentView(bottom_view);
+                    bottomSheet.show();
+                    getViewModel.GetViewList(s_user_name, s,sessionLists);
+                } else {
+                    MyLog.e(TAG, "itemAd>> orderItemView list null");
                 }
-                else
-                {
-                    MyLog.e(TAG,"itemAd>> orderItemView list null");
-                }            }
-        });
-
-        //get selected List
-        getViewModel.getSelectedHeadersListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SelectedHeader>>() {
-            @Override
-            public void onChanged(List<SelectedHeader> selectedHeaders) {
-                bottomSheet.setContentView(bottom_view);
-                bottomSheet.show();
-                ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,selectedHeaders);
-                recyclerview_order_item_details.setAdapter(viewCartAdapter);
             }
         });
 
+        //get selected session list
+        getViewModel.getSessionListMutable().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
+            @Override
+            public void onChanged(List<SessionList> sessionLists) {
 
-
-
-
+                ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel, sessionLists);
+                recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
+            }
+        });
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {

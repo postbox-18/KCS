@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.Profile.MyOrders;
+package com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems;
 
 public class MyOrdersList {
     private final String header;
