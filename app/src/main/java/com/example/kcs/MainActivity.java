@@ -371,8 +371,10 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             ///val done=supportFragmentManager.popBackStackImmediate()
-            breadcrumbsList.remove(breadcrumbsList.size()-1);
-            getViewModel.setBreadCrumbLists(breadcrumbsList);
+            if(breadcrumbsList!=null && breadcrumbsList.size()>0) {
+                breadcrumbsList.remove(breadcrumbsList.size() - 1);
+                getViewModel.setBreadCrumbLists(breadcrumbsList);
+            }
             //super.onBackPressed();
             getSupportFragmentManager().popBackStackImmediate();
         } else {

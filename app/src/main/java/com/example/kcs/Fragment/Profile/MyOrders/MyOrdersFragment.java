@@ -141,8 +141,7 @@ public class MyOrdersFragment extends Fragment {
             public void onChanged(String s) {
                 if(s!=null) {
                     getViewModel.GetViewList(s_user_name,s);
-                    bottomSheet.setContentView(bottom_view);
-                    bottomSheet.show();
+
 
                 }
                 else
@@ -155,6 +154,8 @@ public class MyOrdersFragment extends Fragment {
         getViewModel.getSelectedHeadersListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SelectedHeader>>() {
             @Override
             public void onChanged(List<SelectedHeader> selectedHeaders) {
+                bottomSheet.setContentView(bottom_view);
+                bottomSheet.show();
                 ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,selectedHeaders);
                 recyclerview_order_item_details.setAdapter(viewCartAdapter);
             }

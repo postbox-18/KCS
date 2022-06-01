@@ -5,9 +5,11 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_circle_user_regular.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/bg_banner.xml" value="0.184" />
+        <entry key="app/src/main/res/drawable/breadcrums.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_angles_right_solid.xml" value="0.1265" />
         <entry key="app/src/main/res/drawable/ic_circle_user_regular.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_kitchen_set_solid.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/order_btn.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/register_btn.xml" value="0.1235" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19375" />
@@ -23,6 +25,7 @@
         <entry key="app/src/main/res/layout/fragment_place_order.xml" value="0.17864583333333334" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/fragment_session.xml" value="0.13" />
+        <entry key="app/src/main/res/layout/fun_activity.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/header_layout.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/item_checkbox_list.xml" value="0.2" />
         <entry key="app/src/main/res/layout/layout_breadcrums.xml" value="0.67" />
