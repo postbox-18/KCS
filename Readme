@@ -3,15 +3,13 @@ https://www.techotopia.com/index.php/Working_with_Firebase_Realtime_Database_Lis
 pending
 1-alert check box to select the func (OK and CANCEL btn)
 2-save orders and place final orders
-3-snack bar recyclerview number of headers list
-4-click on(VIEW CART) order btn open new fragment and list the selected item to place an order
+
 5-search to find the item
 7-My orders cancel my order or edit my order
-8-My orders view to see selected list
+
 9-Cancel btn
 10-Three Level Expandable View
-11-pending in MyOrders recyclerview
-12-problem in cart view fragment back btn
+
 13-back btn  <--  func>>session>>header using breadcrumbs
 14-BREADCRUMBS click to back to fragment
 15-lottie files for order saved
@@ -22,3 +20,8 @@ finished
 3-snack bar to place an order
 6-when snack bar is checked bottom sheet open
 3-snack bar to place an order(EVERY PAGE)
+3-snack bar recyclerview number of headers list
+4-click on(VIEW CART) order btn open new fragment and list the selected item to place an order
+8-My orders view to see selected list
+11-pending in MyOrders recyclerview
+12-problem in cart view fragment back btn
