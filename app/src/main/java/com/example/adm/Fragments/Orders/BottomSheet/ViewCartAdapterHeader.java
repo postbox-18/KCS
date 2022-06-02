@@ -26,15 +26,18 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapter";
-
+    private String session_title;
+    private OrderLists orderLists;
     private GetViewModel getViewModel;
     private List<SelectedHeader> header=new ArrayList<>();
 
 
-    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList) {
+    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, OrderLists orderLists) {
         this.context=context;
         this.getViewModel=getViewModel;
         this.header=selectedHeadersList;
+        this.session_title=session_title;
+        this.orderLists=orderLists;
     }
 
 
@@ -56,7 +59,8 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         getViewModel.getOrderItemList_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<OrderItemLists>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<OrderItemLists>> stringListLinkedHashMap) {
-                orderItemListss=stringListLinkedHashMap.get(list.getHeader());
+                MyLog.e(TAG,"orderItemList_f_map>>stringListLinkedHashMap>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                orderItemListss=stringListLinkedHashMap.get(orderLists.getS_user_name()+'-'+orderLists.getFunc()+"-"+session_title+"-"+list.getHeader());
                 //MyLog.e(TAG, "cart>>adapter>>list " +  new GsonBuilder().setPrettyPrinting().create().toJson(orderItemListss));
                 holder.recyclerview_item_list.setHasFixedSize(true);
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));

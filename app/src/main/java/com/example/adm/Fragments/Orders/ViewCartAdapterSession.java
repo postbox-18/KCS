@@ -14,14 +14,17 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SessionList;
 import com.example.adm.Fragments.Orders.BottomSheet.OrderItemLists;
+import com.example.adm.Fragments.Orders.BottomSheet.OrderLists;
 import com.example.adm.Fragments.Orders.BottomSheet.SelectedHeader;
 import com.example.adm.Fragments.Orders.BottomSheet.ViewCartAdapter;
 
 import com.example.adm.Fragments.Orders.BottomSheet.ViewCartAdapterHeader;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -31,13 +34,16 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private Context context;
     private List<SessionList> sessionLists = new ArrayList<>();
     private String TAG = "ViewCartAdapterSession";
+    private List<SelectedHeader> selectedHeaders=new ArrayList<>();
     private GetViewModel getViewModel;
+    private OrderLists orderLists;
 
 
-    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, List<SessionList> sessionLists) {
+    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, List<SessionList> sessionLists, OrderLists orderLists) {
         this.context=context;
         this.getViewModel=getViewModel;
         this.sessionLists=sessionLists;
+        this.orderLists=orderLists;
     }
 
 
@@ -56,16 +62,23 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         final SessionList list=sessionLists.get(position);
         holder.session_title.setText(list.getSession_title());
 
-        //get selected header list
-        getViewModel.getSelectedHeadersMutableLiveData().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
+        //get selected  header list and session list hash map
+
+        //get selected session and header hashmap
+        getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
             @Override
-            public void onChanged(List<SelectedHeader> selectedHeaders) {
+            public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
+                MyLog.e(TAG, "f_mapsorder>>selected header stringListLinkedHashMap " + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                selectedHeaders=stringListLinkedHashMap.get(list.getSession_title());
+                MyLog.e(TAG, "f_mapsorder>>selectedHeaders " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeaders));
+                ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(context,getViewModel,selectedHeaders,list.getSession_title(),orderLists);
+                holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
                 holder.recyclerview_order_item_details.setHasFixedSize(true);
                 holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(context,getViewModel,selectedHeaders);
-                holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
+
             }
         });
+
 
 
 

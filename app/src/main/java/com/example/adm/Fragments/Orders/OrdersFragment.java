@@ -115,7 +115,8 @@ public class OrdersFragment extends Fragment {
             @Override
             public void onChanged(OrderLists orderLists) {
                 if(orderLists!=null) {
-                    getViewModel.GetViewList(orderLists,sessionLists);
+                    ViewCartAdapterSession viewCartAdapter=new ViewCartAdapterSession(getContext(),getViewModel,sessionLists,orderLists);
+                    recyclerview_session_view.setAdapter(viewCartAdapter);
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
                 }
@@ -126,23 +127,6 @@ public class OrdersFragment extends Fragment {
             }
         });
 
-        /*//get selected List
-        getViewModel.getSelectedHeadersMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SelectedHeader>>() {
-            @Override
-            public void onChanged(List<SelectedHeader> selectedHeaders) {
-                ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(getContext(),getViewModel,selectedHeaders);
-                recyclerview_order_item_details.setAdapter(viewCartAdapter);
-            }
-        });*/
-
-        //get session list
-        getViewModel.getSessionListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
-            @Override
-            public void onChanged(List<SessionList> sessionLists) {
-                ViewCartAdapterSession viewCartAdapter=new ViewCartAdapterSession(getContext(),getViewModel,sessionLists);
-                recyclerview_session_view.setAdapter(viewCartAdapter);
-            }
-        });
 
 
 

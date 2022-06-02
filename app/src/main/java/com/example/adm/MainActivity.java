@@ -28,8 +28,20 @@ public class MainActivity extends AppCompatActivity {
 
         MyLog.e(TAG, "logout>> main activity ");
 
+        //load data base
+        getViewModel.GetOrdesList();
+        getViewModel.GetUserList();
+        //getViewModel.GetSessionList();
+        /*getViewModel.GetHeader();
+        getViewModel.GetFun();
+        getViewModel.GetItem();*/
+        getViewModel.GetUpdateHeader();
+        getViewModel.GetUpdateFun();
+        getViewModel.GetUpdateItem();
+
+
         getViewModel.setI_value(0);
-//get value to pass fragment
+        //get value to pass fragment
         getViewModel.getValue().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
