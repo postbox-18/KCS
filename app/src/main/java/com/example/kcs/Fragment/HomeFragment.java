@@ -153,6 +153,8 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+        //get fun list
         getViewModel.getFunMutableList().observe(getViewLifecycleOwner(), new Observer<List<FunList>>() {
             @Override
             public void onChanged(List<FunList> funList1) {

@@ -18,7 +18,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.MyOrderFuncList;
+import com.example.kcs.Classes.MyOrderFuncList;
 
 import java.util.ArrayList;
 import java.util.List;

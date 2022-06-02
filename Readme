@@ -1,6 +1,12 @@
 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
 https://www.techotopia.com/index.php/Working_with_Firebase_Realtime_Database_Lists
-pending
+
+FIREBASE
+1-upload img to fun (KEY::FUNC_NAME,VALUE::IMG_URL)
+
+
+
+PENDING
 1-alert check box to select the func (OK and CANCEL btn)
 2-save orders and place final orders
 
@@ -15,7 +21,7 @@ pending
 15-lottie files for order saved
 16-bottom sheet in my orders scroll problem
 
-finished
+FINISHED
 1-alert check box to select the func
 3-snack bar to place an order
 6-when snack bar is checked bottom sheet open

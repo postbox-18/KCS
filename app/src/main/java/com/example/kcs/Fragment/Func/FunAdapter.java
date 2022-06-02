@@ -11,14 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.Classes.ImgList;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
@@ -27,6 +33,8 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
     private String TAG="FunAdapter";
 
     private GetViewModel getViewModel;
+    //img
+    private List<ImgList> imgLists=new ArrayList<>();
 
     public FunAdapter(Context context, List<FunList> funLists, GetViewModel getViewModel) {
         this.context=context;
@@ -46,9 +54,34 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull FunAdapter.ViewHolder holder, int position) {
         final FunList funList1 = funLists.get(position);
-        //img update soon
-        //holder.fun_img.setText(funList1.getUsername());
+        //get img list
+        getViewModel.getIf_f_mapMutableLiveData().observe((LifecycleOwner)context, new Observer<LinkedHashMap<String, List<ImgList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<ImgList>> stringListLinkedHashMap) {
+                MyLog.e(TAG,"img>>map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                imgLists=stringListLinkedHashMap.get(funList1.getFun());
+                MyLog.e(TAG,"img>>imgLists>>"+new GsonBuilder().setPrettyPrinting().create().toJson(imgLists));
+
+                if(imgLists!=null) {
+                    Picasso.get()
+                            .load(imgLists.get(0).getImg_url())
+                            .placeholder(R.drawable.logo)
+                            .fit()
+                            .centerCrop()
+                            .into(holder.fun_img);
+                }
+
+
+
+            }
+        });
+
+
+
         holder.fun_title.setText(funList1.getFun());
+        if()
+        holder.fun_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+        holder.fun_title.setTextColor(context.getResources().getColor(R.color.colorPrimary));
         holder.fun_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

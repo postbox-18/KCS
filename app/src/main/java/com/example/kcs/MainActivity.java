@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.GetFun();
         getViewModel.GetSession();
         getViewModel.GetItem();
+        getViewModel.GetImg();
 
 
         recyclerview_breadcrumbs.setHasFixedSize(true);

@@ -20,7 +20,7 @@ import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.ViewCartAdapterSess
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.MyOrderFuncList;
+import com.example.kcs.Classes.MyOrderFuncList;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

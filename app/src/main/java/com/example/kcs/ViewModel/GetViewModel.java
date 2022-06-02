@@ -8,7 +8,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.kcs.BreadCrumbs.BreadCrumbList;
+import com.example.kcs.Classes.ImgFunList;
+import com.example.kcs.Classes.ImgList;
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Classes.MyOrderFuncList;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
@@ -30,7 +33,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class GetViewModel extends AndroidViewModel {
     //Header List
@@ -90,6 +92,22 @@ public class GetViewModel extends AndroidViewModel {
     private String session_title;
     private MutableLiveData<String> session_titleMutable = new MutableLiveData<>();
 
+    //Img List
+    private List<ImgList> imgLists = new ArrayList<>();
+    private MutableLiveData<List<ImgList>> imgListsMutableLiveData = new MutableLiveData<>();
+
+    //Img func List
+    private MutableLiveData<List<ImgFunList>> img_funMutableList = new MutableLiveData<>();
+    private List<ImgFunList> img_funLists = new ArrayList<>();
+
+    //Img Func title
+    private String img_func_title;
+    private MutableLiveData<String> img_func_titleMutable = new MutableLiveData<>();
+
+    //Img Func Hash map
+    private LinkedHashMap<String, List<ImgList>> if_f_map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<ImgList>>> if_f_mapMutableLiveData = new MutableLiveData<>();
+
     //Selected Header title
     private String header_title;
     private MutableLiveData<String> header_title_Mutable = new MutableLiveData<>();
@@ -125,8 +143,8 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<SelectedHeader>> selectedHeadersListMutableLiveData = new MutableLiveData<>();
 
     //selected session and header in hash map
-    private LinkedHashMap<String,List<SelectedHeader>> sh_f_map=new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String,List<SelectedHeader>>> sh_f_mapMutableLiveData=new MutableLiveData<>();
+    private LinkedHashMap<String, List<SelectedHeader>> sh_f_map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<SelectedHeader>>> sh_f_mapMutableLiveData = new MutableLiveData<>();
 
     //selected Item list
     private List<OrderItemLists> orderItemLists = new ArrayList<>();
@@ -148,6 +166,11 @@ public class GetViewModel extends AndroidViewModel {
 
 
     }
+
+    public MutableLiveData<LinkedHashMap<String, List<ImgList>>> getIf_f_mapMutableLiveData() {
+        return if_f_mapMutableLiveData;
+    }
+
 
     public MutableLiveData<LinkedHashMap<String, List<SelectedHeader>>> getSh_f_mapMutableLiveData() {
         return sh_f_mapMutableLiveData;
@@ -230,8 +253,8 @@ public class GetViewModel extends AndroidViewModel {
                     for (DataSnapshot ondata : datas.getChildren()) {
                         session_title = ondata.getKey().toString();
                         myOrdersList = new ArrayList<>();
-                        selectedHeadersList=new ArrayList<>();
-                    for (DataSnapshot dataSnapshot : ondata.getChildren()) {
+                        selectedHeadersList = new ArrayList<>();
+                        for (DataSnapshot dataSnapshot : ondata.getChildren()) {
                             //get item list
                             orderItemLists = new ArrayList<>();
                             //////
@@ -265,11 +288,11 @@ public class GetViewModel extends AndroidViewModel {
                             myordersHashMapMutable.postValue(f_mapMyorders);
 
                             //get item list
-                            SelectedHeader selectedHeader=new SelectedHeader(
+                            SelectedHeader selectedHeader = new SelectedHeader(
                                     header_title
                             );
                             selectedHeadersList.add(selectedHeader);
-                            sh_f_map.put(session_title,selectedHeadersList);
+                            sh_f_map.put(session_title, selectedHeadersList);
                             MyLog.e(TAG, "f_mapsorder>>sh_f_map after>> " + new GsonBuilder().setPrettyPrinting().create().toJson(sh_f_map));
 
                         }
@@ -304,7 +327,7 @@ public class GetViewModel extends AndroidViewModel {
                 MyLog.e(TAG, "f_mapsorder>>sh_f_map " + new GsonBuilder().setPrettyPrinting().create().toJson(sh_f_map));
                 MyLog.e(TAG, "f_mapsorder>>selectedHeadersList " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
                 MyLog.e(TAG, "f_mapsorder>>orderItemList_f_map " + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
-                MyLog.e(TAG, "f_mapsorder>>orderItemList_f_map size" +orderItemList_f_map.size());
+                MyLog.e(TAG, "f_mapsorder>>orderItemList_f_map size" + orderItemList_f_map.size());
 
             }
 
@@ -448,6 +471,61 @@ public class GetViewModel extends AndroidViewModel {
 
     public MutableLiveData<List<LinkedHashMap<String, List<ItemList>>>> getS_mapMutable() {
         return s_mapMutable;
+    }
+
+    public MutableLiveData<List<ImgFunList>> getImg_funMutableList() {
+        return img_funMutableList;
+    }
+
+    public void GetImg() {
+
+        databaseReference = firebaseDatabase.getReference("Items").child("Img");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //MyLog.e(TAG, "img>>" + snapshot);
+
+                for (DataSnapshot snap : snapshot.getChildren()) {
+
+                    img_funLists = new ArrayList<>();
+                    for(DataSnapshot shot:snap.getChildren()) {
+                        imgLists=new ArrayList<>();
+                        img_func_title = shot.getKey().toString();
+                        //MyLog.e(TAG, "img>>shot::key>>" + shot.getKey().toString());
+                        ImgList list = new ImgList(
+                                shot.getValue().toString()
+                        );
+
+                        //set img url list
+                        imgLists.add(list);
+                        if_f_map.put(img_func_title, imgLists);
+                        //set img func list
+                        ImgFunList funList = new ImgFunList(
+                                img_func_title
+                        );
+                        img_funLists.add(funList);
+                    }
+
+
+                }
+
+                //set img fun list
+                img_funMutableList.postValue(img_funLists);
+                //set img url list
+                if_f_mapMutableLiveData.postValue(if_f_map);
+
+                /*MyLog.e(TAG,"img>>img>>"+new GsonBuilder().setPrettyPrinting().create().toJson(imgLists));
+                MyLog.e(TAG,"img>>fun>>"+new GsonBuilder().setPrettyPrinting().create().toJson(img_funLists));
+                MyLog.e(TAG,"img>>map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(if_f_map));*/
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // we are showing that error message in toast
+                Toast.makeText(getApplication(), "Error Loading Image", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     public void GetItem() {
@@ -641,4 +719,6 @@ public class GetViewModel extends AndroidViewModel {
         }
 
     }
+
+
 }
