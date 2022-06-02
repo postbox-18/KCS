@@ -35,7 +35,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:itemCount="2"
+        android:layout_gravity="center"
+        android:layout_height="match_parent"
+        tools:itemCount="5"
         tools:listitem="@layout/header_layout" />
 </LinearLayout>

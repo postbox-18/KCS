@@ -2,6 +2,9 @@ package com.example.kcs.Fragment.Session;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +44,25 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull SessionAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         final SessionList sessionList1 = sessionLists.get(position);
-        holder.session_title.setText(sessionList1.getSession_title());
+
+        String[] str = (sessionList1.getSession_title()).split(" ");
+        if(str.length>1) {
+            Spannable word = new SpannableString(str[0]);
+            word.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.colorSecondary)), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.session_title.setText(word);
+            Spannable wordTwo = new SpannableString(str[1]);
+            wordTwo.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.colorPrimary)), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.session_title.append(" ");
+            holder.session_title.append(wordTwo);
+        }
+        else
+        {
+            holder.session_title.setText(sessionList1.getSession_title());
+            holder.session_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+        }
+        
+
+        //holder.session_title.setText(sessionList1.getSession_title());
         holder.session_linear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
