@@ -150,8 +150,6 @@ public class MyOrdersFragment extends Fragment {
                     bottomSheet.show();
                     ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel, sessionLists,s);
                     recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
-
-
                 } else {
                     MyLog.e(TAG, "func_title>> orderItemView list null");
                 }
