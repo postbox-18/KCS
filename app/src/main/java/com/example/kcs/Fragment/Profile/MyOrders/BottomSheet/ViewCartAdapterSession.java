@@ -77,9 +77,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-                MyLog.e(TAG, "f_mapsorder>>selected header stringListLinkedHashMap " + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 selectedHeaders=stringListLinkedHashMap.get(list.getSession_title());
-                MyLog.e(TAG, "f_mapsorder>>selectedHeaders " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeaders));
                 ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(context,getViewModel,selectedHeaders,list.getSession_title(),func_title);
                 holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
                 holder.recyclerview_order_item_details.setHasFixedSize(true);

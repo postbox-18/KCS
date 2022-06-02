@@ -40,7 +40,6 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull SessionAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        MyLog.e(TAG, "sessionLists>>list " + new GsonBuilder().setPrettyPrinting().create().toJson(sessionLists));
         final SessionList sessionList1 = sessionLists.get(position);
         holder.session_title.setText(sessionList1.getSession_title());
         holder.session_linear.setOnClickListener(new View.OnClickListener() {

@@ -102,7 +102,6 @@ public class SessionFragment extends Fragment {
         getViewModel.getSessionListMutable().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
             @Override
             public void onChanged(List<SessionList> sessionLists1) {
-                MyLog.e(TAG, "sessionLists>>fragment " + new GsonBuilder().setPrettyPrinting().create().toJson(sessionLists1));
                 sessionList=sessionLists1;
                 recyclerview_session.setHasFixedSize(true);
                 recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

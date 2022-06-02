@@ -1,6 +1,10 @@
 package com.example.kcs.Fragment.Func;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,17 +33,17 @@ import java.util.List;
 
 public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
     private Context context;
-    private List<FunList>funLists;
-    private String TAG="FunAdapter";
+    private List<FunList> funLists;
+    private String TAG = "FunAdapter";
 
     private GetViewModel getViewModel;
     //img
-    private List<ImgList> imgLists=new ArrayList<>();
+    private List<ImgList> imgLists = new ArrayList<>();
 
     public FunAdapter(Context context, List<FunList> funLists, GetViewModel getViewModel) {
-        this.context=context;
-        this.funLists=funLists;
-        this.getViewModel=getViewModel;
+        this.context = context;
+        this.funLists = funLists;
+        this.getViewModel = getViewModel;
 
     }
 
@@ -55,14 +59,12 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull FunAdapter.ViewHolder holder, int position) {
         final FunList funList1 = funLists.get(position);
         //get img list
-        getViewModel.getIf_f_mapMutableLiveData().observe((LifecycleOwner)context, new Observer<LinkedHashMap<String, List<ImgList>>>() {
+        getViewModel.getIf_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<ImgList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<ImgList>> stringListLinkedHashMap) {
-                MyLog.e(TAG,"img>>map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                imgLists=stringListLinkedHashMap.get(funList1.getFun());
-                MyLog.e(TAG,"img>>imgLists>>"+new GsonBuilder().setPrettyPrinting().create().toJson(imgLists));
+                imgLists = stringListLinkedHashMap.get(funList1.getFun());
 
-                if(imgLists!=null) {
+                if (imgLists != null) {
                     Picasso.get()
                             .load(imgLists.get(0).getImg_url())
                             .placeholder(R.drawable.logo)
@@ -72,40 +74,53 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
                 }
 
 
-
             }
         });
 
 
+        //holder.fun_title.setText(funList1.getFun());
+        String[] str = (funList1.getFun()).split(" ");
+        if(str.length>1) {
+            Spannable word = new SpannableString(str[0]);
+            word.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.colorSecondary)), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.fun_title.setText(word);
+            Spannable wordTwo = new SpannableString(str[1]);
+            wordTwo.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.colorPrimary)), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.fun_title.append(" ");
+            holder.fun_title.append(wordTwo);
+        }
+        else
+        {
+            holder.fun_title.setText(funList1.getFun());
+            holder.fun_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+        }
 
-        holder.fun_title.setText(funList1.getFun());
-        if()
-        holder.fun_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
-        holder.fun_title.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+
         holder.fun_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 getViewModel.getfunFragment(funList1.getFun());
-                getViewModel.SetBreadCrumsList(funList1.getFun(),0);
+                getViewModel.SetBreadCrumsList(funList1.getFun(), 0);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return funLists.size() ;
+        return funLists.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView fun_img;
         private TextView fun_title;
         private CardView fun_card;
+
         public ViewHolder(View view) {
             super(view);
-            fun_img=view.findViewById(R.id.fun_img);
-            fun_title=view.findViewById(R.id.fun_title);
-            fun_card=view.findViewById(R.id.fun_card);
+            fun_img = view.findViewById(R.id.fun_img);
+            fun_title = view.findViewById(R.id.fun_title);
+            fun_card = view.findViewById(R.id.fun_card);
 
         }
     }

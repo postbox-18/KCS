@@ -223,7 +223,6 @@ public class GetViewModel extends AndroidViewModel {
 
                 }
                 sessionListMutable.postValue(sessionList);
-                MyLog.e(TAG, "sessionLists>>sessionList " + new GsonBuilder().setPrettyPrinting().create().toJson(sessionList));
             }
 
             @Override
@@ -293,7 +292,6 @@ public class GetViewModel extends AndroidViewModel {
                             );
                             selectedHeadersList.add(selectedHeader);
                             sh_f_map.put(session_title, selectedHeadersList);
-                            MyLog.e(TAG, "f_mapsorder>>sh_f_map after>> " + new GsonBuilder().setPrettyPrinting().create().toJson(sh_f_map));
 
                         }
                         SessionList sessionList1 = new SessionList(
@@ -310,7 +308,6 @@ public class GetViewModel extends AndroidViewModel {
                     );
                     myOrderFuncLists.add(list);
                 }
-                //MyLog.e(TAG, "f_mapsorder>>list " + new GsonBuilder().setPrettyPrinting().create().toJson(f_mapMyorders));
                 //set func list
                 myOrderFuncListsMutableLiveData.postValue(myOrderFuncLists);
                 //set session list
@@ -324,10 +321,6 @@ public class GetViewModel extends AndroidViewModel {
                 orderItemList_f_mapMutableLiveData.postValue(orderItemList_f_map);
                 //get item list hash map session and header
                 sh_f_mapMutableLiveData.postValue(sh_f_map);
-                MyLog.e(TAG, "f_mapsorder>>sh_f_map " + new GsonBuilder().setPrettyPrinting().create().toJson(sh_f_map));
-                MyLog.e(TAG, "f_mapsorder>>selectedHeadersList " + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
-                MyLog.e(TAG, "f_mapsorder>>orderItemList_f_map " + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
-                MyLog.e(TAG, "f_mapsorder>>orderItemList_f_map size" + orderItemList_f_map.size());
 
             }
 
@@ -514,9 +507,6 @@ public class GetViewModel extends AndroidViewModel {
                 //set img url list
                 if_f_mapMutableLiveData.postValue(if_f_map);
 
-                /*MyLog.e(TAG,"img>>img>>"+new GsonBuilder().setPrettyPrinting().create().toJson(imgLists));
-                MyLog.e(TAG,"img>>fun>>"+new GsonBuilder().setPrettyPrinting().create().toJson(img_funLists));
-                MyLog.e(TAG,"img>>map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(if_f_map));*/
             }
 
             @Override
