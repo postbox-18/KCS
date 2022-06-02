@@ -314,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 5:
                         fragment = new PlaceOrderFragment();
-                        fragmentTAg = "OrderFragment";
+                        fragmentTAg = "PlaceOrderFragment";
                         break;
                     case 6:
                         fragment = new SessionFragment();
@@ -339,6 +339,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void GetFuncTitleList(List<FunList> funLists, LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap, Integer integer) {
 
+        selectedHeadersList=new ArrayList<>();
         //get linked hasp map to view item list
         Set<String> stringSet = stringListLinkedHashMap.keySet();
 

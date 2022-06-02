@@ -24,7 +24,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/Add_button"
+                    android:background="@color/btn_gradient_light"
                     android:orientation="vertical">
 
                     <TextView
@@ -33,6 +33,7 @@
                         android:layout_height="wrap_content"
                         android:text="Header"
                         android:padding="15dp"
+                        android:fontFamily="@font/bebaskai"
                         android:textColor="@color/white"
                         android:textStyle="bold|italic" />
                 </LinearLayout>

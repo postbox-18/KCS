@@ -144,15 +144,16 @@ public class MyOrdersFragment extends Fragment {
         getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                if (s != null ) {
-
-                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel, sessionLists,s);
-                    recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
+                if (s != null && !s.isEmpty()) {
+                    MyLog.e(TAG, "func_title>>string>>" + s);
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
+                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel, sessionLists,s);
+                    recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
+
 
                 } else {
-                    MyLog.e(TAG, "itemAd>> orderItemView list null");
+                    MyLog.e(TAG, "func_title>> orderItemView list null");
                 }
 
             }

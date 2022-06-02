@@ -20,9 +20,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/session"
+                android:fontFamily="@font/bebaskai"
                 android:gravity="left"
                 android:paddingStart="15dp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/colorSecondary"
                 android:textStyle="bold|italic"
                 android:textSize="18dp"
                 />

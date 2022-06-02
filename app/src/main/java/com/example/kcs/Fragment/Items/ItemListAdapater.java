@@ -113,12 +113,15 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         stringListLinkedHashMap.put(header, checkedLists);
 
                         getViewModel.setCheckedLists(checkedLists);
+
                         //notifyDataSetChanged();
-                    } else {
+                    }
+                    else {
                         //unchecked.getUnchecked(itemList1.getItem());
                         GetUncheckList(itemList1.getItem());
 
                     }
+
                     getViewModel.setF_map(stringListLinkedHashMap);
 
                     MyLog.e(TAG, "selected_s_map>>size>>" + selected_s_map.size());

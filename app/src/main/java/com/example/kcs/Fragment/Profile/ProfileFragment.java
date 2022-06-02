@@ -95,6 +95,9 @@ public class ProfileFragment extends Fragment {
         user_name.setText(new SharedPreferences_data(getContext()).getS_user_name());
         email.setText(new SharedPreferences_data(getContext()).getS_email());
 
+        //set func title null
+        getViewModel.setFunc_title("");
+
         //onclick
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,9 +115,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getViewModel.setI_value(0);
-               /* Fragment fragment=new HomeFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/
             }
         });
         my_orders_card.setOnClickListener(new View.OnClickListener() {

@@ -30,6 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="func"
+                    android:fontFamily="@font/bebaskai"
                     android:gravity="center"
                     android:textColor="@color/colorSecondary"
                     android:textStyle="bold|italic"

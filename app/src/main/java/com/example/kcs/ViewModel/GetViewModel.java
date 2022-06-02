@@ -427,6 +427,7 @@ public class GetViewModel extends AndroidViewModel {
 
     public void setFunc_title(String func_title) {
         this.func_title = func_title;
+        MyLog.e(TAG, "func_title>>set>>" + func_title);
         func_title_Mutable.postValue(func_title);
     }
 
@@ -689,6 +690,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void getfunFragment(String fun) {
+        MyLog.e(TAG, "func_title>>get>>" + func_title);
         this.setI_value(6);
         this.func_title_Mutable.postValue(fun);
     }
