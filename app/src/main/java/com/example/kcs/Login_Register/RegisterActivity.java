@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +58,8 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     //Anim
     private Animation slide_down_anim,slide_up_anim,fade_in_anim;
-    private ConstraintLayout bg_banner,head_layout;
+    private ConstraintLayout head_layout;
+    private ImageView bg_banner;
 
     //loading
     private LoadingDialogs loadingDialog=new LoadingDialogs();

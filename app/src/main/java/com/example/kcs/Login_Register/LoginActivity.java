@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +61,8 @@ public class LoginActivity extends AppCompatActivity {
     private LottieAnimationView lottie_loading;
     //anim
     private Animation slide_down_anim, slide_up_anim, fade_in_anim;
-    private ConstraintLayout bg_banner, head_layout;
+    private ConstraintLayout head_layout;
+    private ImageView bg_banner;
     private LoadingDialogs loadingDialog = new LoadingDialogs();
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;

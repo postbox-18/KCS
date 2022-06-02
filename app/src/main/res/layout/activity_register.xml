@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_white"
+    android:background="@drawable/bg"
     tools:context=".Login_Register.RegisterActivity">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -18,60 +18,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ImageView
         android:id="@+id/headings"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_banner"
+        android:src="@drawable/logintop"
+        android:scaleType="centerCrop"
         android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@id/name_ct"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="0.5">
-
-        <TextView
-            android:id="@+id/heads"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textAlignment="textStart"
-            android:textColor="@color/white"
-            android:textSize="22dp"
-            android:textStyle="bold|italic"
-            app:layout_constraintBottom_toTopOf="@id/about"
-            app:layout_constraintEnd_toEndOf="@id/right_guide"
-            app:layout_constraintStart_toStartOf="@id/left_guide"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/about"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="18dp"
-            android:textStyle="italic"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/right_guide"
-            app:layout_constraintStart_toStartOf="@id/left_guide"
-            app:layout_constraintTop_toBottomOf="@id/heads" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/left_guide"
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="55dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/right_guide"
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="55dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintVertical_weight="0.3">
+    </ImageView>
         <LinearLayout
             android:id="@+id/name_ct"
             android:layout_width="match_parent"
@@ -80,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/headings"
-            app:layout_constraintVertical_weight="1.5"
+            app:layout_constraintVertical_weight="0.5"
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"

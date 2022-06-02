@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
     tools:context=".Fragment.HomeFragment">
 
@@ -106,6 +107,7 @@
                     android:layout_height="wrap_content"
                     tools:itemCount="2"
                     tools:listitem="@layout/fun_activity" />
+
             </LinearLayout>
 
             <LinearLayout
