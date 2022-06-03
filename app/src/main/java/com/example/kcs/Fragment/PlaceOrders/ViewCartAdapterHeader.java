@@ -31,15 +31,14 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private String TAG = "ViewCartAdapterHeader";
 
     private GetViewModel getViewModel;
-    private List<SelectedHeader> header=new ArrayList<>();
+    private List<SelectedHeader> header = new ArrayList<>();
 
 
     public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList) {
-        this.context=context;
-        this.getViewModel=getViewModel;
-        this.header=selectedHeadersList;
+        this.context = context;
+        this.getViewModel = getViewModel;
+        this.header = selectedHeadersList;
     }
-
 
 
     @NonNull
@@ -53,19 +52,19 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
     @Override
     public void onBindViewHolder(@NonNull ViewCartAdapterHeader.ViewHolder holder, int position) {
-        final SelectedHeader list=header.get(position);
+        final SelectedHeader list = header.get(position);
         holder.header.setText(list.getHeader());
         //get Checked list hash map
         getViewModel.getF_mapMutable().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
-                    checkedLists=stringListLinkedHashMap.get(list.getHeader());
-                    holder.recyclerview_item_list.setHasFixedSize(true);
-                    holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                    viewCartAdapter=new ViewCartAdapter(context,getViewModel,checkedLists);
-                    holder.recyclerview_item_list.setAdapter(viewCartAdapter);
-
-
+                MyLog.e(TAG, "checkedLists>>stringListLinkedHashMap>>>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                checkedLists = stringListLinkedHashMap.get(list.getHeader());
+                MyLog.e(TAG, "checkedLists>>checkedLists>>>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
+                holder.recyclerview_item_list.setHasFixedSize(true);
+                holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+                viewCartAdapter = new ViewCartAdapter(context, getViewModel, checkedLists);
+                holder.recyclerview_item_list.setAdapter(viewCartAdapter);
 
 
             }

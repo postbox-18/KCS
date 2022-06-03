@@ -70,6 +70,7 @@ public class PlaceOrderFragment extends Fragment {
     private DatabaseReference databaseReference;
     private ImageView back_btn;
     private DoneDialogfragment doneDialogfragment=new DoneDialogfragment();
+    private LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
 
 
     public PlaceOrderFragment() {
@@ -136,6 +137,7 @@ public class PlaceOrderFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 doneDialogfragment.show(getParentFragmentManager(),"DoneDialogfragment");
+
             //get headertitle
                 getViewModel.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
                     @Override
@@ -157,9 +159,10 @@ public class PlaceOrderFragment extends Fragment {
                 //get linked hash map checked list
                 getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
                     @Override
-                    public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
+                    public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
                         for(int i=0;i<selectedHeadersList.size();i++)
                         {
+                            stringListLinkedHashMap=stringListLinkedHashMap1;
 
                             checkedLists=stringListLinkedHashMap.get(selectedHeadersList.get(i).getHeader());
                             SaveOrders(func_title,user_name,selectedHeadersList.get(i).getHeader(),session_title,checkedLists);
@@ -169,9 +172,9 @@ public class PlaceOrderFragment extends Fragment {
 
                     }
                 });
-              
-                
-                //get selected checked list
+
+
+
                 
 
             }
@@ -202,12 +205,13 @@ public class PlaceOrderFragment extends Fragment {
                     databaseReference.child(user_name).child(func_title).child(session_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
 
-                checkedLists.clear();
+                //clear all data checked list
+                 /*stringListLinkedHashMap.clear();
+                getViewModel.setF_map(stringListLinkedHashMap);
                 userItemLists.clear();
                 getViewModel.setUserItemLists(userItemLists);
-                getViewModel.setCheckedLists(checkedLists);
                 //Toast.makeText(getContext(), "Data Added", Toast.LENGTH_SHORT).show();
-                doneDialogfragment.dismiss();
+                doneDialogfragment.dismiss();*/
 
             }
 
