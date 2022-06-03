@@ -173,6 +173,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     private void CheckUserDetails() {
+        checkEmails=new ArrayList<>();
         databaseReference = firebaseDatabase.getReference("Users-Id");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
