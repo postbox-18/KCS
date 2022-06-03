@@ -334,6 +334,7 @@ public class GetViewModel extends AndroidViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 int size = 0;
+                sessionLists=new ArrayList<>();
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     MyLog.e(TAG, "snap>>datas>>" + datas);
                     MyLog.e(TAG, "snap>>datas>>" + datas.getKey().toString());
@@ -344,7 +345,7 @@ public class GetViewModel extends AndroidViewModel {
                         MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot);
                         MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot.getKey().toString());
 
-                        sessionLists=new ArrayList<>();
+
                         for (DataSnapshot shots : dataSnapshot.getChildren()) {
                             session_title = shots.getKey().toString();
 
