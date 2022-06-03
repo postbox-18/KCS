@@ -28,7 +28,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private Context context;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
-    private String TAG = "ViewCartAdapter";
+    private String TAG = "ViewCartAdapterHeader";
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> header=new ArrayList<>();
@@ -59,9 +59,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         getViewModel.getF_mapMutable().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
-
                     checkedLists=stringListLinkedHashMap.get(list.getHeader());
-
                     holder.recyclerview_item_list.setHasFixedSize(true);
                     holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
                     viewCartAdapter=new ViewCartAdapter(context,getViewModel,checkedLists);

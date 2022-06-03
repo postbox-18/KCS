@@ -52,7 +52,8 @@
         <entry key="app/src/main/res/layout/bottom_sheet_order_session.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/content_home.xml" value="0.18425925925925926" />
         <entry key="app/src/main/res/layout/custom_snackbar_view.xml" value="0.19270833333333334" />
-        <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/dialog_done.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/fragment_header.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.14" />
@@ -75,6 +76,7 @@
         <entry key="app/src/main/res/layout/selected_item_list_cardview.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/session_layout.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/topic_activity.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/view_cart_card_view.xml" value="0.1" />
         <entry key="app/src/main/res/layout/view_cart_card_view_header.xml" value="0.19375" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.19375" />
         <entry key="app/src/main/res/menu/home.xml" value="0.22" />

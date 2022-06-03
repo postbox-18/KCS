@@ -49,24 +49,25 @@ public class SplashActivity extends AppCompatActivity {
         splash_img.startAnimation(fade_in_anim);
         version.startAnimation(fade_in_anim);
 
-        String check=new SharedPreferences_data(SplashActivity.this).getS_email();
-        if(check==null||check.isEmpty()) {
-            Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
-            startActivity(intent);
-        }
-        else
-        {
-            startActivity(new Intent(SplashActivity.this,LoginActivity.class));
-        }
 
 
-       /* firebaseDatabase = FirebaseDatabase.getInstance();
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users-Id");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                String check=new SharedPreferences_data(SplashActivity.this).getS_email();
+                if(check==null||check.isEmpty()) {
+                    Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                }
 
-                databaseReference.addValueEventListener(new ValueEventListener() {
+                /*databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         MyLog.e(TAG, "snap>>" + snapshot);
@@ -80,11 +81,11 @@ public class SplashActivity extends AppCompatActivity {
                     public void onCancelled(@NonNull DatabaseError error) {
                         Toast.makeText(SplashActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
                     }
-                });
+                });*/
 
 
             }
-        }, 5000);*/
+        }, 5000);
 
         //share preferences data set empty
         new SharedPreferences_data(getApplicationContext()).setChecked_item_list("");

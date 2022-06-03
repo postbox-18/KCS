@@ -185,11 +185,13 @@ public class MainActivity extends AppCompatActivity {
                     userItemLists.add(userItemList);
                 }
                 getViewModel.setUserItemLists(userItemLists);
+                MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
                 if (userItemLists.size() > 0) {
                     snackbar.show();
                 } else {
                     snackbar.dismiss();
                 }
+
 
 
             }
@@ -213,18 +215,6 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<CheckedList> checkedLists1) {
                 checkedLists = checkedLists1;
                 snackbar.show();
-                //order btn
-               /* order_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (checkedLists.size() > 0) {
-                            GetOrderBtn(checkedLists, func_title);
-                        } else {
-                            Toast.makeText(MainActivity.this, "Empty List", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });*/
 
                 //get View Cart Btn details
                 //get func list

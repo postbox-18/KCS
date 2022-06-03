@@ -17,10 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kcs.Classes.DoneDialogfragment;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Items.CheckedList;
+import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.firebase.database.DataSnapshot;
@@ -56,6 +58,7 @@ public class PlaceOrderFragment extends Fragment {
     private AppCompatButton order_btn;
 
     private List<FunList> funLists=new ArrayList<>();
+    private List<UserItemList> userItemLists=new ArrayList<>();
     private List<CheckedList> checkedLists=new ArrayList<>();
     private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
@@ -66,6 +69,7 @@ public class PlaceOrderFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private ImageView back_btn;
+    private DoneDialogfragment doneDialogfragment=new DoneDialogfragment();
 
 
     public PlaceOrderFragment() {
@@ -157,10 +161,13 @@ public class PlaceOrderFragment extends Fragment {
                     public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
                         for(int i=0;i<selectedHeadersList.size();i++)
                         {
+                            doneDialogfragment.show(getParentFragmentManager(),"PlaceOrder");
                             checkedLists=stringListLinkedHashMap.get(selectedHeadersList.get(i).getHeader());
                             SaveOrders(func_title,user_name,selectedHeadersList.get(i).getHeader(),session_title,checkedLists);
 
                         }
+
+
                     }
                 });
               
@@ -196,8 +203,13 @@ public class PlaceOrderFragment extends Fragment {
                     databaseReference.child(user_name).child(func_title).child(session_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
 
+                checkedLists.clear();
+                userItemLists.clear();
+                getViewModel.setUserItemLists(userItemLists);
+                getViewModel.setCheckedLists(checkedLists);
+                //Toast.makeText(getContext(), "Data Added", Toast.LENGTH_SHORT).show();
+                doneDialogfragment.dismiss();
 
-                Toast.makeText(getContext(), "data added", Toast.LENGTH_SHORT).show();
             }
 
             @Override

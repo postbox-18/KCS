@@ -53,9 +53,10 @@ public class GetViewModel extends AndroidViewModel {
     private List<SessionList> sessionList = new ArrayList<>();
 
     //selected session list
-    private MutableLiveData<List<SessionList>> s_sessionListMutable = new MutableLiveData<>();
+    //private MutableLiveData<List<SessionList>> s_sessionListMutable = new MutableLiveData<>();
     private List<SessionList> s_sessionList = new ArrayList<>();
-
+    private LinkedHashMap<String,List<SessionList>> ss_f_map=new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String,List<SessionList>>> ss_f_mapMutableLiveData=new MutableLiveData<>();
 
     //checked list
     private MutableLiveData<List<CheckedList>> checkedList_Mutable = new MutableLiveData<>();
@@ -211,8 +212,8 @@ public class GetViewModel extends AndroidViewModel {
         return sh_f_mapMutableLiveData;
     }
 
-    public MutableLiveData<List<SessionList>> getS_sessionListMutable() {
-        return s_sessionListMutable;
+    public MutableLiveData<LinkedHashMap<String, List<SessionList>>> getSs_f_mapMutableLiveData() {
+        return ss_f_mapMutableLiveData;
     }
 
     public MutableLiveData<LinkedHashMap<String, List<MyOrdersList>>> getF_mapMyordersMutableLiveData() {
@@ -279,13 +280,15 @@ public class GetViewModel extends AndroidViewModel {
                 int size = 0;
                 MyLog.e(TAG, "onData>>snapshot>>" + snapshot);
                 myOrderFuncLists = new ArrayList<>();
+
                 for (DataSnapshot datas : snapshot.getChildren()) {
+                    s_sessionList = new ArrayList<>();
                     MyLog.e(TAG, "onData>>datas>>" + datas);
-                    MyLog.e(TAG, "onData>>func>>" + datas.getKey().toString());
+                    MyLog.e(TAG, "MyOrdersAdapter>>func>>" + datas.getKey().toString());
                     func = datas.getKey().toString();
-                    sessionList = new ArrayList<>();
                     for (DataSnapshot ondata : datas.getChildren()) {
                         session_title = ondata.getKey().toString();
+                        MyLog.e(TAG, "MyOrdersAdapter>>session_title>>" + ondata.getKey().toString());
                         myOrdersList = new ArrayList<>();
                         selectedHeadersList = new ArrayList<>();
                         for (DataSnapshot dataSnapshot : ondata.getChildren()) {
@@ -329,10 +332,13 @@ public class GetViewModel extends AndroidViewModel {
                             sh_f_map.put(session_title, selectedHeadersList);
 
                         }
+
                         SessionList sessionList1 = new SessionList(
                                 session_title
                         );
                         s_sessionList.add(sessionList1);
+                        String d=s_user_name+"-"+func;
+                        ss_f_map.put(d,s_sessionList);
 
                     }
 
@@ -345,8 +351,8 @@ public class GetViewModel extends AndroidViewModel {
                 }
                 //set func list
                 myOrderFuncListsMutableLiveData.postValue(myOrderFuncLists);
-                //set session list
-                s_sessionListMutable.postValue(s_sessionList);
+                //set session list hash map
+                ss_f_mapMutableLiveData.postValue(ss_f_map);
                 //set f_mpa of my orders
                 f_mapMyordersMutableLiveData.postValue(f_mapMyorders);
 

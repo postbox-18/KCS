@@ -130,14 +130,14 @@ public class MyOrdersFragment extends Fragment {
         recyclerview_order_session_deatils.setHasFixedSize(true);
         recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        //get session list
+        /*//get session list
         getViewModel.getS_sessionListMutable().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
             @Override
             public void onChanged(List<SessionList> sessionLists1) {
                 sessionLists=sessionLists1;
 
             }
-        });
+        });*/
 
 
         //get func_title  to view item list
@@ -148,7 +148,7 @@ public class MyOrdersFragment extends Fragment {
                     MyLog.e(TAG, "func_title>>string>>" + s);
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
-                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel, sessionLists,s);
+                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s);
                     recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "func_title>> orderItemView list null");

@@ -15,18 +15,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.Classes.MyOrderFuncList;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHolder> {
     private Context context;
     private String TAG="MyOrdersAdapter";
     private List<MyOrderFuncList> myOrderFuncLists=new ArrayList<>();
+    private List<SessionList> sessionLists=new ArrayList<>();
     private List<MyOrdersList> myOrdersList;
     private GetViewModel getViewModel;
     public MyOrdersAdapter(Context context, List<MyOrderFuncList> myOrderFuncLists, GetViewModel getViewModel) {
@@ -52,15 +56,19 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         holder.func.setText(myOrderFuncLists1.getFunc());
 
         //get session list
-        getViewModel.getS_sessionListMutable().observe((LifecycleOwner) context, new Observer<List<SessionList>>() {
+        getViewModel.getSs_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionList>>>() {
             @Override
-            public void onChanged(List<SessionList> sessionLists) {
+            public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap) {
+                String username=new SharedPreferences_data(context).getS_user_name();
+                sessionLists=stringListLinkedHashMap.get(username+"-"+myOrderFuncLists1.getFunc());
                 holder.recyclerview_session.setHasFixedSize(true);
                 holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                 MyorderSessiondapters itemListAdapters = new MyorderSessiondapters(context, myOrderFuncLists1.getFunc(),getViewModel,sessionLists);
                 holder.recyclerview_session.setAdapter(itemListAdapters);
             }
         });
+
+
         holder.card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

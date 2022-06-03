@@ -229,7 +229,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<CheckEmail> checkEmails1) {
                 checkEmails=checkEmails1;
-                MyLog.e(TAG,"error>>f_maps>>session list>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(checkEmails1));
                 for(int i=0;i<checkEmails1.size();i++) {
                     if (s_email.equals(checkEmails1.get(i).getEmail()))
                     {
