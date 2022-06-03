@@ -31,6 +31,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     private GetViewModel getViewModel;
     private String TAG = "OrderAdapters";
     private List<UserItemList> userItemLists=new ArrayList<>();
+    private List<SessionList> sessionLists=new ArrayList<>();
     private LinkedHashMap<String, List<UserItemList>> stringListLinkedHashMap=new LinkedHashMap<>();
 
     public OrderAdapters(Context context, List<OrderLists> orderLists, GetViewModel getViewModel) {
@@ -55,8 +56,9 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         holder.func.setText(orderLists1.getFunc());
         MyLog.e(TAG,"item>>name outside>"+orderLists1.getS_user_name());
 
+
         //get session list
-        getViewModel.getSessionListsMutableLiveData().observe((LifecycleOwner) context, new Observer<List<SessionList>>() {
+        /*getViewModel.getSessionListsMutableLiveData().observe((LifecycleOwner) context, new Observer<List<SessionList>>() {
             @Override
             public void onChanged(List<SessionList> sessionLists) {
                 holder.recyclerview_session.setHasFixedSize(true);
@@ -65,7 +67,25 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
                 holder.recyclerview_session.setAdapter(userSessionListAdapter);
 
             }
+        });*/
+
+
+        //get session list
+        getViewModel.getSs_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap) {
+                MyLog.e(TAG,"sessions>>f_map>>stringListLinkedHashMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                MyLog.e(TAG,"sessions>>f_map>>stringListLinkedHashMap>>"+orderLists1.getS_user_name()+"-"+orderLists1.getFunc());
+                sessionLists=stringListLinkedHashMap.get(orderLists1.getS_user_name()+"-"+orderLists1.getFunc());
+                holder.recyclerview_session.setHasFixedSize(true);
+                holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                UserSessionListAdapter userSessionListAdapter=new UserSessionListAdapter(context,getViewModel,orderLists1,sessionLists);
+                holder.recyclerview_session.setAdapter(userSessionListAdapter);
+
+            }
         });
+
+
 
 
 

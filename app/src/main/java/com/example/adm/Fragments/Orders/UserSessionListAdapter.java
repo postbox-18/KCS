@@ -58,8 +58,11 @@ public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionList
             @Override
             public void onChanged(List<LinkedHashMap<String, List<UserItemList>>> linkedHashMaps) {
 
+                MyLog.e(TAG,"ada>>sessionLists>>>>"+ linkedHashMaps.size());
+                MyLog.e(TAG,"sessions>>f_map>>linkedHashMaps>>"+new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
                 userItemLists=new ArrayList<>();
                 for(int i=0;i<linkedHashMaps.size();i++) {
+                    MyLog.e(TAG,"tasl>>"+orderLists1.getS_user_name()+"-"+ orderLists1.getFunc()+"-"+sessionLists1.getSession_title());
                     userItemLists = linkedHashMaps.get(i).get(orderLists1.getS_user_name()+"-"+ orderLists1.getFunc()+"-"+sessionLists1.getSession_title());
                     MyLog.e(TAG,"sessions>>f_map>>userItemLists after>>"+new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
                     holder.itemList.setHasFixedSize(true);

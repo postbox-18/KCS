@@ -19,8 +19,10 @@ import com.example.adm.Fragments.Orders.BottomSheet.ViewCartAdapterHeader;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -47,7 +49,7 @@ public class OrdersFragment extends Fragment {
     //bottom sheet view
     private RecyclerView recyclerview_session_view;
     private List<SessionList> sessionLists=new ArrayList<>();
-
+    private LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap=new LinkedHashMap<>();
 
     private GetViewModel getViewModel;
 
@@ -102,11 +104,14 @@ public class OrdersFragment extends Fragment {
         recyclerview_session_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
 
+        ///get session hash map  List
         //get session list
-        getViewModel.getSessionListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
+        getViewModel.getSs_f_mapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionList>>>() {
             @Override
-            public void onChanged(List<SessionList> sessionLists1) {
-                sessionLists=sessionLists1;
+            public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap1) {
+                stringListLinkedHashMap=stringListLinkedHashMap1;
+
+
             }
         });
 
@@ -115,6 +120,12 @@ public class OrdersFragment extends Fragment {
             @Override
             public void onChanged(OrderLists orderLists) {
                 if(orderLists!=null) {
+                    //get session list
+                    MyLog.e(TAG,"SessionList>>stringListLinkedHashMap>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                    MyLog.e(TAG,"SessionList>>deatils>>"+orderLists.getS_user_name()+"\t\t"+orderLists.getFunc());
+                    sessionLists=stringListLinkedHashMap.get(orderLists.getS_user_name()+"-"+orderLists.getFunc());
+                    MyLog.e(TAG,"SessionList>>sessionLists>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(sessionLists));
+
                     ViewCartAdapterSession viewCartAdapter=new ViewCartAdapterSession(getContext(),getViewModel,sessionLists,orderLists);
                     recyclerview_session_view.setAdapter(viewCartAdapter);
                     bottomSheet.setContentView(bottom_view);

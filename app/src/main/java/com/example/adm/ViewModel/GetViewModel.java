@@ -87,7 +87,8 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<ItemArrayList>> itemListMutableLiveData = new MutableLiveData<>();
     //session list
     private List<SessionList> sessionLists = new ArrayList<>();
-    private MutableLiveData<List<SessionList>> sessionListsMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String,List<SessionList>> ss_f_map=new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String,List<SessionList>>> ss_f_mapMutableLiveData=new MutableLiveData<>();
 
 
     //updated list
@@ -153,6 +154,9 @@ public class GetViewModel extends AndroidViewModel {
             }
         });
     }
+    public MutableLiveData<LinkedHashMap<String, List<SessionList>>> getSs_f_mapMutableLiveData() {
+        return ss_f_mapMutableLiveData;
+    }
     public MutableLiveData<List<CheckEmail>> getCheckEmailsMutableLiveData() {
         return checkEmailsMutableLiveData;
     }
@@ -160,9 +164,9 @@ public class GetViewModel extends AndroidViewModel {
         return sh_f_mapMutableLiveData;
     }
 
-    public MutableLiveData<List<SessionList>> getSessionListsMutableLiveData() {
+/*    public MutableLiveData<List<SessionList>> getSessionListsMutableLiveData() {
         return sessionListsMutableLiveData;
-    }
+    }*/
 
     public MutableLiveData<List<SelectedHeader>> getSelectedHeadersMutableLiveData() {
         return selectedHeadersMutableLiveData;
@@ -364,18 +368,19 @@ public class GetViewModel extends AndroidViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 int size = 0;
-                sessionLists=new ArrayList<>();
+
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     MyLog.e(TAG, "snap>>datas>>" + datas);
                     MyLog.e(TAG, "snap>>datas>>" + datas.getKey().toString());
                     userItemLists = new ArrayList<>();
                     s_user_name = datas.getKey().toString();
+
                     for (DataSnapshot dataSnapshot : datas.getChildren()) {
                         func = dataSnapshot.getKey().toString();
                         MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot);
                         MyLog.e(TAG, "snap>>datasnap>>" + dataSnapshot.getKey().toString());
 
-
+                        sessionLists=new ArrayList<>();
                         for (DataSnapshot shots : dataSnapshot.getChildren()) {
                             session_title = shots.getKey().toString();
 
@@ -424,9 +429,10 @@ public class GetViewModel extends AndroidViewModel {
                                     session_title
                             );
                             sessionLists.add(list1);
+                            String d=s_user_name+"-"+func;
+                            ss_f_map.put(d,sessionLists);
 
                             //MyLog.e(TAG,"session>>f_maps>>session list>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(sessionLists));
-
                         }
                         OrderLists orderLists1 = new OrderLists(
                                 s_user_name,
@@ -437,7 +443,8 @@ public class GetViewModel extends AndroidViewModel {
                     }
 
                 }
-                sessionListsMutableLiveData.postValue(sessionLists);
+                //set session list hash map
+                ss_f_mapMutableLiveData.postValue(ss_f_map);
                 orderItemList_f_mapMutableLiveData.postValue(orderItemList_f_map);
 
                 //get linked hasp map to view item list
@@ -449,7 +456,10 @@ public class GetViewModel extends AndroidViewModel {
                 f_mapMutable.postValue(f_map);
                 s_map.add(f_map);
                 s_mapMutable.postValue(s_map);
-                MyLog.e(TAG,"orderItemList_f_map>>f_maps>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
+                MyLog.e(TAG,"orderItemList_f_map>>f_map>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
+                MyLog.e(TAG,"orderItemList_f_map>>s_map>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
+                MyLog.e(TAG,"orderItemList_f_map>>header>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(sh_f_map));
+                MyLog.e(TAG,"orderItemList_f_map>>session>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(ss_f_map));
             }
 
             @Override
