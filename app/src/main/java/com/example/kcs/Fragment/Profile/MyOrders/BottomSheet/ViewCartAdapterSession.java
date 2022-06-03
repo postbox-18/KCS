@@ -36,10 +36,11 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private List<SelectedHeader> selectedHeaders=new ArrayList<>();
 
 
-    public ViewCartAdapterSession(Context context, GetViewModel getViewModel,String s) {
+    public ViewCartAdapterSession(Context context, GetViewModel getViewModel,String s,List<SessionList> sessionLists) {
         this.context=context;
         this.getViewModel=getViewModel;
         this.func_title=s;
+        this.sessionLists=sessionLists;
     }
 
 
@@ -55,30 +56,17 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewCartAdapterSession.ViewHolder holder, int position) {
-        //get session hash map  List
-        //get session list
-        getViewModel.getSs_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap) {
-
-                String username=new SharedPreferences_data(context).getS_user_name();
-                sessionLists=stringListLinkedHashMap.get(username+"-"+func_title);
-            }
-        });
-        final SessionList list=sessionLists.get(position);
-
-        holder.session_title.setText(list.getSession_title());
-
         //get user name shared prefernces
         s_user_name=new SharedPreferences_data(context).getS_user_name();
 
+        final SessionList list=sessionLists.get(position);
 
-
-
+        holder.session_title.setText(list.getSession_title());
         //get selected session and header hashmap
         getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
+
                 selectedHeaders=stringListLinkedHashMap.get(list.getSession_title());
                 ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(context,getViewModel,selectedHeaders,list.getSession_title(),func_title);
                 holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);

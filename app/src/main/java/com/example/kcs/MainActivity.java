@@ -30,7 +30,7 @@ import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemListAdapters;
 import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
 import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
-import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems.MyOrdersFragment;
+import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Profile.ProfileFragment;
 import com.example.kcs.Fragment.Session.SessionFragment;
 import com.example.kcs.ViewModel.GetViewModel;

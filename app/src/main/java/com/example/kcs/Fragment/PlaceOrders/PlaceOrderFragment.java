@@ -135,7 +135,7 @@ public class PlaceOrderFragment extends Fragment {
         order_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               
+                doneDialogfragment.show(getParentFragmentManager(),"DoneDialogfragment");
             //get headertitle
                 getViewModel.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
                     @Override
@@ -161,7 +161,7 @@ public class PlaceOrderFragment extends Fragment {
                     public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
                         for(int i=0;i<selectedHeadersList.size();i++)
                         {
-                            doneDialogfragment.show(getParentFragmentManager(),"PlaceOrder");
+
                             checkedLists=stringListLinkedHashMap.get(selectedHeadersList.get(i).getHeader());
                             SaveOrders(func_title,user_name,selectedHeadersList.get(i).getHeader(),session_title,checkedLists);
 
