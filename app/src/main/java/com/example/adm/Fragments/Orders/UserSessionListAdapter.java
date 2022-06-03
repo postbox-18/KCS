@@ -25,7 +25,7 @@ import java.util.List;
 
 public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionListAdapter.ViewHolder> {
     private Context context;
-    private String TAG = "ItemListAdapters";
+    private String TAG = "UserSessionListAdapter";
     private GetViewModel getViewModel;
     private List<SessionList> sessionLists=new ArrayList<>();
     private OrderLists orderLists1;
@@ -59,11 +59,9 @@ public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionList
             public void onChanged(List<LinkedHashMap<String, List<UserItemList>>> linkedHashMaps) {
 
                 userItemLists=new ArrayList<>();
-
                 for(int i=0;i<linkedHashMaps.size();i++) {
-
                     userItemLists = linkedHashMaps.get(i).get(orderLists1.getS_user_name()+"-"+ orderLists1.getFunc()+"-"+sessionLists1.getSession_title());
-                    MyLog.e(TAG,"session>>f_map>>after"+new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
+                    MyLog.e(TAG,"sessions>>f_map>>userItemLists after>>"+new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
                     holder.itemList.setHasFixedSize(true);
                     holder.itemList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                     UserItemListAdapters itemListAdapters = new UserItemListAdapters(context, getViewModel, userItemLists);

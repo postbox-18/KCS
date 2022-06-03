@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
+import com.example.adm.Classes.CheckEmail;
 import com.example.adm.Classes.LoadingDialogs;
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SharedPreferences_data;
@@ -38,6 +39,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -65,6 +69,9 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private GetViewModel getViewModel;
+    //check mail
+    private List<CheckEmail> checkEmails=new ArrayList<>();
+    private boolean check_email = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,9 +122,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                 //check the details
                 if (CheckDetails()) {
-
+                    Auth();
                 } else {
-                    loadingDialog.dismiss();
+
                     Toast.makeText(RegisterActivity.this, "Check the Details", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -129,32 +136,7 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             }
         });
-        getViewModel.getEmailMutable().observe(RegisterActivity.this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                //check details
-                if (!aBoolean)
-                {
-                    androidx.appcompat.app.AlertDialog.Builder alert =new androidx.appcompat.app.AlertDialog.Builder(RegisterActivity.this);
-                    alert.setMessage("Something Went Problem Please Try Again Later");
-                    alert.setTitle("Problem");
-                    alert.setCancelable(false);
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    AlertDialog alertDialog=alert.create();
-                    alertDialog.show();
-                }
-                else {
-                    Auth();
-                }
 
-            }
-        });
     }
 
     private void Auth() {
@@ -178,6 +160,10 @@ public class RegisterActivity extends AppCompatActivity {
                                     databaseReference.child(s_phone_number).child("email").setValue(s_email);
                                     databaseReference.child(s_phone_number).child("phone_number").setValue(s_phone_number);
                                     databaseReference.child(s_phone_number).child("username").setValue(s_user_name);
+                                    new SharedPreferences_data(RegisterActivity.this).setS_user_name(s_user_name);
+                                    new SharedPreferences_data(RegisterActivity.this).setS_phone_number(s_phone_number);
+                                    new SharedPreferences_data(RegisterActivity.this).setS_password(s_password);
+                                    new SharedPreferences_data(RegisterActivity.this).setS_email(s_email);
                                 }
 
                                 @Override
@@ -207,6 +193,26 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean CheckDetails() {
 
 
+        //checkemail list in data base
+        getViewModel.getCheckEmailsMutableLiveData().observe(this, new Observer<List<CheckEmail>>() {
+            @Override
+            public void onChanged(List<CheckEmail> checkEmails1) {
+                checkEmails=checkEmails1;
+                for(int i=0;i<checkEmails1.size();i++) {
+                    if (s_email.equals(checkEmails1.get(i).getEmail()))
+                    {
+                        check_email=true;
+                        break;
+                    }
+                    else
+                    {
+                        check_email=false;
+                        continue;
+                    }
+                }
+            }
+        });
+
         //check if value is empty or not
 
         //check user-name is empty
@@ -233,11 +239,12 @@ public class RegisterActivity extends AppCompatActivity {
             password.setError("Please enter a password");
             re_password.setError("Please enter a password");
         }
-        /*else if(currentUser!=null)
+        else if(check_email)
         {
-            AlertDialog.Builder alert =new AlertDialog.Builder(this);
-            alert.setMessage("This id is Already Login");
-            alert.setTitle("Already Login");
+
+            AlertDialog.Builder alert =new AlertDialog.Builder(RegisterActivity.this);
+            alert.setMessage("You have already Register");
+            alert.setTitle("Alert");
             alert.setCancelable(false);
             alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
@@ -248,14 +255,10 @@ public class RegisterActivity extends AppCompatActivity {
             });
             AlertDialog alertDialog=alert.create();
             alertDialog.show();
-        }*/
+        }
         else {
             //shared-preferences
             loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
-            new SharedPreferences_data(this).setS_user_name(s_user_name);
-            new SharedPreferences_data(this).setS_phone_number(s_phone_number);
-            new SharedPreferences_data(this).setS_password(s_password);
-            new SharedPreferences_data(this).setS_email(s_email);
 
             return true;
         }

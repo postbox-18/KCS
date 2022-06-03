@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.adm.Classes.CheckEmail;
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SessionList;
 import com.example.adm.Classes.SharedPreferences_data;
@@ -113,19 +114,48 @@ public class GetViewModel extends AndroidViewModel {
 
     private String TAG = "ViewClassModel";
     String s_user_name, func, header, item,session_title;
-
+    //Email check
+    private List<CheckEmail> checkEmails=new ArrayList<>();
+    private MutableLiveData<List<CheckEmail>> checkEmailsMutableLiveData=new MutableLiveData<>();
 
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-
-
+        CheckUserDetails();
 
 
     }
 
+    private void CheckUserDetails() {
+        checkEmails=new ArrayList<>();
+        databaseReference = firebaseDatabase.getReference("Users-Id");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "snap>>" + snapshot);
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                    MyLog.e(TAG, "error>>at firebase  emails " + datas.child("email").getValue().toString());
+                    CheckEmail checkEmails1=new CheckEmail(
+                            datas.child("email").getValue().toString()
+                    );
+                    checkEmails.add(checkEmails1);
+                }
+                MyLog.e(TAG, "errors>>at firebase  emails out " + check_email);
+                checkEmailsMutableLiveData.postValue(checkEmails);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public MutableLiveData<List<CheckEmail>> getCheckEmailsMutableLiveData() {
+        return checkEmailsMutableLiveData;
+    }
     public MutableLiveData<LinkedHashMap<String, List<SelectedHeader>>> getSh_f_mapMutableLiveData() {
         return sh_f_mapMutableLiveData;
     }
