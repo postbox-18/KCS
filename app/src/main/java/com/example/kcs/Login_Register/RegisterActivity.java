@@ -41,6 +41,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +127,6 @@ public class RegisterActivity extends AppCompatActivity {
                 if (CheckDetails()) {
                     Auth();
                 } else {
-                    loadingDialog.dismiss();
                     Toast.makeText(RegisterActivity.this, "Check the Details", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -140,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        getViewModel.getEmailMutable().observe(RegisterActivity.this, new Observer<Boolean>() {
+        /*getViewModel.getEmailMutable().observe(RegisterActivity.this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 //check details
@@ -166,7 +166,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
     }
 
     private void Auth() {
@@ -229,6 +229,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<CheckEmail> checkEmails1) {
                 checkEmails=checkEmails1;
+                MyLog.e(TAG,"error>>f_maps>>session list>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(checkEmails1));
                 for(int i=0;i<checkEmails1.size();i++) {
                     if (s_email.equals(checkEmails1.get(i).getEmail()))
                     {
@@ -271,7 +272,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
        else if(check_email)
         {
-            loadingDialog.dismiss();
             AlertDialog.Builder alert =new AlertDialog.Builder(RegisterActivity.this);
             alert.setMessage("You have already Register");
             alert.setTitle("Alert");
