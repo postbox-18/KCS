@@ -48,7 +48,19 @@ public class SplashActivity extends AppCompatActivity {
         fade_in_anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade);
         splash_img.startAnimation(fade_in_anim);
         version.startAnimation(fade_in_anim);
-        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        String check=new SharedPreferences_data(SplashActivity.this).getS_email();
+        if(check==null||check.isEmpty()) {
+            Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        }
+        else
+        {
+            startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+        }
+
+
+       /* firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users-Id");
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -59,18 +71,7 @@ public class SplashActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         MyLog.e(TAG, "snap>>" + snapshot);
                         for (DataSnapshot datas : snapshot.getChildren()) {
-                           /* MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                            MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
-                            MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*/
-                            String check=new SharedPreferences_data(SplashActivity.this).getS_email();
-                            if(check==null||check.isEmpty()) {
-                                Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
-                                startActivity(intent);
-                            }
-                            else
-                            {
-                                startActivity(new Intent(SplashActivity.this,LoginActivity.class));
-                            }
+
                         }
 
                     }
@@ -83,7 +84,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
             }
-        }, 5000);
+        }, 5000);*/
 
         //share preferences data set empty
         new SharedPreferences_data(getApplicationContext()).setChecked_item_list("");

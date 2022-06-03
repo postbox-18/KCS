@@ -281,6 +281,7 @@ public class LoginActivity extends AppCompatActivity {
             password.setError("Please enter a valid password");
         } else {
             MyLog.e(TAG, "error>>success");
+            MyLog.e(TAG, "errors>> continue login" );
             getViewModel.setEmail(s_email);
             return true;
         }
