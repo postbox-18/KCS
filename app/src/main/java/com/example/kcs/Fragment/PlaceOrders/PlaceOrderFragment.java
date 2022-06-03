@@ -154,7 +154,6 @@ public class PlaceOrderFragment extends Fragment {
                         session_title=s;
                     }
                 });
-
                 //get linked hash map checked list
                 getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
                     @Override
