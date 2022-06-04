@@ -22,6 +22,7 @@
         android:textColor="@color/colorPrimary"
         android:textSize="22dp"
         android:textStyle="bold|italic"
+        android:fontFamily="@font/robotoblackitalic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +43,16 @@
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/done"
         app:lottie_speed="1" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ok"
+            android:layout_width="wrap_content"
+            android:fontFamily="@font/bebaskai"
+            android:layout_height="wrap_content"
+            android:textColor="@color/bg_white"
+            android:textSize="22dp"
+            android:background="@drawable/order_btn"
+            android:text="OK"/>
+
 </LinearLayout>
 
 </LinearLayout>

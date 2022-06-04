@@ -1,4 +1,4 @@
-package com.example.kcs.Classes;
+package com.example.kcs.DialogFragment;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -8,11 +8,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
@@ -20,6 +22,7 @@ public class DoneDialogfragment extends DialogFragment {
     //Lottie anim
     private LottieAnimationView lottie_loading;
     private TextView loading_text;
+    private AppCompatButton ok;
     private String TAG="DoneDialogfragment";
     private GetViewModel getViewModel;
 
@@ -31,6 +34,7 @@ public class DoneDialogfragment extends DialogFragment {
 
         lottie_loading=view.findViewById(R.id.lottie_loading);
         loading_text=view.findViewById(R.id.loading_text);
+        ok=view.findViewById(R.id.ok);
 
         lottie_loading.setAnimation(R.raw.done);
         lottie_loading.playAnimation();
@@ -42,6 +46,15 @@ public class DoneDialogfragment extends DialogFragment {
             @Override
             public void onResult(Throwable result) {
                 MyLog.e(TAG, "Error:Failure:" + result.getMessage());
+            }
+        });
+
+        //btn click
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getViewModel.setI_value(0);
+                dismiss();
             }
         });
 

@@ -26,7 +26,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
 
 import com.example.kcs.Classes.CheckEmail;
-import com.example.kcs.Classes.LoadingDialogs;
+import com.example.kcs.DialogFragment.LoadingDialogs;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.R;
@@ -41,7 +41,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

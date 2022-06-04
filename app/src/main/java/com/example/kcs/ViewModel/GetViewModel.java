@@ -12,7 +12,7 @@ import com.example.kcs.Classes.CheckEmail;
 import com.example.kcs.Classes.ImgFunList;
 import com.example.kcs.Classes.ImgList;
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.MyOrderFuncList;
+import com.example.kcs.Fragment.Profile.MyOrders.MyOrderFuncList;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;

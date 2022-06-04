@@ -1,4 +1,4 @@
-package com.example.kcs.Classes;
+package com.example.kcs.DialogFragment;
 
 import android.animation.ValueAnimator;
 import android.app.Dialog;
@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.R;
 
 public class LoadingDialogs extends DialogFragment {
