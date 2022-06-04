@@ -9,11 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Fragment.Items.ItemList;
@@ -27,14 +29,11 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private Context context;
     private List<HeaderList>headerLists;
     private String TAG="HeaderAdapter";
-    //HeaderAdapter.GetHeaderFragment getHeaderFragment;
+    private String s_date_picker_actions;
     private GetViewModel getViewModel;
-    //private MyViewModel myViewModel;
+
     private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
-    /*public interface GetHeaderFragment
-    {
-        void getheaderFragment(HeaderList headerList1, int position);
-    }*/
+
     public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
         this.context=context;
         this.headerLists=headerLists;
@@ -60,6 +59,15 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
         //img update soon
         //holder.header_img.setText(funList1.getUsername());
 
+        //get date picker
+        getViewModel.getDate_pickerMutable().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                s_date_picker_actions=s;
+
+            }
+        });
+
         String[] str = (headerList1.getHeader()).split("-");
         if(str.length>1) {
             Spannable word = new SpannableString(str[0]);
@@ -80,9 +88,17 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
         holder.header_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //getHeaderFragment.getheaderFragment(headerList1,position);.
+                //getHeaderFragment.getheaderFragment(headerList1,position);
+                if(s_date_picker_actions!=null)
+                {
+
                 getViewModel.getheaderFragment(headerList1.getHeader(),position,linkedHashMaps);
                 getViewModel.SetBreadCrumsList(headerList1.getHeader(), 2);
+                }
+                else {
+                    Toast.makeText(context, "Please select the date", Toast.LENGTH_SHORT).show();
+
+                }
 
             }
         });

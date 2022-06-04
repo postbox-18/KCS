@@ -1,5 +1,7 @@
 package com.example.kcs.Fragment.Session;
 
+import android.app.DatePickerDialog;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
@@ -23,6 +26,7 @@ import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -87,35 +91,40 @@ public class SessionFragment extends Fragment {
         fun_title=view.findViewById(R.id.fun_title);
         back_btn=view.findViewById(R.id.back_btn);
 
-        //get view model
-        getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                MyLog.e(TAG,"sessionlist>>fun>"+s);
-                funList_title=s;
-                fun_title.setText(funList_title);
-            }
-        });
+
+            //get view model
+            getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+                @Override
+                public void onChanged(String s) {
+                    MyLog.e(TAG, "sessionlist>>fun>" + s);
+                    funList_title = s;
+                    fun_title.setText(funList_title);
+                }
+            });
 
 
-        //get session list
-        getViewModel.getSessionListMutable().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
-            @Override
-            public void onChanged(List<SessionList> sessionLists1) {
-                sessionList=sessionLists1;
-                recyclerview_session.setHasFixedSize(true);
-                recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                sessionAdapter=new SessionAdapter(getContext(),sessionList,getViewModel);
-                recyclerview_session.setAdapter(sessionAdapter);
-            }
-        });
+            //get session list
+            getViewModel.getSessionListMutable().observe(getViewLifecycleOwner(), new Observer<List<SessionList>>() {
+                @Override
+                public void onChanged(List<SessionList> sessionLists1) {
+                    sessionList = sessionLists1;
+                    recyclerview_session.setHasFixedSize(true);
+                    recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    sessionAdapter = new SessionAdapter(getContext(), sessionList, getViewModel);
+                    recyclerview_session.setAdapter(sessionAdapter);
+                }
+            });
 
+
+        //click
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getViewModel.setI_value(0);
             }
         });
+
+
 
         return view;
 

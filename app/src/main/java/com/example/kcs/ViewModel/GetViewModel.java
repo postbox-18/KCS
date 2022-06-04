@@ -163,7 +163,10 @@ public class GetViewModel extends AndroidViewModel {
     private List<CheckEmail> checkEmails=new ArrayList<>();
     private MutableLiveData<List<CheckEmail>> checkEmailsMutableLiveData=new MutableLiveData<>();
 
-    
+    //date picker alert
+    private MutableLiveData<String> date_pickerMutable=new MutableLiveData<>();
+    private String date_picker;
+
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
@@ -198,6 +201,17 @@ public class GetViewModel extends AndroidViewModel {
             }
         });
     }
+
+    public void setDate_picker(String date_picker) {
+        this.date_picker = date_picker;
+        this.date_pickerMutable.postValue(date_picker);
+    }
+
+    public MutableLiveData<String> getDate_pickerMutable() {
+        return date_pickerMutable;
+    }
+
+
 
     public MutableLiveData<List<CheckEmail>> getCheckEmailsMutableLiveData() {
         return checkEmailsMutableLiveData;

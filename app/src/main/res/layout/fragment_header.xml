@@ -20,15 +20,32 @@
         android:orientation="vertical"
         android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/fun_title"
+        android:id="@+id/session_title"
         android:layout_width="match_parent"
-        android:text="func-title"
+        android:text="session_title"
         android:textColor="@color/colorSecondary"
         android:textAlignment="center"
-        android:fontFamily="@font/robotomediumitalic"
-        android:textSize="18dp"
+        android:fontFamily="@font/bebaskai"
+        android:textSize="@dimen/head_title"
         android:textStyle="bold|italic"
         android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right">
+            <TextView
+                android:id="@+id/date_picker_actions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:layout_marginEnd="15dp"
+                android:textSize="22dp"
+                android:textColor="@color/btn_gradient_light"
+                android:drawablePadding="@dimen/drawablePadding"
+                android:text="12-12-2022"
+                android:drawableStart="@drawable/ic_calendar_plus_fill"
+                android:fontFamily="@font/bebaskai"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
 

@@ -24,10 +24,11 @@
                 android:text="func-title"
                 android:textColor="@color/colorSecondary"
                 android:textAlignment="center"
-                android:fontFamily="@font/robotomediumitalic"
-                android:textSize="18dp"
+                android:fontFamily="@font/bebaskai"
+                android:textSize="@dimen/head_title"
                 android:textStyle="bold|italic"
                 android:layout_height="wrap_content"/>
+
         </LinearLayout>
     </LinearLayout>
 
