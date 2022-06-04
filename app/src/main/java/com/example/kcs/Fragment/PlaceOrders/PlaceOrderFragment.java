@@ -204,6 +204,9 @@ public class PlaceOrderFragment extends Fragment {
                     //getFunc
                     databaseReference.child(user_name).child(func_title).child(session_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
+                MyLog.e(TAG,"comit");
+
+                stringListLinkedHashMap.clear();
 
                 //clear all data checked list
                  /*stringListLinkedHashMap.clear();
