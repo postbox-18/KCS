@@ -28,7 +28,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.GsonBuilder;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -51,6 +53,11 @@ public class GetViewModel extends AndroidViewModel {
     //session list
     private MutableLiveData<List<SessionList>> sessionListMutable = new MutableLiveData<>();
     private List<SessionList> sessionList = new ArrayList<>();
+
+    //sessionTime list
+    private List<TimeList> timeList = new ArrayList<>();
+    private LinkedHashMap<String,List<TimeList>> timeListF_Map=new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String,List<TimeList>>> timeListF_MapMutableLiveData=new MutableLiveData<>();
 
     //selected session list
     //private MutableLiveData<List<SessionList>> s_sessionListMutable = new MutableLiveData<>();
@@ -166,6 +173,9 @@ public class GetViewModel extends AndroidViewModel {
     //date picker alert
     private MutableLiveData<String> date_pickerMutable=new MutableLiveData<>();
     private String date_picker;
+    //Time picker alert
+    private MutableLiveData<String> time_pickerMutable=new MutableLiveData<>();
+    private String timepicker;
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -175,6 +185,16 @@ public class GetViewModel extends AndroidViewModel {
 
 
     }
+
+    public void setTimepicker(String timepicker) {
+        this.timepicker = timepicker;
+        this.time_pickerMutable.postValue(timepicker);
+    }
+
+    public MutableLiveData<String> getTime_pickerMutable() {
+        return time_pickerMutable;
+    }
+
 
     private void CheckUserDetails() {
         checkEmails=new ArrayList<>();
@@ -201,6 +221,8 @@ public class GetViewModel extends AndroidViewModel {
             }
         });
     }
+
+
 
     public void setDate_picker(String date_picker) {
         this.date_picker = date_picker;
@@ -243,6 +265,10 @@ public class GetViewModel extends AndroidViewModel {
         return sessionListMutable;
     }
 
+    public MutableLiveData<LinkedHashMap<String, List<TimeList>>> getTimeListF_MapMutableLiveData() {
+        return timeListF_MapMutableLiveData;
+    }
+
     public MutableLiveData<List<BreadCrumbList>> getBreadCrumbListsMutableLiveData() {
         return breadCrumbListsMutableLiveData;
     }
@@ -255,7 +281,35 @@ public class GetViewModel extends AndroidViewModel {
     public MutableLiveData<String> getSession_titleMutable() {
         return session_titleMutable;
     }
+    public void GetSessionTime() {
+        databaseReference = firebaseDatabase.getReference("Items").child("SessionTime");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "Session>>snap>>fun>>" + snapshot);
+                int size = 0;
 
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                    timeList = new ArrayList<>();
+                   session_title=datas.getKey().toString();
+                    TimeList timeList1 = new TimeList(
+                            datas.getValue().toString());
+                    timeList.add(timeList1);
+                    size++;
+                    timeListF_Map.put(session_title,timeList);
+
+                }
+                timeListF_MapMutableLiveData.postValue(timeListF_Map);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                MyLog.e(TAG, "home>>snap>>fun>>Fail to get data.");
+            }
+        });
+    }
     public void GetSession() {
 
         databaseReference = firebaseDatabase.getReference("Items").child("Session");
@@ -783,6 +837,7 @@ public class GetViewModel extends AndroidViewModel {
         }
 
     }
+
 
 
 }

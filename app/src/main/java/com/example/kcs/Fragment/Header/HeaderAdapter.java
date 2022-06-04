@@ -29,7 +29,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private Context context;
     private List<HeaderList>headerLists;
     private String TAG="HeaderAdapter";
-    private String s_date_picker_actions;
+    private String s_date_picker_actions,s_time_picker;
     private GetViewModel getViewModel;
 
     private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
@@ -68,6 +68,17 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
             }
         });
 
+        //get time picker
+        getViewModel.getTime_pickerMutable().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                s_time_picker=s;
+            }
+        });
+
+
+
+
         String[] str = (headerList1.getHeader()).split("-");
         if(str.length>1) {
             Spannable word = new SpannableString(str[0]);
@@ -89,14 +100,14 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 //getHeaderFragment.getheaderFragment(headerList1,position);
-                if(s_date_picker_actions!=null)
+                if(s_date_picker_actions!=null && s_time_picker!=null)
                 {
 
                 getViewModel.getheaderFragment(headerList1.getHeader(),position,linkedHashMaps);
                 getViewModel.SetBreadCrumsList(headerList1.getHeader(), 2);
                 }
                 else {
-                    Toast.makeText(context, "Please select the date", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please select the date & time", Toast.LENGTH_SHORT).show();
 
                 }
 

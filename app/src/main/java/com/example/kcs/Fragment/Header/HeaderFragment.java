@@ -1,6 +1,7 @@
 package com.example.kcs.Fragment.Header;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -10,11 +11,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.kcs.Classes.MyLog;
@@ -23,6 +28,8 @@ import com.example.kcs.Fragment.Items.ItemList;
 
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.TimeList;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,7 +52,6 @@ public class HeaderFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     //call from FunAdapter
-    private String funList_title;
     private TextView session_title;
     //Header
     private RecyclerView recyclerview_header;
@@ -56,9 +62,14 @@ public class HeaderFragment extends Fragment {
     //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
 
+    //date and time
     private TextView date_picker_actions;
-    private String  s_date_picker_actions;
+    private TextView time_picker;
+    private String c_time_picker;
     private DatePickerDialog datePicker;
+    private List<TimeList> timeLists=new ArrayList<>();
+    private LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap=new LinkedHashMap<>();
+    private int mYear, mMonth, mDay, mHour, mMinute;
 
     private String TAG="HeaderFragment";
     public HeaderFragment() {
@@ -103,6 +114,7 @@ public class HeaderFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_header, container, false);
 
         date_picker_actions=view.findViewById(R.id.date_picker_actions);
+        time_picker=view.findViewById(R.id.time_picker);
         recyclerview_header=view.findViewById(R.id.recyclerview_header);
         session_title=view.findViewById(R.id.session_title);
         back_btn=view.findViewById(R.id.back_btn);
@@ -119,6 +131,26 @@ public class HeaderFragment extends Fragment {
             datePicker = new DatePickerDialog(getContext());
         }
 
+        //load time picker
+        //getViewModel.GetSessionTime();
+
+        //get time picker
+        getViewModel.getTime_pickerMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                c_time_picker=s;
+                if(s==null)
+                {
+                    time_picker.setError("please select the time");
+                }
+                else
+                {
+                    time_picker.setError(null);
+                }
+            }
+        });
+
+        //get date picker
         getViewModel.getDate_pickerMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -133,11 +165,39 @@ public class HeaderFragment extends Fragment {
             }
         });
 
+        //get time picker hash map
+        getViewModel.getTimeListF_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<TimeList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap1) {
+                stringListLinkedHashMap=stringListLinkedHashMap1;
+
+
+            }
+        });
+
+
+
             //get view model session title
         getViewModel.getSession_titleMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 session_title.setText(s);
+                MyLog.e(TAG, "time>> sess" + c_time_picker);
+                if(c_time_picker==null) {
+                    timeLists=stringListLinkedHashMap.get(s);
+                    time_picker.setText(timeLists.get(0).getTimeList());
+                    getViewModel.setTimepicker(time_picker.getText().toString());
+                    MyLog.e(TAG, "time>> if" + time_picker.getText().toString());
+
+                }
+                else
+                {
+                    MyLog.e(TAG, "time>> else" + c_time_picker);
+                    getViewModel.setTimepicker(c_time_picker);
+                    time_picker.setText(c_time_picker);
+                }
+
+
             }
         });
 
@@ -175,6 +235,37 @@ public class HeaderFragment extends Fragment {
             }
         });
 
+        //time picker
+        time_picker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //time picker wehn select time and clik on ok btn alert the time is over lunch or breafast
+
+                // Get Current Time
+                final Calendar c = Calendar.getInstance();
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMinute = c.get(Calendar.MINUTE);
+
+                // Launch Time Picker Dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                        new TimePickerDialog.OnTimeSetListener() {
+
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay,
+                                                  int minute) {
+                                //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
+                                //time_picker.setText(hourOfDay + ":" + minute);
+                                boolean isPM = (hourOfDay >= 12);
+                                time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+                                getViewModel.setTimepicker(time_picker.getText().toString());
+                                MyLog.e(TAG, "time>> btn if" + time_picker.getText().toString());
+                            }
+                        }, mHour, mMinute, false);
+                timePickerDialog.show();
+
+            }
+        });
+
         //on click to select the date
         date_picker_actions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,8 +275,7 @@ public class HeaderFragment extends Fragment {
                     public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
                         // adding the selected date in the edittext
                         date_picker_actions.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
-                        s_date_picker_actions=date_picker_actions.getText().toString();
-                        getViewModel.setDate_picker(s_date_picker_actions);
+                        getViewModel.setDate_picker(date_picker_actions.getText().toString());
                     }
                 }, year, month, day);
 
