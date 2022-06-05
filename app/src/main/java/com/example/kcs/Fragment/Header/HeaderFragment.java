@@ -53,6 +53,7 @@ public class HeaderFragment extends Fragment {
     private String mParam2;
     //call from FunAdapter
     private TextView session_title;
+    private String s_session_title;
     //Header
     private RecyclerView recyclerview_header;
     private HeaderAdapter headerAdapter;
@@ -181,6 +182,7 @@ public class HeaderFragment extends Fragment {
         getViewModel.getSession_titleMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
+                s_session_title=s;
                 session_title.setText(s);
                 MyLog.e(TAG, "time>> sess" + c_time_picker);
                 if(c_time_picker==null) {
@@ -254,8 +256,13 @@ public class HeaderFragment extends Fragment {
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
                                 //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
-                                //time_picker.setText(hourOfDay + ":" + minute);
+
                                 boolean isPM = (hourOfDay >= 12);
+
+                                //check condition if lunch or breakfast
+                                CheckTime(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"),s_session_title);
+
+
                                 time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
                                 getViewModel.setTimepicker(time_picker.getText().toString());
                                 MyLog.e(TAG, "time>> btn if" + time_picker.getText().toString());
@@ -288,6 +295,28 @@ public class HeaderFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void CheckTime(String time, String s_session_title) {
+        MyLog.e(TAG,"times>>"+time);
+        if(s_session_title.equals("Breakfast")||s_session_title.equals("Break Fast"))
+        {
+            /*if(time>="6:00 AM")
+            {
+
+            }*/
+        }
+        else if(s_session_title.equals("Lunch"))
+        {
+
+        }
+        else if(s_session_title.equals("Dinner"))
+        {
+
+        }
+
+
+
     }
 
 }
