@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +25,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
 
-import com.example.kcs.Classes.LoadingDialogs;
+import com.example.kcs.Classes.CheckEmail;
+import com.example.kcs.DialogFragment.LoadingDialogs;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.R;
@@ -39,6 +41,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -57,7 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     //Anim
     private Animation slide_down_anim,slide_up_anim,fade_in_anim;
-    private ConstraintLayout bg_banner,head_layout;
+    private ConstraintLayout head_layout;
+    private ImageView bg_banner;
 
     //loading
     private LoadingDialogs loadingDialog=new LoadingDialogs();
@@ -66,7 +72,9 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private GetViewModel getViewModel;
-
+    //check mail
+    private List<CheckEmail> checkEmails=new ArrayList<>();
+    private boolean check_email = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,12 +124,12 @@ public class RegisterActivity extends AppCompatActivity {
 
                 //check the details
                 if (CheckDetails()) {
-
+                    Auth();
                 } else {
-                    //loadingDialog.dismiss();
                     Toast.makeText(RegisterActivity.this, "Check the Details", Toast.LENGTH_SHORT).show();
                 }
             }
+
         });
         //page to login already have a account
         already_login.setOnClickListener(new View.OnClickListener() {
@@ -130,15 +138,17 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             }
         });
-        getViewModel.getEmailMutable().observe(RegisterActivity.this, new Observer<Boolean>() {
+
+        /*getViewModel.getEmailMutable().observe(RegisterActivity.this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 //check details
-                if (!aBoolean)
+                if (aBoolean)
                 {
+                    loadingDialog.dismiss();
                     AlertDialog.Builder alert =new AlertDialog.Builder(RegisterActivity.this);
-                    alert.setMessage("Something Went Problem Please Try Again Later");
-                    alert.setTitle("Problem");
+                    alert.setMessage("You have already Register");
+                    alert.setTitle("Alert");
                     alert.setCancelable(false);
                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @SuppressLint("NotifyDataSetChanged")
@@ -155,7 +165,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
     }
 
     private void Auth() {
@@ -170,8 +180,8 @@ public class RegisterActivity extends AppCompatActivity {
                                             Toast.LENGTH_LONG)
                                     .show();
 
-                            //loadingDialog.dismiss();
-                            databaseReference = firebaseDatabase.getReference("Admin");
+                            loadingDialog.dismiss();
+                            databaseReference = firebaseDatabase.getReference("Users-Id");
                             databaseReference.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -179,6 +189,11 @@ public class RegisterActivity extends AppCompatActivity {
                                     databaseReference.child(s_phone_number).child("email").setValue(s_email);
                                     databaseReference.child(s_phone_number).child("phone_number").setValue(s_phone_number);
                                     databaseReference.child(s_phone_number).child("username").setValue(s_user_name);
+
+                                    new SharedPreferences_data(RegisterActivity.this).setS_user_name(s_user_name);
+                                    new SharedPreferences_data(RegisterActivity.this).setS_phone_number(s_phone_number);
+                                    new SharedPreferences_data(RegisterActivity.this).setS_password(s_password);
+                                    new SharedPreferences_data(RegisterActivity.this).setS_email(s_email);
                                 }
 
                                 @Override
@@ -199,7 +214,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     .show();
 
                             // hide the progress bar
-                            //loadingDialog.dismiss();
+                            loadingDialog.dismiss();
                         }
                     }
                 });
@@ -208,7 +223,26 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean CheckDetails() {
 
 
-        //check if value is empty or not
+        //checkemail list in data base
+        getViewModel.getCheckEmailsMutableLiveData().observe(this, new Observer<List<CheckEmail>>() {
+            @Override
+            public void onChanged(List<CheckEmail> checkEmails1) {
+                checkEmails=checkEmails1;
+                for(int i=0;i<checkEmails1.size();i++) {
+                    if (s_email.equals(checkEmails1.get(i).getEmail()))
+                    {
+                        check_email=true;
+                        break;
+                    }
+                    else
+                    {
+                        check_email=false;
+                        continue;
+                    }
+                }
+            }
+        });
+
 
         //check user-name is empty
         if (s_user_name.isEmpty()) {
@@ -234,11 +268,11 @@ public class RegisterActivity extends AppCompatActivity {
             password.setError("Please enter a password");
             re_password.setError("Please enter a password");
         }
-        /*else if(currentUser!=null)
+       else if(check_email)
         {
-            AlertDialog.Builder alert =new AlertDialog.Builder(this);
-            alert.setMessage("This id is Already Login");
-            alert.setTitle("Already Login");
+            AlertDialog.Builder alert =new AlertDialog.Builder(RegisterActivity.this);
+            alert.setMessage("You have already Register");
+            alert.setTitle("Alert");
             alert.setCancelable(false);
             alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
@@ -249,14 +283,11 @@ public class RegisterActivity extends AppCompatActivity {
             });
             AlertDialog alertDialog=alert.create();
             alertDialog.show();
-        }*/
+        }
         else {
             //shared-preferences
-            //loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
-            new SharedPreferences_data(this).setS_user_name(s_user_name);
-            new SharedPreferences_data(this).setS_phone_number(s_phone_number);
-            new SharedPreferences_data(this).setS_password(s_password);
-            new SharedPreferences_data(this).setS_email(s_email);
+            loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
+            MyLog.e(TAG, "errors>> continue regi" );
 
             return true;
         }

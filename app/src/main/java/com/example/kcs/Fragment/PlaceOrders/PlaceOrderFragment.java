@@ -17,10 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kcs.DialogFragment.DoneDialogfragment;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Items.CheckedList;
+import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.firebase.database.DataSnapshot;
@@ -28,12 +30,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,16 +56,19 @@ public class PlaceOrderFragment extends Fragment {
     private AppCompatButton order_btn;
 
     private List<FunList> funLists=new ArrayList<>();
+    private List<UserItemList> userItemLists=new ArrayList<>();
     private List<CheckedList> checkedLists=new ArrayList<>();
     private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
-    private String func_title,header_title,user_name;
+    private String func_title,header_title,user_name,session_title;
     private TextView func_title_view;
     private String TAG="PlaceOrderFragment";
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private ImageView back_btn;
+    private DoneDialogfragment doneDialogfragment=new DoneDialogfragment();
+    private LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
 
 
     public PlaceOrderFragment() {
@@ -89,6 +92,7 @@ public class PlaceOrderFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -130,7 +134,8 @@ public class PlaceOrderFragment extends Fragment {
         order_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               
+                doneDialogfragment.show(getParentFragmentManager(),"DoneDialogfragment");
+
             //get headertitle
                 getViewModel.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
                     @Override
@@ -142,21 +147,32 @@ public class PlaceOrderFragment extends Fragment {
                 //get username
                 user_name=new SharedPreferences_data(getContext()).getS_user_name();
 
+                //get session list
+                getViewModel.getSession_titleMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        session_title=s;
+                    }
+                });
                 //get linked hash map checked list
                 getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
                     @Override
-                    public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
+                    public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
                         for(int i=0;i<selectedHeadersList.size();i++)
                         {
+                            stringListLinkedHashMap=stringListLinkedHashMap1;
+
                             checkedLists=stringListLinkedHashMap.get(selectedHeadersList.get(i).getHeader());
-                            SaveOrders(func_title,user_name,selectedHeadersList.get(i).getHeader(),checkedLists);
+                            SaveOrders(func_title,user_name,selectedHeadersList.get(i).getHeader(),session_title,checkedLists);
 
                         }
+
+
                     }
                 });
-              
-                
-                //get selected checked list
+
+
+
                 
 
             }
@@ -174,7 +190,7 @@ public class PlaceOrderFragment extends Fragment {
     }
 
 
-    private void SaveOrders(String func_title, String user_name, String headerList_title, List<CheckedList> checkedLists1) {
+    private void SaveOrders(String func_title, String user_name, String headerList_title,String session_title ,List<CheckedList> checkedLists1) {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -184,11 +200,20 @@ public class PlaceOrderFragment extends Fragment {
 
                 for (int i = 0; i < checkedLists1.size(); i++) {
                     //getFunc
-                    databaseReference.child(user_name).child(func_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
+                    databaseReference.child(user_name).child(func_title).child(session_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
+                MyLog.e(TAG,"comit");
 
+                stringListLinkedHashMap.clear();
 
-                Toast.makeText(getContext(), "data added", Toast.LENGTH_SHORT).show();
+                //clear all data checked list
+                 /*stringListLinkedHashMap.clear();
+                getViewModel.setF_map(stringListLinkedHashMap);
+                userItemLists.clear();
+                getViewModel.setUserItemLists(userItemLists);
+                //Toast.makeText(getContext(), "Data Added", Toast.LENGTH_SHORT).show();
+                doneDialogfragment.dismiss();*/
+
             }
 
             @Override

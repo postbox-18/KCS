@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.Profile.MyOrders;
+package com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,26 +8,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.MyOrderFuncList;
-import com.google.gson.GsonBuilder;
+import com.example.kcs.Fragment.Profile.MyOrders.MyOrderFuncList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHolder> {
     private Context context;
     private String TAG="MyOrdersAdapter";
     private List<MyOrderFuncList> myOrderFuncLists=new ArrayList<>();
+    private List<SessionList> sessionLists=new ArrayList<>();
     private List<MyOrdersList> myOrdersList;
     private GetViewModel getViewModel;
     public MyOrdersAdapter(Context context, List<MyOrderFuncList> myOrderFuncLists, GetViewModel getViewModel) {
@@ -52,35 +54,26 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         //get data func,header,list item size from hash map
         holder.func.setText(myOrderFuncLists1.getFunc());
 
-        //get linked hashmap
-        //get hash map value to pass myorderlist
-        getViewModel.getMyordersHashMapMutable().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<MyOrdersList>>>() {
+        //get session list
+        getViewModel.getSs_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionList>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<MyOrdersList>> stringListLinkedHashMap) {
-                //MyLog.e(TAG,"chs>>hahmap>> "+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                Set<String> stringSet=stringListLinkedHashMap.keySet();
-                myOrdersList=new ArrayList<>();
-                List<String> aList = new ArrayList<String>(stringSet.size());
-                for (String x : stringSet)
-                    aList.add(x);
-                //MyLog.e(TAG,"chs>>list "+ new GsonBuilder().setPrettyPrinting().create().toJson(aList));
-                for(int i=0;i<aList.size();i++) {
-                    MyLog.e(TAG,"chs>>list header>> "+ aList.get(i));
-                    MyLog.e(TAG,"chs>>list size "+ stringListLinkedHashMap.get(aList.get(i)).size());
-                    MyOrdersList userItemList = new MyOrdersList(
-                            aList.get(i),
-                            stringListLinkedHashMap.get(aList.get(i)).size()
-                    );
-                    myOrdersList.add(userItemList);
-                }
+            public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap) {
+                String username=new SharedPreferences_data(context).getS_user_name();
+                sessionLists=stringListLinkedHashMap.get(username+"-"+myOrderFuncLists1.getFunc());
+                holder.recyclerview_session.setHasFixedSize(true);
+                holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                MyorderSessiondapters itemListAdapters = new MyorderSessiondapters(context, myOrderFuncLists1.getFunc(),getViewModel,sessionLists);
+                holder.recyclerview_session.setAdapter(itemListAdapters);
+            }
+        });
 
-                //MyLog.e(TAG,"chs>>myorders>> "+ new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
-                getViewModel.setMyOrdersList(myOrdersList);
-                holder.recyclerview_item_list.setHasFixedSize(true);
-                holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
-                holder.recyclerview_item_list.setAdapter(itemListAdapters);
 
+        holder.card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                getViewModel.setFunc_title(myOrderFuncLists1.getFunc());
+                //getViewModel.SetBreadCrumsList(myOrderFuncLists1.getFunc(), 0);
             }
         });
 
@@ -97,13 +90,15 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
         private ImageView profile;
         private TextView   func;
-        private RecyclerView recyclerview_item_list;
+        private CardView card_view;
+        private RecyclerView recyclerview_session;
 
         public ViewHolder(View view) {
             super(view);
             profile = view.findViewById(R.id.profile);
-            recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
+            recyclerview_session = view.findViewById(R.id.recyclerview_session);
             func = view.findViewById(R.id.func);
+            card_view = view.findViewById(R.id.card_view);
 
 
         }

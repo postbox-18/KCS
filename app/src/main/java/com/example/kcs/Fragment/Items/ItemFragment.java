@@ -123,19 +123,6 @@ public class ItemFragment extends Fragment {
         recyclerview_item = view.findViewById(R.id.recyclerview_item);
         back_btn = view.findViewById(R.id.back_btn);
 
-
-
-
-
-
-        /*myViewModel.getHeaderMutableLiveData().observe(getViewLifecycleOwner(), new Observer<HeaderList>() {
-            @Override
-            public void onChanged(HeaderList headerList1) {
-                headerList=headerList1;
-            }
-        });*/
-
-
         //get Checked list hash map
         getViewModel.getCheck_s_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<CheckedList>>>>() {
             @Override
@@ -149,6 +136,7 @@ public class ItemFragment extends Fragment {
         getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
+
                 stringListLinkedHashMap=stringListLinkedHashMap1;
             }
         });

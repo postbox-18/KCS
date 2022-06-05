@@ -44,8 +44,6 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewCartAdapter.ViewHolder holder, int position) {
         final CheckedList checkedList1=checkedLists.get(position);
             holder.list.setText(checkedList1.getItemList());
-
-
     }
 
 

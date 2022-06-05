@@ -5,9 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/content"
-    android:background="@color/bg_white"
+    android:background="@drawable/bg"
     android:orientation="vertical"
     tools:context=".MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/btn_gradient_dark"
+        android:orientation="horizontal">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_breadcrumbs"
+            android:layout_width="match_parent"
+            tools:itemCount="5"
+            android:orientation="horizontal"
+            tools:listitem="@layout/layout_breadcrums"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 <FrameLayout
     android:id="@+id/Fragment"
     android:layout_width="match_parent"

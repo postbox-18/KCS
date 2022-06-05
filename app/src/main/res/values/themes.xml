@@ -14,7 +14,9 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
     </style>
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
 
         <!--For MaterialComponents, we need to define these, so that default dons not come-->
@@ -45,4 +47,11 @@
     <style name="Theme.Kcs.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Kcs.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--BreadCrumbs start-->
+    <style name="CustomFragmentBreadCrumbs" parent="@android:style/Widget.FragmentBreadCrumbs">
+        <item name="android:padding">4dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <!--BreadCrumbs start-->
 </resources>
