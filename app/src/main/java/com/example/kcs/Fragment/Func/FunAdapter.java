@@ -99,7 +99,7 @@ public class FunAdapter extends RecyclerView.Adapter<FunAdapter.ViewHolder> {
         holder.fun_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                getViewModel.setFunc_title(funList1.getFun());
                 getViewModel.getfunFragment(funList1.getFun());
                 getViewModel.SetBreadCrumsList(funList1.getFun(), 0);
             }

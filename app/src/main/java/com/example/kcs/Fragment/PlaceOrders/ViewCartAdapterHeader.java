@@ -58,9 +58,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         getViewModel.getF_mapMutable().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
-                MyLog.e(TAG, "checkedLists>>stringListLinkedHashMap>>>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 checkedLists = stringListLinkedHashMap.get(list.getHeader());
-                MyLog.e(TAG, "checkedLists>>checkedLists>>>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                 holder.recyclerview_item_list.setHasFixedSize(true);
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
                 viewCartAdapter = new ViewCartAdapter(context, getViewModel, checkedLists);

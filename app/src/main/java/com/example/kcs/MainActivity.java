@@ -284,9 +284,6 @@ public class MainActivity extends AppCompatActivity {
                         fragmentTAg = "HomeFragment";
                         break;
                     case 1:
-                        //for time picker
-                        getViewModel.setTimepicker("");
-                        new SharedPreferences_data(MainActivity.this).setSession_title("");
                         fragment = new HeaderFragment();
                         fragmentTAg = "HeaderFragment";
                         break;
