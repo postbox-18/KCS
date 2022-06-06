@@ -13,24 +13,34 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.TimeList;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHolder>  {
     private Context context;
     private List<SessionList> sessionLists;
-    private String TAG="SessionAdapter";
+    private String TAG="SessionAdapter",funList_title;
     private GetViewModel getViewModel;
-    public SessionAdapter(Context context, List<SessionList> sessionLists, GetViewModel getViewModel) {
+    private LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap = new LinkedHashMap<>();
+    private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
+    private LinkedHashMap<String, List<SessionDateTime>> f_mapsdtMutable = new LinkedHashMap<>();
+    public SessionAdapter(Context context, List<SessionList> sessionLists, GetViewModel getViewModel, String funList_title) {
         this.context=context;
         this.sessionLists=sessionLists;
         this.getViewModel=getViewModel;
+        this.funList_title=funList_title;
     }
 
     @NonNull
@@ -69,6 +79,34 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                 getViewModel.setI_value(1);
                 getViewModel.setSession_title(sessionList1.getSession_title());
                 getViewModel.SetBreadCrumsList(sessionList1.getSession_title(), 1);
+                //get SessionDateTime Hash Map
+                getViewModel.getF_mapsdtMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+                    @Override
+                    public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
+                        f_mapsdtMutable = stringListLinkedHashMap;
+                        MyLog.e(TAG,"dateTime>> gson>>"+new GsonBuilder().setPrettyPrinting().create().toJson(f_mapsdtMutable));
+                        MyLog.e(TAG, "datetime>>set >>" + funList_title + "-" + sessionList1.getSession_title());
+                        sessionDateTimes = f_mapsdtMutable.get(funList_title + "-" + sessionList1.getSession_title());
+                        if((sessionDateTimes==null) || (sessionDateTimes.isEmpty())) {
+                            sessionDateTimes=new ArrayList<>();
+                            getViewModel.setSessionDateTimes(sessionDateTimes);
+                            getViewModel.setTimepicker("");
+                            getViewModel.setDate_picker("");
+
+
+                        }
+                        else
+                        {
+
+                            getViewModel.setSessionDateTimes(sessionDateTimes);
+                            MyLog.e(TAG, "datetime>>set sessionDateTimes>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
+                            getViewModel.setTimepicker(sessionDateTimes.get(0).getTime());
+                            getViewModel.setDate_picker(sessionDateTimes.get(0).getDate());
+                        }
+
+
+                    }
+                });
             }
         });
 

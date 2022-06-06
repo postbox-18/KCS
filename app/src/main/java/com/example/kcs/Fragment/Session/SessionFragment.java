@@ -110,7 +110,7 @@ public class SessionFragment extends Fragment {
                     sessionList = sessionLists1;
                     recyclerview_session.setHasFixedSize(true);
                     recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    sessionAdapter = new SessionAdapter(getContext(), sessionList, getViewModel);
+                    sessionAdapter = new SessionAdapter(getContext(), sessionList, getViewModel,funList_title);
                     recyclerview_session.setAdapter(sessionAdapter);
                 }
             });

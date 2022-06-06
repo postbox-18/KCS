@@ -217,6 +217,13 @@ public class HeaderFragment extends Fragment {
             }
         });
 
+        //get session date and time
+        getViewModel.getSessionDateTimesMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SessionDateTime>>() {
+            @Override
+            public void onChanged(List<SessionDateTime> sessionDateTimes1) {
+                sessionDateTimes=sessionDateTimes1;
+            }
+        });
         //get view model session title
         getViewModel.getSession_titleMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -252,7 +259,7 @@ public class HeaderFragment extends Fragment {
             }
         });
         //get SessionDateTime Hash Map
-        getViewModel.getF_mapsdtMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+        /*getViewModel.getF_mapsdtMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
                 f_mapsdtMutable = stringListLinkedHashMap;
@@ -264,7 +271,7 @@ public class HeaderFragment extends Fragment {
 
 
             }
-        });
+        });*/
 
 
         //get header list
