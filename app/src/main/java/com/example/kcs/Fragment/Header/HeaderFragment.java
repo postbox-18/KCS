@@ -1,10 +1,13 @@
 package com.example.kcs.Fragment.Header;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +29,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Items.ItemList;
 
+import com.example.kcs.Login_Register.LoginActivity;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.TimeList;
@@ -66,7 +70,7 @@ public class HeaderFragment extends Fragment {
     //date and time
     private TextView date_picker_actions;
     private TextView time_picker;
-    private String c_time_picker;
+    private String c_time_picker,s_date_picker_actions;
     private DatePickerDialog datePicker;
     private List<TimeList> timeLists=new ArrayList<>();
     private LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap=new LinkedHashMap<>();
@@ -162,6 +166,7 @@ public class HeaderFragment extends Fragment {
                 else
                 {
                     date_picker_actions.setText(s);
+                    s_date_picker_actions=s;
                 }
             }
         });
@@ -237,38 +242,44 @@ public class HeaderFragment extends Fragment {
             }
         });
 
+
         //time picker
         time_picker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //time picker wehn select time and clik on ok btn alert the time is over lunch or breafast
+                MyLog.e(TAG,"dateTime>>"+s_date_picker_actions);
+                if(s_date_picker_actions!=null) {
+                    // Get Current Time
+                    final Calendar c = Calendar.getInstance();
 
-                // Get Current Time
-                final Calendar c = Calendar.getInstance();
-                mHour = c.get(Calendar.HOUR_OF_DAY);
-                mMinute = c.get(Calendar.MINUTE);
+                    //set selected time to show on alert machine
+                    mHour = c.get(Calendar.HOUR_OF_DAY);
+                    mMinute = c.get(Calendar.MINUTE);
 
-                // Launch Time Picker Dialog
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                        new TimePickerDialog.OnTimeSetListener() {
+                    // Launch Time Picker Dialog
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                            new TimePickerDialog.OnTimeSetListener() {
 
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay,
-                                                  int minute) {
-                                //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
-
-                                boolean isPM = (hourOfDay >= 12);
-
-                                //check condition if lunch or breakfast
-                                CheckTime(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"),s_session_title);
+                                @Override
+                                public void onTimeSet(TimePicker view, int hourOfDay,
+                                                      int minute) {
+                                    //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
+                                    // txtTime.setText(hourOfDay + ":" + minute);
 
 
-                                time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
-                                getViewModel.setTimepicker(time_picker.getText().toString());
-                                MyLog.e(TAG, "time>> btn if" + time_picker.getText().toString());
-                            }
-                        }, mHour, mMinute, false);
-                timePickerDialog.show();
+                                    //check condition if lunch or breakfast
+                                    CheckTime(s_session_title,s_date_picker_actions,hourOfDay,minute);
+
+
+                                }
+                            }, mHour, mMinute, false);
+                    timePickerDialog.show();
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "Please select date first", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -282,6 +293,7 @@ public class HeaderFragment extends Fragment {
                     public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
                         // adding the selected date in the edittext
                         date_picker_actions.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                        s_date_picker_actions=(dayOfMonth + "/" + (month + 1) + "/" + year);
                         getViewModel.setDate_picker(date_picker_actions.getText().toString());
                     }
                 }, year, month, day);
@@ -297,23 +309,72 @@ public class HeaderFragment extends Fragment {
         return view;
     }
 
-    private void CheckTime(String time, String s_session_title) {
-        MyLog.e(TAG,"times>>"+time);
+    private void CheckTime(String s_session_title, String s_date_picker_actions, int hourOfDay, int minute) {
+        String t_time=(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute));
+        String date_time=s_date_picker_actions+" "+t_time;
+        MyLog.e(TAG,"dateTime>>date_time>>"+date_time);
+        String start_dt,end_dt;
         if(s_session_title.equals("Breakfast")||s_session_title.equals("Break Fast"))
         {
-            /*if(time>="6:00 AM")
-            {
 
-            }*/
+            start_dt=s_date_picker_actions+" 06:00";
+            end_dt=s_date_picker_actions+" 11:00";
+            alertTime(s_session_title,start_dt,end_dt,date_time,hourOfDay,minute);
+
+
         }
         else if(s_session_title.equals("Lunch"))
         {
-
+            start_dt=s_date_picker_actions+" 12:00";
+            end_dt=s_date_picker_actions+" 16:00";
+            alertTime(s_session_title,start_dt,end_dt,date_time,hourOfDay,minute);
         }
         else if(s_session_title.equals("Dinner"))
         {
+            start_dt=s_date_picker_actions+" 17:00";
+            end_dt=s_date_picker_actions+" 22:00";
+            alertTime(s_session_title,start_dt,end_dt,date_time,hourOfDay,minute);
 
         }
+
+
+
+    }
+
+    private void alertTime(String s_session_title, String start_dt, String end_dt, String date_time, int hourOfDay, int minute) {
+
+          /* MyLog.e(TAG,"dateTime>>startdate_time>>"+start_dt);
+            MyLog.e(TAG,"dateTime>>endDateTime>>"+end_dt);
+            MyLog.e(TAG,"dateTime>>start>>"+date_time.compareTo(start_dt));
+            MyLog.e(TAG,"dateTime>>end>>"+date_time.compareTo(end_dt));*/
+        if(date_time.compareTo(start_dt)>=0 && date_time.compareTo(end_dt)<=0)
+        {
+            boolean isPM = (hourOfDay >= 12);
+            time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+            getViewModel.setTimepicker(time_picker.getText().toString());
+            MyLog.e(TAG, "time>> btn if" + time_picker.getText().toString());
+
+        }
+        else
+        {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+            alert.setMessage("You Have Selected Time is More Than "+s_session_title+" Session");
+            alert.setTitle("Problem");
+            alert.setCancelable(false);
+            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alertDialog = alert.create();
+            alertDialog.show();
+
+            time_picker.setError("Please select Time");
+
+        }
+
 
 
 
