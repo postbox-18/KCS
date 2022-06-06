@@ -26,10 +26,12 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Items.ItemList;
 
 import com.example.kcs.Login_Register.LoginActivity;
+import com.example.kcs.MainActivity;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.TimeList;
@@ -70,7 +72,7 @@ public class HeaderFragment extends Fragment {
     //date and time
     private TextView date_picker_actions;
     private TextView time_picker;
-    private String c_time_picker,s_date_picker_actions;
+    private String c_time_picker;
     private DatePickerDialog datePicker;
     private List<TimeList> timeLists=new ArrayList<>();
     private LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap=new LinkedHashMap<>();
@@ -78,6 +80,7 @@ public class HeaderFragment extends Fragment {
 
     private String TAG="HeaderFragment";
     public HeaderFragment() {
+
 
         // Required empty public constructor
     }
@@ -166,7 +169,6 @@ public class HeaderFragment extends Fragment {
                 else
                 {
                     date_picker_actions.setText(s);
-                    s_date_picker_actions=s;
                 }
             }
         });
@@ -183,26 +185,30 @@ public class HeaderFragment extends Fragment {
 
 
 
-            //get view model session title
+
+        //get view model session title
         getViewModel.getSession_titleMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 s_session_title=s;
-                session_title.setText(s);
-                MyLog.e(TAG, "time>> sess" + c_time_picker);
-                if(c_time_picker==null) {
-                    timeLists=stringListLinkedHashMap.get(s);
-                    time_picker.setText(timeLists.get(0).getTimeList());
-                    getViewModel.setTimepicker(time_picker.getText().toString());
-                    MyLog.e(TAG, "time>> if" + time_picker.getText().toString());
+                //get session title shared preferences
+                String gs_title=new SharedPreferences_data(getContext()).getSession_title();
+                MyLog.e(TAG,"dateTimes>>header "+gs_title);
+                    session_title.setText(s);
+                    MyLog.e(TAG, "time>> sess" + c_time_picker);
+                    if ( gs_title.isEmpty()||!gs_title.equals(s_session_title) ) {
+                        //save session title shared preferences
+                        MyLog.e(TAG,"dateTimes>>null "+s);
+                        new SharedPreferences_data(getContext()).setSession_title(s);
+                        timeLists = stringListLinkedHashMap.get(s);
+                        time_picker.setText(timeLists.get(0).getTimeList());
+                        MyLog.e(TAG, "time>> if" + time_picker.getText().toString());
 
-                }
-                else
-                {
-                    MyLog.e(TAG, "time>> else" + c_time_picker);
-                    getViewModel.setTimepicker(c_time_picker);
-                    time_picker.setText(c_time_picker);
-                }
+                    } else {
+                        MyLog.e(TAG,"dateTimes>>value"+s+"\ts_title\t"+gs_title);
+                        MyLog.e(TAG, "time>> else" + c_time_picker);
+                        time_picker.setText(c_time_picker);
+                    }
 
 
             }
@@ -248,8 +254,8 @@ public class HeaderFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //time picker wehn select time and clik on ok btn alert the time is over lunch or breafast
-                MyLog.e(TAG,"dateTime>>"+s_date_picker_actions);
-                if(s_date_picker_actions!=null) {
+                MyLog.e(TAG,"dateTime>>"+date_picker_actions.getText().toString());
+                if((date_picker_actions.getText().toString())!=null) {
                     // Get Current Time
                     final Calendar c = Calendar.getInstance();
 
@@ -269,7 +275,7 @@ public class HeaderFragment extends Fragment {
 
 
                                     //check condition if lunch or breakfast
-                                    CheckTime(s_session_title,s_date_picker_actions,hourOfDay,minute);
+                                    CheckTime(s_session_title,(date_picker_actions.getText().toString()),hourOfDay,minute);
 
 
                                 }
@@ -293,7 +299,6 @@ public class HeaderFragment extends Fragment {
                     public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
                         // adding the selected date in the edittext
                         date_picker_actions.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
-                        s_date_picker_actions=(dayOfMonth + "/" + (month + 1) + "/" + year);
                         getViewModel.setDate_picker(date_picker_actions.getText().toString());
                     }
                 }, year, month, day);

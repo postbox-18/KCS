@@ -191,6 +191,7 @@ public class PlaceOrderFragment extends Fragment {
 
 
     private void SaveOrders(String func_title, String user_name, String headerList_title,String session_title ,List<CheckedList> checkedLists1) {
+        String session_str="";
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -199,7 +200,9 @@ public class PlaceOrderFragment extends Fragment {
 
 
                 for (int i = 0; i < checkedLists1.size(); i++) {
-                    //getFunc
+
+                    //set session-dateTime
+                    //session_str=session_title+"-"+
                     databaseReference.child(user_name).child(func_title).child(session_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
                 MyLog.e(TAG,"comit");

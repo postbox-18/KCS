@@ -100,7 +100,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 //getHeaderFragment.getheaderFragment(headerList1,position);
-                if(s_date_picker_actions!=null && s_time_picker!=null)
+                if(s_date_picker_actions!=null && s_time_picker!=null && !s_date_picker_actions.isEmpty() && !s_time_picker.isEmpty())
                 {
 
                 getViewModel.getheaderFragment(headerList1.getHeader(),position,linkedHashMaps);
