@@ -150,10 +150,8 @@ public class MyOrdersFragment extends Fragment {
                     bottomSheet.show();
 
                     //get session list
-                    MyLog.e(TAG,"SessionList>>stringListLinkedHashMap>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                     MyLog.e(TAG,"SessionList>>deatils>>"+s_user_name+"\t\t"+func_title);
                     sessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
-                    MyLog.e(TAG,"SessionList>>sessionLists>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(sessionLists));
 
 
                     recyclerview_order_session_deatils.setHasFixedSize(true);

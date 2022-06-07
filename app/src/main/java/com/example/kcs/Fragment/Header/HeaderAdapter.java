@@ -18,10 +18,13 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -33,14 +36,14 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private GetViewModel getViewModel;
 
     private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
+    private List<SessionDateTime> sessionDateTimes=new ArrayList<>();
 
     public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
         this.context=context;
         this.headerLists=headerLists;
         this.getViewModel=getViewModel;
         this.linkedHashMaps=linkedHashMaps;
-        //this.getHeaderFragment=getHeaderFragment;
-        //getViewModel= new ViewModelProvider((FragmentActivity)context).get(GetViewModel.class);
+        
 
 
     }
@@ -59,26 +62,14 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
         //img update soon
         //holder.header_img.setText(funList1.getUsername());
 
-        //get date picker
-        getViewModel.getDate_pickerMutable().observe((LifecycleOwner) context, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                s_date_picker_actions=s;
 
+        //get session Date Time
+        getViewModel.getSessionDateTimesMutableLiveData().observe((LifecycleOwner) context, new Observer<List<SessionDateTime>>() {
+            @Override
+            public void onChanged(List<SessionDateTime> sessionDateTimes1) {
+                sessionDateTimes=sessionDateTimes1;
             }
         });
-
-        //get time picker
-        getViewModel.getTime_pickerMutable().observe((LifecycleOwner) context, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                s_time_picker=s;
-            }
-        });
-
-
-
-
         String[] str = (headerList1.getHeader()).split("-");
         if(str.length>1) {
             Spannable word = new SpannableString(str[0]);
@@ -100,14 +91,15 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 //getHeaderFragment.getheaderFragment(headerList1,position);
-                if(s_date_picker_actions!=null && s_time_picker!=null)
+                if((sessionDateTimes==null) || (sessionDateTimes.size()==0)  )
                 {
+                    Toast.makeText(context, "Please select the date & time", Toast.LENGTH_SHORT).show();
 
-                getViewModel.getheaderFragment(headerList1.getHeader(),position,linkedHashMaps);
-                getViewModel.SetBreadCrumsList(headerList1.getHeader(), 2);
+
                 }
                 else {
-                    Toast.makeText(context, "Please select the date & time", Toast.LENGTH_SHORT).show();
+                    getViewModel.getheaderFragment(headerList1.getHeader(),position,linkedHashMaps);
+                    getViewModel.SetBreadCrumsList(headerList1.getHeader(), 2);
 
                 }
 

@@ -10,6 +10,8 @@ import android.widget.CompoundButton;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,21 +38,24 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
     //private LinkedHashMap<String, List<CheckedList>> f_map = new LinkedHashMap<>();
     //private List<LinkedHashMap<String,List<CheckedList>>> s_map=new ArrayList<>();
     private List<LinkedHashMap<String, List<CheckedList>>> selected_s_map = new ArrayList<>();
-    private  LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
-    private String header;
+
+    private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
+    private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
+    private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
+    private String header,funcTitle,sessionTitle;
     ItemListAdapater.Unchecked unchecked;
 
     public interface Unchecked {
         void getUnchecked(String item);
     }
 
-    public ItemListAdapater(Context context, List<ItemList> itemLists, String header, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps, LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
+    public ItemListAdapater(Context context, List<ItemList> itemLists, String header, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps, LinkedHashMap<String, List<CheckedList>> headerMap) {
         this.context = context;
         this.itemLists = itemLists;
         this.getViewModel = getViewModel;
         this.header = header;
         this.selected_s_map = linkedHashMaps;
-        this.stringListLinkedHashMap = stringListLinkedHashMap;
+        this.headerMap = headerMap;
         //cartViewModel = ViewModelProviders.of((FragmentActivity) context).get(CartViewModel.class);
         //myViewModel= new ViewModelProvider((FragmentActivity)context).get(MyViewModel.class);
 
@@ -67,22 +72,48 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
 
     @Override
     public void onBindViewHolder(@NonNull ItemListAdapater.ViewHolder holder, int position) {
+        if(headerMap==null)
+        {
+            headerMap=new LinkedHashMap<>();
+        }
 
         final ItemList itemList1 = itemLists.get(position);
 
         //img update soon
         //holder.header_img.setText(funList1.getImg());
 
+        //get func title
+        getViewModel.getFunc_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                funcTitle=s;
+            }
+        });
+        //get session title
+        getViewModel.getSession_titleMutable().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                sessionTitle=s;
+            }
+        });
 
-        //check if checked list item selected
+        //get session map
+        getViewModel.getSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> stringLinkedHashMapLinkedHashMap) {
+                sessionMap=stringLinkedHashMapLinkedHashMap;
+            }
+        });
+
+        //check if checked list item already selected
         if (selected_s_map.size() > 0) {
             for (int k = 0; k < selected_s_map.size(); k++) {
                 selected_checkedLists = selected_s_map.get(k).get(header);
                 if (selected_checkedLists != null) {
                     for (int i = 0; i < selected_checkedLists.size(); i++) {
                         final CheckedList selected_checkedLists1 = selected_checkedLists.get(i);
-                   /* MyLog.e(TAG, "checked>>" + selected_checkedLists1.getPosition());
-                    MyLog.e(TAG, "checked>>" + position);*/
+                    MyLog.e(TAG, "checked>>" + selected_checkedLists1.getPosition());
+                    MyLog.e(TAG, "checked>>" + position);
                         if (selected_checkedLists1.getPosition() == position) {
                             //MyLog.e(TAG, "checked>>" + selected_checkedLists1.getItemList());
                             holder.item_check.setChecked(true);
@@ -93,7 +124,8 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                     MyLog.e(TAG, "checked>> selected size is null>>");
                 }
             }
-        } else {
+        }
+        else {
             MyLog.e(TAG, "checked>>selected  map size is null>>");
         }
         MyLog.e(TAG, "hashmap>>size>>" + selected_s_map.size());
@@ -110,9 +142,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         );
                         checkedLists.add(checkedLists1);
 
-                        stringListLinkedHashMap.put(header, checkedLists);
 
-                        getViewModel.setCheckedLists(checkedLists);
 
                         //notifyDataSetChanged();
                     }
@@ -121,11 +151,21 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         GetUncheckList(itemList1.getItem());
 
                     }
+                    getViewModel.setCheckedLists(checkedLists);
 
-                    getViewModel.setF_map(stringListLinkedHashMap);
+                    headerMap.put(header, checkedLists);
+                    sessionMap.put(sessionTitle,headerMap);
+                    funcMap.put(funcTitle,sessionMap);
 
+
+                    //set header map
+                    getViewModel.setHeaderMap(headerMap);
+                    //set session map
+                    getViewModel.setSessionMap(sessionMap);
+                    //set func map
+                    getViewModel.setFuncMap(funcMap);
                     MyLog.e(TAG, "selected_s_map>>size>>" + selected_s_map.size());
-                    selected_s_map.add(stringListLinkedHashMap);
+                    selected_s_map.add(headerMap);
                     getViewModel.setCheck_s_map(selected_s_map);
 
                     Gson gson = new Gson();

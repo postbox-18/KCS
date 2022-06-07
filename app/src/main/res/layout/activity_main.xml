@@ -9,8 +9,10 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
     <LinearLayout
+        android:id="@+id/breadCrums"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:visibility="gone"
         android:background="@color/btn_gradient_dark"
         android:orientation="horizontal">
         <androidx.recyclerview.widget.RecyclerView

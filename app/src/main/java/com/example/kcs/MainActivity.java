@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.example.kcs.BreadCrumbs.BreadCrumbList;
 import com.example.kcs.BreadCrumbs.BreadCrumbsAdapter;
@@ -28,8 +30,11 @@ import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemFragment;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemListAdapters;
+import com.example.kcs.Fragment.PlaceOrders.Header.PlaceOrderViewCartAdapterHeader;
 import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
-import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
+import com.example.kcs.Fragment.PlaceOrders.Session.PlaceOrderViewCartAdapterSession;
+import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Profile.ProfileFragment;
 import com.example.kcs.Fragment.Session.SessionFragment;
@@ -37,6 +42,7 @@ import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -52,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
     //Bread Crumbs
+    private LinearLayout breadCrums;
     private RecyclerView recyclerview_breadcrumbs;
     private BreadCrumbsAdapter breadCrumbsAdapter;
     private List<BreadCrumbList> breadcrumbsList = new ArrayList<>();
@@ -70,7 +77,14 @@ public class MainActivity extends AppCompatActivity {
     private List<HeaderList> headerLists = new ArrayList<>();
     private CardView view_cart_cardView;
     private String user_name;
-    private Integer integer, frag_integer;
+    private Integer integer, frag_integer=-1;
+    //header map
+    private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
+    //session map
+    private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
+    //func map
+    private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
+    private List<SelectedSessionList> selectedSessionLists=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         View parentLayout = findViewById(android.R.id.content);
         recyclerview_breadcrumbs = findViewById(R.id.recyclerview_breadcrumbs);
+        breadCrums = findViewById(R.id.breadCrums);
 
         MyLog.e(TAG, "logout>> main activity ");
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
@@ -163,12 +178,78 @@ public class MainActivity extends AppCompatActivity {
         recyclerview_selected_count.setHasFixedSize(true);
         recyclerview_selected_count.setLayoutManager(new LinearLayoutManager(getApplication(), LinearLayoutManager.HORIZONTAL, false));
 
-        //linked hash map of checked list
-        getViewModel.getF_mapMutable().observe(this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+
+        // func hash map of checked list
+        /*getViewModel.getFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
+                funcMap=stringLinkedHashMapLinkedHashMap;
+                Set<String> stringSet = funcMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+
+                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                selectedSessionLists.clear();
+                for (int i = 0; i < aList.size(); i++) {
+                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                    SelectedSessionList list = new SelectedSessionList(
+                            aList.get(i)
+                    );
+                    selectedSessionLists.add(list);
+                }
+                getViewModel.setSelectedSessionLists(selectedSessionLists);
+
+            }
+        });*/
+
+
+
+        //func map
+        getViewModel.getFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
+                funcMap=stringLinkedHashMapLinkedHashMap;
+                MyLog.e(TAG, "placeorder>>get funcMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
+                MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
+                sessionMap=funcMap.get(func_title);
+                MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
+                MyLog.e(TAG, "placeorder>>get sessionMap>>" +session_title);
+                headerMap=sessionMap.get(session_title);
+                MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+
+                Set<String> stringSet = headerMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+
+                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                userItemLists.clear();
+                for (int i = 0; i < aList.size(); i++) {
+                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                    MyLog.e(TAG, "chs>>list size " + headerMap.get(aList.get(i)).size());
+                    UserItemList userItemList = new UserItemList(
+                            aList.get(i),
+                            headerMap.get(aList.get(i)).size()
+                    );
+                    userItemLists.add(userItemList);
+                }
+                getViewModel.setUserItemLists(userItemLists);
+                MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
+                if (userItemLists.size() > 0) {
+                    snackbar.show();
+                } else {
+                    snackbar.dismiss();
+                }
+            }
+        });
+
+        /*getViewModel.getF_mapMutable().observe(this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
                 stringListLinkedHashMap = stringListLinkedHashMap1;
                 MyLog.e(TAG, "chs>>keyset>>" + stringListLinkedHashMap.keySet());
+
                 Set<String> stringSet = stringListLinkedHashMap.keySet();
                 List<String> aList = new ArrayList<String>(stringSet.size());
                 for (String x : stringSet)
@@ -194,9 +275,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-
             }
-        });
+        });*/
 
 
         //get user-item list
@@ -239,6 +319,24 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
+                        Set<String> stringSet = headerMap.keySet();
+                        List<String> aList = new ArrayList<String>(stringSet.size());
+                        for (String x : stringSet)
+                            aList.add(x);
+
+                        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                        selectedHeadersList.clear();
+                        for (int i = 0; i < aList.size(); i++) {
+                            MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                            SelectedHeader list = new SelectedHeader(
+                                    aList.get(i)
+
+                            );
+                            selectedHeadersList.add(list);
+                        }
+                        getViewModel.setSelectedHeadersList(selectedHeadersList);
+
+
                 //which fragment going to pass
                 getViewModel.getI_fragmentMutable().observe(MainActivity.this, new Observer<Integer>() {
                     @Override
@@ -253,7 +351,15 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         snackbar.dismiss();
                         //get func title is selected
-                        GetFuncTitleList(funLists, stringListLinkedHashMap, integer);
+                        //GetFuncTitleList(funLists, stringListLinkedHashMap, integer);
+                        MyLog.e(TAG, "integer>>int>>" + integer);
+                        if (integer == 1) {
+                            MyLog.e(TAG, "integer>>title>>out>>" + func_title);
+                            getViewModel.setI_value(5);
+                        } else {
+                            MyLog.e(TAG, "integer>>fun>>out>>" + funLists.size());
+                            showAlertDialog(funLists);
+                        }
 
                     }
                 });
@@ -270,6 +376,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Integer integer) {
                 frag_integer = integer;
+                //breadCrums
+                if(integer==0)
+                {
+                    breadCrums.setVisibility(View.GONE);
+                }
+                else
+                {
+                    breadCrums.setVisibility(View.VISIBLE);
+
+                }
+
+
                 MyLog.e(TAG, "integer>>" + integer);
                 Fragment fragment = new Fragment();
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -285,7 +403,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 1:
                         fragment = new HeaderFragment();
-
                         fragmentTAg = "HeaderFragment";
                         break;
                     case 2:
@@ -326,9 +443,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
     }
 
-    private void GetFuncTitleList(List<FunList> funLists, LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap, Integer integer) {
+    /*private void GetFuncTitleList(List<FunList> funLists, LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap, Integer integer) {
 
         selectedHeadersList=new ArrayList<>();
         //get linked hasp map to view item list
@@ -352,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -361,6 +479,11 @@ public class MainActivity extends AppCompatActivity {
             if(breadcrumbsList!=null && breadcrumbsList.size()>0) {
                 breadcrumbsList.remove(breadcrumbsList.size() - 1);
                 getViewModel.setBreadCrumbLists(breadcrumbsList);
+                breadCrums.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                breadCrums.setVisibility(View.GONE);
             }
             //super.onBackPressed();
             getSupportFragmentManager().popBackStackImmediate();

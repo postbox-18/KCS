@@ -139,19 +139,19 @@ public class HomeFragment extends Fragment {
                 linkedHashMaps=linkedHashMaps1;
             }
         });
-        getViewModel.getListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
+        /*getViewModel.getListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
             @Override
             public void onChanged(List<HeaderList> headerLists1) {
                 headerList=headerLists1;
                 //recyclerview_header
                 recyclerview_header.setHasFixedSize(true);
                 recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,linkedHashMaps);
+                //headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,linkedHashMaps, f_mapsdtMutable);
                 getViewModel.setI_fragment(0);
                 recyclerview_header.setAdapter(headerAdapter);
 
             }
-        });
+        });*/
 
         //get fun list
         getViewModel.getFunMutableList().observe(getViewLifecycleOwner(), new Observer<List<FunList>>() {

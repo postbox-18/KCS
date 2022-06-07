@@ -12,6 +12,8 @@ import com.example.kcs.Classes.CheckEmail;
 import com.example.kcs.Classes.ImgFunList;
 import com.example.kcs.Classes.ImgList;
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.Header.SessionDateTime;
+import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrderFuncList;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.Classes.SharedPreferences_data;
@@ -20,7 +22,7 @@ import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
-import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems.MyOrdersList;
 import com.google.firebase.database.DataSnapshot;
@@ -28,9 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -132,6 +132,10 @@ public class GetViewModel extends AndroidViewModel {
     private Integer i_fragment;
     private MutableLiveData<Integer> i_fragmentMutable = new MutableLiveData<>();
 
+    //Session Alert
+    private Integer alert;
+    private MutableLiveData<Integer> alertMutable = new MutableLiveData<>();
+
     //user selected list
     private List<UserItemList> userItemLists = new ArrayList<>();
     private MutableLiveData<List<UserItemList>> userItemListsMutableLiveData = new MutableLiveData<>();
@@ -177,18 +181,78 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<String> time_pickerMutable=new MutableLiveData<>();
     private String timepicker;
 
+    //SessionDateTime
+    private List<SessionDateTime> sessionDateTimes=new ArrayList<>();
+    private MutableLiveData<List<SessionDateTime>> sessionDateTimesMutableLiveData=new MutableLiveData<>();
+    private LinkedHashMap<String, List<SessionDateTime>> f_mapsdt=new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<SessionDateTime>>> f_mapsdtMutableLiveData=new MutableLiveData<>();
+    //header map
+    private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
+    private  MutableLiveData<LinkedHashMap<String, List<CheckedList>>> headerMapMutableLiveData=new MutableLiveData<>();
+    //session map
+    private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
+    private  MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMapMutableLiveData=new MutableLiveData<>();
+    //fun map
+    private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
+    private  MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMapMutableLiveData=new MutableLiveData<>();
+    //selected Session list
+    private List<SelectedSessionList>  selectedSessionLists=new ArrayList<>();
+
+
+
+    private MutableLiveData<List<SelectedSessionList>>  selectedSessionListsMutableLiveData=new MutableLiveData<>();
+
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
         CheckUserDetails();
 
-
     }
 
+    public void setHeaderMap(LinkedHashMap<String, List<CheckedList>> headerMap) {
+        this.headerMap = headerMap;
+        this.headerMapMutableLiveData.postValue(headerMap);
+    }
+    public MutableLiveData<LinkedHashMap<String, List<CheckedList>>> getHeaderMapMutableLiveData() {
+        return headerMapMutableLiveData;
+    }
     public void setTimepicker(String timepicker) {
         this.timepicker = timepicker;
         this.time_pickerMutable.postValue(timepicker);
+    }
+
+    public void setSelectedSessionLists(List<SelectedSessionList> selectedSessionLists) {
+        this.selectedSessionLists = selectedSessionLists;
+        this.selectedSessionListsMutableLiveData.postValue(selectedSessionLists);
+    }
+    public MutableLiveData<List<SelectedSessionList>> getSelectedSessionListsMutableLiveData() {
+        return selectedSessionListsMutableLiveData;
+    }
+    public void setAlert(Integer alert) {
+        this.alert = alert;
+        this.alertMutable.postValue(alert);
+    }
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> getSessionMapMutableLiveData() {
+        return sessionMapMutableLiveData;
+    }
+    public void setSessionMap(LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap) {
+        this.sessionMap = sessionMap;
+        this.sessionMapMutableLiveData.postValue(sessionMap);
+    }
+
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> getFuncMapMutableLiveData() {
+        return funcMapMutableLiveData;
+    }
+
+
+    public void setFuncMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap) {
+        this.funcMap = funcMap;
+        this.funcMapMutableLiveData.postValue(funcMap);
+    }
+
+    public MutableLiveData<Integer> getAlertMutable() {
+        return alertMutable;
     }
 
     public MutableLiveData<String> getTime_pickerMutable() {
@@ -239,8 +303,20 @@ public class GetViewModel extends AndroidViewModel {
         return checkEmailsMutableLiveData;
     }
 
+    public void setSessionDateTimes(List<SessionDateTime> sessionDateTimes) {
+        this.sessionDateTimes = sessionDateTimes;
+        this.sessionDateTimesMutableLiveData.postValue(sessionDateTimes);
+    }
+    public MutableLiveData<List<SessionDateTime>> getSessionDateTimesMutableLiveData() {
+        return sessionDateTimesMutableLiveData;
+    }
+
     public MutableLiveData<LinkedHashMap<String, List<ImgList>>> getIf_f_mapMutableLiveData() {
         return if_f_mapMutableLiveData;
+    }
+
+ public MutableLiveData<LinkedHashMap<String, List<SessionDateTime>>> getF_mapsdtMutableLiveData() {
+        return f_mapsdtMutableLiveData;
     }
 
 
@@ -839,5 +915,71 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
+    public void CheckTime(String s_session_title, String s_date_picker_actions, int hourOfDay, int minute, String funcTitle) {
+        String t_time=(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute));
+        String date_time=s_date_picker_actions+" "+t_time;
+        MyLog.e(TAG,"dateTime>>date_time>>"+date_time);
+        String start_dt,end_dt;
+        if(s_session_title.equals("Breakfast")||s_session_title.equals("Break Fast"))
+        {
 
+            start_dt=s_date_picker_actions+" 06:00";
+            end_dt=s_date_picker_actions+" 11:00";
+            alertTime(s_session_title,start_dt,end_dt,date_time,hourOfDay,minute,s_date_picker_actions,funcTitle);
+
+
+        }
+        else if(s_session_title.equals("Lunch"))
+        {
+            start_dt=s_date_picker_actions+" 12:00";
+            end_dt=s_date_picker_actions+" 16:00";
+            alertTime(s_session_title,start_dt,end_dt,date_time,hourOfDay,minute, s_date_picker_actions,funcTitle);
+        }
+        else if(s_session_title.equals("Dinner"))
+        {
+            start_dt=s_date_picker_actions+" 17:00";
+            end_dt=s_date_picker_actions+" 22:00";
+            alertTime(s_session_title,start_dt,end_dt,date_time,hourOfDay,minute, s_date_picker_actions,funcTitle);
+
+        }
+
+
+
+    }
+
+    private void alertTime(String s_session_title, String start_dt, String end_dt, String date_time, int hourOfDay, int minute, String s_date_picker_actions,String funcTitle) {
+
+          /* MyLog.e(TAG,"dateTime>>startdate_time>>"+start_dt);
+            MyLog.e(TAG,"dateTime>>endDateTime>>"+end_dt);
+            MyLog.e(TAG,"dateTime>>start>>"+date_time.compareTo(start_dt));
+            MyLog.e(TAG,"dateTime>>end>>"+date_time.compareTo(end_dt));*/
+
+        if(date_time.compareTo(start_dt)>=0 && date_time.compareTo(end_dt)<=0)
+        {
+            boolean isPM = (hourOfDay >= 12);
+            String time=String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM");
+            time_pickerMutable.postValue(time);
+            sessionDateTimes=new ArrayList<>();
+            SessionDateTime list=new SessionDateTime(
+                    s_date_picker_actions,
+                   time
+            );
+            sessionDateTimes.add(list);
+            String d=funcTitle+"-"+s_session_title;
+            f_mapsdt.put(d,sessionDateTimes);
+            f_mapsdtMutableLiveData.postValue(f_mapsdt);
+
+
+
+        }
+        else
+        {
+            alertMutable.postValue(0);
+
+        }
+
+
+
+
+    }
 }

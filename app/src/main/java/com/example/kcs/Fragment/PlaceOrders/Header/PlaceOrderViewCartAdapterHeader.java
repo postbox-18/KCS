@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.PlaceOrders;
+package com.example.kcs.Fragment.PlaceOrders.Header;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,19 +12,17 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Items.CheckedList;
 
+import com.example.kcs.Fragment.PlaceOrders.ViewCartAdapter;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
-public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterHeader.ViewHolder> {
+public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceOrderViewCartAdapterHeader.ViewHolder> {
     private Context context;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
@@ -32,43 +30,40 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> header = new ArrayList<>();
+    private LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
 
 
-    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList) {
+    public PlaceOrderViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, LinkedHashMap<String, List<CheckedList>> headerMap) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.header = selectedHeadersList;
+        this.headerMap = headerMap;
     }
 
 
     @NonNull
     @Override
-    public ViewCartAdapterHeader.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PlaceOrderViewCartAdapterHeader.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
         View view = layoutInflater.inflate(R.layout.view_cart_card_view_header, parent, false);
-        return new ViewCartAdapterHeader.ViewHolder(view);
+        return new PlaceOrderViewCartAdapterHeader.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewCartAdapterHeader.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PlaceOrderViewCartAdapterHeader.ViewHolder holder, int position) {
         final SelectedHeader list = header.get(position);
         holder.header.setText(list.getHeader());
         //get Checked list hash map
-        getViewModel.getF_mapMutable().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
-                MyLog.e(TAG, "checkedLists>>stringListLinkedHashMap>>>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                checkedLists = stringListLinkedHashMap.get(list.getHeader());
-                MyLog.e(TAG, "checkedLists>>checkedLists>>>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
+
+                checkedLists = headerMap.get(list.getHeader());
                 holder.recyclerview_item_list.setHasFixedSize(true);
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
                 viewCartAdapter = new ViewCartAdapter(context, getViewModel, checkedLists);
                 holder.recyclerview_item_list.setAdapter(viewCartAdapter);
 
 
-            }
-        });
+
 
 
     }
