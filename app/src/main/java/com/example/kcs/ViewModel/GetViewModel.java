@@ -1,12 +1,9 @@
 package com.example.kcs.ViewModel;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.DialogInterface;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
@@ -16,6 +13,7 @@ import com.example.kcs.Classes.ImgFunList;
 import com.example.kcs.Classes.ImgList;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Header.SessionDateTime;
+import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrderFuncList;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.Classes.SharedPreferences_data;
@@ -24,7 +22,7 @@ import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
-import com.example.kcs.Fragment.PlaceOrders.SelectedHeader;
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems.MyOrdersList;
 import com.google.firebase.database.DataSnapshot;
@@ -32,9 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -190,6 +186,21 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<SessionDateTime>> sessionDateTimesMutableLiveData=new MutableLiveData<>();
     private LinkedHashMap<String, List<SessionDateTime>> f_mapsdt=new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, List<SessionDateTime>>> f_mapsdtMutableLiveData=new MutableLiveData<>();
+    //header map
+    private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
+    private  MutableLiveData<LinkedHashMap<String, List<CheckedList>>> headerMapMutableLiveData=new MutableLiveData<>();
+    //session map
+    private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
+    private  MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMapMutableLiveData=new MutableLiveData<>();
+    //fun map
+    private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
+    private  MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMapMutableLiveData=new MutableLiveData<>();
+    //selected Session list
+    private List<SelectedSessionList>  selectedSessionLists=new ArrayList<>();
+
+
+
+    private MutableLiveData<List<SelectedSessionList>>  selectedSessionListsMutableLiveData=new MutableLiveData<>();
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -199,16 +210,45 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-
+    public void setHeaderMap(LinkedHashMap<String, List<CheckedList>> headerMap) {
+        this.headerMap = headerMap;
+        this.headerMapMutableLiveData.postValue(headerMap);
+    }
+    public MutableLiveData<LinkedHashMap<String, List<CheckedList>>> getHeaderMapMutableLiveData() {
+        return headerMapMutableLiveData;
+    }
     public void setTimepicker(String timepicker) {
         this.timepicker = timepicker;
         this.time_pickerMutable.postValue(timepicker);
     }
 
-
+    public void setSelectedSessionLists(List<SelectedSessionList> selectedSessionLists) {
+        this.selectedSessionLists = selectedSessionLists;
+        this.selectedSessionListsMutableLiveData.postValue(selectedSessionLists);
+    }
+    public MutableLiveData<List<SelectedSessionList>> getSelectedSessionListsMutableLiveData() {
+        return selectedSessionListsMutableLiveData;
+    }
     public void setAlert(Integer alert) {
         this.alert = alert;
         this.alertMutable.postValue(alert);
+    }
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> getSessionMapMutableLiveData() {
+        return sessionMapMutableLiveData;
+    }
+    public void setSessionMap(LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap) {
+        this.sessionMap = sessionMap;
+        this.sessionMapMutableLiveData.postValue(sessionMap);
+    }
+
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> getFuncMapMutableLiveData() {
+        return funcMapMutableLiveData;
+    }
+
+
+    public void setFuncMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap) {
+        this.funcMap = funcMap;
+        this.funcMapMutableLiveData.postValue(funcMap);
     }
 
     public MutableLiveData<Integer> getAlertMutable() {

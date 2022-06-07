@@ -91,7 +91,6 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 //getHeaderFragment.getheaderFragment(headerList1,position);
-                MyLog.e(TAG, "datetime>>sessionDateTimes>>>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
                 if((sessionDateTimes==null) || (sessionDateTimes.size()==0)  )
                 {
                     Toast.makeText(context, "Please select the date & time", Toast.LENGTH_SHORT).show();

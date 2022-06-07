@@ -238,7 +238,6 @@ public class HeaderFragment extends Fragment {
                 MyLog.e(TAG,"dateTime>>session>>"+s_session_title);
                 MyLog.e(TAG,"dateTime>>date>>"+s_date_picker_actions);
                 MyLog.e(TAG,"dateTime>>time>>"+s_time_picker);
-                MyLog.e(TAG,"dateTime>>get sessionDateTimes>>"+new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
 
                 if ((sessionDateTimes == null || sessionDateTimes.isEmpty()) &&((s_time_picker==null)||(s_time_picker.isEmpty()))) {
 

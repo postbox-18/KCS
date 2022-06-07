@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Header.SessionDateTime;
+import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.TimeList;
@@ -36,6 +37,12 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
     private LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap = new LinkedHashMap<>();
     private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
     private LinkedHashMap<String, List<SessionDateTime>> f_mapsdtMutable = new LinkedHashMap<>();
+    //get header ,fun map
+    private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
+    private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
+    private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
+
+    private List<LinkedHashMap<String, List<CheckedList>>> selected_s_map = new ArrayList<>();
     public SessionAdapter(Context context, List<SessionList> sessionLists, GetViewModel getViewModel, String funList_title) {
         this.context=context;
         this.sessionLists=sessionLists;
@@ -72,6 +79,17 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
         }
         
 
+        //get func map
+        getViewModel.getFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
+                funcMap=stringLinkedHashMapLinkedHashMap;
+                sessionMap=funcMap.get(funList_title);
+                headerMap=sessionMap.get(sessionList1.getSession_title());
+
+            }
+        });
+
         //holder.session_title.setText(sessionList1.getSession_title());
         holder.session_linear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +102,6 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                     @Override
                     public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
                         f_mapsdtMutable = stringListLinkedHashMap;
-                        MyLog.e(TAG,"dateTime>> gson>>"+new GsonBuilder().setPrettyPrinting().create().toJson(f_mapsdtMutable));
                         MyLog.e(TAG, "datetime>>set >>" + funList_title + "-" + sessionList1.getSession_title());
                         sessionDateTimes = f_mapsdtMutable.get(funList_title + "-" + sessionList1.getSession_title());
                         if((sessionDateTimes==null) || (sessionDateTimes.isEmpty())) {
@@ -98,11 +115,28 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                         else
                         {
 
+                            //clear session date and time list
                             getViewModel.setSessionDateTimes(sessionDateTimes);
-                            MyLog.e(TAG, "datetime>>set sessionDateTimes>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
                             getViewModel.setTimepicker(sessionDateTimes.get(0).getTime());
                             getViewModel.setDate_picker(sessionDateTimes.get(0).getDate());
                             getViewModel.setAlert(1);
+                            //clear checked list
+                            MyLog.e(TAG, "placeorder>>get funcMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
+                            MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
+                            MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+
+                           /* MyLog.e(TAG, "placeorder>>get funcMap::before>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
+                            MyLog.e(TAG, "placeorder>>get headerMap::before>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+                            headerMap=new LinkedHashMap<>();
+                            getViewModel.setHeaderMap(headerMap);
+                            MyLog.e(TAG, "placeorder>>get funcMap::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
+                            MyLog.e(TAG, "placeorder>>get headerMap::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+
+                            MyLog.e(TAG, "placeorder>>get selected_s_map::before>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
+                            selected_s_map=new ArrayList<>();
+                            getViewModel.setCheck_s_map(selected_s_map);
+                            MyLog.e(TAG, "placeorder>>get selected_s_map::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));*/
+
                         }
 
 
