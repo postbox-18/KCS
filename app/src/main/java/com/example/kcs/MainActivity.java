@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.example.kcs.BreadCrumbs.BreadCrumbList;
 import com.example.kcs.BreadCrumbs.BreadCrumbsAdapter;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
     //Bread Crumbs
+    private LinearLayout breadCrums;
     private RecyclerView recyclerview_breadcrumbs;
     private BreadCrumbsAdapter breadCrumbsAdapter;
     private List<BreadCrumbList> breadcrumbsList = new ArrayList<>();
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private List<HeaderList> headerLists = new ArrayList<>();
     private CardView view_cart_cardView;
     private String user_name;
-    private Integer integer, frag_integer;
+    private Integer integer, frag_integer=-1;
     //header map
     private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
     //session map
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         View parentLayout = findViewById(android.R.id.content);
         recyclerview_breadcrumbs = findViewById(R.id.recyclerview_breadcrumbs);
+        breadCrums = findViewById(R.id.breadCrums);
 
         MyLog.e(TAG, "logout>> main activity ");
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
@@ -373,6 +376,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Integer integer) {
                 frag_integer = integer;
+                //breadCrums
+                if(integer==0)
+                {
+                    breadCrums.setVisibility(View.GONE);
+                }
+                else
+                {
+                    breadCrums.setVisibility(View.VISIBLE);
+
+                }
+
+
                 MyLog.e(TAG, "integer>>" + integer);
                 Fragment fragment = new Fragment();
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -428,6 +443,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
     }
 
     /*private void GetFuncTitleList(List<FunList> funLists, LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap, Integer integer) {
@@ -463,6 +479,11 @@ public class MainActivity extends AppCompatActivity {
             if(breadcrumbsList!=null && breadcrumbsList.size()>0) {
                 breadcrumbsList.remove(breadcrumbsList.size() - 1);
                 getViewModel.setBreadCrumbLists(breadcrumbsList);
+                breadCrums.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                breadCrums.setVisibility(View.GONE);
             }
             //super.onBackPressed();
             getSupportFragmentManager().popBackStackImmediate();
