@@ -206,6 +206,10 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
+    public void setAlert(Integer alert) {
+        this.alert = alert;
+        this.alertMutable.postValue(alert);
+    }
 
     public MutableLiveData<Integer> getAlertMutable() {
         return alertMutable;

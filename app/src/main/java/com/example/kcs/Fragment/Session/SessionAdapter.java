@@ -102,6 +102,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                             MyLog.e(TAG, "datetime>>set sessionDateTimes>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
                             getViewModel.setTimepicker(sessionDateTimes.get(0).getTime());
                             getViewModel.setDate_picker(sessionDateTimes.get(0).getDate());
+                            getViewModel.setAlert(1);
                         }
 
 

@@ -199,19 +199,24 @@ public class HeaderFragment extends Fragment {
             public void onChanged(Integer integer) {
 
                 if (integer == 0) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                    alert.setMessage("You Have Selected Time is More Than " + s_session_title + " Session");
-                    alert.setTitle("Problem");
-                    alert.setCancelable(false);
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @SuppressLint("NotifyDataSetChanged")
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    AlertDialog alertDialog = alert.create();
-                    alertDialog.show();
+                    if(s_session_title!=null) {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                        alert.setMessage("You Have Selected Time is More Than " + s_session_title + " Session");
+                        alert.setTitle("Problem");
+                        alert.setCancelable(false);
+                        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        AlertDialog alertDialog = alert.create();
+                        alertDialog.show();
+                    }
+                    else {
+                        MyLog.e(TAG,"Session has empty value");
+                    }
                 }
 
             }
