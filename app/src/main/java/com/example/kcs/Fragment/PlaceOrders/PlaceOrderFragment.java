@@ -141,13 +141,10 @@ public class PlaceOrderFragment extends Fragment {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
-                MyLog.e(TAG, "placeorder>>get funcMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
-                MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                 sessionMap = funcMap.get(func_title);
-                MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
-                MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
                 headerMap = sessionMap.get(session_title);
-                MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+
+                //set session list
                 Set<String> stringSet = sessionMap.keySet();
                 List<String> aList = new ArrayList<String>(stringSet.size());
                 for (String x : stringSet)
@@ -170,6 +167,10 @@ public class PlaceOrderFragment extends Fragment {
                 } else {
                     MyLog.e(TAG, "selected session list is empty");
                 }
+
+
+
+
             }
         });
 
@@ -188,7 +189,7 @@ public class PlaceOrderFragment extends Fragment {
         order_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
+
 
                 //get headertitle
                 getViewModel.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -208,8 +209,49 @@ public class PlaceOrderFragment extends Fragment {
                         session_title = s;
                     }
                 });
-                //get linked hash map checked list
-                getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+
+
+                MyLog.e(TAG, "placeorder>>get funcMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
+                MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
+                sessionMap = funcMap.get(func_title);
+                MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
+                MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
+                headerMap = sessionMap.get(session_title);
+                //set selected header
+                MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+                if(headerMap!=null) {
+                    Set<String> stringSet1 = headerMap.keySet();
+                    List<String> aList1 = new ArrayList<String>(stringSet1.size());
+                    for (String x1 : stringSet1)
+                        aList1.add(x1);
+
+                    //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                    selectedHeadersList.clear();
+                    for (int i = 0; i < aList1.size(); i++) {
+                        MyLog.e(TAG, "chs>>list header>> " + aList1.get(i));
+                        SelectedHeader list1 = new SelectedHeader(
+                                aList1.get(i)
+                        );
+                        selectedHeadersList.add(list1);
+                    }
+                    getViewModel.setSelectedHeadersList(selectedHeadersList);
+                    MyLog.e(TAG, "placeorder>>set selectedHeadersList>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
+                }
+                else
+                {
+                    MyLog.e(TAG,"Header map is empty");
+                }
+
+                MyLog.e(TAG, "placeorder>>get selectedHeadersList>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
+                doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
+
+                for(int i=0;i<selectedHeadersList.size();i++) {
+                    checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
+                    SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), session_title, checkedLists);
+                }
+                //get func map
+
+                /*getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
                     @Override
                     public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
                         for (int i = 0; i < selectedHeadersList.size(); i++) {
@@ -222,7 +264,7 @@ public class PlaceOrderFragment extends Fragment {
 
 
                     }
-                });
+                });*/
 
 
             }
