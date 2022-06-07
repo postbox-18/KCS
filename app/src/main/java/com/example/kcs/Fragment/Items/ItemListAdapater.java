@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 
+import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.Gson;
@@ -32,6 +33,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
     private List<ItemList> itemLists;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<CheckedList> selected_checkedLists = new ArrayList<>();
+    private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
     private String TAG = "ItemListAdapater";
     //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
@@ -82,6 +84,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         //img update soon
         //holder.header_img.setText(funList1.getImg());
 
+
         //get func title
         getViewModel.getFunc_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
             @Override
@@ -96,7 +99,13 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                 sessionTitle=s;
             }
         });
-
+        //get Session Date Time
+        getViewModel.getF_mapsdtMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
+                sessionDateTimes = stringListLinkedHashMap.get(funcTitle + "-" + sessionTitle);
+            }
+        });
         //get session map
         getViewModel.getSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>() {
             @Override
@@ -154,8 +163,11 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                     getViewModel.setCheckedLists(checkedLists);
 
                     headerMap.put(header, checkedLists);
-                    sessionMap.put(sessionTitle,headerMap);
+                    String s=sessionTitle+"-"+(sessionDateTimes.get(0).getDate()+" "+sessionDateTimes.get(0).getTime());
+                    MyLog.e(TAG, "placeorder>>date_time>>" + s);
+                    sessionMap.put(s,headerMap);
                     funcMap.put(funcTitle,sessionMap);
+                    MyLog.e(TAG, "placeorder>>date_time sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
 
 
                     //set header map

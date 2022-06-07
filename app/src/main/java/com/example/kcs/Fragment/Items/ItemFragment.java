@@ -3,6 +3,7 @@ package com.example.kcs.Fragment.Items;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunList;
 
+import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -64,6 +66,9 @@ public class ItemFragment extends Fragment {
     private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
     private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
     private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
+    //get date and time
+    private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
+    private String date_time;
 
 
     private String TAG = "ItemFragment";
@@ -142,6 +147,13 @@ public class ItemFragment extends Fragment {
                 session_title=s;
             }
         });
+        //get Session Date Time
+        getViewModel.getF_mapsdtMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
+                sessionDateTimes = stringListLinkedHashMap.get(func_title + "-" + session_title);
+            }
+        });
 
         //get fun map
         getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
@@ -153,7 +165,8 @@ public class ItemFragment extends Fragment {
                 sessionMap=funcMap.get(func_title);
                 MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
                 MyLog.e(TAG, "placeorder>>get sessionMap>>" +session_title);
-                headerMap=sessionMap.get(session_title);
+                date_time=session_title+"-"+(sessionDateTimes.get(0).getDate()+" "+sessionDateTimes.get(0).getTime());
+                headerMap=sessionMap.get(date_time);
                 MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
             }
         });

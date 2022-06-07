@@ -36,6 +36,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
     private GetViewModel getViewModel;
     private LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap = new LinkedHashMap<>();
     private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
+    private String date_time;
     private LinkedHashMap<String, List<SessionDateTime>> f_mapsdtMutable = new LinkedHashMap<>();
     //get header ,fun map
     private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
@@ -77,7 +78,14 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
             holder.session_title.setText(sessionList1.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
         }
-        
+
+        //get Session Date Time
+        getViewModel.getF_mapsdtMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
+                sessionDateTimes = stringListLinkedHashMap.get(funList_title + "-" + sessionList1.getSession_title());
+            }
+        });
 
         //get func map
         getViewModel.getFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
@@ -85,7 +93,8 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap=stringLinkedHashMapLinkedHashMap;
                 sessionMap=funcMap.get(funList_title);
-                headerMap=sessionMap.get(sessionList1.getSession_title());
+                date_time=(sessionList1.getSession_title())+"-"+(sessionDateTimes.get(0).getDate()+" "+sessionDateTimes.get(0).getTime());
+                headerMap=sessionMap.get(date_time);
 
             }
         });

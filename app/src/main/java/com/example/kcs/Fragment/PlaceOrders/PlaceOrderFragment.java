@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +22,7 @@ import com.example.kcs.DialogFragment.DoneDialogfragment;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
+import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.PlaceOrders.Header.PlaceOrderViewCartAdapterHeader;
@@ -85,7 +87,11 @@ public class PlaceOrderFragment extends Fragment {
     //func map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
-
+    //get date and time
+    private LinkedHashMap<String, List<SessionDateTime>> date_timeMap = new LinkedHashMap<>();
+    //get date and time
+    private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
+    private String date_time;
 
     public PlaceOrderFragment() {
         // Required empty public constructor
@@ -136,13 +142,27 @@ public class PlaceOrderFragment extends Fragment {
             }
         });
 
+        //get selected session
+        //get Session Date Time
+        getViewModel.getF_mapsdtMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
+                MyLog.e(TAG, "placeorder>>date_time stringListLinkedHashMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                MyLog.e(TAG, "placeorder>>date_time stringListLinkedHashMap>>" + func_title + "-" + session_title);
+                sessionDateTimes = stringListLinkedHashMap.get(func_title + "-" + session_title);
+                MyLog.e(TAG, "placeorder>>date_time sessionDateTimes>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
+
+            }
+        });
+
         // fun hash map of checked list
         getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
                 sessionMap = funcMap.get(func_title);
-                headerMap = sessionMap.get(session_title);
+                date_time=session_title+"-"+(sessionDateTimes.get(0).getDate()+" "+sessionDateTimes.get(0).getTime());
+                headerMap = sessionMap.get(date_time);
 
                 //set session list
                 Set<String> stringSet = sessionMap.keySet();
@@ -159,10 +179,12 @@ public class PlaceOrderFragment extends Fragment {
                     );
                     selectedSessionLists.add(list);
                 }
+                //set selected session
                 getViewModel.setSelectedSessionLists(selectedSessionLists);
 
+                date_time="";
                 if (selectedSessionLists != null) {
-                    viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists);
+                    viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists,date_time);
                     recyclerview_session.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "selected session list is empty");
@@ -245,9 +267,13 @@ public class PlaceOrderFragment extends Fragment {
                 MyLog.e(TAG, "placeorder>>get selectedHeadersList>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
                 doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
 
+
+                    date_time="";
+                        MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
+
                 for(int i=0;i<selectedHeadersList.size();i++) {
                     checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
-                    SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), session_title, checkedLists);
+                    SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), session_title, checkedLists,date_time);
                 }
                 //get func map
 
@@ -282,7 +308,7 @@ public class PlaceOrderFragment extends Fragment {
     }
 
 
-    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1) {
+    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String date_time) {
         String session_str = "";
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");

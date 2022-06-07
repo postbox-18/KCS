@@ -34,7 +34,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "PlaceOrderViewCartAdapterSession";
-    private String func_title,s_user_name;
+    private String func_title,s_user_name,date_time;
     private List<SelectedSessionList> sessionLists=new ArrayList<>();
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders=new ArrayList<>();
@@ -44,11 +44,12 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
 
 
 
-    public PlaceOrderViewCartAdapterSession(Context context, GetViewModel getViewModel,String s,List<SelectedSessionList> sessionLists) {
+    public PlaceOrderViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String date_time) {
         this.context=context;
         this.getViewModel=getViewModel;
         this.func_title=s;
         this.sessionLists=sessionLists;
+        this.date_time=date_time;
     }
 
 

@@ -25,6 +25,7 @@ import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.Header.HeaderList;
+import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemFragment;
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
     //func map
     private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
     private List<SelectedSessionList> selectedSessionLists=new ArrayList<>();
+    private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
+    private String date_time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +206,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-
+        //get Session Date Time
+        getViewModel.getF_mapsdtMutableLiveData().observe(this, new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
+                sessionDateTimes = stringListLinkedHashMap.get(func_title + "-" + session_title);
+            }
+        });
 
         //func map
         getViewModel.getFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
@@ -215,7 +224,8 @@ public class MainActivity extends AppCompatActivity {
                 sessionMap=funcMap.get(func_title);
                 MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
                 MyLog.e(TAG, "placeorder>>get sessionMap>>" +session_title);
-                headerMap=sessionMap.get(session_title);
+                date_time=session_title+"-"+(sessionDateTimes.get(0).getDate()+" "+sessionDateTimes.get(0).getTime());
+                headerMap=sessionMap.get(date_time);
                 MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
 
                 Set<String> stringSet = headerMap.keySet();
