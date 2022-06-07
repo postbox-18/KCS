@@ -58,7 +58,7 @@
                 android:textColor="@color/btn_gradient_light"
                 android:drawablePadding="5dp"
                 android:hint="--:--:--"
-                android:drawableStart="@drawable/ic_watch"
+                android:drawableStart="@drawable/ic_truckclock"
                 android:fontFamily="@font/bebaskai"/>
 
         </LinearLayout>
