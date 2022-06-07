@@ -121,21 +121,20 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                             getViewModel.setDate_picker(sessionDateTimes.get(0).getDate());
                             getViewModel.setAlert(1);
                             //clear checked list
-                            MyLog.e(TAG, "placeorder>>get funcMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
+                            /*MyLog.e(TAG, "placeorder>>get funcMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
                             MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
-                            MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+                            MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));*/
 
                            /* MyLog.e(TAG, "placeorder>>get funcMap::before>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
                             MyLog.e(TAG, "placeorder>>get headerMap::before>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
                             headerMap=new LinkedHashMap<>();
                             getViewModel.setHeaderMap(headerMap);
                             MyLog.e(TAG, "placeorder>>get funcMap::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
-                            MyLog.e(TAG, "placeorder>>get headerMap::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
-
+                            MyLog.e(TAG, "placeorder>>get headerMap::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));*/
                             MyLog.e(TAG, "placeorder>>get selected_s_map::before>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
                             selected_s_map=new ArrayList<>();
                             getViewModel.setCheck_s_map(selected_s_map);
-                            MyLog.e(TAG, "placeorder>>get selected_s_map::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));*/
+                            MyLog.e(TAG, "placeorder>>get selected_s_map::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
 
                         }
 
