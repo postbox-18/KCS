@@ -37,15 +37,18 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
     private List<SelectedSessionList> sessionLists=new ArrayList<>();
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders=new ArrayList<>();
-    private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
 
 
 
-    public PlaceOrderViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String date_time, LinkedHashMap<String, List<CheckedList>> headerMap) {
+    public PlaceOrderViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String date_time, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap) {
         this.context=context;
         this.getViewModel=getViewModel;
         this.func_title=s;
-        this.headerMap=headerMap;
+        this.sessionMap=sessionMap;
         this.sessionLists=sessionLists;
         this.date_time=date_time;
     }
@@ -67,10 +70,10 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
         s_user_name=new SharedPreferences_data(context).getS_user_name();
 
         final SelectedSessionList list=sessionLists.get(position);
-        String s=list.getSession_title()+" "+list.getDate_time();
+        String s=list.getSession_title()+"  "+list.getDate_time();
         holder.session_title.setText(s);
-
-        MyLog.e(TAG, "placeorder>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+        String a=list.getSession_title()+"-"+list.getDate_time();
+        headerMap=sessionMap.get(a);
         Set<String> stringSet = headerMap.keySet();
         List<String> aList = new ArrayList<String>(stringSet.size());
         for (String x : stringSet)
@@ -82,10 +85,10 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
             MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
             SelectedHeader list1 = new SelectedHeader(
                     aList.get(i)
-
             );
             selectedHeaders.add(list1);
         }
+
         getViewModel.setSelectedHeadersList(selectedHeaders);
         holder.recyclerview_order_item_details.setHasFixedSize(true);
         holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));

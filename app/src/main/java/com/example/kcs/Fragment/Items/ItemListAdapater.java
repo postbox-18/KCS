@@ -132,6 +132,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         }
                     }
                 } else {
+                    checkedLists=new ArrayList<>();
                     MyLog.e(TAG, "checked>> selected size is null>>");
                 }
             }

@@ -166,16 +166,25 @@ public class ItemFragment extends Fragment {
                 MyLog.e(TAG, "placeorders>>get sessionMap>>" + session_title);
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getDate_time());
-                    MyLog.e(TAG, "placeorders>>get date_time>>" + date_time);
-                    if (sessionMap == null) {
-                        sessionMap=new LinkedHashMap<>();
-                        MyLog.e(TAG, "placeorders>>date_time headerMap null");
-                        // headerMap=sessionMap.get(date_time);
-                    } else {
-                        headerMap = sessionMap.get(date_time);
-                        MyLog.e(TAG, "placeorders>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+                    if(session_title.equals(selectedSessionLists.get(k).getSession_title())) {
+                        date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getDate_time());
+                        MyLog.e(TAG, "placeorders>>get date_time>>" + date_time);
+                        if (sessionMap == null) {
+                            sessionMap = new LinkedHashMap<>();
+                            MyLog.e(TAG, "placeorders>>date_time headerMap null");
+                            // headerMap=sessionMap.get(date_time);
+                        } else {
+                            headerMap = sessionMap.get(date_time);
+                            MyLog.e(TAG, "placeorders>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+                        }
+                        break;
                     }
+                    else
+                    {
+                        continue;
+                    }
+
+
 
                 }
 

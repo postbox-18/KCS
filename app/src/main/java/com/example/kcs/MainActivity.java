@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getSelectedSessionListsMutableLiveData().observe(this, new Observer<List<SelectedSessionList>>() {
             @Override
             public void onChanged(List<SelectedSessionList> selectedSessionLists1) {
-                selectedSessionLists=selectedSessionLists1;
+                selectedSessionLists = selectedSessionLists1;
                 MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                 sessionMap = funcMap.get(func_title);
                 MyLog.e(TAG, "placeorder>>date_time sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
@@ -211,33 +211,38 @@ public class MainActivity extends AppCompatActivity {
                 MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getDate_time());
-                    headerMap = sessionMap.get(date_time);
-                    MyLog.e(TAG, "placeorder>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+                    if (session_title.equals(selectedSessionLists.get(k).getSession_title())) {
+                        date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getDate_time());
+                        headerMap = sessionMap.get(date_time);
+                        MyLog.e(TAG, "placeorder>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
 
-                    Set<String> stringSet = headerMap.keySet();
-                    List<String> aList = new ArrayList<String>(stringSet.size());
-                    for (String x : stringSet)
-                        aList.add(x);
+                        Set<String> stringSet = headerMap.keySet();
+                        List<String> aList = new ArrayList<String>(stringSet.size());
+                        for (String x : stringSet)
+                            aList.add(x);
 
-                    //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                    userItemLists.clear();
-                    for (int i = 0; i < aList.size(); i++) {
-                        MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
-                        MyLog.e(TAG, "chs>>list size " + headerMap.get(aList.get(i)).size());
-                        UserItemList userItemList = new UserItemList(
-                                aList.get(i),
-                                headerMap.get(aList.get(i)).size()
-                        );
-                        userItemLists.add(userItemList);
-                    }
-                    getViewModel.setUserItemLists(userItemLists);
-                    MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
-                    if (userItemLists.size() > 0) {
-                        snackbar.show();
-                        MyLog.e(TAG, "chs>>snackbar Show");
+                        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                        userItemLists.clear();
+                        for (int i = 0; i < aList.size(); i++) {
+                            MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                            MyLog.e(TAG, "chs>>list size " + headerMap.get(aList.get(i)).size());
+                            UserItemList userItemList = new UserItemList(
+                                    aList.get(i),
+                                    headerMap.get(aList.get(i)).size()
+                            );
+                            userItemLists.add(userItemList);
+                        }
+                        getViewModel.setUserItemLists(userItemLists);
+                        MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
+                        if (userItemLists.size() > 0) {
+                            snackbar.show();
+                            MyLog.e(TAG, "chs>>snackbar Show");
+                        } else {
+                            snackbar.dismiss();
+                        }
+                        break;
                     } else {
-                        snackbar.dismiss();
+                        continue;
                     }
                 }
             }

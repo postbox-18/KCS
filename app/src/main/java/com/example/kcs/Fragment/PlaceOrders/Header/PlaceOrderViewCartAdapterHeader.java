@@ -62,10 +62,6 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
                 viewCartAdapter = new ViewCartAdapter(context, getViewModel, checkedLists);
                 holder.recyclerview_item_list.setAdapter(viewCartAdapter);
 
-
-
-
-
     }
 
 
