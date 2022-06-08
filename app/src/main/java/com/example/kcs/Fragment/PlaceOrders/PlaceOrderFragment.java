@@ -89,8 +89,6 @@ public class PlaceOrderFragment extends Fragment {
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
     //get date and time
     private LinkedHashMap<String, List<SessionDateTime>> date_timeMap = new LinkedHashMap<>();
-    //get date and time
-    private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
     private String date_time;
 
     public PlaceOrderFragment() {
@@ -142,18 +140,8 @@ public class PlaceOrderFragment extends Fragment {
             }
         });
 
-        //get selected session
-        //get Session Date Time
-        getViewModel.getF_mapsdtMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
-                MyLog.e(TAG, "placeorder>>date_time stringListLinkedHashMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                MyLog.e(TAG, "placeorder>>date_time stringListLinkedHashMap>>" + func_title + "-" + session_title);
-                sessionDateTimes = stringListLinkedHashMap.get(func_title + "-" + session_title);
-                MyLog.e(TAG, "placeorder>>date_time sessionDateTimes>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
 
-            }
-        });
+        
 
         // fun hash map of checked list
         getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
@@ -161,8 +149,7 @@ public class PlaceOrderFragment extends Fragment {
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
                 sessionMap = funcMap.get(func_title);
-                date_time=session_title+"-"+(sessionDateTimes.get(0).getDate()+" "+sessionDateTimes.get(0).getTime());
-                headerMap = sessionMap.get(date_time);
+                MyLog.e(TAG, "placeorder>>date_time sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
 
                 //set session list
                 Set<String> stringSet = sessionMap.keySet();
@@ -173,23 +160,45 @@ public class PlaceOrderFragment extends Fragment {
                 //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
                 selectedSessionLists.clear();
                 for (int i = 0; i < aList.size(); i++) {
-                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                    String[] arr=(aList.get(i)).split("-");
+
+                    //set selected session list and session date and time
+                    MyLog.e(TAG, "chs>>list header>> " + arr[0]);
                     SelectedSessionList list = new SelectedSessionList(
-                            aList.get(i)
+                            arr[0],
+                            arr[1]
                     );
                     selectedSessionLists.add(list);
                 }
+
+                MyLog.e(TAG, "placeorder>>date_time selectedSessionLists>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedSessionLists));
                 //set selected session
                 getViewModel.setSelectedSessionLists(selectedSessionLists);
 
-                date_time="";
-                if (selectedSessionLists != null) {
-                    viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists,date_time);
-                    recyclerview_session.setAdapter(viewCartAdapter);
-                } else {
-                    MyLog.e(TAG, "selected session list is empty");
+                if(sessionMap==null)
+                {
+                    headerMap=new LinkedHashMap<>();
+                    // headerMap=sessionMap.get(date_time);
                 }
+                else {
 
+                    for (int i = 0; i < selectedSessionLists.size(); i++) {
+                        date_time = selectedSessionLists.get(i).getSession_title() + "-" + (selectedSessionLists.get(i).getDate_time());
+                        MyLog.e(TAG, "placeorder>>date_time"+date_time);
+                        headerMap = sessionMap.get(date_time);
+                        MyLog.e(TAG, "placeorder>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+
+                        MyLog.e(TAG, "placeorder>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+
+
+                        if (selectedSessionLists != null) {
+                            viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time, headerMap);
+                            recyclerview_session.setAdapter(viewCartAdapter);
+                        } else {
+                            MyLog.e(TAG, "selected session list is empty");
+                        }
+                    }
+                }
 
 
 
@@ -231,17 +240,23 @@ public class PlaceOrderFragment extends Fragment {
                         session_title = s;
                     }
                 });
+                //get selected session date and time lisy
+                /*getViewModel.getSelectedSessionDateTimesMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SelectedSessionDateTime>>() {
+                    @Override
+                    public void onChanged(List<SelectedSessionDateTime> selectedSessionDateTimes) {
+
+                    }
+                });*/
 
 
-                MyLog.e(TAG, "placeorder>>get funcMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
                 MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                 sessionMap = funcMap.get(func_title);
-                MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
                 MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
-                headerMap = sessionMap.get(session_title);
+                for(int k=0;k<selectedSessionLists.size();k++)
+                {
+                headerMap = sessionMap.get(selectedSessionLists.get(k).getSession_title() + "-" + selectedSessionLists.get(k).getDate_time());
                 //set selected header
-                MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
-                if(headerMap!=null) {
+                if (headerMap != null) {
                     Set<String> stringSet1 = headerMap.keySet();
                     List<String> aList1 = new ArrayList<String>(stringSet1.size());
                     for (String x1 : stringSet1)
@@ -257,40 +272,20 @@ public class PlaceOrderFragment extends Fragment {
                         selectedHeadersList.add(list1);
                     }
                     getViewModel.setSelectedHeadersList(selectedHeadersList);
-                    MyLog.e(TAG, "placeorder>>set selectedHeadersList>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
-                }
-                else
-                {
-                    MyLog.e(TAG,"Header map is empty");
+                } else {
+                    MyLog.e(TAG, "Header map is empty");
                 }
 
-                MyLog.e(TAG, "placeorder>>get selectedHeadersList>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
                 doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
 
 
-                    date_time="";
-                        MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
+                MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
 
-                for(int i=0;i<selectedHeadersList.size();i++) {
+                for (int i = 0; i < selectedHeadersList.size(); i++) {
                     checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
-                    SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), session_title, checkedLists,date_time);
+                    SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), session_title, checkedLists, date_time);
                 }
-                //get func map
-
-                /*getViewModel.getF_mapMutable().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
-                    @Override
-                    public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
-                        for (int i = 0; i < selectedHeadersList.size(); i++) {
-                            stringListLinkedHashMap = stringListLinkedHashMap1;
-
-                            checkedLists = stringListLinkedHashMap.get(selectedHeadersList.get(i).getHeader());
-                            SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), session_title, checkedLists);
-
-                        }
-
-
-                    }
-                });*/
+            }
 
 
             }

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.Items.CheckedList;
+import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.TimeList;
@@ -29,26 +30,28 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHolder>  {
+public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHolder> {
     private Context context;
     private List<SessionList> sessionLists;
-    private String TAG="SessionAdapter",funList_title;
+    private String TAG = "SessionAdapter", funList_title;
     private GetViewModel getViewModel;
     private LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap = new LinkedHashMap<>();
     private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
+    private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
     private String date_time;
     private LinkedHashMap<String, List<SessionDateTime>> f_mapsdtMutable = new LinkedHashMap<>();
     //get header ,fun map
-    private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
-    private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
-    private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
+    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
 
     private List<LinkedHashMap<String, List<CheckedList>>> selected_s_map = new ArrayList<>();
+
     public SessionAdapter(Context context, List<SessionList> sessionLists, GetViewModel getViewModel, String funList_title) {
-        this.context=context;
-        this.sessionLists=sessionLists;
-        this.getViewModel=getViewModel;
-        this.funList_title=funList_title;
+        this.context = context;
+        this.sessionLists = sessionLists;
+        this.getViewModel = getViewModel;
+        this.funList_title = funList_title;
     }
 
     @NonNull
@@ -64,7 +67,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
         final SessionList sessionList1 = sessionLists.get(position);
 
         String[] str = (sessionList1.getSession_title()).split(" ");
-        if(str.length>1) {
+        if (str.length > 1) {
             Spannable word = new SpannableString(str[0]);
             word.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.colorSecondary)), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.session_title.setText(word);
@@ -72,29 +75,46 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
             wordTwo.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.colorPrimary)), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.session_title.append(" ");
             holder.session_title.append(wordTwo);
-        }
-        else
-        {
+        } else {
             holder.session_title.setText(sessionList1.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
         }
 
-        //get Session Date Time
-        getViewModel.getF_mapsdtMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+        //get session date and time
+        getViewModel.getSessionDateTimesMutableLiveData().observe((LifecycleOwner) context, new Observer<List<SessionDateTime>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
-                sessionDateTimes = stringListLinkedHashMap.get(funList_title + "-" + sessionList1.getSession_title());
+            public void onChanged(List<SessionDateTime> sessionDateTimes1) {
+                sessionDateTimes = sessionDateTimes1;
             }
         });
+        //get selected session list
+        getViewModel.getSelectedSessionListsMutableLiveData().observe((LifecycleOwner) context, new Observer<List<SelectedSessionList>>() {
+            @Override
+            public void onChanged(List<SelectedSessionList> selectedSessionLists1) {
+                selectedSessionLists = selectedSessionLists1;
+                sessionMap = funcMap.get(funList_title);
+                if (sessionMap == null) {
+                    sessionMap=new LinkedHashMap<>();
+                }
+                else {
+                    MyLog.e(TAG, "placeorder>>date_time sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
+                    for (int k = 0; k < selectedSessionLists.size(); k++) {
+                        date_time = (sessionList1.getSession_title()) + "-" + (selectedSessionLists.get(k).getDate_time());
+                        headerMap = sessionMap.get(date_time);
+                        MyLog.e(TAG, "placeorder>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+                    }
+                }
+
+            }
+        });
+
 
         //get func map
         getViewModel.getFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
-                funcMap=stringLinkedHashMapLinkedHashMap;
-                sessionMap=funcMap.get(funList_title);
-                date_time=(sessionList1.getSession_title())+"-"+(sessionDateTimes.get(0).getDate()+" "+sessionDateTimes.get(0).getTime());
-                headerMap=sessionMap.get(date_time);
+                funcMap = stringLinkedHashMapLinkedHashMap;
+
 
             }
         });
@@ -113,16 +133,14 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                         f_mapsdtMutable = stringListLinkedHashMap;
                         MyLog.e(TAG, "datetime>>set >>" + funList_title + "-" + sessionList1.getSession_title());
                         sessionDateTimes = f_mapsdtMutable.get(funList_title + "-" + sessionList1.getSession_title());
-                        if((sessionDateTimes==null) || (sessionDateTimes.isEmpty())) {
-                            sessionDateTimes=new ArrayList<>();
+                        if ((sessionDateTimes == null) || (sessionDateTimes.isEmpty())) {
+                            sessionDateTimes = new ArrayList<>();
                             getViewModel.setSessionDateTimes(sessionDateTimes);
                             getViewModel.setTimepicker("");
                             getViewModel.setDate_picker("");
 
 
-                        }
-                        else
-                        {
+                        } else {
 
                             //clear session date and time list
                             getViewModel.setSessionDateTimes(sessionDateTimes);
@@ -130,20 +148,11 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                             getViewModel.setDate_picker(sessionDateTimes.get(0).getDate());
                             getViewModel.setAlert(1);
                             //clear checked list
-                            /*MyLog.e(TAG, "placeorder>>get funcMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
-                            MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
-                            MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));*/
-
-                           /* MyLog.e(TAG, "placeorder>>get funcMap::before>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
-                            MyLog.e(TAG, "placeorder>>get headerMap::before>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
-                            headerMap=new LinkedHashMap<>();
+                            headerMap = new LinkedHashMap<>();
+                            MyLog.e(TAG, "placeorders>>date_time cleared headerMap");
                             getViewModel.setHeaderMap(headerMap);
-                            MyLog.e(TAG, "placeorder>>get funcMap::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
-                            MyLog.e(TAG, "placeorder>>get headerMap::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));*/
-                            MyLog.e(TAG, "placeorder>>get selected_s_map::before>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
-                            selected_s_map=new ArrayList<>();
+                            selected_s_map = new ArrayList<>();
                             getViewModel.setCheck_s_map(selected_s_map);
-                            MyLog.e(TAG, "placeorder>>get selected_s_map::after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
 
                         }
 
@@ -157,18 +166,19 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return sessionLists.size() ;
+        return sessionLists.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private LinearLayout session_linear;
         private ImageView session_img;
         private TextView session_title;
+
         public ViewHolder(View view) {
             super(view);
-            session_img=view.findViewById(R.id.session_img);
-            session_title=view.findViewById(R.id.session_title);
-            session_linear=view.findViewById(R.id.session_linear);
+            session_img = view.findViewById(R.id.session_img);
+            session_title = view.findViewById(R.id.session_title);
+            session_linear = view.findViewById(R.id.session_linear);
 
         }
     }

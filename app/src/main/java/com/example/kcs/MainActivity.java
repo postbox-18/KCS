@@ -5,7 +5,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,16 +24,13 @@ import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.Header.HeaderList;
-import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemFragment;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemListAdapters;
-import com.example.kcs.Fragment.PlaceOrders.Header.PlaceOrderViewCartAdapterHeader;
 import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
-import com.example.kcs.Fragment.PlaceOrders.Session.PlaceOrderViewCartAdapterSession;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Profile.ProfileFragment;
@@ -78,15 +74,14 @@ public class MainActivity extends AppCompatActivity {
     private List<HeaderList> headerLists = new ArrayList<>();
     private CardView view_cart_cardView;
     private String user_name;
-    private Integer integer, frag_integer=-1;
+    private Integer integer, frag_integer = -1;
     //header map
-    private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
+    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
     //session map
-    private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
     //func map
-    private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
-    private List<SelectedSessionList> selectedSessionLists=new ArrayList<>();
-    private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
+    private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
     private String date_time;
 
     @Override
@@ -119,15 +114,13 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getBreadCrumbListsMutableLiveData().observe(this, new Observer<List<BreadCrumbList>>() {
             @Override
             public void onChanged(List<BreadCrumbList> breadCrumbLists) {
-                breadcrumbsList=breadCrumbLists;
+                breadcrumbsList = breadCrumbLists;
                 if (breadcrumbsList != null) {
                     breadCrumbsAdapter = new BreadCrumbsAdapter(getApplicationContext(), getViewModel, breadcrumbsList);
                     recyclerview_breadcrumbs.setAdapter(breadCrumbsAdapter);
                 }
             }
         });
-
-
 
 
         //get header title
@@ -206,11 +199,47 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-        //get Session Date Time
-        getViewModel.getF_mapsdtMutableLiveData().observe(this, new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+        //get selected session list
+        getViewModel.getSelectedSessionListsMutableLiveData().observe(this, new Observer<List<SelectedSessionList>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
-                sessionDateTimes = stringListLinkedHashMap.get(func_title + "-" + session_title);
+            public void onChanged(List<SelectedSessionList> selectedSessionLists1) {
+                selectedSessionLists=selectedSessionLists1;
+                MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
+                sessionMap = funcMap.get(func_title);
+                MyLog.e(TAG, "placeorder>>date_time sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
+
+                MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
+
+                for (int k = 0; k < selectedSessionLists.size(); k++) {
+                    date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getDate_time());
+                    headerMap = sessionMap.get(date_time);
+                    MyLog.e(TAG, "placeorder>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+
+                    Set<String> stringSet = headerMap.keySet();
+                    List<String> aList = new ArrayList<String>(stringSet.size());
+                    for (String x : stringSet)
+                        aList.add(x);
+
+                    //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                    userItemLists.clear();
+                    for (int i = 0; i < aList.size(); i++) {
+                        MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                        MyLog.e(TAG, "chs>>list size " + headerMap.get(aList.get(i)).size());
+                        UserItemList userItemList = new UserItemList(
+                                aList.get(i),
+                                headerMap.get(aList.get(i)).size()
+                        );
+                        userItemLists.add(userItemList);
+                    }
+                    getViewModel.setUserItemLists(userItemLists);
+                    MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
+                    if (userItemLists.size() > 0) {
+                        snackbar.show();
+                        MyLog.e(TAG, "chs>>snackbar Show");
+                    } else {
+                        snackbar.dismiss();
+                    }
+                }
             }
         });
 
@@ -218,39 +247,10 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
-                funcMap=stringLinkedHashMapLinkedHashMap;
-                MyLog.e(TAG, "placeorder>>get funcMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
-                MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
-                sessionMap=funcMap.get(func_title);
-                MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
-                MyLog.e(TAG, "placeorder>>get sessionMap>>" +session_title);
-                date_time=session_title+"-"+(sessionDateTimes.get(0).getDate()+" "+sessionDateTimes.get(0).getTime());
-                headerMap=sessionMap.get(date_time);
-                MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+                funcMap = stringLinkedHashMapLinkedHashMap;
 
-                Set<String> stringSet = headerMap.keySet();
-                List<String> aList = new ArrayList<String>(stringSet.size());
-                for (String x : stringSet)
-                    aList.add(x);
 
-                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                userItemLists.clear();
-                for (int i = 0; i < aList.size(); i++) {
-                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
-                    MyLog.e(TAG, "chs>>list size " + headerMap.get(aList.get(i)).size());
-                    UserItemList userItemList = new UserItemList(
-                            aList.get(i),
-                            headerMap.get(aList.get(i)).size()
-                    );
-                    userItemLists.add(userItemList);
-                }
-                getViewModel.setUserItemLists(userItemLists);
-                MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
-                if (userItemLists.size() > 0) {
-                    snackbar.show();
-                } else {
-                    snackbar.dismiss();
-                }
+
             }
         });
 
@@ -329,22 +329,22 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
-                        Set<String> stringSet = headerMap.keySet();
-                        List<String> aList = new ArrayList<String>(stringSet.size());
-                        for (String x : stringSet)
-                            aList.add(x);
+                Set<String> stringSet = headerMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
 
-                        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                        selectedHeadersList.clear();
-                        for (int i = 0; i < aList.size(); i++) {
-                            MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
-                            SelectedHeader list = new SelectedHeader(
-                                    aList.get(i)
+                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                selectedHeadersList.clear();
+                for (int i = 0; i < aList.size(); i++) {
+                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                    SelectedHeader list = new SelectedHeader(
+                            aList.get(i)
 
-                            );
-                            selectedHeadersList.add(list);
-                        }
-                        getViewModel.setSelectedHeadersList(selectedHeadersList);
+                    );
+                    selectedHeadersList.add(list);
+                }
+                getViewModel.setSelectedHeadersList(selectedHeadersList);
 
 
                 //which fragment going to pass
@@ -387,12 +387,9 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(Integer integer) {
                 frag_integer = integer;
                 //breadCrums
-                if(integer==0)
-                {
+                if (integer == 0) {
                     breadCrums.setVisibility(View.GONE);
-                }
-                else
-                {
+                } else {
                     breadCrums.setVisibility(View.VISIBLE);
 
                 }
@@ -453,7 +450,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     /*private void GetFuncTitleList(List<FunList> funLists, LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap, Integer integer) {
@@ -486,13 +482,11 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             ///val done=supportFragmentManager.popBackStackImmediate()
-            if(breadcrumbsList!=null && breadcrumbsList.size()>0) {
+            if (breadcrumbsList != null && breadcrumbsList.size() > 0) {
                 breadcrumbsList.remove(breadcrumbsList.size() - 1);
                 getViewModel.setBreadCrumbLists(breadcrumbsList);
                 breadCrums.setVisibility(View.VISIBLE);
-            }
-            else
-            {
+            } else {
                 breadCrums.setVisibility(View.GONE);
             }
             //super.onBackPressed();

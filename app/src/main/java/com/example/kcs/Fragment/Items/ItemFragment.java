@@ -3,7 +3,6 @@ package com.example.kcs.Fragment.Items;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,8 +17,8 @@ import android.widget.TextView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunList;
 
-import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
+import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
@@ -63,11 +62,11 @@ public class ItemFragment extends Fragment {
     private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps=new ArrayList<>();
     //private  LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
     private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
+    private   List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
     private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
     private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
     private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
-    //get date and time
-    private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
+
     private String date_time;
 
 
@@ -147,11 +146,13 @@ public class ItemFragment extends Fragment {
                 session_title=s;
             }
         });
-        //get Session Date Time
-        getViewModel.getF_mapsdtMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+
+        //get selected session list
+        getViewModel.getSelectedSessionListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SelectedSessionList>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
-                sessionDateTimes = stringListLinkedHashMap.get(func_title + "-" + session_title);
+            public void onChanged(List<SelectedSessionList> selectedSessionLists1) {
+                selectedSessionLists = selectedSessionLists1;
+
             }
         });
 
@@ -159,15 +160,25 @@ public class ItemFragment extends Fragment {
         getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
-                funcMap=stringLinkedHashMapLinkedHashMap;
-                MyLog.e(TAG, "placeorder>>get funcMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
-                MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
-                sessionMap=funcMap.get(func_title);
-                MyLog.e(TAG, "placeorder>>get sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
-                MyLog.e(TAG, "placeorder>>get sessionMap>>" +session_title);
-                date_time=session_title+"-"+(sessionDateTimes.get(0).getDate()+" "+sessionDateTimes.get(0).getTime());
-                headerMap=sessionMap.get(date_time);
-                MyLog.e(TAG, "placeorder>>get headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+                funcMap = stringLinkedHashMapLinkedHashMap;
+                sessionMap = funcMap.get(func_title);
+                MyLog.e(TAG, "placeorders>>date_time sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
+                MyLog.e(TAG, "placeorders>>get sessionMap>>" + session_title);
+
+                for (int k = 0; k < selectedSessionLists.size(); k++) {
+                    date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getDate_time());
+                    MyLog.e(TAG, "placeorders>>get date_time>>" + date_time);
+                    if (sessionMap == null) {
+                        sessionMap=new LinkedHashMap<>();
+                        MyLog.e(TAG, "placeorders>>date_time headerMap null");
+                        // headerMap=sessionMap.get(date_time);
+                    } else {
+                        headerMap = sessionMap.get(date_time);
+                        MyLog.e(TAG, "placeorders>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+                    }
+
+                }
+
             }
         });
 
@@ -185,6 +196,8 @@ public class ItemFragment extends Fragment {
         getViewModel.getItemHeaderMutable().observe(getViewLifecycleOwner(), new Observer<List<ItemList>>() {
             @Override
             public void onChanged(List<ItemList> itemLists1) {
+                MyLog.e(TAG, "placeorders>> ItemListAdapater" );
+                MyLog.e(TAG, "placeorders>>date_time setAdapter headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
                 itemLists = itemLists1;
                 recyclerview_item.setHasFixedSize(true);
                 recyclerview_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
