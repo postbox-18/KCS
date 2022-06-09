@@ -12,11 +12,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.adm.Classes.MyLog;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -34,7 +37,7 @@ public class ItemFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String mParam1;
-    private String mParam2;
+    private String mParam2,TAG="ItemFragment";
     private RecyclerView recyclerView_item;
     private ItemAdapter itemAdapter;
     private List<ItemArrayList> itemList=new ArrayList<>();
@@ -68,6 +71,7 @@ public class ItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_item, container, false);
+
         getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
         recyclerView_item=view.findViewById(R.id.recyclerview_item_list);
         header_title=view.findViewById(R.id.header_title);
@@ -90,6 +94,15 @@ public class ItemFragment extends Fragment {
                 recyclerView_item.setAdapter(itemAdapter);
             }
         });
+
+        //get check hash map
+        getViewModel.getCheckItemArrayListMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<ItemArrayList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<ItemArrayList>> stringListLinkedHashMap) {
+                getViewModel.updateItem(stringListLinkedHashMap);
+            }
+        });
+
 
         return view;
     }

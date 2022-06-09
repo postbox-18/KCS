@@ -11,22 +11,32 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
+import com.example.adm.Fragments.Orders.BottomSheet.SelectedHeader;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
-    private List<ItemArrayList> item;
+    private List<ItemArrayList> item=new ArrayList<>();
     private Context context;
-    private String TAG="ItemAdapter";
+    private String TAG="ItemAdapter",header_title;
+    private GetViewModel getViewModel;
+    private LinkedHashMap<String,List<ItemArrayList>> selectedHeaderMap=new LinkedHashMap<>();
     public ItemAdapter(Context context, List<ItemArrayList> item, GetViewModel getViewModel) {
         this.item = item;
         this.context = context;
+        this.getViewModel = getViewModel;
     }
 
     @NonNull
@@ -42,6 +52,24 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ItemAdapter.ViewHolder holder, int position) {
         final ItemArrayList item1 = item.get(position);
         holder.item_title.setText(item1.getItem());
+
+
+        //get hash map
+        getViewModel.getItemArrayListMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<ItemArrayList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<ItemArrayList>> stringListLinkedHashMap) {
+                selectedHeaderMap=stringListLinkedHashMap;
+            }
+        });
+
+        //get header title
+        getViewModel.getHeader_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                header_title=s;
+            }
+        });
+
         if((item1.getSelected()).equals("true"))
         {
             holder.switchView.setChecked(true);
@@ -56,20 +84,26 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         }
 
 
+
+
         holder.switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(compoundButton.isChecked())
                 {
-                    MyLog.e(TAG, "switch>> enabled" );
+                    MyLog.e(TAG, "switch>>get enabled"+b );
                     holder.item_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
                 }
                 else
                 {
-                    MyLog.e(TAG, "switch>> not enabled" );
+                    MyLog.e(TAG, "switch>>get not enabled" +b);
                     holder.item_title.setTextColor(context.getResources().getColor(R.color.light_gray));
 
                 }
+                item=selectedHeaderMap.get(header_title);
+                selectedHeaderMap.get(header_title).get(position).setSelected(String.valueOf(b));
+                getViewModel.setCheckItemArrayListMap(selectedHeaderMap);
+
             }
         });
     }
