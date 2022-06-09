@@ -22,7 +22,7 @@ PENDING
 
 16-bottom sheet in my orders scroll problem
 17-Refresh swipe down
-18-Save order to clear all checked list
+
 
 FINISHED
 1-alert check box to select the func
@@ -35,3 +35,4 @@ FINISHED
 11-pending in MyOrders recyclerview
 12-problem in cart view fragment back btn
 15-lottie files for order saved
+18-Save order to clear all checked list
