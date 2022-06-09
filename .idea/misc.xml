@@ -36,6 +36,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/app_bar_home__sample.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/back_btn_layout.xml" value="0.15904232578024796" />
         <entry key="app/src/main/res/layout/bottom_sheet_item_list.xml" value="0.17708333333333334" />
         <entry key="app/src/main/res/layout/bottom_sheet_list.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/bottom_sheet_list_header_item_list.xml" value="0.19270833333333334" />
@@ -44,12 +45,16 @@
         <entry key="app/src/main/res/layout/bottom_sheet_order_item_list.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/bottom_sheet_order_session.xml" value="0.15904232578024796" />
         <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/fragment_control__panel.xml" value="0.15904232578024796" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_item.xml" value="0.15904232578024796" />
         <entry key="app/src/main/res/layout/fragment_orders.xml" value="0.17864583333333334" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_user.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/header_cardview.xml" value="0.14" />
         <entry key="app/src/main/res/layout/img_activity.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/item_cardview.xml" value="0.15904232578024796" />
         <entry key="app/src/main/res/layout/list_cardview.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/nav_header_home__sample.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/order_cardview.xml" value="0.21" />

@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+
             <androidx.cardview.widget.CardView
-                android:id="@+id/header2"
-                android:layout_width="match_parent"
+                android:id="@+id/header_cardView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:orientation="horizontal"
+                android:layout_margin="25dp"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="3dp">
+                >
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:orientation="vertical">
-                    <com.google.android.material.textfield.TextInputEditText
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:orientation="horizontal"
+                        app:cardCornerRadius="10dp"
+                        >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/skcs_logo"/>
+                    </androidx.cardview.widget.CardView>
+                    <TextView
                         android:id="@+id/header_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="item"/>
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="14dp"
+                        android:padding="8dp"
+                        android:textStyle="bold|italic"
+                        android:gravity="center"
+                        android:text="item list "/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-        </LinearLayout>
+
 
     </LinearLayout>
 </LinearLayout>

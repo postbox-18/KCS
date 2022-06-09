@@ -74,7 +74,6 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         getViewModel.getSs_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap) {
-                MyLog.e(TAG,"sessions>>f_map>>stringListLinkedHashMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                 MyLog.e(TAG,"sessions>>f_map>>stringListLinkedHashMap>>"+orderLists1.getS_user_name()+"-"+orderLists1.getFunc());
                 sessionLists=stringListLinkedHashMap.get(orderLists1.getS_user_name()+"-"+orderLists1.getFunc());
                 holder.recyclerview_session.setHasFixedSize(true);

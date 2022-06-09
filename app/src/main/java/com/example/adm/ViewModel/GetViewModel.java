@@ -11,9 +11,9 @@ import com.example.adm.Classes.CheckEmail;
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SessionList;
 import com.example.adm.Classes.SharedPreferences_data;
-import com.example.adm.Fragments.Control_Panel.Func.FuncList;
-import com.example.adm.Fragments.Control_Panel.Header.HeaderList;
-import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
+import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.FuncList;
+import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.HeaderList;
+import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
 import com.example.adm.Fragments.Control_Panel.UpdatedList;
 import com.example.adm.Fragments.Orders.BottomSheet.OrderItemLists;
 import com.example.adm.Fragments.Orders.BottomSheet.SelectedHeader;
@@ -85,6 +85,9 @@ public class GetViewModel extends AndroidViewModel {
     //item list
     private List<ItemArrayList> itemList = new ArrayList<>();
     private MutableLiveData<List<ItemArrayList>> itemListMutableLiveData = new MutableLiveData<>();
+    //header map
+    private LinkedHashMap<String,List<ItemArrayList>> itemArrayListMap=new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String,List<ItemArrayList>>> itemArrayListMapMutableLiveData=new MutableLiveData<>();
     //session list
     private List<SessionList> sessionLists = new ArrayList<>();
     private LinkedHashMap<String,List<SessionList>> ss_f_map=new LinkedHashMap<>();
@@ -154,6 +157,17 @@ public class GetViewModel extends AndroidViewModel {
             }
         });
     }
+
+
+    public void setItemArrayListMap(LinkedHashMap<String, List<ItemArrayList>> itemArrayListMap) {
+        this.itemArrayListMap = itemArrayListMap;
+        this.itemArrayListMapMutableLiveData.postValue(itemArrayListMap);
+    }
+
+    public MutableLiveData<LinkedHashMap<String, List<ItemArrayList>>> getItemArrayListMapMutableLiveData() {
+        return itemArrayListMapMutableLiveData;
+    }
+
     public MutableLiveData<LinkedHashMap<String, List<SessionList>>> getSs_f_mapMutableLiveData() {
         return ss_f_mapMutableLiveData;
     }
@@ -211,12 +225,17 @@ public class GetViewModel extends AndroidViewModel {
         return funcListMutableLiveData;
     }
 
+    public void setItemArrayList(List<ItemArrayList> itemList){
+        this.itemList=itemList;
+        this.itemListMutableLiveData.postValue(itemList);
+
+    }
     public MutableLiveData<List<ItemArrayList>> getItemListMutableLiveData() {
         return itemListMutableLiveData;
     }
 
     public void GetUpdateItem() {
-        databaseReference = firebaseDatabase.getReference("Items").child("List");
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -224,17 +243,30 @@ public class GetViewModel extends AndroidViewModel {
                 MyLog.e(TAG, "list>>snap>>" + snapshot);
                 int size = 0;
 
-
+                headerList=new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    //MyLog.e(TAG, "list>>datasnapshot>>" + dataSnapshot);
+                    MyLog.e(TAG, "list>>datasnapshot>>key>>" + dataSnapshot.getKey().toString());
+                    header_title=dataSnapshot.getKey().toString();
                     itemList = new ArrayList<>();
-                    ItemArrayList itemList1 = new ItemArrayList(
-                            dataSnapshot.getValue().toString()
+                    for(DataSnapshot data:dataSnapshot.getChildren()) {
+                        //MyLog.e(TAG, "list>>data>>" + data);
+                        MyLog.e(TAG, "list>>data>>key>>" + data.getKey().toString());
+                        ItemArrayList itemList1 = new ItemArrayList(
+                                data.getKey().toString(),
+                                data.getValue().toString()
+                        );
+                        itemList.add(itemList1);
+                        itemArrayListMap.put(header_title,itemList);
+                    }
+                    HeaderList headerList1=new HeaderList(
+                            header_title
                     );
-                    itemList.add(itemList1);
+                    headerList.add(headerList1);
+                    headerListMutableLiveData.postValue(headerList);
                 }
 
-                itemListMutableLiveData.postValue(itemList);
-                //MyLog.e(TAG, "data>>item>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemList));
+                itemArrayListMapMutableLiveData.postValue(itemArrayListMap);
                 size++;
 
 
@@ -249,7 +281,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void GetUpdateFun() {
-        databaseReference = firebaseDatabase.getReference("Items").child("Function");
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("Function");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -269,7 +301,6 @@ public class GetViewModel extends AndroidViewModel {
 
                 }
                 funcListMutableLiveData.postValue(funcList);
-                //MyLog.e(TAG, "data>>func>>" + new GsonBuilder().setPrettyPrinting().create().toJson(funcList));
 
             }
 
@@ -282,7 +313,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void GetUpdateHeader() {
-        databaseReference = firebaseDatabase.getReference("Items").child("Category");
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("Category");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -305,7 +336,6 @@ public class GetViewModel extends AndroidViewModel {
                 }
 
                 headerListMutableLiveData.postValue(headerList);
-                // MyLog.e(TAG, "data>>header>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerList));
 
             }
 
@@ -432,7 +462,6 @@ public class GetViewModel extends AndroidViewModel {
                             String d=s_user_name+"-"+func;
                             ss_f_map.put(d,sessionLists);
 
-                            //MyLog.e(TAG,"session>>f_maps>>session list>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(sessionLists));
                         }
                         OrderLists orderLists1 = new OrderLists(
                                 s_user_name,
@@ -456,10 +485,7 @@ public class GetViewModel extends AndroidViewModel {
                 f_mapMutable.postValue(f_map);
                 s_map.add(f_map);
                 s_mapMutable.postValue(s_map);
-                MyLog.e(TAG,"orderItemList_f_map>>f_map>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(f_map));
-                MyLog.e(TAG,"orderItemList_f_map>>s_map>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
-                MyLog.e(TAG,"orderItemList_f_map>>header>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(sh_f_map));
-                MyLog.e(TAG,"orderItemList_f_map>>session>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(ss_f_map));
+
             }
 
             @Override
@@ -552,12 +578,10 @@ public class GetViewModel extends AndroidViewModel {
                     }
                     itemMutable.postValue(itemLists);
                     f_map.put(headerList.get(k).getHeader(),itemLists);
-                    //MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
                     size++;
                 }
                 s_map.add(f_map);
                 s_mapMutable.postValue(s_map);
-                //MyLog.e(TAG, "hashmap>>item list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(s_map));
 
 
 
@@ -694,7 +718,6 @@ public class GetViewModel extends AndroidViewModel {
         //itemLists=itemLists1;
         this.itemHeaderMutable.postValue(itemLists);
         MyLog.e(TAG,"itm>nut>>"+itemLists.size());
-        //MyLog.e(TAG, "hashmap>>data>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
         if(itemLists.size()>0) {
             value.postValue(2);
 
@@ -738,7 +761,6 @@ public class GetViewModel extends AndroidViewModel {
 
 
     public void GetViewList(OrderLists orderLists, List<SessionList> sessionLists) {
-        //MyLog.e(TAG,"orderItemList_f_map>>f_maps>>map orderitem list before11>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
         orderItemList_f_map.clear();
         firebaseDatabase = FirebaseDatabase.getInstance();
         for(int i=0;i<sessionLists.size();i++) {
@@ -763,9 +785,7 @@ public class GetViewModel extends AndroidViewModel {
                                     dataSnapshot.getValue().toString()
                             );
                             orderItemLists.add(itemLists);
-                            //MyLog.e(TAG, "orderItemList_f_map>>f_maps>>map orderitem list before>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
                             orderItemList_f_map.put(header, orderItemLists);
-                            //MyLog.e(TAG, "sessionllist>>f_maps>>map orderitem list after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
                             size++;
                         }
 
@@ -786,7 +806,6 @@ public class GetViewModel extends AndroidViewModel {
                     selectedHeadersMutableLiveData.postValue(selectedHeaders);
 
 
-                    MyLog.e(TAG, "sessionllist>>f_maps>>map get>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemList_f_map));
 
                 }
 

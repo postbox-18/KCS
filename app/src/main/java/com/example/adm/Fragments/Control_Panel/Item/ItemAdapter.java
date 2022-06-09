@@ -4,12 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
+import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 
@@ -37,6 +42,36 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ItemAdapter.ViewHolder holder, int position) {
         final ItemArrayList item1 = item.get(position);
         holder.item_title.setText(item1.getItem());
+        if((item1.getSelected()).equals("true"))
+        {
+            holder.switchView.setChecked(true);
+            //holder.item_cardView.setCardBackgroundColor(context.getResources().getColor(R.color.light_blue_color));
+            holder.item_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+        }
+        else
+        {
+            holder.switchView.setChecked(false);
+           // holder.item_cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightGray));
+            holder.item_title.setTextColor(context.getResources().getColor(R.color.light_gray));
+        }
+
+
+        holder.switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(compoundButton.isChecked())
+                {
+                    MyLog.e(TAG, "switch>> enabled" );
+                    holder.item_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+                }
+                else
+                {
+                    MyLog.e(TAG, "switch>> not enabled" );
+                    holder.item_title.setTextColor(context.getResources().getColor(R.color.light_gray));
+
+                }
+            }
+        });
     }
 
 
@@ -48,11 +83,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private EditText item_title;
+        private TextView item_title;
+        private Switch switchView;
+        private CardView item_cardView;
 
         public ViewHolder(View view) {
             super(view);
             item_title = view.findViewById(R.id.item_title);
+            item_cardView = view.findViewById(R.id.item_cardView);
+            switchView = view.findViewById(R.id.switchView);
+
         }
     }
 }

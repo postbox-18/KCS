@@ -2,10 +2,8 @@ package com.example.adm.Fragments.Control_Panel;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,24 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.example.adm.Classes.MyLog;
 import com.example.adm.Fragments.Control_Panel.Func.FuncAdapter;
-import com.example.adm.Fragments.Control_Panel.Func.FuncList;
+import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.FuncList;
 import com.example.adm.Fragments.Control_Panel.Header.HeaderAdapter;
-import com.example.adm.Fragments.Control_Panel.Header.HeaderList;
+import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.HeaderList;
 import com.example.adm.Fragments.Control_Panel.Item.ItemAdapter;
-import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
-import com.example.adm.Fragments.HomeFragment;
+import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,17 +43,20 @@ public class Control_PanelFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private RecyclerView recyclerView_header;
+
+    private RecyclerView recyclerview_header;
     private List<HeaderList> headerList=new ArrayList<>();
     private HeaderAdapter headerAdapter;
-    private RecyclerView recyclerView_func;
+
+    /*private RecyclerView recyclerView_func;
     private List<FuncList> funcList=new ArrayList<>();
     private FuncAdapter funcAdapter;
+
     private RecyclerView recyclerView_item;
     private ItemAdapter itemAdapter;
-    private List<ItemArrayList> itemList=new ArrayList<>();
-    private ImageView back_btn;
+    private List<ItemArrayList> itemList=new ArrayList<>();*/
 
+    private ImageView back_btn;
     private GetViewModel getViewModel;
 
     //Update Data in firebase
@@ -75,16 +69,6 @@ public class Control_PanelFragment extends Fragment {
     public Control_PanelFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Control_PanelFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Control_PanelFragment newInstance(String param1, String param2) {
         Control_PanelFragment fragment = new Control_PanelFragment();
         Bundle args = new Bundle();
@@ -111,38 +95,29 @@ public class Control_PanelFragment extends Fragment {
         getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
 
         back_btn=view.findViewById(R.id.back_btn);
-
         update_btn=view.findViewById(R.id.update_btn);
+        recyclerview_header=view.findViewById(R.id.recyclerview_header);
 
-        recyclerView_header=view.findViewById(R.id.recyclerview_header);
-        recyclerView_header.setHasFixedSize(true);
-        recyclerView_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerView_func=view.findViewById(R.id.recyclerview_func);
-        recyclerView_func.setHasFixedSize(true);
-        recyclerView_func.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerView_item=view.findViewById(R.id.recyclerview_item);
-        recyclerView_item.setHasFixedSize(true);
-        recyclerView_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        recyclerview_header.setHasFixedSize(true);
+        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+
 
         headerList=new ArrayList<>();
-        funcList=new ArrayList<>();
-        itemList=new ArrayList<>();
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
-        /*GetUpdateHeader();
-        GetUpdateFun();
-        GetUpdateItem();*/
+
 
         //get header list
         getViewModel.getHeaderListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
             @Override
             public void onChanged(List<HeaderList> headerLists) {
                 headerAdapter=new HeaderAdapter(getContext(),headerLists,getViewModel);
-                recyclerView_header.setAdapter(headerAdapter);
+                recyclerview_header.setAdapter(headerAdapter);
             }
         });
 
-        //get item list
+       /* //get item list
         getViewModel.getItemListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<ItemArrayList>>() {
             @Override
             public void onChanged(List<ItemArrayList> itemArrayLists) {
@@ -159,16 +134,16 @@ public class Control_PanelFragment extends Fragment {
                 funcAdapter=new FuncAdapter(getContext(),funcLists,getViewModel);
                 recyclerView_func.setAdapter(funcAdapter);
             }
-        });
+        });*/
 
 
         //click update btn
-        update_btn.setOnClickListener(new View.OnClickListener() {
+        /*update_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getViewModel.UpdateListBase();
             }
-        });
+        });*/
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -182,109 +157,5 @@ public class Control_PanelFragment extends Fragment {
 
         return view;
     }
-    /*private void GetUpdateItem() {
-        databaseReference = firebaseDatabase.getReference("Items").child("List");
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "list>>snap>>" + snapshot);
-                int size=0;
-
-
-               for(DataSnapshot dataSnapshot: snapshot.getChildren())
-               {
-                   itemList=new ArrayList<>();
-                   ItemArrayList itemList1=new ItemArrayList(
-                           dataSnapshot.getValue().toString()
-                   );
-                   itemList.add(itemList1);
-               }
-               itemAdapter=new ItemAdapter(getContext(),itemList);
-               recyclerView_item.setAdapter(itemAdapter);
-                //MyLog.e(TAG, "data>>item>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemList));
-                size++;
-
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG, "list>>snap>>fun>>Fail to get data.");
-            }
-        });
-    }
-
-    private void GetUpdateFun() {
-        databaseReference = firebaseDatabase.getReference("Items").child("Function");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "home>>snap>>fun>>" + snapshot);
-                int size=0;
-                funcList=new ArrayList<>();
-
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                    String path=""+size;
-                    MyLog.e(TAG, "home>>snap>>fun>>" +  path);
-                    //MyLog.e(TAG, "home>>snap>>fun>>" +  datas.child("0").getValue().toString());
-                    FuncList funList1 = new FuncList(
-                            datas.getValue().toString());
-                    funcList.add(funList1);
-                    size++;
-
-                }
-                funcAdapter=new FuncAdapter(getContext(),funcList);
-                recyclerView_func.setAdapter(funcAdapter);
-                //MyLog.e(TAG, "data>>func>>" + new GsonBuilder().setPrettyPrinting().create().toJson(funcList));
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG, "home>>snap>>fun>>Fail to get data.");
-            }
-        });
-    }
-    private void GetUpdateHeader() {
-        databaseReference = firebaseDatabase.getReference("Items").child("Category");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "home>>snap>>" + snapshot);
-                int size=0;
-                headerList=new ArrayList<>();
-                for (DataSnapshot datas : snapshot.getChildren()) {
-
-                    String path=""+size;
-
-                    //MyLog.e(TAG, "home>>snap>>" +  datas.child("a").getValue().toString());
-
-                    HeaderList headerList1 = new HeaderList(
-                            datas.getValue().toString()
-                    );
-                    headerList.add(headerList1);
-                    size++;
-
-                }
-
-                headerAdapter=new HeaderAdapter(getContext(),headerList);
-                recyclerView_header.setAdapter(headerAdapter);
-               // MyLog.e(TAG, "data>>header>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerList));
-
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG, "home>>snap>>Fail to get data.");
-            }
-        });
-    }*/
 }

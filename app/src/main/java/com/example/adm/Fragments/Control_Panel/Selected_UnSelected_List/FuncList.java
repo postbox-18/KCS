@@ -1,4 +1,4 @@
-package com.example.adm.Fragments.Control_Panel.Func;
+package com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List;
 
 public class FuncList {
     private final String func;

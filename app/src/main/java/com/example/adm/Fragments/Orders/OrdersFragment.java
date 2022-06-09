@@ -92,7 +92,6 @@ public class OrdersFragment extends Fragment {
                 recyclerView_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                 orderAdapters=new OrderAdapters(getContext(),orderLists,getViewModel);
                 recyclerView_order_list.setAdapter(orderAdapters);
-                //MyLog.e(TAG,"order>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(orderLists));
             }
         });
 
@@ -121,10 +120,8 @@ public class OrdersFragment extends Fragment {
             public void onChanged(OrderLists orderLists) {
                 if(orderLists!=null) {
                     //get session list
-                    MyLog.e(TAG,"SessionList>>stringListLinkedHashMap>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                     MyLog.e(TAG,"SessionList>>deatils>>"+orderLists.getS_user_name()+"\t\t"+orderLists.getFunc());
                     sessionLists=stringListLinkedHashMap.get(orderLists.getS_user_name()+"-"+orderLists.getFunc());
-                    MyLog.e(TAG,"SessionList>>sessionLists>>>>\n"+ new GsonBuilder().setPrettyPrinting().create().toJson(sessionLists));
 
                     ViewCartAdapterSession viewCartAdapter=new ViewCartAdapterSession(getContext(),getViewModel,sessionLists,orderLists);
                     recyclerview_session_view.setAdapter(viewCartAdapter);

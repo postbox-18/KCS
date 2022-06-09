@@ -41,7 +41,6 @@ public class UserItemListAdapters extends RecyclerView.Adapter<UserItemListAdapt
     @Override
     public void onBindViewHolder(@NonNull UserItemListAdapters.ViewHolder holder, int position) {
 
-        //MyLog.e(TAG, "item>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
         final UserItemList userItemList1 = userItemLists.get(position);
         MyLog.e(TAG, "item>>header>" + userItemList1.getHeader());
         MyLog.e(TAG, "item>>size>>" + userItemList1.getList_size());

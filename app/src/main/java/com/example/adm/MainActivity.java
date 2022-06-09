@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Fragments.Control_Panel.Control_PanelFragment;
+import com.example.adm.Fragments.Control_Panel.Item.ItemFragment;
 import com.example.adm.Fragments.HomeFragment;
 import com.example.adm.Fragments.ProfileFragment;
 import com.example.adm.ViewModel.GetViewModel;
@@ -66,8 +67,11 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         fragment = new ProfileFragment();
-
                         fragmentTAg = "ProfileFragment";
+                        break;
+                    case 3:
+                        fragment =new ItemFragment();
+                        fragmentTAg="ItemFragment";
                         break;
                 }
                 fragmentTransaction.replace(R.id.Fragment, fragment);
