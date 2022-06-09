@@ -672,7 +672,7 @@ public class GetViewModel extends AndroidViewModel {
         }
     }
 
-    public void updateItem(LinkedHashMap<String, List<ItemArrayList>> selectedMap) {
+    /*public void updateItem(LinkedHashMap<String, List<ItemArrayList>> selectedMap) {
 
         //get selected header
         Set<String> stringSet1 = selectedMap.keySet();
@@ -690,13 +690,14 @@ public class GetViewModel extends AndroidViewModel {
 
         //item list
         for(int i=0;i<selectedHeaders.size();i++) {
+            MyLog.e(TAG,"switches>>selectedMap>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(selectedMap));
 
             itemList=selectedMap.get(selectedHeaders.get(i).getHeader());
             //header title
             header_title=selectedHeaders.get(i).getHeader();
             item=itemList.get(i).getItem();
             selected=itemList.get(i).getSelected();
-
+            MyLog.e(TAG,"switches>>itemList>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(itemList));
             if(itemList==null)
             {
                 itemList=new ArrayList<>();
@@ -724,5 +725,26 @@ public class GetViewModel extends AndroidViewModel {
             }
         }
 
+    }*/
+
+    public void updateItem(String header_title, String item, String selected) {
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                MyLog.e(TAG, "switchs>>list>> item list >>"+header_title+">>item>>"+item+">>selected>>" +selected);
+
+                databaseReference.child(header_title).child(item).setValue(selected);
+                MyLog.e(TAG, "switchs>>comit");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // if the data is not added or it is cancelled then
+                // we are displaying a failure toast message.
+                Toast.makeText(getApplication(), "Fail to add data " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

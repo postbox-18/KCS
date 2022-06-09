@@ -95,13 +95,7 @@ public class ItemFragment extends Fragment {
             }
         });
 
-        //get check hash map
-        getViewModel.getCheckItemArrayListMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<ItemArrayList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<ItemArrayList>> stringListLinkedHashMap) {
-                getViewModel.updateItem(stringListLinkedHashMap);
-            }
-        });
+
 
 
         return view;
