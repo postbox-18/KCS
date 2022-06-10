@@ -29,12 +29,15 @@
         <entry key="app/src/main/res/drawable/ic_gear_fill_tool.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_kitchen_set_solid.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_menu_camera.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/ic_plus_lg.xml" value="0.1205" />
+        <entry key="app/src/main/res/drawable/ic_plus_solid.xml" value="0.1205" />
         <entry key="app/src/main/res/drawable/mytabs.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/tab_bottom.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/tab_react.xml" value="0.184" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/add_itembox.xml" value="0.15818725951261223" />
         <entry key="app/src/main/res/layout/app_bar_home__sample.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/back_btn_layout.xml" value="0.15904232578024796" />
         <entry key="app/src/main/res/layout/bottom_sheet_item_list.xml" value="0.17708333333333334" />
@@ -47,7 +50,7 @@
         <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/fragment_control__panel.xml" value="0.15904232578024796" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_item.xml" value="0.15904232578024796" />
+        <entry key="app/src/main/res/layout/fragment_item.xml" value="0.16" />
         <entry key="app/src/main/res/layout/fragment_orders.xml" value="0.17864583333333334" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />

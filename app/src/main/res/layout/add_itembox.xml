@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="3dp"
+    android:orientation="vertical"
+    android:background="@color/White"
+    app:cardCornerRadius="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Item To Add.."
+                android:textColor="@color/colorPrimary"
+                android:textSize="18dp"
+                android:textStyle="bold|italic" />
+
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/item"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:hint="item"
+                    android:padding="15dp" />
+
+
+            <!--<androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/ok"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/update_btn"
+                android:text="OK"
+                android:textColor="@color/White"
+                android:textSize="18dp"
+                android:textStyle="bold|italic" />-->
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
