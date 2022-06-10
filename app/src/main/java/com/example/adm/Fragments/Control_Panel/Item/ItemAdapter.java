@@ -102,36 +102,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                     holder.item_title.setTextColor(context.getResources().getColor(R.color.light_gray));
 
                 }
-                item=selectedHeaderMap.get(header_title);
-                selectedHeaderMap.get(header_title).get(position).setSelected(String.valueOf(b));
-                MyLog.e(TAG, "switches>>selectedHeaderMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeaderMap));
+                //selectedHeaderMap.get(header_title).get(position).setSelected(String.valueOf(b));
+                getViewModel.updateItem(header_title, item.get(position).getItem(), String.valueOf(b));
 
-                //get selected header
-                Set<String> stringSet1 = selectedHeaderMap.keySet();
-                List<String> aList1 = new ArrayList<String>(stringSet1.size());
-                for (String x1 : stringSet1)
-                    aList1.add(x1);
-                selectedHeaders.clear();
-                for (int i = 0; i < aList1.size(); i++) {
-                    MyLog.e(TAG, "chs>>list header>> " + aList1.get(i));
-                    SelectedHeader list1 = new SelectedHeader(
-                            aList1.get(i)
-                    );
-                    selectedHeaders.add(list1);
-                }
-                //item list
-                item=new ArrayList<>();
-                for(int i=0;i<selectedHeaders.size();i++) {
-                    item = selectedHeaderMap.get(selectedHeaders.get(i).getHeader());
-                    //header title
-                    header_title = selectedHeaders.get(i).getHeader();
-                    MyLog.e(TAG, "switches>>itemList>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(item));
-                for(int k=0;k<item.size();k++)
-                {
-                    getViewModel.updateItem(header_title, item.get(k).getItem(), item.get(k).getSelected());
-                }
 
-                }
 
             }
         });

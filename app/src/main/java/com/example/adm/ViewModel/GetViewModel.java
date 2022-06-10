@@ -672,69 +672,16 @@ public class GetViewModel extends AndroidViewModel {
         }
     }
 
-    /*public void updateItem(LinkedHashMap<String, List<ItemArrayList>> selectedMap) {
 
-        //get selected header
-        Set<String> stringSet1 = selectedMap.keySet();
-        List<String> aList1 = new ArrayList<String>(stringSet1.size());
-        for (String x1 : stringSet1)
-            aList1.add(x1);
-        selectedHeaders.clear();
-        for (int i = 0; i < aList1.size(); i++) {
-            MyLog.e(TAG, "chs>>list header>> " + aList1.get(i));
-            SelectedHeader list1 = new SelectedHeader(
-                    aList1.get(i)
-            );
-            selectedHeaders.add(list1);
-        }
-
-        //item list
-        for(int i=0;i<selectedHeaders.size();i++) {
-            MyLog.e(TAG,"switches>>selectedMap>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(selectedMap));
-
-            itemList=selectedMap.get(selectedHeaders.get(i).getHeader());
-            //header title
-            header_title=selectedHeaders.get(i).getHeader();
-            item=itemList.get(i).getItem();
-            selected=itemList.get(i).getSelected();
-            MyLog.e(TAG,"switches>>itemList>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(itemList));
-            if(itemList==null)
-            {
-                itemList=new ArrayList<>();
-                MyLog.e(TAG, "switchs>>list>> item list is null" );
-            }
-            else {
-                databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
-                databaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        MyLog.e(TAG, "switchs>>list>> item list >>"+header_title+">>item>>"+item+">>selected>>" +selected);
-
-                        databaseReference.child(header_title).child(item).setValue(selected);
-                        MyLog.e(TAG, "switchs>>comit");
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        // if the data is not added or it is cancelled then
-                        // we are displaying a failure toast message.
-                        Toast.makeText(getApplication(), "Fail to add data " + error, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-
-    }*/
 
     public void updateItem(String header_title, String item, String selected) {
+        MyLog.e(TAG, "switchs>>updateItem");
         databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.child(header_title).child(item).setValue(selected);
+        /*databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                MyLog.e(TAG, "switchs>>list>> item list >>"+header_title+">>item>>"+item+">>selected>>" +selected);
-
+                //MyLog.e(TAG, "switches>>itemLists>>\nheader_title>>" + header_title+"\titem>>"+item+"\tselected>>"+selected);
                 databaseReference.child(header_title).child(item).setValue(selected);
                 MyLog.e(TAG, "switchs>>comit");
             }
@@ -745,6 +692,6 @@ public class GetViewModel extends AndroidViewModel {
                 // we are displaying a failure toast message.
                 Toast.makeText(getApplication(), "Fail to add data " + error, Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 }
