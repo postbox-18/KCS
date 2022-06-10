@@ -197,10 +197,8 @@ public class GetViewModel extends AndroidViewModel {
     private  MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMapMutableLiveData=new MutableLiveData<>();
     //selected Session list
     private List<SelectedSessionList>  selectedSessionLists=new ArrayList<>();
-
-
-
     private MutableLiveData<List<SelectedSessionList>>  selectedSessionListsMutableLiveData=new MutableLiveData<>();
+
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -209,6 +207,9 @@ public class GetViewModel extends AndroidViewModel {
         CheckUserDetails();
 
     }
+
+
+
 
     public void setHeaderMap(LinkedHashMap<String, List<CheckedList>> headerMap) {
         this.headerMap = headerMap;
