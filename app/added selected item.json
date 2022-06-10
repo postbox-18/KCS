@@ -9,7 +9,6 @@
   "Items": {
     "Main": {
       "Category": [
-
         "Non-Veg",
         "Veg",
         "Dessert"
@@ -33,7 +32,6 @@
       },
       "List": {
         "Dessert": [
-
           "Ice Creams",
           "Milk Shakes",
           "Juice",
@@ -41,7 +39,6 @@
           "Chocolates"
         ],
         "Non-Veg": [
-
           "Mutton",
           "Chicken",
           "Fish",
@@ -49,7 +46,6 @@
           "Crab"
         ],
         "Veg": [
-
           "Meals",
           "Varitey Rices",
           "Tiffun Items",
@@ -68,10 +64,8 @@
         "Lunch": "12:00 PM-04:00 PM"
       }
     },
-
     "Selected&UnSelected": {
       "Category": [
-
         "Non-Veg",
         "Veg",
         "Dessert"
@@ -95,27 +89,27 @@
       },
       "List": {
         "Dessert": {
-          "Ice Creams": "true",
-          "Milk Shakes": "false",
-          "Juice": "true",
           "Cakes": "true",
-          "Chocolates": "false"
+          "Chocolates": "true",
+          "Ice Creams": "true",
+          "Juice": "false",
+          "Milk Shakes": "false",
+          "Sweets ": "true"
         },
         "Non-Veg": {
-
-          "Mutton": "true",
           "Chicken": "false",
+          "Crab": "true",
           "Fish": "false",
-          "Prawns": "true",
-          "Crab": "true"
+          "Mutton": "true",
+          "Prawns": "true"
         },
         "Veg": {
-
-          "Meals": "true",
-          "Varitey Rices": "true",
-          "Tiffun Items": "false",
           "Biryani": "false",
-          "Gravy Recipies": "true"
+          "Gravy Recipies": "true",
+          "Meals": "true",
+          "Mushroom ": "true",
+          "Tiffun Items": "false",
+          "Varitey Rices": "true"
         }
       },
       "Session": [
