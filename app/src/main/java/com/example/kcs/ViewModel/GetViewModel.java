@@ -359,7 +359,7 @@ public class GetViewModel extends AndroidViewModel {
         return session_titleMutable;
     }
     public void GetSessionTime() {
-        databaseReference = firebaseDatabase.getReference("Items").child("SessionTime");
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("SessionTime");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -389,7 +389,7 @@ public class GetViewModel extends AndroidViewModel {
     }
     public void GetSession() {
 
-        databaseReference = firebaseDatabase.getReference("Items").child("Session");
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("Session");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -659,7 +659,7 @@ public class GetViewModel extends AndroidViewModel {
 
     public void GetImg() {
 
-        databaseReference = firebaseDatabase.getReference("Items").child("Img");
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("Img");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -706,12 +706,12 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void GetItem() {
-        databaseReference = firebaseDatabase.getReference("Items").child("List");
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "list>>snap>>" + snapshot);
+               /* MyLog.e(TAG, "list>>snap>>" + snapshot);
                 int size = 0;
                 for (int k = 0; k < headerList.size(); k++) {
                     MyLog.e(TAG, "list>>snap>>fun>>" + snapshot.child(headerList.get(k).getHeader()).getValue());
@@ -734,7 +734,34 @@ public class GetViewModel extends AndroidViewModel {
                 }
 
                 s_map.add(f_maps);
+                s_mapMutable.postValue(s_map);*/
+
+                headerList=new ArrayList<>();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    //MyLog.e(TAG, "list>>datasnapshot>>" + dataSnapshot);
+                    MyLog.e(TAG, "list>>datasnapshot>>key>>" + dataSnapshot.getKey().toString());
+                    header_title=dataSnapshot.getKey().toString();
+                    itemLists = new ArrayList<>();
+                    for(DataSnapshot data:dataSnapshot.getChildren()) {
+                        //MyLog.e(TAG, "list>>data>>" + data);
+                        MyLog.e(TAG, "list>>data>>key>>" + data.getKey().toString());
+                        ItemList itemLists1 = new ItemList();
+                        itemLists1.setItem(data.getKey().toString());
+                        itemLists1.setSelected(data.getValue().toString());
+                        itemLists.add(itemLists1);
+                        f_maps.put(header_title,itemLists);
+                    }
+                    HeaderList headerList1=new HeaderList(
+                            header_title
+                    );
+                    headerList.add(headerList1);
+                    headerListMutableList.postValue(headerList);
+                }
+
+                s_map.add(f_maps);
                 s_mapMutable.postValue(s_map);
+
+
 
 
             }
@@ -805,7 +832,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void GetFun() {
-        databaseReference = firebaseDatabase.getReference("Items").child("Function");
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("Function");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -840,7 +867,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void GetHeader() {
-        databaseReference = firebaseDatabase.getReference("Items").child("Category");
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("Category");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

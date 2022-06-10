@@ -142,7 +142,17 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         }
         MyLog.e(TAG, "hashmap>>size>>" + selected_s_map.size());
 
+
         holder.item_check.setText(itemList1.getItem());
+        if(itemList1.getSelected().equals("true"))
+        {
+            holder.item_check.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+        }
+        else {
+            holder.item_check.setTextColor(context.getResources().getColor(R.color.light_gray));
+            holder.item_check.setEnabled(false);
+        }
+
         holder.item_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
