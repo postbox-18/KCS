@@ -237,7 +237,7 @@ public class PlaceOrderFragment extends Fragment {
 
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    date_time=selectedSessionLists.get(k).getSession_title() + "-" + selectedSessionLists.get(k).getDate_time();
+                    date_time=selectedSessionLists.get(k).getSession_title() + "!" + selectedSessionLists.get(k).getDate_time();
                     headerMap = sessionMap.get(date_time);
                     //set selected header
                     if (headerMap != null) {
@@ -300,8 +300,7 @@ public class PlaceOrderFragment extends Fragment {
 
                 for (int i = 0; i < checkedLists1.size(); i++) {
                     //set session-dateTime
-                    String str=date_time.replace("-","!");
-                    String session_str=str.replace("/","-");
+                    String session_str=date_time.replace("/","-");
                     MyLog.e(TAG, "placeorders>>date_time session_str>>"+session_str);
                     databaseReference.child(user_name).child(func_title).child(session_str).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
