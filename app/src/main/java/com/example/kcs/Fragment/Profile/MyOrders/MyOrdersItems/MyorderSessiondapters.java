@@ -51,8 +51,12 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     public void onBindViewHolder(@NonNull MyorderSessiondapters.ViewHolder holder, int position) {
         final SessionList sessionLists1 = sessionLists.get(position);
 
-        //get data func,header,list item size from hash map
-        holder.session_title.setText(sessionLists1.getSession_title());
+        //set session title and date
+        MyLog.e(TAG,"myord>> sessionLists1?>>"+sessionLists1.getSession_title());
+        String[] str=(sessionLists1.getSession_title()).split("!");
+        MyLog.e(TAG,"myord>> sessionLists1?>>"+str[0]+">>date_time>>"+str[1]);
+        holder.session_title.setText(str[0]);
+        holder.date_time.setText(str[1]);
 
         //get hash map of my orders list
         getViewModel.getF_mapMyordersMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<MyOrdersList>>>() {
@@ -82,7 +86,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profile;
-        private TextView session_title;
+        private TextView session_title,date_time;
         private CardView card_view;
         private RecyclerView recyclerview_item_list;
 
@@ -91,6 +95,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             profile = view.findViewById(R.id.profile);
             recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
             session_title = view.findViewById(R.id.session_title);
+            date_time = view.findViewById(R.id.date_time);
             card_view = view.findViewById(R.id.card_view);
 
 
