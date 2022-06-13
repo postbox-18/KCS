@@ -167,7 +167,6 @@ public class PlaceOrderFragment extends Fragment {
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
                 sessionMap = funcMap.get(func_title);
-                MyLog.e(TAG, "placeorder>>date_time sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
 
                 //set session list
                 Set<String> stringSet = sessionMap.keySet();
@@ -189,7 +188,6 @@ public class PlaceOrderFragment extends Fragment {
                     selectedSessionLists.add(list);
                 }
 
-                MyLog.e(TAG, "placeorder>>date_time selectedSessionLists>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedSessionLists));
                 //set selected session
                 getViewModel.setSelectedSessionLists(selectedSessionLists);
 
@@ -203,7 +201,6 @@ public class PlaceOrderFragment extends Fragment {
                        date_time = selectedSessionLists.get(i).getSession_title() + "-" + (selectedSessionLists.get(i).getDate_time());
                         MyLog.e(TAG, "placeorder>>date_time" + date_time);
                         headerMap = sessionMap.get(date_time);
-                        MyLog.e(TAG, "placeorder>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
 
 
                         Set<String> stringSets = headerMap.keySet();

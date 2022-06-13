@@ -206,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
                 selectedSessionLists = selectedSessionLists1;
                 MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                 sessionMap = funcMap.get(func_title);
-                MyLog.e(TAG, "placeorder>>date_time sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
 
                 MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
 
@@ -214,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
                     if (session_title.equals(selectedSessionLists.get(k).getSession_title())) {
                         date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getDate_time());
                         headerMap = sessionMap.get(date_time);
-                        MyLog.e(TAG, "placeorder>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
 
                         Set<String> stringSet = headerMap.keySet();
                         List<String> aList = new ArrayList<String>(stringSet.size());

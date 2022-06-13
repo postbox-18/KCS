@@ -52,9 +52,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
         final SessionList sessionLists1 = sessionLists.get(position);
 
         //set session title and date
-        MyLog.e(TAG,"myord>> sessionLists1?>>"+sessionLists1.getSession_title());
         String[] str=(sessionLists1.getSession_title()).split("!");
-        MyLog.e(TAG,"myord>> sessionLists1?>>"+str[0]+">>date_time>>"+str[1]);
         holder.session_title.setText(str[0]);
         holder.date_time.setText(str[1]);
 
@@ -69,6 +67,15 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                 MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
                 holder.recyclerview_item_list.setAdapter(itemListAdapters);
+            }
+        });
+
+        //on click
+        holder.session_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String s=func_title+"/"+sessionLists1.getSession_title();
+                    getViewModel.setFunc_Session(s);
             }
         });
 
@@ -87,7 +94,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
 
         private ImageView profile;
         private TextView session_title,date_time;
-        private CardView card_view;
+        private CardView session_card;
         private RecyclerView recyclerview_item_list;
 
         public ViewHolder(View view) {
@@ -96,7 +103,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
             session_title = view.findViewById(R.id.session_title);
             date_time = view.findViewById(R.id.date_time);
-            card_view = view.findViewById(R.id.card_view);
+            session_card = view.findViewById(R.id.session_card);
 
 
         }

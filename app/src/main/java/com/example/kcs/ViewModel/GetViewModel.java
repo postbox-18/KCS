@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -198,7 +199,9 @@ public class GetViewModel extends AndroidViewModel {
     //selected Session list
     private List<SelectedSessionList>  selectedSessionLists=new ArrayList<>();
     private MutableLiveData<List<SelectedSessionList>>  selectedSessionListsMutableLiveData=new MutableLiveData<>();
-
+    //when click session to (func) to show item list
+    private String Func_Session;
+    private MutableLiveData<String> Func_SessionMutable=new MutableLiveData<>();
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -206,6 +209,16 @@ public class GetViewModel extends AndroidViewModel {
         firebaseDatabase = FirebaseDatabase.getInstance();
         CheckUserDetails();
 
+    }
+
+
+
+    public void setFunc_Session(String func_Session) {
+        Func_Session = func_Session;
+        this.Func_SessionMutable.postValue(Func_Session);
+    }
+    public MutableLiveData<String> getFunc_SessionMutable() {
+        return Func_SessionMutable;
     }
 
 

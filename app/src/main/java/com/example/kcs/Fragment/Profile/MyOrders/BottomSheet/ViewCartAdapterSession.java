@@ -12,11 +12,13 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -27,19 +29,18 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapterSession";
-    private String func_title,s_user_name;
-    private List<SessionList> sessionLists=new ArrayList<>();
+    private String func_title, s_user_name;
+    private List<SessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
-    private List<SelectedHeader> selectedHeaders=new ArrayList<>();
+    private List<SelectedHeader> selectedHeaders = new ArrayList<>();
 
 
-    public ViewCartAdapterSession(Context context, GetViewModel getViewModel,String s,List<SessionList> sessionLists) {
-        this.context=context;
-        this.getViewModel=getViewModel;
-        this.func_title=s;
-        this.sessionLists=sessionLists;
+    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SessionList> sessionLists) {
+        this.context = context;
+        this.getViewModel = getViewModel;
+        this.func_title = s;
+        this.sessionLists = sessionLists;
     }
-
 
 
     @NonNull
@@ -53,26 +54,25 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewCartAdapterSession.ViewHolder holder, int position) {
+        MyLog.e(TAG, "myord>>View Session");
         //get user name shared prefernces
-        s_user_name=new SharedPreferences_data(context).getS_user_name();
+        s_user_name = new SharedPreferences_data(context).getS_user_name();
 
-        final SessionList list=sessionLists.get(position);
-
+        final SessionList list = sessionLists.get(position);
         holder.session_title.setText(list.getSession_title());
+
         //get selected session and header hashmap
         getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-
-                selectedHeaders=stringListLinkedHashMap.get(list.getSession_title());
-                ViewCartAdapterHeader viewCartAdapter=new ViewCartAdapterHeader(context,getViewModel,selectedHeaders,list.getSession_title(),func_title);
+                selectedHeaders = stringListLinkedHashMap.get(list.getSession_title());
+                ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, selectedHeaders, list.getSession_title(), func_title);
                 holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
                 holder.recyclerview_order_item_details.setHasFixedSize(true);
                 holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
             }
         });
-
 
 
     }
