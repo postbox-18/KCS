@@ -29,16 +29,17 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapterSession";
-    private String func_title, s_user_name;
+    private String func_title, s_user_name, sess_title;
     private List<SessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
 
 
-    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SessionList> sessionLists) {
+    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SessionList> sessionLists, String s1) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.func_title = s;
+        this.sess_title = s1;
         this.sessionLists = sessionLists;
     }
 
@@ -57,30 +58,52 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         MyLog.e(TAG, "myord>>View Session");
         //get user name shared prefernces
         s_user_name = new SharedPreferences_data(context).getS_user_name();
+        if (sessionLists == null) {
 
-        final SessionList list = sessionLists.get(position);
-        holder.session_title.setText(list.getSession_title());
+            //get selected session and header hashmap
+            getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
+                @Override
+                public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
 
-        //get selected session and header hashmap
-        getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-                selectedHeaders = stringListLinkedHashMap.get(list.getSession_title());
-                ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, selectedHeaders, list.getSession_title(), func_title);
-                holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
-                holder.recyclerview_order_item_details.setHasFixedSize(true);
-                holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+                    selectedHeaders = stringListLinkedHashMap.get(sess_title);
+                    holder.session_title.setText(sess_title);
+                    MyLog.e(TAG, "myord>> equal>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeaders));
+                    ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, selectedHeaders, sess_title, func_title);
+                    holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
+                    holder.recyclerview_order_item_details.setHasFixedSize(true);
+                    holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
-            }
-        });
+                }
+            });
+        } else {
+            final SessionList list = sessionLists.get(position);
+            holder.session_title.setText(list.getSession_title());
 
+            //get selected session and header hashmap
+            getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
+                @Override
+                public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
+                    selectedHeaders = stringListLinkedHashMap.get(list.getSession_title());
+                    MyLog.e(TAG, "myord>> null>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeaders));
+                    ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, selectedHeaders, list.getSession_title(), func_title);
+                    holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
+                    holder.recyclerview_order_item_details.setHasFixedSize(true);
+                    holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+
+                }
+            });
+        }
 
     }
 
 
     @Override
     public int getItemCount() {
-        return sessionLists.size();
+        if (sessionLists == null) {
+            return 1;
+        } else {
+            return sessionLists.size();
+        }
     }
 
 

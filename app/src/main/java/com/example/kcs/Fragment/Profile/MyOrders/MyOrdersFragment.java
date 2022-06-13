@@ -3,7 +3,6 @@ package com.example.kcs.Fragment.Profile.MyOrders;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,13 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
-import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.ViewCartAdapterHeader;
 import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.ViewCartAdapterSession;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems.MyOrdersAdapter;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems.MyOrdersList;
@@ -151,14 +148,14 @@ public class MyOrdersFragment extends Fragment {
                    /* //get session list
                     MyLog.e(TAG,"myord>>deatils>>"+s_user_name+"\t\t"+func_title);
                     sessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);*/
-                    sessionLists.clear();
+                   /* sessionLists.clear();
                     SessionList sessionList1=new SessionList(
                             str[1]
                     );
-                    sessionLists.add(sessionList1);
+                    sessionLists.add(sessionList1);*/
                     recyclerview_order_session_deatils.setHasFixedSize(true);
                     recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,str[0],sessionLists);
+                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,str[0],null,str[1]);
                     recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "myord>> func_session_title null");
@@ -195,7 +192,7 @@ public class MyOrdersFragment extends Fragment {
                     sessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
                     recyclerview_order_session_deatils.setHasFixedSize(true);
                     recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s,sessionLists);
+                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s,sessionLists, null);
                     recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "func_title>> orderItemView list null");
