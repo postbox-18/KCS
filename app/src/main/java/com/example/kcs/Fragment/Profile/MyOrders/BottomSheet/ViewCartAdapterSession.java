@@ -1,6 +1,9 @@
 package com.example.kcs.Fragment.Profile.MyOrders.BottomSheet;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +62,11 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         //get user name shared prefernces
         s_user_name = new SharedPreferences_data(context).getS_user_name();
         if (sessionLists == null) {
+            String[] s=sess_title.split("!");
+            holder.session_title.setText(s[0]);
+            holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
+            holder.date_time.setText(s[1]);
+            holder.date_time.setTextColor(context.getResources().getColor(R.color.colorSecondary));
 
             //get selected session and header hashmap
             getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
@@ -66,7 +74,6 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
 
                     selectedHeaders = stringListLinkedHashMap.get(sess_title);
-                    holder.session_title.setText(sess_title);
                     MyLog.e(TAG, "myord>> equal>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeaders));
                     ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, selectedHeaders, sess_title, func_title);
                     holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
@@ -77,8 +84,11 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             });
         } else {
             final SessionList list = sessionLists.get(position);
-            holder.session_title.setText(list.getSession_title());
-
+            String[] s=(list.getSession_title()).split("!");
+            holder.session_title.setText(s[0]);
+            holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
+            holder.date_time.setText(s[1]);
+            holder.date_time.setTextColor(context.getResources().getColor(R.color.colorSecondary));
             //get selected session and header hashmap
             getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
                 @Override
@@ -108,7 +118,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView session_title;
+        private TextView session_title,date_time;
         private RecyclerView recyclerview_order_item_details;
 
 
@@ -116,6 +126,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             super(view);
             recyclerview_order_item_details = view.findViewById(R.id.recyclerview_order_item_details);
             session_title = view.findViewById(R.id.session_title);
+            date_time = view.findViewById(R.id.date_time);
 
         }
     }
