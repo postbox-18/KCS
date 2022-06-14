@@ -1,17 +1,40 @@
 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
 https://www.techotopia.com/index.php/Working_with_Firebase_Realtime_Database_Lists
-pending
+
+FIREBASE
+1-upload img to fun (KEY::FUNC_NAME,VALUE::IMG_URL)
+
+
+
+PENDING
 1-alert check box to select the func (OK and CANCEL btn)
-2-save orders and place final orders
-3-snack bar recyclerview number of headers list
-4-click on(VIEW CART) order btn open new fragment and list the selected item to place an order
+
+
 5-search to find the item
 7-My orders cancel my order or edit my order
-8-My orders view to see selected list
-9-Cancel btn
 
-finished
+9-Cancel btn
+10-Three Level Expandable View
+
+12-back btn  <--  func>>session>>header using breadcrumbs(INSTEAD OF SNACK BAR  )
+13-back btn  <--  func>>session>>header using breadcrumbs(INSTEAD OF SNACK BAR  )
+14-BREADCRUMBS click to back to fragment
+
+16-bottom sheet in my orders scroll problem
+17-Refresh swipe down
+18-Save Order in phone number
+19-set forgot password
+
+FINISHED
 1-alert check box to select the func
 3-snack bar to place an order
+2-save orders and place final orders
 6-when snack bar is checked bottom sheet open
 3-snack bar to place an order(EVERY PAGE)
+3-snack bar recyclerview number of headers list
+4-click on(VIEW CART) order btn open new fragment and list the selected item to place an order
+8-My orders view to see selected list
+11-pending in MyOrders recyclerview
+12-problem in cart view fragment back btn
+15-lottie files for order saved
+18-Save order to clear all checked list

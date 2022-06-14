@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#205042</color>
+    <color name="colorPrimary">#5f8825</color>
     <color name="colorSecondary">#fdbe02</color>
+
+    <color name="btn_gradient_dark">#5f8825</color>
+    <color name="btn_gradient_light">#77b322</color>
+
 
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
@@ -44,6 +48,7 @@
     <color name="skin_color">#FDEAEF</color>
     <color name="search_white">#faf8f8</color>
     <color name="bg_white">#eff2f9</color>
+    <color name="heading_login">#771500</color>
 
 
 </resources>

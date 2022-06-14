@@ -21,4 +21,6 @@
     <string name="user_name">User name</string>
     <string name="wedding">wedding</string>
     <string name="Veg">Veg</string>
+    <string name="session">Session</string>
+    <string name="date_time">12/12/2012</string>
 </resources>

@@ -11,6 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
-import com.example.kcs.Classes.LoadingDialogs;
+import com.example.kcs.DialogFragment.LoadingDialogs;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.MainActivity;
@@ -34,13 +35,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     //primary field
@@ -60,7 +56,8 @@ public class LoginActivity extends AppCompatActivity {
     private LottieAnimationView lottie_loading;
     //anim
     private Animation slide_down_anim, slide_up_anim, fade_in_anim;
-    private ConstraintLayout bg_banner, head_layout;
+    private ConstraintLayout head_layout;
+    private ImageView bg_banner;
     private LoadingDialogs loadingDialog = new LoadingDialogs();
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
@@ -279,6 +276,7 @@ public class LoginActivity extends AppCompatActivity {
             password.setError("Please enter a valid password");
         } else {
             MyLog.e(TAG, "error>>success");
+            MyLog.e(TAG, "errors>> continue login" );
             getViewModel.setEmail(s_email);
             return true;
         }

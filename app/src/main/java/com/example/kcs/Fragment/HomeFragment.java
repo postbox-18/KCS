@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -82,61 +81,9 @@ public class HomeFragment extends Fragment {
     private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
 
     public HomeFragment() {
-        // Required empty public constructor
-    }
-    /*private HeaderAdapter.GetHeaderFragment getheaderFragment=new HeaderAdapter.GetHeaderFragment() {
-        @Override
-        public void getheaderFragment(HeaderList headerList1, int position) {
 
-            myViewModel.setHeaderList(headerList1);
-            getViewModel.getS_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>() {
-                @Override
-                public void onChanged(List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
-                    //check if headerlist1 data's value is empty or not
-                    //MyLog.e(TAG, "hashmap>>data>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps.get(0).get(headerList1.getHeader())));
-                    List<ItemList> itemLists=linkedHashMaps.get(0).get(headerList1.getHeader());
-                    //itemLists=itemLists1;
-                    myViewModel.setItemLists(itemLists);
-                    MyLog.e(TAG, "hashmap>>data>>" + new GsonBuilder().setPrettyPrinting().create()
-                            .toJson(itemLists));
-                    if(itemLists.size()>0) {
-                        myViewModel.setI_value(2);
-
-                    }
-                    else
-                    {
-                        Toast.makeText(getContext(), "Empty Response", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-
-        }
-    };*/
-
-
-    private void SetToFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getParentFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();
     }
 
-    /*private FunAdapter.GetFunFragment getfunFragment=new FunAdapter.GetFunFragment() {
-        @Override
-        public void getfunFragment(FunList funList1) {
-            MyLog.e(TAG, "Data>>fun home>>" + funList1.getFun());
-           // myViewModel.setFunList(funList1);
-            //header list
-            //myViewModel.setHeaderLists(headerList);
-            //myViewModel.setI_value(1);
-
-            getViewModel.setI_value(1);
-            getViewModel.setFunc_title(funList1.getFun());
-
-            *//*Fragment fragment=new HeaderFragment(funList1,headerList,getheaderFragment);
-            SetToFragment(fragment);*//*
-
-        }
-    };*/
 
     public static HomeFragment newInstance(String param1, String param2) {
         HomeFragment fragment = new HomeFragment();
@@ -192,20 +139,21 @@ public class HomeFragment extends Fragment {
                 linkedHashMaps=linkedHashMaps1;
             }
         });
-        getViewModel.getListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
+        /*getViewModel.getListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
             @Override
             public void onChanged(List<HeaderList> headerLists1) {
                 headerList=headerLists1;
                 //recyclerview_header
                 recyclerview_header.setHasFixedSize(true);
                 recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,linkedHashMaps);
+                //headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,linkedHashMaps, f_mapsdtMutable);
                 getViewModel.setI_fragment(0);
                 recyclerview_header.setAdapter(headerAdapter);
 
-                //MyLog.e(TAG, "model>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerLists));
             }
-        });
+        });*/
+
+        //get fun list
         getViewModel.getFunMutableList().observe(getViewLifecycleOwner(), new Observer<List<FunList>>() {
             @Override
             public void onChanged(List<FunList> funList1) {
@@ -229,110 +177,6 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    private void GetItem(HeaderList headerList1) {
-        databaseReference = firebaseDatabase.getReference("Items").child("List");
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "list>>snap>>" + snapshot);
-                int size=0;
-                    MyLog.e(TAG, "list>>snap>>fun>>" + snapshot.child(headerList1.getHeader()).getValue());
-                    itemLists=new ArrayList<>();
-                    ArrayList<String> str = new ArrayList<>();
-                    str= (ArrayList<String>) snapshot.child(headerList1.getHeader()).getValue();
-                    for(String i:str) {
-                        MyLog.e(TAG,"list>>"+i);
-                        ItemList itemLists1 = new ItemList(
-                                i);
-                        itemLists.add(itemLists1);
-                    }
-                    //MyLog.e(TAG, "itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
-                    size++;
-
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG, "list>>snap>>fun>>Fail to get data.");
-            }
-        });
-    }
-
-    /*private void GetFun() {
-        databaseReference = firebaseDatabase.getReference("Items").child("Function");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "home>>snap>>fun>>" + snapshot);
-                int size=0;
-                funLists=new ArrayList<>();
-
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                  *//*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*//*
-                    String path=""+size;
-                    MyLog.e(TAG, "home>>snap>>fun>>" +  path);
-                    //MyLog.e(TAG, "home>>snap>>fun>>" +  datas.child("0").getValue().toString());
-                    FunList funList1 = new FunList(
-                            datas.getValue().toString());
-                    funLists.add(funList1);
-                    size++;
-
-                }
-                funAdapter=new FunAdapter(getContext(),funLists,getfunFragment);
-                recyclerview_fun.setAdapter(funAdapter);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG, "home>>snap>>fun>>Fail to get data.");
-            }
-        });
-    }
-    private void GetHeader() {
-        databaseReference = firebaseDatabase.getReference("Items").child("Category");
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "home>>snap>>" + snapshot);
-                int size=0;
-                headerList=new ArrayList<>();
-                for (DataSnapshot datas : snapshot.getChildren()) {
-                  *//*  MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                    MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());*//*
-                    String path=""+size;
-                    MyLog.e(TAG, "home>>snap>>" +  path);
-                    MyLog.e(TAG, "home>>snap>>" +  datas.getValue().toString());
-                    //MyLog.e(TAG, "home>>snap>>" +  datas.child("a").getValue().toString());
-
-                    HeaderList headerList1 = new HeaderList(
-                            datas.getValue().toString()
-                    );
-                    headerList.add(headerList1);
-                    size++;
-
-                }
-
-                headerAdapter=new HeaderAdapter(getContext(),headerList,getheaderFragment);
-                recyclerview_header.setAdapter(headerAdapter);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG, "home>>snap>>Fail to get data.");
-            }
-        });
-    }*/
 
 }

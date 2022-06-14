@@ -1,11 +1,10 @@
-package com.example.kcs.Fragment.Profile;
+package com.example.kcs.Fragment.Settings.Profile;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
-import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Login_Register.LoginActivity;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -95,6 +93,9 @@ public class ProfileFragment extends Fragment {
         user_name.setText(new SharedPreferences_data(getContext()).getS_user_name());
         email.setText(new SharedPreferences_data(getContext()).getS_email());
 
+        //set func title null
+        getViewModel.setFunc_title("");
+
         //onclick
         log_out.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,9 +113,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getViewModel.setI_value(0);
-               /* Fragment fragment=new HomeFragment();
-                FragmentManager fragmentManager = getParentFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.Fragment, fragment).commit();*/
             }
         });
         my_orders_card.setOnClickListener(new View.OnClickListener() {

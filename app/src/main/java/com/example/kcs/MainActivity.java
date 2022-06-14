@@ -1,8 +1,7 @@
 package com.example.kcs;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,8 +15,10 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
+import com.example.kcs.BreadCrumbs.BreadCrumbList;
+import com.example.kcs.BreadCrumbs.BreadCrumbsAdapter;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
@@ -28,20 +29,21 @@ import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemFragment;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemListAdapters;
-import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersFragment;
-import com.example.kcs.Fragment.Profile.ProfileFragment;
+import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
+import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersFragment;
+import com.example.kcs.Fragment.Settings.Profile.ProfileFragment;
+import com.example.kcs.Fragment.Session.SessionFragment;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private String TAG = "MainActivity";
@@ -51,34 +53,81 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
 
+    //Bread Crumbs
+    private LinearLayout breadCrums;
+    private RecyclerView recyclerview_breadcrumbs;
+    private BreadCrumbsAdapter breadCrumbsAdapter;
+    private List<BreadCrumbList> breadcrumbsList = new ArrayList<>();
+
     //snack bar
     private RecyclerView recyclerview_selected_count;
-    private AppCompatButton order_btn, cancel_btn;
-    private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps = new ArrayList<>();
+    //private AppCompatButton order_btn, cancel_btn;
+    //private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps = new ArrayList<>();
+    private LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap = new LinkedHashMap<>();
     private List<UserItemList> userItemLists = new ArrayList<>();
+    private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private UserItemListAdapters userItemListAdapters;
-    private String headerList_title, func_title;
+    private String headerList_title, func_title, session_title;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
+    private CardView view_cart_cardView;
+    private String user_name;
+    private Integer integer, frag_integer = -1;
+    //header map
+    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
+    private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
+    private String date_time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         View parentLayout = findViewById(android.R.id.content);
+        recyclerview_breadcrumbs = findViewById(R.id.recyclerview_breadcrumbs);
+        breadCrums = findViewById(R.id.breadCrums);
 
         MyLog.e(TAG, "logout>> main activity ");
-
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
-
         firebaseDatabase = FirebaseDatabase.getInstance();
+        user_name = new SharedPreferences_data(getApplication()).getS_user_name();
+
+        //to load data base
+        getViewModel.GetHeader();
+        getViewModel.GetFun();
+        getViewModel.GetSession();
+        getViewModel.GetItem();
+        getViewModel.GetImg();
+        getViewModel.GetSessionTime();
+
+
+        recyclerview_breadcrumbs.setHasFixedSize(true);
+        recyclerview_breadcrumbs.setLayoutManager(new LinearLayoutManager(getApplication(), LinearLayoutManager.HORIZONTAL, false));
+
+
+        //get breadcrumbs list
+        getViewModel.getBreadCrumbListsMutableLiveData().observe(this, new Observer<List<BreadCrumbList>>() {
+            @Override
+            public void onChanged(List<BreadCrumbList> breadCrumbLists) {
+                breadcrumbsList = breadCrumbLists;
+                if (breadcrumbsList != null) {
+                    breadCrumbsAdapter = new BreadCrumbsAdapter(getApplicationContext(), getViewModel, breadcrumbsList);
+                    recyclerview_breadcrumbs.setAdapter(breadCrumbsAdapter);
+                }
+            }
+        });
+
 
         //get header title
         getViewModel.getHeader_title_Mutable().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 headerList_title = s;
+
             }
         });
 
@@ -87,13 +136,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(String s) {
                 func_title = s;
+
             }
         });
+
+        //get session_title
+        getViewModel.getSession_titleMutable().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                session_title = s;
+
+            }
+        });
+
         //get header list
         getViewModel.getHeaderListMutableList().observe(this, new Observer<List<HeaderList>>() {
             @Override
             public void onChanged(List<HeaderList> headerLists1) {
-                headerLists=headerLists1;
+                headerLists = headerLists1;
             }
         });
 
@@ -104,8 +164,9 @@ public class MainActivity extends AppCompatActivity {
         Snackbar.SnackbarLayout snackbarLayout = (Snackbar.SnackbarLayout) snackbar.getView();
         snackbarLayout.addView(customSnackView, 0);
         snackbarLayout.setPadding(0, 0, 0, 0);
-        cancel_btn = customSnackView.findViewById(R.id.cancel_btn);
-        order_btn = customSnackView.findViewById(R.id.order_btn);
+
+
+        view_cart_cardView = customSnackView.findViewById(R.id.view_cart_cardView);
         recyclerview_selected_count = customSnackView.findViewById(R.id.recyclerview_selected_count);
 
 
@@ -113,43 +174,122 @@ public class MainActivity extends AppCompatActivity {
         recyclerview_selected_count.setLayoutManager(new LinearLayoutManager(getApplication(), LinearLayoutManager.HORIZONTAL, false));
 
 
-        //get hash map checked list
-        getViewModel.getCheck_s_mapMutable().observe(this, new Observer<List<LinkedHashMap<String, List<CheckedList>>>>() {
+        // func hash map of checked list
+        /*getViewModel.getFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
             @Override
-            public void onChanged(List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps1) {
-                linkedHashMaps = linkedHashMaps1;
-                //MyLog.e(TAG, "s_map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
-                List<CheckedList> list = new ArrayList<>();
-               // MyLog.e(TAG, "maps>>s_map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(linkedHashMaps));
-                MyLog.e(TAG, "maps>>title>>" +headerList_title);
-                MyLog.e(TAG,"chs>>before"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
-                for (int k = 0; k < linkedHashMaps.size(); k++) {
-                    list = linkedHashMaps.get(k).get(headerList_title);
-                    if (list != null) {
-                        //MyLog.e(TAG, "maps>>checked list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(list));
-                        UserItemList userItemList = new UserItemList(
-                                headerList_title,
-                                list.size()
-                        );
-                        userItemLists.add(userItemList);
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
+                funcMap=stringLinkedHashMapLinkedHashMap;
+                Set<String> stringSet = funcMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+
+                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                selectedSessionLists.clear();
+                for (int i = 0; i < aList.size(); i++) {
+                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                    SelectedSessionList list = new SelectedSessionList(
+                            aList.get(i)
+                    );
+                    selectedSessionLists.add(list);
+                }
+                getViewModel.setSelectedSessionLists(selectedSessionLists);
+
+            }
+        });*/
+
+        //get selected session list
+        getViewModel.getSelectedSessionListsMutableLiveData().observe(this, new Observer<List<SelectedSessionList>>() {
+            @Override
+            public void onChanged(List<SelectedSessionList> selectedSessionLists1) {
+                selectedSessionLists = selectedSessionLists1;
+                MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
+                sessionMap = funcMap.get(func_title);
+
+                MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
+
+                for (int k = 0; k < selectedSessionLists.size(); k++) {
+                    if (session_title.equals(selectedSessionLists.get(k).getSession_title())) {
+                        date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getDate_time());
+                        headerMap = sessionMap.get(date_time);
+
+                        Set<String> stringSet = headerMap.keySet();
+                        List<String> aList = new ArrayList<String>(stringSet.size());
+                        for (String x : stringSet)
+                            aList.add(x);
+
+                        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                        userItemLists.clear();
+                        for (int i = 0; i < aList.size(); i++) {
+                            MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                            MyLog.e(TAG, "chs>>list size " + headerMap.get(aList.get(i)).size());
+                            UserItemList userItemList = new UserItemList(
+                                    aList.get(i),
+                                    headerMap.get(aList.get(i)).size()
+                            );
+                            userItemLists.add(userItemList);
+                        }
                         getViewModel.setUserItemLists(userItemLists);
-                        if (userItemList.getList_size() > 0) {
+                        MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
+                        if (userItemLists.size() > 0) {
                             snackbar.show();
+                            MyLog.e(TAG, "chs>>snackbar Show");
                         } else {
                             snackbar.dismiss();
                         }
+                        break;
                     } else {
-                        MyLog.e(TAG, "maps>>checked list is null");
+                        continue;
                     }
                 }
-                MyLog.e(TAG,"chs>>after"+ new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
-
-
-                }
-                // MyLog.e(TAG, "items>>userList>>" + new GsonBuilder().setPrettyPrinting().create().toJson(userItemLists));
-
-
+            }
         });
+
+        //func map
+        getViewModel.getFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
+                funcMap = stringLinkedHashMapLinkedHashMap;
+
+
+
+            }
+        });
+
+        /*getViewModel.getF_mapMutable().observe(this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
+                stringListLinkedHashMap = stringListLinkedHashMap1;
+                MyLog.e(TAG, "chs>>keyset>>" + stringListLinkedHashMap.keySet());
+
+                Set<String> stringSet = stringListLinkedHashMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+
+                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                userItemLists.clear();
+                for (int i = 0; i < aList.size(); i++) {
+                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                    MyLog.e(TAG, "chs>>list size " + stringListLinkedHashMap.get(aList.get(i)).size());
+                    UserItemList userItemList = new UserItemList(
+                            aList.get(i),
+                            stringListLinkedHashMap.get(aList.get(i)).size()
+                    );
+                    userItemLists.add(userItemList);
+                }
+                getViewModel.setUserItemLists(userItemLists);
+                MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
+                if (userItemLists.size() > 0) {
+                    snackbar.show();
+                } else {
+                    snackbar.dismiss();
+                }
+
+
+            }
+        });*/
+
 
         //get user-item list
         getViewModel.getUserItemListsMutableLiveData().observe(this, new Observer<List<UserItemList>>() {
@@ -167,17 +307,70 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<CheckedList> checkedLists1) {
                 checkedLists = checkedLists1;
-
-
                 snackbar.show();
-                //order btn
-                order_btn.setOnClickListener(new View.OnClickListener() {
+
+                //get View Cart Btn details
+                //get func list
+                getViewModel.getFunMutableList().observe(MainActivity.this, new Observer<List<FunList>>() {
+                    @Override
+                    public void onChanged(List<FunList> funLists1) {
+                        funLists = funLists1;
+                        MyLog.e(TAG, "fun>>in" + funLists.size());
+                    }
+                });
+
+                //get linked hasp map to view item list
+                //get Checked list hash map
+                getViewModel.getF_mapMutable().observe(MainActivity.this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+                    @Override
+                    public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
+                        stringListLinkedHashMap = stringListLinkedHashMap1;
+
+
+                    }
+                });
+
+
+                Set<String> stringSet = headerMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+
+                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                selectedHeadersList.clear();
+                for (int i = 0; i < aList.size(); i++) {
+                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                    SelectedHeader list = new SelectedHeader(
+                            aList.get(i)
+
+                    );
+                    selectedHeadersList.add(list);
+                }
+                getViewModel.setSelectedHeadersList(selectedHeadersList);
+
+
+                //which fragment going to pass
+                getViewModel.getI_fragmentMutable().observe(MainActivity.this, new Observer<Integer>() {
+                    @Override
+                    public void onChanged(Integer integer1) {
+                        integer = integer1;
+
+                    }
+                });
+
+                view_cart_cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (checkedLists.size() > 0) {
-                            GetOrderBtn(checkedLists, func_title);
+                        snackbar.dismiss();
+                        //get func title is selected
+                        //GetFuncTitleList(funLists, stringListLinkedHashMap, integer);
+                        MyLog.e(TAG, "integer>>int>>" + integer);
+                        if (integer == 1) {
+                            MyLog.e(TAG, "integer>>title>>out>>" + func_title);
+                            getViewModel.setI_value(5);
                         } else {
-                            Toast.makeText(MainActivity.this, "Empty List", Toast.LENGTH_SHORT).show();
+                            MyLog.e(TAG, "integer>>fun>>out>>" + funLists.size());
+                            showAlertDialog(funLists);
                         }
 
                     }
@@ -194,6 +387,16 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getValue().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
+                frag_integer = integer;
+                //breadCrums
+                if (integer == 0) {
+                    breadCrums.setVisibility(View.GONE);
+                } else {
+                    breadCrums.setVisibility(View.VISIBLE);
+
+                }
+
+
                 MyLog.e(TAG, "integer>>" + integer);
                 Fragment fragment = new Fragment();
                 FragmentManager fragmentManager = getSupportFragmentManager();
@@ -205,17 +408,13 @@ public class MainActivity extends AppCompatActivity {
                 switch (integer) {
                     case 0:
                         fragment = new HomeFragment();
-
                         fragmentTAg = "HomeFragment";
                         break;
                     case 1:
-                        //MyLog.e(TAG, "Data>>fun list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getHeaderLists()));
                         fragment = new HeaderFragment();
-
                         fragmentTAg = "HeaderFragment";
                         break;
                     case 2:
-                        //MyLog.e(TAG, "Data>>header list>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myViewModel.getItemLists()));
                         fragment = new ItemFragment();
 
                         fragmentTAg = "ItemFragment";
@@ -229,6 +428,14 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new MyOrdersFragment();
 
                         fragmentTAg = "MyOrdersFragment";
+                        break;
+                    case 5:
+                        fragment = new PlaceOrderFragment();
+                        fragmentTAg = "PlaceOrderFragment";
+                        break;
+                    case 6:
+                        fragment = new SessionFragment();
+                        fragmentTAg = "SessionFragment";
                         break;
                     default:
                         fragment = new HomeFragment();
@@ -247,89 +454,58 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /*private void GetFuncTitleList(List<FunList> funLists, LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap, Integer integer) {
+
+        selectedHeadersList=new ArrayList<>();
+        //get linked hasp map to view item list
+        Set<String> stringSet = stringListLinkedHashMap.keySet();
+
+        for (String a : stringSet) {
+            SelectedHeader aList = new SelectedHeader(
+                    a
+            );
+            selectedHeadersList.add(aList);
+
+        }
+        getViewModel.setSelectedHeadersList(selectedHeadersList);
+        MyLog.e(TAG, "integer>>int>>" + integer);
+        if (integer == 1) {
+            MyLog.e(TAG, "integer>>title>>out>>" + func_title);
+            getViewModel.setI_value(5);
+        } else {
+            MyLog.e(TAG, "integer>>fun>>out>>" + funLists.size());
+            showAlertDialog(funLists);
+        }
+
+
+    }*/
+
     @Override
     public void onBackPressed() {
-        /*if (supportFragmentManager.backStackEntryCount > 0) {
-///val done=supportFragmentManager.popBackStackImmediate()
-MyLog.i(TAG, "onBackPressedAct:onBackPressed pop:")
-super.onBackPressed()
-} else {
-
-//snack
-
-}*/
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             ///val done=supportFragmentManager.popBackStackImmediate()
-            MyLog.i(TAG, "onBackPressedAct:onBackPressed pop:");
+            if (breadcrumbsList != null && breadcrumbsList.size() > 0) {
+                breadcrumbsList.remove(breadcrumbsList.size() - 1);
+                getViewModel.setBreadCrumbLists(breadcrumbsList);
+                breadCrums.setVisibility(View.VISIBLE);
+            } else {
+                breadCrums.setVisibility(View.GONE);
+            }
             //super.onBackPressed();
             getSupportFragmentManager().popBackStackImmediate();
         } else {
+
             super.onBackPressed();
-            MyLog.i(TAG, "onBackPressedAct:onBackPressed in:");
+            MyLog.e(TAG, "breadcrumbs>>onBackPressedAct:onBackPressed in:");
             //snack
 
         }
 
     }
 
-    private void GetOrderBtn(List<CheckedList> checkedLists, String func_title) {
-
-        //get func list
-        getViewModel.getFunMutableList().observe(this, new Observer<List<FunList>>() {
-            @Override
-            public void onChanged(List<FunList> funLists1) {
-                funLists = funLists1;
-                MyLog.e(TAG, "fun>>in" + funLists.size());
-            }
-        });
-
-        //fragment
-        getViewModel.getI_fragmentMutable().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-
-                MyLog.e(TAG, "int>>" + integer);
-                if (integer == 1) {
-                    MyLog.e(TAG, "title>>out" + func_title);
-                    SaveOrders(func_title);
-                } else {
-                    MyLog.e(TAG, "fun>>out" + funLists.size());
-                    showAlertDialog(funLists);
-
-                }
-
-            }
-        });
-
-    }
-
-    private void SaveOrders(String func_title) {
-        databaseReference = firebaseDatabase.getReference("Orders");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String user_name = new SharedPreferences_data(getApplication()).getS_user_name();
-
-                for (int i = 0; i < checkedLists.size(); i++) {
-                    //getFunc
-                    databaseReference.child(user_name).child(func_title).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists.get(i).getItemList());
-                }
-
-
-                Toast.makeText(MainActivity.this, "data added", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // if the data is not added or it is cancelled then
-                // we are displaying a failure toast message.
-                Toast.makeText(MainActivity.this, "Fail to add data " + error, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void showAlertDialog(List<FunList> funLists) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getApplication());
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
         alertDialog.setTitle("Please select Function Type!");
         String[] str = new String[funLists.size()];
         for (int i = 0; i < funLists.size(); i++) {
@@ -345,7 +521,8 @@ super.onBackPressed()
                     if (which == i) {
                         getViewModel.setFunc_title(str[i]);
                         dialog.dismiss();
-                        SaveOrders(str[i]);
+                        getViewModel.setI_value(5);
+
                         break;
                     } else {
                         continue;
