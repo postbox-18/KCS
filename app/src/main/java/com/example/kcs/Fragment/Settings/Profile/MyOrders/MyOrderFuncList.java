@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.Profile.MyOrders;
+package com.example.kcs.Fragment.Settings.Profile.MyOrders;
 
 public class MyOrderFuncList {
     private final String func;

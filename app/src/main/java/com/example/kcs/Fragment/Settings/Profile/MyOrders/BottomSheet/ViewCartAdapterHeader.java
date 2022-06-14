@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.Profile.MyOrders.BottomSheet;
+package com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
+import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
@@ -31,7 +32,8 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> header=new ArrayList<>();
-
+    //edit hash map list
+    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
 
     public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title) {
         this.context=context;
@@ -54,19 +56,37 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        MyLog.e(TAG, "edit>>s View header");
         final SelectedHeader list=header.get(position);
         holder.header.setText(list.getHeader());
+
+
+        //get edit selected header list
+        getViewModel.getE_selectedHeadersLive().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
+            @Override
+            public void onChanged(List<SelectedHeader> selectedHeaders) {
+                e_selectedHeaders=selectedHeaders;
+            }
+        });
+
+        e_selectedHeaders=new ArrayList<>();
+        getViewModel.setE_selectedHeaders(e_selectedHeaders);
+
+
+
+
         //get order item view list hash map
         getViewModel.getOrderItemList_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<OrderItemLists>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<OrderItemLists>> stringListLinkedHashMap) {
                 orderItemListss=new ArrayList<>();
+
                 MyLog.e(TAG,"myord>> header>>"+func_title+"-"+session_title+"-"+list.getHeader());
                 orderItemListss=stringListLinkedHashMap.get(func_title+"-"+session_title+"-"+list.getHeader());
                 holder.recyclerview_item_list.setHasFixedSize(true);
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
                 if(orderItemListss!=null) {
-                    viewCartAdapter = new ViewCartAdapter(context, getViewModel, orderItemListss);
+                    viewCartAdapter = new ViewCartAdapter(context, getViewModel, orderItemListss,func_title,session_title,list.getHeader());
                     holder.recyclerview_item_list.setAdapter(viewCartAdapter);
                 }
             }

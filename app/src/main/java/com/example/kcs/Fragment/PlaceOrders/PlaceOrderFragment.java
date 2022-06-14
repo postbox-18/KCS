@@ -64,7 +64,6 @@ public class PlaceOrderFragment extends Fragment {
     /*private RecyclerView recyclerview_order_list;
     private PlaceOrderViewCartAdapterHeader viewCartAdapter;*/
     private AppCompatButton order_btn;
-
     private List<FunList> funLists = new ArrayList<>();
     private List<UserItemList> userItemLists = new ArrayList<>();
     private List<CheckedList> checkedLists = new ArrayList<>();

@@ -32,14 +32,13 @@ import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemListAdapters;
 import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
-import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersFragment;
-import com.example.kcs.Fragment.Profile.ProfileFragment;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersFragment;
+import com.example.kcs.Fragment.Settings.Profile.ProfileFragment;
 import com.example.kcs.Fragment.Session.SessionFragment;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

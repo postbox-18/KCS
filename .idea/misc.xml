@@ -36,6 +36,7 @@
         <entry key="app/src/main/res/drawable/ic_gear_fill_tool.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_kitchen_set_solid.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_kitchen_set_solid_tool.xml" value="0.184" />
+        <entry key="app/src/main/res/drawable/ic_knife_01.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_truckclock.xml" value="0.116" />
         <entry key="app/src/main/res/drawable/ic_user_solid.xml" value="0.184" />
@@ -48,9 +49,9 @@
         <entry key="app/src/main/res/layout/app_bar_home.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/app_bar_home__sample.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/bottom_sheet_order_details.xml" value="0.19375" />
-        <entry key="app/src/main/res/layout/bottom_sheet_order_header.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/bottom_sheet_order_header.xml" value="0.2" />
         <entry key="app/src/main/res/layout/bottom_sheet_order_item_list.xml" value="0.19375" />
-        <entry key="app/src/main/res/layout/bottom_sheet_order_session.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/bottom_sheet_order_session.xml" value="0.14" />
         <entry key="app/src/main/res/layout/content_home.xml" value="0.18425925925925926" />
         <entry key="app/src/main/res/layout/custom_snackbar_view.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/dialog_done.xml" value="0.19270833333333334" />

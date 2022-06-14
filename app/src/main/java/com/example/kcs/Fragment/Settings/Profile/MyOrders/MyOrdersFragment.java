@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.Profile.MyOrders;
+package com.example.kcs.Fragment.Settings.Profile.MyOrders;
 
 import android.os.Bundle;
 
@@ -17,10 +17,11 @@ import android.widget.TextView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 
+import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
-import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.ViewCartAdapterSession;
-import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems.MyOrdersAdapter;
-import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems.MyOrdersList;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapterSession;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersAdapter;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -70,6 +71,9 @@ public class MyOrdersFragment extends Fragment {
     private TextView func;
     private LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap=new LinkedHashMap<>();
 
+
+
+
     public MyOrdersFragment() {
         // Required empty public constructor
     }
@@ -96,6 +100,8 @@ public class MyOrdersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        MyLog.e(TAG, "edit>>s View myorder fragments");
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_orders, container, false);
 
@@ -111,7 +117,10 @@ public class MyOrdersFragment extends Fragment {
 
         //to load data in my order details
         getViewModel.GetMyOrdersDetails(s_user_name);
+
         getViewModel.setFunc_Session(null);
+
+
 
         //get Func name list
         getViewModel.getMyOrderFuncListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<MyOrderFuncList>>() {
@@ -145,14 +154,6 @@ public class MyOrdersFragment extends Fragment {
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
 
-                   /* //get session list
-                    MyLog.e(TAG,"myord>>deatils>>"+s_user_name+"\t\t"+func_title);
-                    sessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);*/
-                   /* sessionLists.clear();
-                    SessionList sessionList1=new SessionList(
-                            str[1]
-                    );
-                    sessionLists.add(sessionList1);*/
                     recyclerview_order_session_deatils.setHasFixedSize(true);
                     recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                     ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,str[0],null,str[1]);
@@ -187,7 +188,6 @@ public class MyOrdersFragment extends Fragment {
 
                     //get session list
                     MyLog.e(TAG,"SessionList>>deatils>>"+s_user_name+"\t\t"+func_title);
-                    MyLog.e(TAG, "myord>>stringListLinkedHashMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
                     //sessionLists.clear();
                     sessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
                     recyclerview_order_session_deatils.setHasFixedSize(true);

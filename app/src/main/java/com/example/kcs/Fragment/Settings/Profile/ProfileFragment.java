@@ -1,11 +1,10 @@
-package com.example.kcs.Fragment.Profile;
+package com.example.kcs.Fragment.Settings.Profile;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
-import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Login_Register.LoginActivity;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;

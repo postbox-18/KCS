@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,11 +15,10 @@ import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.PlaceOrders.Header.PlaceOrderViewCartAdapterHeader;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
-import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.OrderItemLists;
-import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.ViewCartAdapter;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapter;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
