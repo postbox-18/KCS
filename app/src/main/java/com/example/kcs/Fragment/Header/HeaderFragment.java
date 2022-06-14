@@ -26,6 +26,9 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Items.ItemList;
 
+import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
+import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.TimeList;
@@ -35,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,7 +70,7 @@ public class HeaderFragment extends Fragment {
     //date and time
     private TextView date_picker_actions;
     private TextView time_picker;
-    private String funcTitle,s_time_picker,s_date_picker_actions;
+    private String funcTitle,s_time_picker,s_date_picker_actions,e_session_title,date_time;
     private DatePickerDialog datePicker;
     private List<TimeList> timeLists = new ArrayList<>();
 
@@ -74,8 +78,14 @@ public class HeaderFragment extends Fragment {
     private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
     private LinkedHashMap<String, List<SessionDateTime>> f_mapsdtMutable = new LinkedHashMap<>();
     private int mYear, mMonth, mDay, mHour, mMinute;
-
     private String TAG = "HeaderFragment";
+    //edit hash map
+    //edit hash map list
+    private List<SessionList> e_sessionLists=new ArrayList<>();
+    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
 
     public HeaderFragment() {
 
@@ -148,7 +158,25 @@ public class HeaderFragment extends Fragment {
             }
         });
 
+        //get edit func map
+        getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
+                editFunc_Map=stringLinkedHashMapLinkedHashMap;
+                editSessionMap=editFunc_Map.get(funcTitle);
+                Set<String> stringSet = editSessionMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+                String[] str =(aList.get(0)).split("!");
+                e_session_title=str[0];
+                date_time=str[1];
+               session_title.setText(e_session_title);
+               date_picker_actions.setText(date_time);
 
+
+            }
+        });
 
 
         //get time picker
@@ -262,18 +290,7 @@ public class HeaderFragment extends Fragment {
 
             }
         });
-        //get SessionDateTime Hash Map
-        /*getViewModel.getF_mapsdtMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
-                f_mapsdtMutable = stringListLinkedHashMap;
-                MyLog.e(TAG, "datetime>>set >>" + funcTitle + "-" + s_session_title);
-                sessionDateTimes = f_mapsdtMutable.get(funcTitle + "-" + s_session_title);
-                getViewModel.setSessionDateTimes(sessionDateTimes);
 
-
-            }
-        });*/
 
 
         //get header list
@@ -283,16 +300,6 @@ public class HeaderFragment extends Fragment {
                 headerList = headerLists;
             }
         });
-
-
-        //get time to print value
-        /*getViewModel.getTime_pickerMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                time_picker.setText(s);
-            }
-        });
-*/
 
 
         //list hashmap of itemlist
@@ -380,83 +387,6 @@ public class HeaderFragment extends Fragment {
 
         return view;
     }
-    /*private void CheckTime(String s_session_title, String s_date_picker_actions, int hourOfDay, int minute) {
-        String t_time=(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute));
-        String date_time=s_date_picker_actions+" "+t_time;
-        MyLog.e(TAG,"dateTime>>date_time>>"+date_time);
-        String start_dt,end_dt;
-        if(s_session_title.equals("Breakfast")||s_session_title.equals("Break Fast"))
-        {
-
-            start_dt=s_date_picker_actions+" 06:00";
-            end_dt=s_date_picker_actions+" 11:00";
-            alertTime(s_session_title,start_dt,end_dt,date_time,hourOfDay,minute,s_date_picker_actions);
-
-
-        }
-        else if(s_session_title.equals("Lunch"))
-        {
-            start_dt=s_date_picker_actions+" 12:00";
-            end_dt=s_date_picker_actions+" 16:00";
-            alertTime(s_session_title,start_dt,end_dt,date_time,hourOfDay,minute, s_date_picker_actions);
-        }
-        else if(s_session_title.equals("Dinner"))
-        {
-            start_dt=s_date_picker_actions+" 17:00";
-            end_dt=s_date_picker_actions+" 22:00";
-            alertTime(s_session_title,start_dt,end_dt,date_time,hourOfDay,minute, s_date_picker_actions);
-
-        }
-
-
-
-    }
-
-    private void alertTime(String s_session_title, String start_dt, String end_dt, String date_time, int hourOfDay, int minute, String s_date_picker_actions) {
-
-          *//* MyLog.e(TAG,"dateTime>>startdate_time>>"+start_dt);
-            MyLog.e(TAG,"dateTime>>endDateTime>>"+end_dt);
-            MyLog.e(TAG,"dateTime>>start>>"+date_time.compareTo(start_dt));
-            MyLog.e(TAG,"dateTime>>end>>"+date_time.compareTo(end_dt));*//*
-        if(date_time.compareTo(start_dt)>=0 && date_time.compareTo(end_dt)<=0)
-        {
-            boolean isPM = (hourOfDay >= 12);
-            time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
-            getViewModel.setTimepicker(time_picker.getText().toString());
-            MyLog.e(TAG, "time>> btn if" + time_picker.getText().toString());
-            SessionDateTime list=new SessionDateTime(
-                    s_session_title,
-                    s_date_picker_actions,
-                    String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM")
-            );
-            sessionDateTimes.add(list);
-            f_mapsdtMutable.put(func,sessionDateTimes);
-
-        }
-        else
-        {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-            alert.setMessage("You Have Selected Time is More Than "+s_session_title+" Session");
-            alert.setTitle("Problem");
-            alert.setCancelable(false);
-            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            AlertDialog alertDialog = alert.create();
-            alertDialog.show();
-
-            time_picker.setError("Please select Time");
-
-        }
-
-
-
-
-    }*/
 
 
 }
