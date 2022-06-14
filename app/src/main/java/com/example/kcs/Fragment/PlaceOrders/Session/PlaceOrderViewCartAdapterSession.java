@@ -57,7 +57,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
     public PlaceOrderViewCartAdapterSession.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
-        View view = layoutInflater.inflate(R.layout.bottom_sheet_order_session, parent, false);
+        View view = layoutInflater.inflate(R.layout.place_order_session, parent, false);
         return new PlaceOrderViewCartAdapterSession.ViewHolder(view);
     }
 
@@ -67,9 +67,13 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
         s_user_name=new SharedPreferences_data(context).getS_user_name();
 
         final SelectedSessionList list=sessionLists.get(position);
-        String s=list.getSession_title()+"  "+list.getDate_time();
-        holder.session_title.setText(s);
+        holder.session_title.setText(list.getSession_title());
+        holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
+
+        holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+        holder.date_timeS.setText(list.getDate_time());
         String a=list.getSession_title()+"-"+list.getDate_time();
+
         headerMap=sessionMap.get(a);
         Set<String> stringSet = headerMap.keySet();
         List<String> aList = new ArrayList<String>(stringSet.size());
@@ -103,7 +107,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView session_title;
+        private TextView session_title,date_timeS;
         private RecyclerView recyclerview_order_item_details;
 
 
@@ -111,6 +115,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
             super(view);
             recyclerview_order_item_details = view.findViewById(R.id.recyclerview_order_item_details);
             session_title = view.findViewById(R.id.session_title);
+            date_timeS = view.findViewById(R.id.date_time);
 
         }
     }
