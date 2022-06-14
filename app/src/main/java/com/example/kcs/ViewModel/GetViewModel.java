@@ -1114,7 +1114,6 @@ public class GetViewModel extends AndroidViewModel {
         editFunc_Map.put(func_title,editSessionMap);
         //set
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
-        MyLog.e(TAG, "edit>>editFunc_Maps\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
 
     }
