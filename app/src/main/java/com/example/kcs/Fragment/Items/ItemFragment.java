@@ -162,8 +162,6 @@ public class ItemFragment extends Fragment {
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
                 sessionMap = funcMap.get(func_title);
-                MyLog.e(TAG, "placeorders>>date_time sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
-                MyLog.e(TAG, "placeorders>>get sessionMap>>" + session_title);
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
                     if(session_title.equals(selectedSessionLists.get(k).getSession_title())) {
@@ -175,7 +173,6 @@ public class ItemFragment extends Fragment {
                             // headerMap=sessionMap.get(date_time);
                         } else {
                             headerMap = sessionMap.get(date_time);
-                            MyLog.e(TAG, "placeorders>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
                         }
                         break;
                     }
@@ -206,7 +203,6 @@ public class ItemFragment extends Fragment {
             @Override
             public void onChanged(List<ItemList> itemLists1) {
                 MyLog.e(TAG, "placeorders>> ItemListAdapater" );
-                MyLog.e(TAG, "placeorders>>date_time setAdapter headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
                 itemLists = itemLists1;
                 recyclerview_item.setHasFixedSize(true);
                 recyclerview_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

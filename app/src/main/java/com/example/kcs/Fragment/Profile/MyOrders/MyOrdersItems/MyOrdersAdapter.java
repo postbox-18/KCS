@@ -61,7 +61,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
                 String username=new SharedPreferences_data(context).getS_user_name();
                 sessionLists=stringListLinkedHashMap.get(username+"-"+myOrderFuncLists1.getFunc());
                 holder.recyclerview_session.setHasFixedSize(true);
-                holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
                 MyorderSessiondapters itemListAdapters = new MyorderSessiondapters(context, myOrderFuncLists1.getFunc(),getViewModel,sessionLists);
                 holder.recyclerview_session.setAdapter(itemListAdapters);
             }

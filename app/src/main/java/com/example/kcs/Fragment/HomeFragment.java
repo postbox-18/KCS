@@ -177,36 +177,6 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    private void GetItem(HeaderList headerList1) {
-        databaseReference = firebaseDatabase.getReference("Items").child("List");
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG, "list>>snap>>" + snapshot);
-                int size=0;
-                    MyLog.e(TAG, "list>>snap>>fun>>" + snapshot.child(headerList1.getHeader()).getValue());
-                    itemLists=new ArrayList<>();
-                    ArrayList<String> str = new ArrayList<>();
-                    str= (ArrayList<String>) snapshot.child(headerList1.getHeader()).getValue();
-                    for(String i:str) {
-                        MyLog.e(TAG,"list>>"+i);
-                        ItemList itemLists1 = new ItemList(
-                                i);
-                        itemLists.add(itemLists1);
-                    }
-                    size++;
-
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG, "list>>snap>>fun>>Fail to get data.");
-            }
-        });
-    }
 
 }

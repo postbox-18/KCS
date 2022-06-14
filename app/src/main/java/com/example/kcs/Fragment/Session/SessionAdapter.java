@@ -97,12 +97,10 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                     sessionMap=new LinkedHashMap<>();
                 }
                 else {
-                    MyLog.e(TAG, "placeorder>>date_time sessionMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
                     for (int k = 0; k < selectedSessionLists.size(); k++) {
                         if((sessionList1.getSession_title()).equals(selectedSessionLists.get(k).getSession_title())) {
                             date_time = (sessionList1.getSession_title()) + "-" + (selectedSessionLists.get(k).getDate_time());
                             headerMap = sessionMap.get(date_time);
-                            MyLog.e(TAG, "placeorder>>date_time headerMap>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
                         break;
                         }
                         else

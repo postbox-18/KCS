@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Profile.MyOrders.BottomSheet.ViewCartAdapterSession;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems.MyOrdersAdapter;
 import com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems.MyOrdersList;
@@ -53,13 +54,15 @@ public class MyOrdersFragment extends Fragment {
     private RecyclerView recyclerview_my_orders;
     private List<MyOrdersList> myOrdersList = new ArrayList<>();
     private List<MyOrderFuncList> myOrderFuncLists = new ArrayList<>();
+    private List<SelectedHeader> selectedHeaders = new ArrayList<>();
     private MyOrdersAdapter myOrdersAdapter;
-    private String header, func_title, s_user_name;
+    private String header, func_title, s_user_name,func_session_title;
     private String item = "";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private String TAG = "MyOrdersFragment";
     private LinkedHashMap<String, List<MyOrdersList>> myordersHashMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, List<SelectedHeader>> selectedHeaderMap=new LinkedHashMap<>();
 
     //bottom sheet view
     private RecyclerView recyclerview_order_session_deatils;
@@ -108,6 +111,7 @@ public class MyOrdersFragment extends Fragment {
 
         //to load data in my order details
         getViewModel.GetMyOrdersDetails(s_user_name);
+        getViewModel.setFunc_Session(null);
 
         //get Func name list
         getViewModel.getMyOrderFuncListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<MyOrderFuncList>>() {
@@ -119,20 +123,51 @@ public class MyOrdersFragment extends Fragment {
             }
         });
 
-        //Bottom sheet
+
         BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
         View bottom_view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_order_details, null);
         recyclerview_order_session_deatils = bottom_view.findViewById(R.id.recyclerview_order_session_deatils);
         func = bottom_view.findViewById(R.id.func_title);
 
 
+        //get func session title to show item list
+        getViewModel.getFunc_SessionMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                func_session_title=s;
+                //click on session adapter cardview
+                if (func_session_title != null && !func_session_title.isEmpty()) {
+                    MyLog.e(TAG,"myord>>func>>"+func_session_title);
+                    String[] str=func_session_title.split("/");
+                    func_title=str[0];
+                    func.setText(func_title);
+
+                    bottomSheet.setContentView(bottom_view);
+                    bottomSheet.show();
+
+                   /* //get session list
+                    MyLog.e(TAG,"myord>>deatils>>"+s_user_name+"\t\t"+func_title);
+                    sessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);*/
+                   /* sessionLists.clear();
+                    SessionList sessionList1=new SessionList(
+                            str[1]
+                    );
+                    sessionLists.add(sessionList1);*/
+                    recyclerview_order_session_deatils.setHasFixedSize(true);
+                    recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,str[0],null,str[1]);
+                    recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
+                } else {
+                    MyLog.e(TAG, "myord>> func_session_title null");
+                }
+            }
+        });
         //get session hash map  List
         //get session list
         getViewModel.getSs_f_mapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap1) {
                 stringListLinkedHashMap=stringListLinkedHashMap1;
-
 
             }
         });
@@ -142,6 +177,7 @@ public class MyOrdersFragment extends Fragment {
         getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
+                //click on full adapter cardview
                 if (s != null && !s.isEmpty()) {
                     func_title=s;
                     func.setText(s);
@@ -151,16 +187,17 @@ public class MyOrdersFragment extends Fragment {
 
                     //get session list
                     MyLog.e(TAG,"SessionList>>deatils>>"+s_user_name+"\t\t"+func_title);
+                    MyLog.e(TAG, "myord>>stringListLinkedHashMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                    //sessionLists.clear();
                     sessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
-
-
                     recyclerview_order_session_deatils.setHasFixedSize(true);
                     recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s,sessionLists);
+                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s,sessionLists, null);
                     recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "func_title>> orderItemView list null");
                 }
+
 
             }
         });

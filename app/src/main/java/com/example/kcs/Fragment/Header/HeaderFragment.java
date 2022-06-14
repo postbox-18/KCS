@@ -267,11 +267,9 @@ public class HeaderFragment extends Fragment {
             @Override
             public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
                 f_mapsdtMutable = stringListLinkedHashMap;
-                MyLog.e(TAG,"dateTime>> gson>>"+new GsonBuilder().setPrettyPrinting().create().toJson(f_mapsdtMutable));
                 MyLog.e(TAG, "datetime>>set >>" + funcTitle + "-" + s_session_title);
                 sessionDateTimes = f_mapsdtMutable.get(funcTitle + "-" + s_session_title);
                 getViewModel.setSessionDateTimes(sessionDateTimes);
-                MyLog.e(TAG, "datetime>>set sessionDateTimes>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
 
 
             }

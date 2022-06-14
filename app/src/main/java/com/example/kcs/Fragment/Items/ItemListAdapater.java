@@ -120,7 +120,6 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
             for (int k = 0; k < selected_s_map.size(); k++) {
                 checkedLists = selected_s_map.get(k).get(header);
                 if (checkedLists != null) {
-                    MyLog.e(TAG, "placeorders>>checkedLists selected>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                     for (int i = 0; i < checkedLists.size(); i++) {
                         final CheckedList checkedLists1 = checkedLists.get(i);
                         MyLog.e(TAG, "checked>>" + checkedLists1.getPosition());
@@ -142,7 +141,17 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         }
         MyLog.e(TAG, "hashmap>>size>>" + selected_s_map.size());
 
+
         holder.item_check.setText(itemList1.getItem());
+        if(itemList1.getSelected().equals("true"))
+        {
+            holder.item_check.setTextColor(context.getResources().getColor(R.color.colorPrimary));
+        }
+        else {
+            holder.item_check.setTextColor(context.getResources().getColor(R.color.light_gray));
+            holder.item_check.setEnabled(false);
+        }
+
         holder.item_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -203,7 +212,6 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                     getViewModel.setSessionMap(sessionMap);
                     //set func map
                     getViewModel.setFuncMap(funcMap);
-                    MyLog.e(TAG, "placeorders>>date_time funcMap after>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
                     MyLog.e(TAG, "selected_s_map>>size>>" + selected_s_map.size());
                     selected_s_map.add(headerMap);
                     getViewModel.setCheck_s_map(selected_s_map);

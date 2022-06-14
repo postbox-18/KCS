@@ -51,8 +51,10 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     public void onBindViewHolder(@NonNull MyorderSessiondapters.ViewHolder holder, int position) {
         final SessionList sessionLists1 = sessionLists.get(position);
 
-        //get data func,header,list item size from hash map
-        holder.session_title.setText(sessionLists1.getSession_title());
+        //set session title and date
+        String[] str=(sessionLists1.getSession_title()).split("!");
+        holder.session_title.setText(str[0]);
+        holder.date_time.setText(str[1]);
 
         //get hash map of my orders list
         getViewModel.getF_mapMyordersMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<MyOrdersList>>>() {
@@ -65,6 +67,15 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                 MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
                 holder.recyclerview_item_list.setAdapter(itemListAdapters);
+            }
+        });
+
+        //on click
+        holder.session_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String s=func_title+"/"+sessionLists1.getSession_title();
+                    getViewModel.setFunc_Session(s);
             }
         });
 
@@ -82,8 +93,8 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profile;
-        private TextView session_title;
-        private CardView card_view;
+        private TextView session_title,date_time;
+        private CardView session_card;
         private RecyclerView recyclerview_item_list;
 
         public ViewHolder(View view) {
@@ -91,7 +102,8 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             profile = view.findViewById(R.id.profile);
             recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
             session_title = view.findViewById(R.id.session_title);
-            card_view = view.findViewById(R.id.card_view);
+            date_time = view.findViewById(R.id.date_time);
+            session_card = view.findViewById(R.id.session_card);
 
 
         }
