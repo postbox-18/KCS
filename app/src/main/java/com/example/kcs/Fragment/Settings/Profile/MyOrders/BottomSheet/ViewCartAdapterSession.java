@@ -38,6 +38,10 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
     private List<SessionList> e_sessionLists=new ArrayList<>();
+    //edit hash map list
+
+    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
+
     public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SessionList> sessionLists, String s1) {
         this.context = context;
         this.getViewModel = getViewModel;
@@ -63,7 +67,17 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         //get user name shared prefernces
         s_user_name = new SharedPreferences_data(context).getS_user_name();
         //clear
+///////////***************************clear list in live data model****************************//////////////////////
 
+        //get header map
+        getViewModel.getEditHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
+                editHeaderMap=stringListLinkedHashMap;
+            }
+        });
+
+        ///////////***************************clear list in live data model****************************//////////////////////
         //get edit selected header and session list
         getViewModel.getE_sessionListsLive().observe((LifecycleOwner) context, new Observer<List<SessionList>>() {
             @Override
@@ -75,6 +89,8 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
         e_sessionLists=new ArrayList<>();
         getViewModel.setE_sessionLists(e_sessionLists);
+        editHeaderMap=new LinkedHashMap<>();
+        getViewModel.setEditHeaderMap(editHeaderMap);
 
         if (sessionLists == null) {
             String[] s=sess_title.split("!");
