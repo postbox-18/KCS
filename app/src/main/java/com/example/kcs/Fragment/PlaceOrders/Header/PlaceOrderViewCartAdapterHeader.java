@@ -7,14 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Fragment.Items.CheckedList;
 
 import com.example.kcs.Fragment.PlaceOrders.ViewCartAdapter;
+import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
@@ -30,14 +29,21 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> header = new ArrayList<>();
-    private LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
+    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
+    //edit hash map
+    //edit hash map list
+    private List<SessionList> e_sessionLists = new ArrayList<>();
+    private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
 
-
-    public PlaceOrderViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, LinkedHashMap<String, List<CheckedList>> headerMap) {
+    public PlaceOrderViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, LinkedHashMap<String, List<CheckedList>> headerMap, LinkedHashMap<String, List<SelectedHeader>> editHeaderMap) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.header = selectedHeadersList;
         this.headerMap = headerMap;
+        this.editHeaderMap = editHeaderMap;
     }
 
 
@@ -52,16 +58,27 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
 
     @Override
     public void onBindViewHolder(@NonNull PlaceOrderViewCartAdapterHeader.ViewHolder holder, int position) {
-        final SelectedHeader list = header.get(position);
-        holder.header.setText(list.getHeader());
-        //get Checked list hash map
+        if (editHeaderMap == null) {
+            final SelectedHeader list = header.get(position);
+            holder.header.setText(list.getHeader());
+            //get Checked list hash map
 
-                checkedLists = headerMap.get(list.getHeader());
-                holder.recyclerview_item_list.setHasFixedSize(true);
-                holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                viewCartAdapter = new ViewCartAdapter(context, getViewModel, checkedLists);
-                holder.recyclerview_item_list.setAdapter(viewCartAdapter);
+            checkedLists = headerMap.get(list.getHeader());
+            holder.recyclerview_item_list.setHasFixedSize(true);
+            holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+            viewCartAdapter = new ViewCartAdapter(context, getViewModel, checkedLists,null);
+            holder.recyclerview_item_list.setAdapter(viewCartAdapter);
+        } else {
+            final SelectedHeader list = header.get(position);
+            holder.header.setText(list.getHeader());
+            //get Checked list hash map
 
+            e_selectedHeaders = editHeaderMap.get(list.getHeader());
+            holder.recyclerview_item_list.setHasFixedSize(true);
+            holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+            viewCartAdapter = new ViewCartAdapter(context, getViewModel, null,e_selectedHeaders);
+            holder.recyclerview_item_list.setAdapter(viewCartAdapter);
+        }
     }
 
 

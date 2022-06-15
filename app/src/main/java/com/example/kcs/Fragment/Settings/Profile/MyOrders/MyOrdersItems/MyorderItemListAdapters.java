@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems;
+package com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems;
 
 import android.content.Context;
 import android.view.LayoutInflater;

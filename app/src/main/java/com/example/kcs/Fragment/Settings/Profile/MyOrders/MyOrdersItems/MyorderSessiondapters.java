@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.Profile.MyOrders.MyOrdersItems;
+package com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,11 +26,19 @@ import java.util.List;
 
 public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessiondapters.ViewHolder> {
     private Context context;
-    private String TAG="MyorderSessiondapters";
+    private String TAG = "MyorderSessiondapters";
     private String func_title;
     private List<MyOrdersList> myOrdersList;
-    private List<SessionList> sessionLists=new ArrayList<>();
+    private List<SessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
+    //edit hash map list
+    private List<SessionList> e_sessionLists=new ArrayList<>();
+    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
+
+
     public MyorderSessiondapters(Context context, String func_title, GetViewModel getViewModel, List<SessionList> sessionLists) {
         this.func_title = func_title;
         this.context = context;
@@ -52,7 +60,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
         final SessionList sessionLists1 = sessionLists.get(position);
 
         //set session title and date
-        String[] str=(sessionLists1.getSession_title()).split("!");
+        String[] str = (sessionLists1.getSession_title()).split("!");
         holder.session_title.setText(str[0]);
         holder.date_time.setText(str[1]);
 
@@ -61,7 +69,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             @Override
             public void onChanged(LinkedHashMap<String, List<MyOrdersList>> stringListLinkedHashMap) {
 
-                myOrdersList=stringListLinkedHashMap.get(func_title+"/"+sessionLists1.getSession_title());
+                myOrdersList = stringListLinkedHashMap.get(func_title + "/" + sessionLists1.getSession_title());
                 getViewModel.setMyOrdersList(myOrdersList);
                 holder.recyclerview_item_list.setHasFixedSize(true);
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
@@ -69,16 +77,51 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                 holder.recyclerview_item_list.setAdapter(itemListAdapters);
             }
         });
+        ///////////***************************clear list in live data model****************************//////////////////////
+
+        //get func map
+        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
+                editFunc_Map=stringLinkedHashMapLinkedHashMap;
+            }
+        });
+
+
+        //get session map
+        getViewModel.getEditSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> stringLinkedHashMapLinkedHashMap) {
+                editSessionMap=stringLinkedHashMapLinkedHashMap;
+            }
+        });
+
+
+        //get header map
+        getViewModel.getEditHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
+                editHeaderMap=stringListLinkedHashMap;
+            }
+        });
+
+        ///////////***************************clear list in live data model****************************//////////////////////
 
         //on click
         holder.session_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s=func_title+"/"+sessionLists1.getSession_title();
-                    getViewModel.setFunc_Session(s);
+                editFunc_Map=new LinkedHashMap<>();
+                getViewModel.setEditFuncMap(editFunc_Map);
+                editSessionMap=new LinkedHashMap<>();
+                getViewModel.setEditSessionMap(editSessionMap);
+                editHeaderMap=new LinkedHashMap<>();
+                getViewModel.setEditHeaderMap(editHeaderMap);
+                getViewModel.setFunc_title(func_title);
+                String s = func_title + "/" + sessionLists1.getSession_title();
+                getViewModel.setFunc_Session(s);
             }
         });
-
 
 
     }
@@ -93,7 +136,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profile;
-        private TextView session_title,date_time;
+        private TextView session_title, date_time;
         private CardView session_card;
         private RecyclerView recyclerview_item_list;
 

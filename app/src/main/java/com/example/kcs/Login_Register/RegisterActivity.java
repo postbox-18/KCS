@@ -199,6 +199,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
                                     Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
+                                    MyLog.e(TAG,"fail to get data "+error.getMessage());
                                 }
                             });
                             //Next Screen Login
