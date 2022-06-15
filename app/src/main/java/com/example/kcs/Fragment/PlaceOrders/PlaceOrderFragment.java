@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,7 +24,6 @@ import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
-import com.example.kcs.Fragment.PlaceOrders.Header.PlaceOrderViewCartAdapterHeader;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.PlaceOrderViewCartAdapterSession;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
@@ -37,7 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -188,10 +185,10 @@ public class PlaceOrderFragment extends Fragment {
                     MyLog.e(TAG, "chs>>list header>> " + arr[0]);
 
                     MyLog.e(TAG, "chs>>list header>> " + arr[1]);
-                    SelectedSessionList list = new SelectedSessionList(
-                            arr[0],
-                            arr[1]
-                    );
+                    SelectedSessionList list = new SelectedSessionList();
+                    list.setBolen(null);
+                    list.setSession_title(arr[0]);
+                    list.setDate_time(arr[1]);
                     selectedSessionLists.add(list);
                 }
 
@@ -231,10 +228,10 @@ public class PlaceOrderFragment extends Fragment {
                     //set selected session list and session date and time
                     MyLog.e(TAG, "chs>>list header>> " + arr[0]);
                     MyLog.e(TAG, "chs>>list header>> " + arr[1]);
-                    SelectedSessionList list = new SelectedSessionList(
-                            arr[0],
-                            arr[1]
-                    );
+                    SelectedSessionList list = new SelectedSessionList();
+                    list.setBolen(null);
+                    list.setSession_title(arr[0]);
+                    list.setDate_time(arr[1]);
                     selectedSessionLists.add(list);
                 }
 
@@ -331,7 +328,8 @@ public class PlaceOrderFragment extends Fragment {
                     String str=date_time.replace("-","!");
                     String session_str=str.replace("/","-");
                     MyLog.e(TAG, "placeorders>>date_time session_str>>"+session_str);
-                    databaseReference.child(user_name).child(func_title).child(session_str).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
+                    String s=session_str+"_true";
+                    databaseReference.child(user_name).child(func_title).child(s).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
                 MyLog.e(TAG, "comit");
 

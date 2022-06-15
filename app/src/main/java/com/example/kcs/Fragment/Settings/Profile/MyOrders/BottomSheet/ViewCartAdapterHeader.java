@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
-import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
@@ -28,18 +27,19 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapterHeader";
-    private String session_title,func_title;
+    private String session_title,func_title,bolen,sess;
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> header=new ArrayList<>();
     //edit hash map list
     private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
 
-    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title) {
+    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title, String bolen) {
         this.context=context;
         this.getViewModel=getViewModel;
         this.header=selectedHeadersList;
-        this.session_title=session_title;
+        this.bolen=bolen;
+        this.sess=session_title;
         this.func_title=func_title;
     }
 
@@ -58,8 +58,8 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final SelectedHeader list=header.get(position);
         holder.header.setText(list.getHeader());
-
-
+        String[] str=sess.split("_");
+        session_title=str[0];
         //get edit selected header list
         getViewModel.getE_selectedHeadersLive().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
             @Override
@@ -85,7 +85,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
                 holder.recyclerview_item_list.setHasFixedSize(true);
                 holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
                 if(orderItemListss!=null) {
-                    viewCartAdapter = new ViewCartAdapter(context, getViewModel, orderItemListss,func_title,session_title,list.getHeader());
+                    viewCartAdapter = new ViewCartAdapter(context, getViewModel, orderItemListss,func_title,session_title,list.getHeader(),bolen);
                     holder.recyclerview_item_list.setAdapter(viewCartAdapter);
                 }
             }

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Session.SessionList;
@@ -29,16 +30,18 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private String TAG = "ViewCartAdapter";
     private GetViewModel getViewModel;
-    private String func_title, session_title, header;
+    private String func_title, session_title, header,username,bolen;
+    private int n;
 
 
-    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<OrderItemLists> orderItemListss, String func_title, String session_title, String header) {
+    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<OrderItemLists> orderItemListss, String func_title, String session_title, String header, String bolen) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.orderItemListss = orderItemListss;
         this.func_title = func_title;
         this.header = header;
         this.session_title = session_title;
+        this.bolen = bolen;
     }
 
 
@@ -55,8 +58,19 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final OrderItemLists orderItemLists1 = orderItemListss.get(position);
         holder.list.setText(orderItemLists1.getItemList());
+
+        //get username
+        username=new SharedPreferences_data(context).getS_user_name();
+
+        //get Edit Cancel Delete
+        getViewModel.getEcdLive().observe((LifecycleOwner) context, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                n=integer;
+            }
+        });
         //set edit hash map
-        getViewModel.EditMap(func_title, session_title, header, orderItemLists1.getItemList(), position);
+        getViewModel.EditMap(func_title, session_title, header, orderItemLists1.getItemList(), position,n,username,bolen);
 
     }
 
