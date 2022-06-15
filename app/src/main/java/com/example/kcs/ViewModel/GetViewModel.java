@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class GetViewModel extends AndroidViewModel {
     //Header List
@@ -102,6 +103,9 @@ public class GetViewModel extends AndroidViewModel {
     //Session Fragment title
     private String session_title;
     private MutableLiveData<String> session_titleMutable = new MutableLiveData<>();
+    //date time
+    private String date_time;
+    private MutableLiveData<String> date_timeLive = new MutableLiveData<>();
 
     //Img List
     private List<ImgList> imgLists = new ArrayList<>();
@@ -209,16 +213,19 @@ public class GetViewModel extends AndroidViewModel {
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_MapMutableLiveData = new MutableLiveData<>();
     //header map
-    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
-    private MutableLiveData<List<SelectedHeader>> e_selectedHeadersLive=new MutableLiveData<>();
+    private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
+    private MutableLiveData<List<SelectedHeader>> e_selectedHeadersLive = new MutableLiveData<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, List<SelectedHeader>>> editHeaderMapMutableLiveData = new MutableLiveData<>();
     //session map
-    private List<SessionList> e_sessionLists=new ArrayList<>();
-    private MutableLiveData<List<SessionList>> e_sessionListsLive=new MutableLiveData<>();
+    private List<SessionList> e_sessionLists = new ArrayList<>();
+    private MutableLiveData<List<SessionList>> e_sessionListsLive = new MutableLiveData<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editSessionMapMutableLiveData = new MutableLiveData<>();
-
+    //get selected map in place order
+    private List<LinkedHashMap<String, List<CheckedList>>> edit_selected_s_map = new ArrayList<>();
+    private LinkedHashMap<String, List<CheckedList>> e_headerMap = new LinkedHashMap<>();
+    private List<CheckedList> e_checkedLists = new ArrayList<>();
 
 
     public GetViewModel(@NonNull Application application) {
@@ -229,6 +236,14 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
+    public MutableLiveData<String> getDate_timeLive() {
+        return date_timeLive;
+    }
+
+    public void setDate_time(String date_time) {
+        this.date_time = date_time;
+        this.date_timeLive.postValue(date_time);
+    }
 
     public void setE_selectedHeaders(List<SelectedHeader> e_checkedLists) {
         this.e_selectedHeaders = e_checkedLists;
@@ -244,6 +259,7 @@ public class GetViewModel extends AndroidViewModel {
         this.e_sessionListsLive.postValue(e_sessionLists);
 
     }
+
     public MutableLiveData<List<SessionList>> getE_sessionListsLive() {
         return e_sessionListsLive;
     }
@@ -366,7 +382,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG,"fail to get data "+error.getMessage());
+                MyLog.e(TAG, "fail to get data " + error.getMessage());
             }
         });
     }
@@ -467,7 +483,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG,"fail to get data "+error.getMessage());
+                MyLog.e(TAG, "fail to get data " + error.getMessage());
             }
         });
     }
@@ -494,7 +510,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG,"fail to get data "+error.getMessage());
+                MyLog.e(TAG, "fail to get data " + error.getMessage());
             }
         });
     }
@@ -598,7 +614,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG,"fail to get data "+error.getMessage());
+                MyLog.e(TAG, "fail to get data " + error.getMessage());
             }
         });
 
@@ -853,7 +869,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG,"fail to get data "+error.getMessage());
+                MyLog.e(TAG, "fail to get data " + error.getMessage());
             }
         });
     }
@@ -902,7 +918,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG,"fail to get data "+error.getMessage());
+                MyLog.e(TAG, "fail to get data " + error.getMessage());
             }
         });
 
@@ -947,7 +963,7 @@ public class GetViewModel extends AndroidViewModel {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
                 MyLog.e(TAG, "home>>snap>>fun>>Fail to get data.");
-                MyLog.e(TAG,"fail to get data "+error.getMessage());
+                MyLog.e(TAG, "fail to get data " + error.getMessage());
             }
         });
     }
@@ -984,7 +1000,7 @@ public class GetViewModel extends AndroidViewModel {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
                 MyLog.e(TAG, "home>>snap>>Fail to get data.");
-                MyLog.e(TAG,"fail to get data "+error.getMessage());
+                MyLog.e(TAG, "fail to get data " + error.getMessage());
             }
         });
     }
@@ -1031,14 +1047,19 @@ public class GetViewModel extends AndroidViewModel {
 
 
     public void CheckTime(String s_session_title, String s_date_picker_actions, int hourOfDay, int minute, String funcTitle) {
-        String t_time = (String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute));
+        String t_time;
+
+        t_time = (String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute));
+
         String date_time = s_date_picker_actions + " " + t_time;
         MyLog.e(TAG, "dateTime>>date_time>>" + date_time);
+        MyLog.e(TAG, "dateTime>>s_session_title>>" + s_session_title);
         String start_dt, end_dt;
         if (s_session_title.equals("Breakfast") || s_session_title.equals("Break Fast")) {
 
             start_dt = s_date_picker_actions + " 06:00";
             end_dt = s_date_picker_actions + " 11:00";
+
             alertTime(s_session_title, start_dt, end_dt, date_time, hourOfDay, minute, s_date_picker_actions, funcTitle);
 
 
@@ -1068,11 +1089,13 @@ public class GetViewModel extends AndroidViewModel {
             String time = String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM");
             time_pickerMutable.postValue(time);
             sessionDateTimes = new ArrayList<>();
+            MyLog.e(TAG, "time>>" + time + "\tdate>>" + s_date_picker_actions);
             SessionDateTime list = new SessionDateTime(
                     s_date_picker_actions,
                     time
             );
             sessionDateTimes.add(list);
+            sessionDateTimesMutableLiveData.postValue(sessionDateTimes);
             String d = funcTitle + "-" + s_session_title;
             f_mapsdt.put(d, sessionDateTimes);
             f_mapsdtMutableLiveData.postValue(f_mapsdt);
@@ -1086,7 +1109,7 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void EditMap(String func_title, String session_title, String header,String item ,int position) {
+    public void EditMap(String func_title, String session_title, String header, String item, int position) {
 
         //clear data
         /*editFunc_Map=new LinkedHashMap<>();
@@ -1095,31 +1118,104 @@ public class GetViewModel extends AndroidViewModel {
 
 
         //set header map
-        SelectedHeader selectedHeader=new SelectedHeader(
+        SelectedHeader selectedHeader = new SelectedHeader(
                 item
         );
         e_selectedHeaders.add(selectedHeader);
-        editHeaderMap.put(header,e_selectedHeaders);
+        editHeaderMap.put(header, e_selectedHeaders);
         //set
         editHeaderMapMutableLiveData.postValue(editHeaderMap);
 
 
         //set session map
-        SessionList sessionList=new SessionList(
+        SessionList sessionList = new SessionList(
                 session_title
         );
         e_sessionLists.add(sessionList);
-        editSessionMap.put(session_title,editHeaderMap);
+        editSessionMap.put(session_title, editHeaderMap);
         //set
         editSessionMapMutableLiveData.postValue(editSessionMap);
 
 
-
         //set func map
-        editFunc_Map.put(func_title,editSessionMap);
+        editFunc_Map.put(func_title, editSessionMap);
         //set
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
-        MyLog.e(TAG,"edit>> fun map>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
+        /*MyLog.e(TAG,"edit>> fun map>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(editHeaderMap));
+        MyLog.e(TAG,"edit>> get list map>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(f_maps));*/
+    }
+
+    public void getSelecteds_map() {
+
+        //get session title
+        Set<String> set = editSessionMap.keySet();
+        List<String> aList1 = new ArrayList<String>(set.size());
+        for (String x1 : set)
+            aList1.add(x1);
+        String[] arr = (aList1.get(0)).split("!");
+        //set session title live
+        session_titleMutable.postValue((arr[0]));
+        //set date picker and time picker live
+        String[] strings = (arr[1]).split(" ");
+        MyLog.e(TAG, "edit>>date " + strings[0]);
+        MyLog.e(TAG, "edit>>time " + strings[1]);
+        MyLog.e(TAG, "edit>>am " + strings[2]);
+        String date = strings[0].replace("-", "/");
+        //set date picker
+        date_pickerMutable.postValue(date);
+        String time = strings[1] + " " + strings[2];
+        //set time picker
+        time_pickerMutable.postValue(time);
+
+
+        //get header list
+        Set<String> stringSet = editHeaderMap.keySet();
+        List<String> aList = new ArrayList<String>(stringSet.size());
+        for (String x : stringSet)
+            aList.add(x);
+
+        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+        e_selectedHeaders.clear();
+        for (int i = 0; i < aList.size(); i++) {
+            //set selected header list
+            SelectedHeader list = new SelectedHeader(
+                    aList.get(i)
+            );
+            e_selectedHeaders.add(list);
+        }
+        //MyLog.e(TAG,"edit>>e_selectedHeaders>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(e_selectedHeaders));
+        selectedHeadersList.clear();
+        for (int i = 0; i < e_selectedHeaders.size(); i++) {
+            header_title = e_selectedHeaders.get(i).getHeader();
+            MyLog.e(TAG, "edit>>header_title>>" + header_title);
+            //set item list from edit header map
+            selectedHeadersList = editHeaderMap.get(header_title);
+            //set item list from header map in data base
+            itemLists = f_maps.get(header_title);
+
+        }
+        /*MyLog.e(TAG,"edit>>selectedHeadersList>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
+        MyLog.e(TAG,"edit>>itemLists>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));*/
+        edit_selected_s_map.clear();
+        e_checkedLists.clear();
+        e_headerMap = new LinkedHashMap<>();
+        for (int s = 0; s < selectedHeadersList.size(); s++) {
+            for (int i = 0; i < itemLists.size(); i++) {
+                //check the item list and get position
+                if ((selectedHeadersList.get(s).getHeader()).equals(itemLists.get(i).getItem())) {
+                    CheckedList checkedList = new CheckedList(
+                            selectedHeadersList.get(s).getHeader(),
+                            i
+                    );
+                    e_checkedLists.add(checkedList);
+                    e_headerMap.put(header_title, e_checkedLists);
+                }
+            }
+        }
+        edit_selected_s_map.add(e_headerMap);
+        check_s_mapMutable.postValue(edit_selected_s_map);
+        MyLog.e(TAG, "edit>>edit_selected_s_map>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(edit_selected_s_map));
+
 
     }
 }

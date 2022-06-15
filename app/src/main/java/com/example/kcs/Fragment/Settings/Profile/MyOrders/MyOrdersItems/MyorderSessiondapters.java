@@ -111,7 +111,6 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
         holder.session_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyLog.e(TAG, "edit>>s on click session");
                 editFunc_Map=new LinkedHashMap<>();
                 getViewModel.setEditFuncMap(editFunc_Map);
                 editSessionMap=new LinkedHashMap<>();

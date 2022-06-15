@@ -56,7 +56,6 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MyLog.e(TAG, "edit>>s View header");
         final SelectedHeader list=header.get(position);
         holder.header.setText(list.getHeader());
 

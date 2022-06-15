@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
@@ -40,8 +41,9 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private List<SessionList> e_sessionLists=new ArrayList<>();
     private BottomSheetDialog bottomSheet;
     //edit hash map list
-
+    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
+    private List<SessionDateTime> sessionDateTimes=new ArrayList<>();
 
     public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SessionList> sessionLists, String s1, BottomSheetDialog bottomSheet) {
         this.context = context;
@@ -65,7 +67,6 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     @Override
     public void onBindViewHolder(@NonNull ViewCartAdapterSession.ViewHolder holder, int position) {
 
-        MyLog.e(TAG, "edit>>s View Session");
         //get user name shared prefernces
         s_user_name = new SharedPreferences_data(context).getS_user_name();
         //clear
@@ -76,6 +77,13 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             @Override
             public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
                 editHeaderMap=stringListLinkedHashMap;
+            }
+        });
+        //get edit selected header list
+        getViewModel.getE_selectedHeadersLive().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
+            @Override
+            public void onChanged(List<SelectedHeader> selectedHeaders) {
+                e_selectedHeaders=selectedHeaders;
             }
         });
 
@@ -120,7 +128,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             holder.edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    alertDialog();
+                    alertDialog(sess_title);
                 }
             });
 
@@ -147,13 +155,13 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             holder.edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    alertDialog();
+                    alertDialog(list.getSession_title());
                 }
             });
         }
 
     }
-    private void alertDialog() {
+    private void alertDialog(String session_title) {
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
         alert.setMessage("You want to Edit the Session");
         alert.setTitle("Edit");
@@ -165,7 +173,12 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 dialog.cancel();
                 getViewModel.setI_value(1);
                 bottomSheet.dismiss();
+                e_selectedHeaders=new ArrayList<>();
+                getViewModel.setE_selectedHeaders(e_selectedHeaders);
+                getViewModel.getSelecteds_map();
             }
+
+
         });
         AlertDialog alertDialog = alert.create();
         alertDialog.show();

@@ -34,10 +34,14 @@ import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.TimeList;
 import com.google.gson.GsonBuilder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -153,27 +157,6 @@ public class HeaderFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 funcTitle = s;
-                MyLog.e(TAG, "datetime>>get >>" + funcTitle + "-" + s_session_title);
-
-            }
-        });
-
-        //get edit func map
-        getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
-                editSessionMap=editFunc_Map.get(funcTitle);
-                Set<String> stringSet = editSessionMap.keySet();
-                List<String> aList = new ArrayList<String>(stringSet.size());
-                for (String x : stringSet)
-                    aList.add(x);
-                String[] str =(aList.get(0)).split("!");
-                e_session_title=str[0];
-                date_time=str[1];
-               session_title.setText(e_session_title);
-               date_picker_actions.setText(date_time);
-
 
             }
         });
@@ -184,12 +167,12 @@ public class HeaderFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 s_time_picker=s;
-                    if (s == null) {
-                        time_picker.setError("please select the time");
-                    } else {
-                        time_picker.setError(null);
-                        time_picker.setText(s);
-                    }
+                if (s == null) {
+                    time_picker.setError("please select the time");
+                } else {
+                    time_picker.setError(null);
+                    time_picker.setText(s);
+                }
 
             }
         });
@@ -208,6 +191,48 @@ public class HeaderFragment extends Fragment {
                     date_picker_actions.setError(null);
                     date_picker_actions.setText(s);
                 }
+            }
+        });
+
+        //get edit func map
+        getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
+                editFunc_Map=stringLinkedHashMapLinkedHashMap;
+                editSessionMap=editFunc_Map.get(funcTitle);
+                Set<String> stringSet = editSessionMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+                String[] str =(aList.get(0)).split("!");
+                e_session_title=str[0];
+                date_time=str[1];
+               session_title.setText(e_session_title);
+               String[] s=(str[1]).split(" ");
+               String date=s[0].replace("-","/");
+               date_picker_actions.setText(date);
+               String time=s[1]+" "+s[2];
+
+               //change 12:12 AM to 24-hrs time
+                SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
+                String stime= null;
+                try {
+                    stime = date24Format.format(date12Format.parse(time));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    MyLog.e(TAG, "time>>error>>"+e.getMessage());
+                }
+                MyLog.e(TAG, "time>>"+stime);
+                String[] hrs=stime.split(":");
+                MyLog.e(TAG, "time>>"+hrs[0]);
+                MyLog.e(TAG, "time>>"+hrs[1]);
+
+                //check the date and time selection
+                //check condition if lunch or breakfast
+                getViewModel.CheckTime(e_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
+
+
             }
         });
 
@@ -249,6 +274,9 @@ public class HeaderFragment extends Fragment {
 
             }
         });
+
+
+
 
         //get session date and time
         getViewModel.getSessionDateTimesMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<SessionDateTime>>() {
@@ -309,7 +337,7 @@ public class HeaderFragment extends Fragment {
                 //recyclerview_header
                 recyclerview_header.setHasFixedSize(true);
                 recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                headerAdapter = new HeaderAdapter(getContext(), headerList, getViewModel, linkedHashMaps);
+                headerAdapter = new HeaderAdapter(getContext(), headerList, getViewModel, linkedHashMaps,s_session_title);
                 getViewModel.setI_fragment(1);
                 recyclerview_header.setAdapter(headerAdapter);
             }

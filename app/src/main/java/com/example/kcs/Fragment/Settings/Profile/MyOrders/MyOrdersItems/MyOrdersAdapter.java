@@ -109,7 +109,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         holder.card_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyLog.e(TAG, "edit>>s on click card");
                 editFunc_Map=new LinkedHashMap<>();
                 getViewModel.setEditFuncMap(editFunc_Map);
                 editSessionMap=new LinkedHashMap<>();

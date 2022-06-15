@@ -53,7 +53,6 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MyLog.e(TAG, "edit>>s View item");
         final OrderItemLists orderItemLists1 = orderItemListss.get(position);
         holder.list.setText(orderItemLists1.getItemList());
         //set edit hash map

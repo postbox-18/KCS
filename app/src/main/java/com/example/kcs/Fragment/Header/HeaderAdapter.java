@@ -32,18 +32,19 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private Context context;
     private List<HeaderList>headerLists;
     private String TAG="HeaderAdapter";
-    private String s_date_picker_actions,s_time_picker;
+    private String s_date_picker_actions,s_time_picker,s_session_title;
     private GetViewModel getViewModel;
 
     private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
     private List<SessionDateTime> sessionDateTimes=new ArrayList<>();
 
-    public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
+    public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps,String s_session_title) {
         this.context=context;
         this.headerLists=headerLists;
         this.getViewModel=getViewModel;
         this.linkedHashMaps=linkedHashMaps;
-        
+        this.s_session_title=s_session_title;
+
 
 
     }
@@ -90,11 +91,11 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
         holder.header_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 //getHeaderFragment.getheaderFragment(headerList1,position);
                 if((sessionDateTimes==null) || (sessionDateTimes.size()==0)  )
                 {
                     Toast.makeText(context, "Please select the date & time", Toast.LENGTH_SHORT).show();
-
 
                 }
                 else {
