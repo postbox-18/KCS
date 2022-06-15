@@ -366,6 +366,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                MyLog.e(TAG,"fail to get data "+error.getMessage());
             }
         });
     }
@@ -466,7 +467,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG, "home>>snap>>fun>>Fail to get data.");
+                MyLog.e(TAG,"fail to get data "+error.getMessage());
             }
         });
     }
@@ -493,7 +494,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG, "home>>snap>>fun>>Fail to get data.");
+                MyLog.e(TAG,"fail to get data "+error.getMessage());
             }
         });
     }
@@ -597,6 +598,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                MyLog.e(TAG,"fail to get data "+error.getMessage());
             }
         });
 
@@ -851,7 +853,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG, "list>>snap>>fun>>Fail to get data.");
+                MyLog.e(TAG,"fail to get data "+error.getMessage());
             }
         });
     }
@@ -900,6 +902,7 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+                MyLog.e(TAG,"fail to get data "+error.getMessage());
             }
         });
 
@@ -944,6 +947,7 @@ public class GetViewModel extends AndroidViewModel {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
                 MyLog.e(TAG, "home>>snap>>fun>>Fail to get data.");
+                MyLog.e(TAG,"fail to get data "+error.getMessage());
             }
         });
     }
@@ -980,6 +984,7 @@ public class GetViewModel extends AndroidViewModel {
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
                 MyLog.e(TAG, "home>>snap>>Fail to get data.");
+                MyLog.e(TAG,"fail to get data "+error.getMessage());
             }
         });
     }
@@ -1114,7 +1119,7 @@ public class GetViewModel extends AndroidViewModel {
         editFunc_Map.put(func_title,editSessionMap);
         //set
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
-
+        MyLog.e(TAG,"edit>> fun map>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
     }
 }
