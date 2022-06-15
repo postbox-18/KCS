@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Fragment.Items.CheckedList;
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
@@ -21,12 +22,14 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
     private List<CheckedList> checkedLists = new ArrayList<>();
     private String TAG = "ViewCartAdapter";
     private GetViewModel getViewModel;
+    private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
 
 
-    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<CheckedList> checkedLists) {
+    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<CheckedList> checkedLists, List<SelectedHeader> e_selectedHeaders) {
         this.context=context;
         this.getViewModel=getViewModel;
         this.checkedLists=checkedLists;
+        this.e_selectedHeaders=e_selectedHeaders;
     }
 
 
@@ -42,14 +45,26 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewCartAdapter.ViewHolder holder, int position) {
-        final CheckedList checkedList1=checkedLists.get(position);
+        if(e_selectedHeaders==null) {
+            final CheckedList checkedList1 = checkedLists.get(position);
             holder.list.setText(checkedList1.getItemList());
+        }
+        else {
+            final SelectedHeader checkedList1 = e_selectedHeaders.get(position);
+            holder.list.setText(checkedList1.getHeader());
+        }
     }
 
 
     @Override
     public int getItemCount() {
-        return checkedLists.size();
+        if(e_selectedHeaders==null) {
+            return checkedLists.size();
+        }
+        else
+        {
+            return e_selectedHeaders.size();
+        }
     }
 
 

@@ -22,7 +22,7 @@ import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -38,16 +38,18 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
     private List<SessionList> e_sessionLists=new ArrayList<>();
+    private BottomSheetDialog bottomSheet;
     //edit hash map list
 
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
 
-    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SessionList> sessionLists, String s1) {
+    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SessionList> sessionLists, String s1, BottomSheetDialog bottomSheet) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.func_title = s;
         this.sess_title = s1;
         this.sessionLists = sessionLists;
+        this.bottomSheet = bottomSheet;
     }
 
 
@@ -161,7 +163,8 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                getViewModel.setI_value(5);
+                getViewModel.setI_value(1);
+                bottomSheet.dismiss();
             }
         });
         AlertDialog alertDialog = alert.create();

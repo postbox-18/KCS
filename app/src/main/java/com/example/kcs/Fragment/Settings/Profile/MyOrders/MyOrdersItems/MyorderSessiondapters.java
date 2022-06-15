@@ -118,6 +118,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                 getViewModel.setEditSessionMap(editSessionMap);
                 editHeaderMap=new LinkedHashMap<>();
                 getViewModel.setEditHeaderMap(editHeaderMap);
+                getViewModel.setFunc_title(func_title);
                 String s = func_title + "/" + sessionLists1.getSession_title();
                 getViewModel.setFunc_Session(s);
             }
