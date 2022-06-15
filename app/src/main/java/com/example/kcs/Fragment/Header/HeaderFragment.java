@@ -200,38 +200,44 @@ public class HeaderFragment extends Fragment {
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
                 editFunc_Map=stringLinkedHashMapLinkedHashMap;
                 editSessionMap=editFunc_Map.get(funcTitle);
-                Set<String> stringSet = editSessionMap.keySet();
-                List<String> aList = new ArrayList<String>(stringSet.size());
-                for (String x : stringSet)
-                    aList.add(x);
-                String[] str =(aList.get(0)).split("!");
-                e_session_title=str[0];
-                date_time=str[1];
-               session_title.setText(e_session_title);
-               String[] s=(str[1]).split(" ");
-               String date=s[0].replace("-","/");
-               date_picker_actions.setText(date);
-               String time=s[1]+" "+s[2];
-
-               //change 12:12 AM to 24-hrs time
-                SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
-                SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
-                String stime= null;
-                try {
-                    stime = date24Format.format(date12Format.parse(time));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    MyLog.e(TAG, "time>>error>>"+e.getMessage());
+                if(editSessionMap==null)
+                {
+                    editSessionMap=new LinkedHashMap<>();
+                    MyLog.e(TAG,"eeditSessionMap is null");
                 }
-                MyLog.e(TAG, "time>>"+stime);
-                String[] hrs=stime.split(":");
-                MyLog.e(TAG, "time>>"+hrs[0]);
-                MyLog.e(TAG, "time>>"+hrs[1]);
+                else {
+                    Set<String> stringSet = editSessionMap.keySet();
+                    List<String> aList = new ArrayList<String>(stringSet.size());
+                    for (String x : stringSet)
+                        aList.add(x);
+                    String[] str = (aList.get(0)).split("!");
+                    e_session_title = str[0];
+                    date_time = str[1];
+                    session_title.setText(e_session_title);
+                    String[] s = (str[1]).split(" ");
+                    String date = s[0].replace("-", "/");
+                    date_picker_actions.setText(date);
+                    String time = s[1] + " " + s[2];
 
-                //check the date and time selection
-                //check condition if lunch or breakfast
-                getViewModel.CheckTime(e_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
+                    //change 12:12 AM to 24-hrs time
+                    SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                    SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
+                    String stime = null;
+                    try {
+                        stime = date24Format.format(date12Format.parse(time));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        MyLog.e(TAG, "time>>error>>" + e.getMessage());
+                    }
+                    MyLog.e(TAG, "time>>" + stime);
+                    String[] hrs = stime.split(":");
+                    MyLog.e(TAG, "time>>" + hrs[0]);
+                    MyLog.e(TAG, "time>>" + hrs[1]);
 
+                    //check the date and time selection
+                    //check condition if lunch or breakfast
+                    getViewModel.CheckTime(e_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
+                }
 
             }
         });
