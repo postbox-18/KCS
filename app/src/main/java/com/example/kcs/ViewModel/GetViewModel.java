@@ -1277,7 +1277,6 @@ public class GetViewModel extends AndroidViewModel {
 
 
 
-
         if (old.equals("true")) {
             old = "false";
         } else if (old.equals("false")) {
