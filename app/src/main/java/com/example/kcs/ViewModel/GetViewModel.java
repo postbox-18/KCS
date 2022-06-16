@@ -231,6 +231,7 @@ public class GetViewModel extends AndroidViewModel {
     //Session Alert
     private Integer ecd;
     private MutableLiveData<Integer> ecdLive = new MutableLiveData<>();
+    private List<SelectedHeader> c_selectedHeaders = new ArrayList<>();
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -547,8 +548,8 @@ public class GetViewModel extends AndroidViewModel {
                     func = datas.getKey().toString();
                     for (DataSnapshot ondata : datas.getChildren()) {
                         String ss = ondata.getKey().toString();
-                        String[] str=ss.split("_");
-                        session_title=str[0];
+                        String[] str = ss.split("_");
+                        session_title = str[0];
                         MyLog.e(TAG, "MyOrdersAdapter>>session_title>>" + ondata.getKey().toString());
                         myOrdersList = new ArrayList<>();
                         selectedHeadersList = new ArrayList<>();
@@ -597,7 +598,7 @@ public class GetViewModel extends AndroidViewModel {
                         SelectedSessionList sessionList1 = new SelectedSessionList(
 
                         );
-                        String[] dateTime=(session_title).split("!");
+                        String[] dateTime = (session_title).split("!");
                         sessionList1.setSession_title(dateTime[0]);
                         sessionList1.setBolen(str[1]);
                         sessionList1.setDate_time(dateTime[1]);
@@ -1131,9 +1132,9 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void EditMap(String func_title, String session_title, String header, String item, int position, int n, String username, String bolen) {
-        MyLog.e(TAG,"cancel>>value "+n);
+        MyLog.e(TAG, "cancel>>value " + n);
 
-            /////////*****Edit **********//////////////////
+        /////////*****Edit **********//////////////////
         //set header map
         SelectedHeader selectedHeader = new SelectedHeader(
                 item
@@ -1145,13 +1146,13 @@ public class GetViewModel extends AndroidViewModel {
 
 
         //set SelectedSessionList map
-            SelectedSessionList sessionList = new SelectedSessionList(
+        SelectedSessionList sessionList = new SelectedSessionList(
 
         );
-            String[]li=session_title.split("!");
-            sessionList.setSession_title(li[0]);
-            sessionList.setBolen(null);
-            sessionList.setDate_time(li[1]);
+        String[] li = session_title.split("!");
+        sessionList.setSession_title(li[0]);
+        sessionList.setBolen(null);
+        sessionList.setDate_time(li[1]);
         e_sessionLists.add(sessionList);
         editSessionMap.put(session_title, editHeaderMap);
         //set
@@ -1162,8 +1163,6 @@ public class GetViewModel extends AndroidViewModel {
         editFunc_Map.put(func_title, editSessionMap);
         //set
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
-
-
 
 
     }
@@ -1243,58 +1242,66 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen) {
-        MyLog.e(TAG,"cancel ");
-        /////////**************Cancel***********/////////
-            //set header map
-           /* SelectedHeader selectedHeader = new SelectedHeader(
-                    item
+        MyLog.e(TAG, "cancel ");
+        MyLog.e(TAG, "Cancel>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
+        String[] str = session_title.split("_");
+        String sess = str[0];
+        String old = str[1];
+        editSessionMap = editFunc_Map.get(func_title);
+        editHeaderMap = editSessionMap.get(sess);
+
+        //get header list
+        Set<String> stringSet = editHeaderMap.keySet();
+        List<String> aList = new ArrayList<String>(stringSet.size());
+        for (String x : stringSet)
+            aList.add(x);
+
+        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+        c_selectedHeaders.clear();
+        for (int i = 0; i < aList.size(); i++) {
+            //set selected header list
+            SelectedHeader list = new SelectedHeader(
+                    aList.get(i)
             );
-            e_selectedHeaders.add(selectedHeader);
-            editHeaderMap.put(header, e_selectedHeaders);
-            //set
-            editHeaderMapMutableLiveData.postValue(editHeaderMap);
+            c_selectedHeaders.add(list);
+        }
 
 
-            //set SelectedSessionList map
-            SelectedSessionList sessionList = new SelectedSessionList(
-
-            );
-            String[]li=session_title.split("!");
-            sessionList.setSession_title(li[0]);
-            sessionList.setBolen(null);
-            sessionList.setDate_time(li[1]);
-            e_sessionLists.add(sessionList);
-
-            editSessionMap.put(session_title, editHeaderMap);
-            //set
-            editSessionMapMutableLiveData.postValue(editSessionMap);
+        //remove old data
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
+        MyLog.e(TAG, "cancel>> value  " + session_title);
+        //remove data
+        databaseReference.child(func_title).child(session_title).removeValue();
+        MyLog.e(TAG, "cancel remove commit");
 
 
-            //set func map
-            editFunc_Map.put(func_title, editSessionMap);
-            //set
-            editFunc_MapMutableLiveData.postValue(editFunc_Map);*/
 
-            //remove old data
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MyLog.e(TAG,"cancel>> value  "+session_title);
-                databaseReference.child(func_title).child(session_title).removeValue();
-                MyLog.e(TAG,"cancel commit");
-                //set replace bolen
-                //databaseReference.child(func_title).child(s).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
+
+        if (old.equals("true")) {
+            old = "false";
+        } else if (old.equals("false")) {
+            old = "true";
+        }
+
+        //add new data
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
+        String newData = sess + "_" + old;
+        MyLog.e(TAG, "cancel>> value  " + newData);
+        MyLog.e(TAG, "cancel add commit");
+        //set replace bolen
+        selectedHeadersList.clear();
+        for (int l = 0; l < c_selectedHeaders.size(); l++) {
+            header_title = c_selectedHeaders.get(l).getHeader();
+            selectedHeadersList = editHeaderMap.get(header_title);
+            for (int k = 0; k < selectedHeadersList.size(); k++) {
+                databaseReference.child(func_title).child(newData).child(header_title).child(String.valueOf(k)).setValue(selectedHeadersList.get(k).getHeader());
             }
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplication(), "Fail to get data", Toast.LENGTH_SHORT).show();
-                MyLog.e(TAG,"fail to get data 1293 "+error.getMessage());
-            }
-        });
 
 
     }
 }
+
