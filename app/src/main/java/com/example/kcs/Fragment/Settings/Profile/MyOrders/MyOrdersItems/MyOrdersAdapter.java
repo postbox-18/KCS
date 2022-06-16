@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
+import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -30,11 +31,11 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
     private Context context;
     private String TAG="MyOrdersAdapter";
     private List<MyOrderFuncList> myOrderFuncLists=new ArrayList<>();
-    private List<SessionList> sessionLists=new ArrayList<>();
+    private List<SelectedSessionList> sessionLists=new ArrayList<>();
     private List<MyOrdersList> myOrdersList;
     private GetViewModel getViewModel;
     //edit hash map list
-    private List<SessionList> e_sessionLists=new ArrayList<>();
+    private List<SelectedSessionList> e_sessionLists=new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
@@ -92,9 +93,9 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get session list
-        getViewModel.getSs_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionList>>>() {
+        getViewModel.getSs_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedSessionList>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, List<SelectedSessionList>> stringListLinkedHashMap) {
                 String username=new SharedPreferences_data(context).getS_user_name();
                 sessionLists=stringListLinkedHashMap.get(username+"-"+myOrderFuncLists1.getFunc());
                 holder.recyclerview_session.setHasFixedSize(true);

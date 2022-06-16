@@ -9,10 +9,8 @@ import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
@@ -23,7 +21,6 @@ import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -199,10 +196,10 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
 
                         //set selected session list and session date and time
                         MyLog.e(TAG, "chs>>list header>> " + arr[0]);
-                        SelectedSessionList list = new SelectedSessionList(
-                                arr[0],
-                                arr[1]
-                        );
+                        SelectedSessionList list = new SelectedSessionList();
+                        list.setBolen(null);
+                        list.setSession_title(arr[0]);
+                        list.setDate_time(arr[1]);
                         selectedSessionLists.add(list);
                     }
 

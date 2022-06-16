@@ -30,6 +30,8 @@
         <entry key="app/src/main/res/drawable/breadcrums.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_arrow_return_left.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_box_arrow_right.xml" value="0.184" />
+        <entry key="app/src/main/res/drawable/ic_calendar_x_fill.xml" value="0.184" />
+        <entry key="app/src/main/res/drawable/ic_calendar_x_fill_cancel.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_circle_user_regular.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_close_black_24dp.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_gear_fill.xml" value="0.184" />
@@ -37,7 +39,10 @@
         <entry key="app/src/main/res/drawable/ic_kitchen_set_solid.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_kitchen_set_solid_tool.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_knife_01.xml" value="0.184" />
+        <entry key="app/src/main/res/drawable/ic_knife_01_cancel.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/ic_trash3_fill.xml" value="0.184" />
+        <entry key="app/src/main/res/drawable/ic_trash3_fill_cancel.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_truckclock.xml" value="0.116" />
         <entry key="app/src/main/res/drawable/ic_user_solid.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/register_btn.xml" value="0.1235" />
@@ -76,6 +81,7 @@
         <entry key="app/src/main/res/layout/place_order_session.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/search_bar.xml" value="0.22" />
         <entry key="app/src/main/res/layout/select_item_count.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/select_session.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/selected_item_list_cardview.xml" value="0.14" />
         <entry key="app/src/main/res/layout/session_layout.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/topic_activity.xml" value="0.19375" />

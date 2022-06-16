@@ -18,6 +18,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
+import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapterSession;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersAdapter;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
@@ -65,9 +66,9 @@ public class MyOrdersFragment extends Fragment {
 
     //bottom sheet view
     private RecyclerView recyclerview_order_session_deatils;
-    private List<SessionList> sessionLists=new ArrayList<>();
+    private List<SelectedSessionList> selectedSessionLists=new ArrayList<>();
     private TextView func;
-    private LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap=new LinkedHashMap<>();
+    private LinkedHashMap<String, List<SelectedSessionList>> stringListLinkedHashMap=new LinkedHashMap<>();
 
 
 
@@ -144,6 +145,7 @@ public class MyOrdersFragment extends Fragment {
                 //click on session adapter cardview
                 if (func_session_title != null && !func_session_title.isEmpty()) {
                     MyLog.e(TAG,"myord>>func>>"+func_session_title);
+                    //String s = func_title + "/" + sessionLists1.getSession_title()+"!"+sessionLists1.getDate_time()+"_"+sessionLists1.getBolen();
                     String[] str=func_session_title.split("/");
                     func_title=str[0];
                     func.setText(func_title);
@@ -162,9 +164,9 @@ public class MyOrdersFragment extends Fragment {
         });
         //get session hash map  List
         //get session list
-        getViewModel.getSs_f_mapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionList>>>() {
+        getViewModel.getSs_f_mapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SelectedSessionList>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap1) {
+            public void onChanged(LinkedHashMap<String, List<SelectedSessionList>> stringListLinkedHashMap1) {
                 stringListLinkedHashMap=stringListLinkedHashMap1;
 
             }
@@ -178,7 +180,9 @@ public class MyOrdersFragment extends Fragment {
                 //click on full adapter cardview
                 if (s != null && !s.isEmpty()) {
                     func_title=s;
+
                     func.setText(s);
+
                     MyLog.e(TAG, "func_title>>string>>" + s);
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
@@ -186,10 +190,12 @@ public class MyOrdersFragment extends Fragment {
                     //get session list
                     MyLog.e(TAG,"SessionList>>deatils>>"+s_user_name+"\t\t"+func_title);
                     //sessionLists.clear();
-                    sessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
+                    selectedSessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
+
+
                     recyclerview_order_session_deatils.setHasFixedSize(true);
                     recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s,sessionLists, null,bottomSheet);
+                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s,selectedSessionLists, null,bottomSheet);
                     recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "func_title>> orderItemView list null");
