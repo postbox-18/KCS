@@ -1286,23 +1286,23 @@ public class GetViewModel extends AndroidViewModel {
             } else if (old.equals("false")) {
                 old = "true";
             }
-
-            //add new data
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-            String newData = sess + "_" + old;
-            MyLog.e(TAG, "cancel>> value  " + newData);
-            MyLog.e(TAG, "cancel add commit");
-            //set replace bolen
-            selectedHeadersList.clear();
-            for (int l = 0; l < c_selectedHeaders.size(); l++) {
-                header_title = c_selectedHeaders.get(l).getHeader();
-                selectedHeadersList = editHeaderMap.get(header_title);
-                for (int k = 0; k < selectedHeadersList.size(); k++) {
-                    databaseReference.child(func_title).child(newData).child(header_title).child(String.valueOf(k)).setValue(selectedHeadersList.get(k).getHeader());
+            if(n==1) {
+                //add new data
+                firebaseDatabase = FirebaseDatabase.getInstance();
+                databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
+                String newData = sess + "_" + old;
+                MyLog.e(TAG, "cancel>> value  " + newData);
+                MyLog.e(TAG, "cancel add commit");
+                //set replace bolen
+                selectedHeadersList.clear();
+                for (int l = 0; l < c_selectedHeaders.size(); l++) {
+                    header_title = c_selectedHeaders.get(l).getHeader();
+                    selectedHeadersList = editHeaderMap.get(header_title);
+                    for (int k = 0; k < selectedHeadersList.size(); k++) {
+                        databaseReference.child(func_title).child(newData).child(header_title).child(String.valueOf(k)).setValue(selectedHeadersList.get(k).getHeader());
+                    }
                 }
             }
-
         }
 
     }

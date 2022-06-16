@@ -278,6 +278,8 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 else if(n==2)
                 {
                     //Delete
+                    getViewModel.CancelOrders(func_title, session_title,n,s_user_name,bolen,editFunc_Map);
+
                 }
 
             }
