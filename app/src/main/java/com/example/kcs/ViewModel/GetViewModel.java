@@ -1241,65 +1241,69 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen) {
+    public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Maps) {
         MyLog.e(TAG, "cancel ");
-        MyLog.e(TAG, "Cancel>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
+        MyLog.e(TAG, "Cancel>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Maps));
         String[] str = session_title.split("_");
         String sess = str[0];
         String old = str[1];
-        editSessionMap = editFunc_Map.get(func_title);
+        editSessionMap = editFunc_Maps.get(func_title);
         editHeaderMap = editSessionMap.get(sess);
-
-        //get header list
-        Set<String> stringSet = editHeaderMap.keySet();
-        List<String> aList = new ArrayList<String>(stringSet.size());
-        for (String x : stringSet)
-            aList.add(x);
-
-        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-        c_selectedHeaders.clear();
-        for (int i = 0; i < aList.size(); i++) {
-            //set selected header list
-            SelectedHeader list = new SelectedHeader(
-                    aList.get(i)
-            );
-            c_selectedHeaders.add(list);
+        if(editHeaderMap==null)
+        {
+            editHeaderMap=new LinkedHashMap<>();
+            MyLog.e(TAG,"Cancel>>sess_date editheaderMap is null");
         }
+        else {
+            //get header list
+            Set<String> stringSet = editHeaderMap.keySet();
+            List<String> aList = new ArrayList<String>(stringSet.size());
+            for (String x : stringSet)
+                aList.add(x);
 
-
-        //remove old data
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-        MyLog.e(TAG, "cancel>> value  " + session_title);
-        //remove data
-        databaseReference.child(func_title).child(session_title).removeValue();
-        MyLog.e(TAG, "cancel remove commit");
-
-
-
-        if (old.equals("true")) {
-            old = "false";
-        } else if (old.equals("false")) {
-            old = "true";
-        }
-
-        //add new data
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-        String newData = sess + "_" + old;
-        MyLog.e(TAG, "cancel>> value  " + newData);
-        MyLog.e(TAG, "cancel add commit");
-        //set replace bolen
-        selectedHeadersList.clear();
-        for (int l = 0; l < c_selectedHeaders.size(); l++) {
-            header_title = c_selectedHeaders.get(l).getHeader();
-            selectedHeadersList = editHeaderMap.get(header_title);
-            for (int k = 0; k < selectedHeadersList.size(); k++) {
-                databaseReference.child(func_title).child(newData).child(header_title).child(String.valueOf(k)).setValue(selectedHeadersList.get(k).getHeader());
+            //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+            c_selectedHeaders.clear();
+            for (int i = 0; i < aList.size(); i++) {
+                //set selected header list
+                SelectedHeader list = new SelectedHeader(
+                        aList.get(i)
+                );
+                c_selectedHeaders.add(list);
             }
+
+
+            //remove old data
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
+            MyLog.e(TAG, "cancel>> value  " + session_title);
+            //remove data
+            databaseReference.child(func_title).child(session_title).removeValue();
+            MyLog.e(TAG, "cancel remove commit");
+
+
+            if (old.equals("true")) {
+                old = "false";
+            } else if (old.equals("false")) {
+                old = "true";
+            }
+
+            //add new data
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
+            String newData = sess + "_" + old;
+            MyLog.e(TAG, "cancel>> value  " + newData);
+            MyLog.e(TAG, "cancel add commit");
+            //set replace bolen
+            selectedHeadersList.clear();
+            for (int l = 0; l < c_selectedHeaders.size(); l++) {
+                header_title = c_selectedHeaders.get(l).getHeader();
+                selectedHeadersList = editHeaderMap.get(header_title);
+                for (int k = 0; k < selectedHeadersList.size(); k++) {
+                    databaseReference.child(func_title).child(newData).child(header_title).child(String.valueOf(k)).setValue(selectedHeadersList.get(k).getHeader());
+                }
+            }
+
         }
-
-
 
     }
 }
