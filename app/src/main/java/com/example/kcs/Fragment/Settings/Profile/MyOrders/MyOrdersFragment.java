@@ -180,7 +180,9 @@ public class MyOrdersFragment extends Fragment {
                 //click on full adapter cardview
                 if (s != null && !s.isEmpty()) {
                     func_title=s;
+
                     func.setText(s);
+
                     MyLog.e(TAG, "func_title>>string>>" + s);
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
@@ -189,6 +191,8 @@ public class MyOrdersFragment extends Fragment {
                     MyLog.e(TAG,"SessionList>>deatils>>"+s_user_name+"\t\t"+func_title);
                     //sessionLists.clear();
                     selectedSessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
+
+
                     recyclerview_order_session_deatils.setHasFixedSize(true);
                     recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                     ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s,selectedSessionLists, null,bottomSheet);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -57,9 +58,20 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final SelectedHeader list=header.get(position);
+
         holder.header.setText(list.getHeader());
         String[] str=sess.split("_");
         session_title=str[0];
+        if(bolen.equals("true"))
+        {
+            holder.header_layout.setBackgroundColor(context.getResources().getColor(R.color.btn_gradient_light));
+        }
+        else if(bolen.equals("false"))
+        {
+            holder.header_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
+        }
+
+
         //get edit selected header list
         getViewModel.getE_selectedHeadersLive().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
             @Override
@@ -104,12 +116,14 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView header;
         private RecyclerView recyclerview_item_list;
+        private LinearLayout header_layout;
 
 
         public ViewHolder(View view) {
             super(view);
             recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
             header = view.findViewById(R.id.header);
+            header_layout = view.findViewById(R.id.header_layout);
 
         }
     }

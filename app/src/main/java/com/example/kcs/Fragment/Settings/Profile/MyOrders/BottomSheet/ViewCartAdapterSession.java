@@ -124,13 +124,29 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
         if (sessionLists == null) {
             String[] s=sess_title.split("!");
-            holder.session_title.setText(s[0]);
-            holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
             String[] date_time=(s[1]).split("_");
             String bolen=date_time[1];
-            holder.date_time.setText(date_time[0]);
-            holder.date_time.setTextColor(context.getResources().getColor(R.color.colorSecondary));
-
+            if(bolen.equals("true")) {
+                holder.session_title.setText(s[0]);
+                holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
+                holder.date_time.setText(date_time[0]);
+                holder.date_time.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+                //img
+                holder.edit.setImageResource(R.drawable.ic_knife_01);
+                holder.edit.setVisibility(View.VISIBLE);
+                holder.cancel.setImageResource(R.drawable.ic_calendar_x_fill);
+                holder.delete.setImageResource(R.drawable.ic_trash3_fill);
+            }
+            else if(bolen.equals("false")) {
+                holder.session_title.setText(s[0]);
+                holder.session_title.setTextColor(context.getResources().getColor(R.color.text_silver));
+                holder.date_time.setText(date_time[0]);
+                holder.date_time.setTextColor(context.getResources().getColor(R.color.text_silver));
+                //img
+                holder.edit.setVisibility(View.GONE);
+                holder.cancel.setImageResource(R.drawable.ic_calendar_x_fill_cancel);
+                holder.delete.setImageResource(R.drawable.ic_trash3_fill_cancel);
+            }
 
 
             //get selected session and header hashmap
@@ -267,6 +283,12 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             }
 
 
+        });
+        alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
         });
         AlertDialog alertDialog = alert.create();
         alertDialog.show();

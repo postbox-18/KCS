@@ -61,9 +61,23 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     public void onBindViewHolder(@NonNull MyorderSessiondapters.ViewHolder holder, int position) {
         final SelectedSessionList sessionLists1 = sessionLists.get(position);
 
-        //set session title and date
-        holder.session_title.setText(sessionLists1.getSession_title());
-        holder.date_time.setText(sessionLists1.getDate_time());
+        if((sessionLists1.getBolen()).equals("true")) {
+            //set session title and date
+            holder.session_title.setText(sessionLists1.getSession_title());
+            holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
+            holder.date_time.setText(sessionLists1.getDate_time());
+            holder.session_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+
+        }
+        else if((sessionLists1.getBolen()).equals("false"))
+        {
+            //set session title and date
+            holder.session_title.setText(sessionLists1.getSession_title());
+            holder.session_title.setTextColor(context.getResources().getColor(R.color.text_silver));
+            holder.date_time.setText(sessionLists1.getDate_time());
+            holder.date_time.setTextColor(context.getResources().getColor(R.color.text_silver));
+        }
+
 
         //get hash map of my orders list
         getViewModel.getF_mapMyordersMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<MyOrdersList>>>() {

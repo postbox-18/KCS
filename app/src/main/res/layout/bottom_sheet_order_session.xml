@@ -34,10 +34,10 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/date_time"
-                    app:layout_constraintHorizontal_weight="0.5"
+                    app:layout_constraintHorizontal_weight="0.9"
                     android:text="@string/session"
                     android:textColor="@color/colorSecondary"
-                    android:textSize="18dp"
+                    android:textSize="16dp"
                     android:textStyle="bold|italic" />
 
                 <TextView
@@ -45,7 +45,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/robotoblackitalic"
-                    android:gravity="left"
                     app:layout_constraintTop_toTopOf="@id/session_title"
                     app:layout_constraintBottom_toBottomOf="@id/session_title"
                     app:layout_constraintHorizontal_weight="1.5"
@@ -53,7 +52,7 @@
                     app:layout_constraintEnd_toStartOf="@id/edit"
                     android:text="12-12-2012 12:12 AM"
                     android:textColor="@color/colorSecondary"
-                    android:textSize="18dp"
+                    android:textSize="16dp"
                     android:textStyle="bold|italic" />
                 <ImageView
                     android:id="@+id/edit"
