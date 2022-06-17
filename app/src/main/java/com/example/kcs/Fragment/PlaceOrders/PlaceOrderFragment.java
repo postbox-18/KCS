@@ -24,12 +24,10 @@ import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
-import com.example.kcs.Fragment.PlaceOrders.Date.PlaceOrderViewCartAdapterDate;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.PlaceOrderViewCartAdapterSession;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Session.SessionList;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.firebase.database.DataSnapshot;
@@ -59,10 +57,8 @@ public class PlaceOrderFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    /*private RecyclerView recyclerview_date;
-    private PlaceOrderViewCartAdapterSession viewCartAdapter;*/
-    private RecyclerView recyclerview_date;
-    private PlaceOrderViewCartAdapterDate viewCartAdapterDate;
+    private RecyclerView recyclerview_session;
+    private PlaceOrderViewCartAdapterSession viewCartAdapter;
     /*private RecyclerView recyclerview_order_list;
     private PlaceOrderViewCartAdapterHeader viewCartAdapter;*/
     private AppCompatButton order_btn;
@@ -88,14 +84,12 @@ public class PlaceOrderFragment extends Fragment {
     //func map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
-    private List<SelectedDateList> dateLists = new ArrayList<>();
     //get date and time
     private LinkedHashMap<String, List<SessionDateTime>> date_timeMap = new LinkedHashMap<>();
     //edit hash map list
     private List<SessionList> e_sessionLists=new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
 
@@ -132,14 +126,14 @@ public class PlaceOrderFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_place_order, container, false);
         MyLog.e(TAG, "placeorder>> PlaceOrder Fragment");
-        recyclerview_date = view.findViewById(R.id.recyclerview_date);
+        recyclerview_session = view.findViewById(R.id.recyclerview_session);
         back_btn = view.findViewById(R.id.back_btn);
         order_btn = view.findViewById(R.id.order_btn);
         func_title_view = view.findViewById(R.id.func_title);
 
 
-        recyclerview_date.setHasFixedSize(true);
-        recyclerview_date.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerview_session.setHasFixedSize(true);
+        recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         //get Func_title
         getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -170,30 +164,13 @@ public class PlaceOrderFragment extends Fragment {
         });
 
         //get edit func map
-        getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
+     /*   getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
                 editFunc_Map=stringLinkedHashMapLinkedHashMap;
-                editDateMap=editFunc_Map.get(func_title);
-                //get date list
-                Set<String> set = editDateMap.keySet();
-                List<String> aList1 = new ArrayList<String>(set.size());
-                for (String x1 : set)
-                    aList1.add(x1);
-                dateLists.clear();
-                for(int i=0;i<aList1.size();i++)
-                {
-                    SelectedDateList sessionList=new SelectedDateList(
-                            aList1.get(i)
-                    );
+                editSessionMap=editFunc_Map.get(func_title);
 
-                    dateLists.add(sessionList);
-
-                }
-                //set place order Date Adapter
-                viewCartAdapterDate = new PlaceOrderViewCartAdapterDate(getContext(), getViewModel,func_title,dateLists,editDateMap);
-                recyclerview_date.setAdapter(viewCartAdapterDate);
-              /*  //set session list
+                //set session list
                 Set<String> stringSet = editSessionMap.keySet();
                 List<String> aList = new ArrayList<String>(stringSet.size());
                 for (String x : stringSet)
@@ -211,7 +188,7 @@ public class PlaceOrderFragment extends Fragment {
                     SelectedSessionList list = new SelectedSessionList();
                     list.setBolen(null);
                     list.setSession_title(arr[0]);
-                    list.setTime(arr[1]);
+                    list.setDate_time(arr[1]);
                     selectedSessionLists.add(list);
                 }
 
@@ -223,13 +200,12 @@ public class PlaceOrderFragment extends Fragment {
                     // headerMap=sessionMap.get(date_time);
                 } else {
 
-                    viewCartAdapterDate = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time,null,editSessionMap);
-                    recyclerview_date.setAdapter(viewCartAdapterDate);
-                }*/
-
+                    viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time,null,editSessionMap);
+                    recyclerview_session.setAdapter(viewCartAdapter);
+                }
 
             }
-        });
+        });*/
 
         // fun hash map of checked list
         getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
@@ -268,7 +244,7 @@ public class PlaceOrderFragment extends Fragment {
                 } else {
 
                     viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time,sessionMap,null);
-                    recyclerview_date.setAdapter(viewCartAdapter);
+                    recyclerview_session.setAdapter(viewCartAdapter);
                 }
 
 
@@ -337,7 +313,7 @@ public class PlaceOrderFragment extends Fragment {
     }
 
 
-    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String sess_date_time) {
+    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String date_time) {
         n++;
         MyLog.e(TAG, "placeorders>>date_time session_str n value>>"+n);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -349,19 +325,11 @@ public class PlaceOrderFragment extends Fragment {
 
                 for (int i = 0; i < checkedLists1.size(); i++) {
                     //set session-dateTime
-                    String[] arr=sess_date_time.split("-");
-                    String dateTime=arr[1];
-                    String sess=arr[0];
-                    MyLog.e(TAG, "placeorders>>sess >>"+sess);
-                    String[] str=dateTime.split(" ");
-                    String date=str[0];
-                    MyLog.e(TAG, "placeorders>>date >>"+date);
-                    date=date.replace("/","-");
-                    MyLog.e(TAG, "placeorders>>date >>"+date);
-                    String time=str[1]+" "+str[2];
-                    MyLog.e(TAG, "placeorders>>time>>"+time);
-                    String session_str=sess+"!"+time+"_true";
-                    databaseReference.child(user_name).child(func_title).child(date).child(session_str).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
+                    String str=date_time.replace("-","!");
+                    String session_str=str.replace("/","-");
+                    MyLog.e(TAG, "placeorders>>date_time session_str>>"+session_str);
+                    String s=session_str+"_true";
+                    databaseReference.child(user_name).child(func_title).child(s).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
                 MyLog.e(TAG, "comit");
 

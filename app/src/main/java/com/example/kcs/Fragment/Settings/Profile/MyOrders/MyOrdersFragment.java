@@ -186,6 +186,8 @@ public class MyOrdersFragment extends Fragment {
                     //String s = func_title + "/" + sessionLists1.getSession_title()+"!"+sessionLists1.getDate_time()+"_"+sessionLists1.getBolen();
                     String[] str=func_session_title.split("/");
                     func_title=str[0];
+                   String date=str[1];
+
                     func.setText(func_title);
 
                     bottomSheet.setContentView(bottom_view);
@@ -194,26 +196,16 @@ public class MyOrdersFragment extends Fragment {
 
                     //get order date map
                     orderDateMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
-                    //get date list
-                    Set<String> set = orderDateMap.keySet();
-                    List<String> aList1 = new ArrayList<String>(set.size());
-                    for (String x1 : set)
-                        aList1.add(x1);
                     o_dateLists.clear();
-                    for(int i=0;i<aList1.size();i++)
-                    {
-                        SelectedDateList sessionList=new SelectedDateList(
-                                aList1.get(i)
-                        );
-
-                        o_dateLists.add(sessionList);
-
-                    }
+                    SelectedDateList selectedDateList1=new SelectedDateList(
+                            date
+                    );
+                    o_dateLists.add(selectedDateList1);
 
 
                     recyclerview_order_date.setHasFixedSize(true);
                     recyclerview_order_date.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterDate viewCartAdapter = new ViewCartAdapterDate(getContext(), getViewModel,str[0],null,str[1], bottomSheet,orderDateMap,o_dateLists);
+                    ViewCartAdapterDate viewCartAdapter = new ViewCartAdapterDate(getContext(), getViewModel,str[0], bottomSheet,orderDateMap,o_dateLists);
                     recyclerview_order_date.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "myord>> func_session_title null");
@@ -261,12 +253,9 @@ public class MyOrdersFragment extends Fragment {
                     }
 
 
-
-
-
                     recyclerview_order_date.setHasFixedSize(true);
                     recyclerview_order_date.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterDate viewCartAdapter = new ViewCartAdapterDate(getContext(), getViewModel,s,selectedSessionLists, null,bottomSheet,orderDateMap,o_dateLists);
+                    ViewCartAdapterDate viewCartAdapter = new ViewCartAdapterDate(getContext(), getViewModel,func_title, bottomSheet,orderDateMap,o_dateLists);
                     recyclerview_order_date.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "func_title>> orderItemView list null");

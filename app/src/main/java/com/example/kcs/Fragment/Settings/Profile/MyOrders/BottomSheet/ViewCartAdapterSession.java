@@ -37,7 +37,6 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapterSession";
     private String func_title, s_user_name, sess_title,date;
-    private List<SelectedSessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
     private List<SelectedSessionList> e_sessionLists=new ArrayList<>();
@@ -49,7 +48,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     //cancel map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
-    private int n;
+    private int n=-1;
     //order hashmap
     //func map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderFunc_Map = new LinkedHashMap<>();
@@ -59,15 +58,15 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
     //selected headers
     private List<SelectedHeader> o_selectedHeaders=new ArrayList<>();
+    private List<SelectedSessionList> o_selectedSessionLists=new ArrayList<>();
 
 
-    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String s1, BottomSheetDialog bottomSheet, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap,String date) {
+    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String func_title, BottomSheetDialog bottomSheet, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap, String date, List<SelectedSessionList> o_selectedSessionLists) {
         this.context = context;
         this.getViewModel = getViewModel;
-        this.func_title = s;
-        this.sess_title = s1;
+        this.func_title = func_title;
         this.date = date;
-        this.sessionLists = sessionLists;
+        this.o_selectedSessionLists = o_selectedSessionLists;
         this.bottomSheet = bottomSheet;
         this.orderSessionMap = new LinkedHashMap<>(orderSessionMap);
     }
@@ -136,7 +135,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         editHeaderMap=new LinkedHashMap<>();
         getViewModel.setEditHeaderMap(editHeaderMap);
 
-        if (sessionLists == null) {
+        /*if (o_selectedSessionLists == null) {
             String[] s=sess_title.split("!");
             String[] date_time=(s[1]).split("_");
             String bolen=date_time[1];
@@ -166,12 +165,8 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             //get selected header to viewHeaderAdapter
             orderHeaderMap=orderSessionMap.get(sess_title);
             MyLog.e(TAG,"orders>>selected orderHeaderMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderHeaderMap));
-            if(orderHeaderMap==null)
-            {
-                MyLog.e(TAG,"orders>>selected orderHeaderMap is null");
-                orderHeaderMap=new LinkedHashMap<>();
-            }
-            else {
+
+
                 Set<String> set = orderHeaderMap.keySet();
                 List<String> aList1 = new ArrayList<String>(set.size());
                 for (String x1 : set)
@@ -191,7 +186,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_title, func_title, bolen, orderHeaderMap,date);
                 holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
 
-            }
+
 
 
 
@@ -219,9 +214,9 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 }
             });
 
-        }
-        else {
-            final SelectedSessionList list = sessionLists.get(position);
+        }*/
+
+            final SelectedSessionList list = o_selectedSessionLists.get(position);
             //set session date time bolen
             String sess_date=list.getSession_title()+"!"+list.getTime()+"_"+list.getBolen();
             MyLog.e(TAG,"cancel>> session>>"+list.getSession_title());
@@ -277,7 +272,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                     alertDialog(sess_date,2, list.getBolen());
                 }
             });
-        }
+
 
     }
     private void alertDialog(String session_title, int n, String bolen) {
@@ -348,11 +343,11 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
     @Override
     public int getItemCount() {
-        if (sessionLists == null) {
+       /* if (sessionLists == null) {
             return 1;
-        } else {
-            return sessionLists.size();
-        }
+        } else {*/
+            return o_selectedSessionLists.size();
+
     }
 
 

@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
     private String date_time;
     //edit hash map
     //edit hash map list
-    private List<SessionList> e_sessionLists=new ArrayList<>();
-    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
+    private List<SessionList> e_sessionLists = new ArrayList<>();
+    private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
@@ -182,13 +182,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerview_selected_count.setLayoutManager(new LinearLayoutManager(getApplication(), LinearLayoutManager.HORIZONTAL, false));
 
 
-     //get func hash map
-        getViewModel.getEditFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
+        //get func hash map
+        /*getViewModel.getEditFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
+                editFunc_Map = stringLinkedHashMapLinkedHashMap;
             }
-        });
+        });*/
 
         //get selected session list
         getViewModel.getSelectedSessionListsMutableLiveData().observe(this, new Observer<List<SelectedSessionList>>() {
@@ -198,8 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    if(session_title==null)
-                    {
+                    if (session_title == null) {
 
                         MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                         editSessionMap = editFunc_Map.get(func_title);
@@ -232,8 +231,7 @@ public class MainActivity extends AppCompatActivity {
                             snackbar.dismiss();
                         }*/
                         break;
-                    }
-                    else {
+                    } else {
                         if (session_title.equals(selectedSessionLists.get(k).getSession_title())) {
                             MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                             sessionMap = funcMap.get(func_title);
@@ -266,9 +264,7 @@ public class MainActivity extends AppCompatActivity {
                                 snackbar.dismiss();
                             }
                             break;
-                        }
-                        else
-                        {
+                        } else {
                             continue;
                         }
                     }
@@ -281,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
-
 
 
             }

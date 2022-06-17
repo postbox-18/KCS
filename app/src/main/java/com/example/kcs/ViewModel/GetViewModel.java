@@ -1262,7 +1262,7 @@ public class GetViewModel extends AndroidViewModel {
         String sess = str[0];
         String old = str[1];
         editDateMap = editFunc_Maps.get(func_title);
-        editSessionMap=editDateMap.get(date)
+        editSessionMap=editDateMap.get(date);
         editHeaderMap = editSessionMap.get(sess);
         if(editHeaderMap==null)
         {

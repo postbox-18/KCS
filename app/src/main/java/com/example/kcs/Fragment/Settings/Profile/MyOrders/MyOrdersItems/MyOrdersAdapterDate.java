@@ -141,6 +141,22 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
             holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             MyorderSessiondapters itemListAdapters = new MyorderSessiondapters(context, funcTitle, list.getDate(), getViewModel, sessionLists, orderSessionMap);
             holder.recyclerview_session.setAdapter(itemListAdapters);
+            //on click
+            holder.date_card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    editFunc_Map=new LinkedHashMap<>();
+                    getViewModel.setEditFuncMap(editFunc_Map);
+                    editSessionMap=new LinkedHashMap<>();
+                    getViewModel.setEditSessionMap(editSessionMap);
+                    editHeaderMap=new LinkedHashMap<>();
+                    getViewModel.setEditHeaderMap(editHeaderMap);
+                    getViewModel.setFunc_title(funcTitle);
+                    String s = funcTitle + "/" + list.getDate();
+                    getViewModel.setFunc_Session(s);
+                }
+            });
+
         }
     }
 
@@ -155,11 +171,13 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
 
         private TextView date;
         private RecyclerView recyclerview_session;
+        private CardView date_card;
 
         public ViewHolder(View view) {
             super(view);
             recyclerview_session = view.findViewById(R.id.recyclerview_session);
             date = view.findViewById(R.id.date);
+            date_card = view.findViewById(R.id.date_card);
 
 
 

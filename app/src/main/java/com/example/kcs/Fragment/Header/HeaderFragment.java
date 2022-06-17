@@ -195,7 +195,7 @@ public class HeaderFragment extends Fragment {
         });
 
         //get edit func map
-        getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
+        /*getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
                 editFunc_Map=stringLinkedHashMapLinkedHashMap;
@@ -240,7 +240,7 @@ public class HeaderFragment extends Fragment {
                 }
 
             }
-        });
+        });*/
 
         //get time picker hash map
         getViewModel.getTimeListF_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<TimeList>>>() {

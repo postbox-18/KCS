@@ -160,7 +160,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
 
         ///////////***************************clear list in live data model****************************//////////////////////
 
-        //on click
+       /* //on click
         holder.session_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,11 +171,11 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                 editHeaderMap=new LinkedHashMap<>();
                 getViewModel.setEditHeaderMap(editHeaderMap);
                 getViewModel.setFunc_title(func_title);
-                String s = func_title + "/" + sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"_"+sessionLists1.getBolen();
+                String s = func_title + "/" + sessionLists1.getSession_title()+"!"+date+"#"+sessionLists1.getTime()+"_"+sessionLists1.getBolen();
                 getViewModel.setFunc_Session(s);
             }
         });
-
+*/
 
     }
 
@@ -190,7 +190,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
 
         private ImageView profile;
         private TextView session_title, time;
-        private CardView session_card;
+        //private CardView session_card;
         private RecyclerView recyclerview_item_list;
 
         public ViewHolder(View view) {
@@ -199,7 +199,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
             session_title = view.findViewById(R.id.session_title);
             time = view.findViewById(R.id.time);
-            session_card = view.findViewById(R.id.session_card);
+            //session_card = view.findViewById(R.id.session_card);
 
 
         }
