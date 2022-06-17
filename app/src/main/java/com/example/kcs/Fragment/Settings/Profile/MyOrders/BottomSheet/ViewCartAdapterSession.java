@@ -186,20 +186,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
 
 
-           /* //get selected session and header hashmap
-            getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
-                @Override
-                public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-                    MyLog.e(TAG,"cancel>> sess_titlen  "+sess_title);
-                    selectedHeaders = stringListLinkedHashMap.get(sess_title);
 
-                    ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, selectedHeaders, sess_title, func_title,bolen);
-                    holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
-                    holder.recyclerview_order_item_details.setHasFixedSize(true);
-                    holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-
-                }
-            });*/
 
 
             //onclick
@@ -259,18 +246,6 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_date, func_title, list.getBolen(), orderHeaderMap);
             holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
 
-           /* //get selected session and header hashmap
-            getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
-                @Override
-                public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-                    selectedHeaders = stringListLinkedHashMap.get(sess_date);
-                    ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, selectedHeaders, sess_date, func_title, list.getBolen());
-                    holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
-                    holder.recyclerview_order_item_details.setHasFixedSize(true);
-                    holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-
-                }
-            });*/
 
 
             //onclick

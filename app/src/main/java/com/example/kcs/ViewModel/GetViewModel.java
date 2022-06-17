@@ -240,8 +240,11 @@ public class GetViewModel extends AndroidViewModel {
     //private List<MyOrderFuncList> o_myOrderFuncLists=new ArrayList<>();
     //private List<SelectedSessionList> o_selectedSessionLists=new ArrayList<>();
     //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderFunc_Map = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_MapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderFunc_MapMutableLiveData = new MutableLiveData<>();
+    //date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderDateMapMutableLiveData = new MutableLiveData<>();
     //header map
     private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> orderHeaderMapMutableLiveData = new MutableLiveData<>();
@@ -260,7 +263,7 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-   /* public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderFunc_Map) {
+   /* public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderFunc_Map) {
         this.orderFunc_Map = orderFunc_Map;
         this.orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
     }*/
@@ -275,7 +278,11 @@ public class GetViewModel extends AndroidViewModel {
         this.orderSessionMapMutableLiveData.postValue(orderSessionMap);
     }
 
-    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> getOrderFunc_MapMutableLiveData() {
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> getOrderDateMapMutableLiveData() {
+        return orderDateMapMutableLiveData;
+    }
+
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> getOrderFunc_MapMutableLiveData() {
         return orderFunc_MapMutableLiveData;
     }
 
@@ -355,7 +362,6 @@ public class GetViewModel extends AndroidViewModel {
 
 
     public void setFunc_Session(String func_Session) {
-        MyLog.e(TAG,"orders>>change func_Session >>"+func_Session);
 
         Func_Session = func_Session;
         this.Func_SessionMutable.postValue(Func_Session);
@@ -592,80 +598,53 @@ public class GetViewModel extends AndroidViewModel {
                     MyLog.e(TAG, "onData>>datas>>" + datas);
                     MyLog.e(TAG, "MyOrdersAdapter>>func>>" + datas.getKey().toString());
                     func = datas.getKey().toString();
-                    orderSessionMap=new LinkedHashMap<>();
-                    for (DataSnapshot ondata : datas.getChildren()) {
-                        String ss = ondata.getKey().toString();
-                        String[] str = ss.split("_");
-                        session_title = str[0];
-                        MyLog.e(TAG, "MyOrdersAdapter>>session_title>>" + ondata.getKey().toString());
-                        //o_myOrdersList = new ArrayList<>();
-                        //o_selectedHeadersList = new ArrayList<>();
-                        orderHeaderMap=new LinkedHashMap<>();
-                        for (DataSnapshot dataSnapshot : ondata.getChildren()) {
-                            //get item list
-                            o_orderItemLists = new ArrayList<>();
-
-                            //////
-                            header_title = dataSnapshot.getKey().toString();
-                            MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
-                            MyLog.e(TAG, "onData>>header_title>>" + dataSnapshot.getKey().toString());
-                            size = 0;
-                            for (DataSnapshot shot : dataSnapshot.getChildren()) {
-                                MyLog.e(TAG, "onData>>shots>>" + shot);
-                                MyLog.e(TAG, "onData>>shots>>" + shot.getKey().toString());
+                    orderDateMap=new LinkedHashMap<>();
+                    for(DataSnapshot dataTime:datas.getChildren()) {
+                        String date=dataTime.getKey().toString();
+                        orderSessionMap=new LinkedHashMap<>();
+                        for (DataSnapshot ondata : dataTime.getChildren()) {
+                            String ss = ondata.getKey().toString();
+                            String[] str = ss.split("_");
+                            session_title = str[0];
+                            MyLog.e(TAG, "MyOrdersAdapter>>session_title>>" + ondata.getKey().toString());
+                            //o_myOrdersList = new ArrayList<>();
+                            //o_selectedHeadersList = new ArrayList<>();
+                            orderHeaderMap = new LinkedHashMap<>();
+                            for (DataSnapshot dataSnapshot : ondata.getChildren()) {
                                 //get item list
-                                OrderItemLists itemLists = new OrderItemLists(
-                                        shot.getValue().toString()
-                                );
-                                o_orderItemLists.add(itemLists);
-                                size++;
+                                o_orderItemLists = new ArrayList<>();
+
+                                header_title = dataSnapshot.getKey().toString();
+                                MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
+                                MyLog.e(TAG, "onData>>header_title>>" + dataSnapshot.getKey().toString());
+                                size = 0;
+                                for (DataSnapshot shot : dataSnapshot.getChildren()) {
+                                    MyLog.e(TAG, "onData>>shots>>" + shot);
+                                    MyLog.e(TAG, "onData>>shots>>" + shot.getKey().toString());
+                                    //get item list
+                                    OrderItemLists itemLists = new OrderItemLists(
+                                            shot.getValue().toString()
+                                    );
+                                    o_orderItemLists.add(itemLists);
+                                    size++;
+                                }
+
+                                MyLog.e(TAG, "onData>>size>" + size);
+                                orderHeaderMap.put(header_title, o_orderItemLists);
+
+
                             }
-
-                            MyLog.e(TAG, "onData>>size>" + size);
-                           /* MyOrdersList itemList = new MyOrdersList(
-                                    header_title,
-                                    size
-                            );
-                            o_myOrdersList.add(itemList);*/
-
-
-                            orderHeaderMap.put(header_title, o_orderItemLists);
-
-
-                            //get item list
-                            /*SelectedHeader selectedHeader = new SelectedHeader(
-                                    header_title
-                            );
-                            selectedHeadersList.add(selectedHeader);
-                            sh_f_map.put(ss, selectedHeadersList);*/
+                            orderSessionMap.put(ss, orderHeaderMap);
 
                         }
-
-                        //set selected session list
-                        /*SelectedSessionList sessionList1 = new SelectedSessionList();
-                        String[] dateTime = (session_title).split("!");
-                        sessionList1.setSession_title(dateTime[0]);
-                        sessionList1.setBolen(str[1]);
-                        sessionList1.setDate_time(dateTime[1]);
-                        o_selectedSessionLists.add(sessionList1);*/
-
-                        orderSessionMap.put(ss, orderHeaderMap);
-
+                        orderDateMap.put(date,orderSessionMap);
                     }
-
-
-                    //get func name into list
-                    /*MyOrderFuncList list = new MyOrderFuncList(
-                            func
-                    );
-                    myOrderFuncLists.add(list);*/
-
-                    orderFunc_Map.put(func,orderSessionMap);
+                    orderFunc_Map.put(func,orderDateMap);
                 }
 
                 //set func map
                 orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
-
+                MyLog.e(TAG,"orders>>orderFunc_Map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
 
             }

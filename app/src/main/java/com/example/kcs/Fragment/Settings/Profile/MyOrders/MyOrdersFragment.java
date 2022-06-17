@@ -78,8 +78,10 @@ public class MyOrdersFragment extends Fragment {
 
     //order hashmap
     //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderFunc_Map = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> s_orderFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> s_orderFunc_Map = new LinkedHashMap<>();
+    //date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
     //header map
     private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
     //session map
@@ -134,9 +136,9 @@ public class MyOrdersFragment extends Fragment {
         getViewModel.setFunc_Session(null);
 
         //get order func hash map
-        getViewModel.getOrderFunc_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>() {
+        getViewModel.getOrderFunc_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> stringLinkedHashMapLinkedHashMap) {
                 orderFunc_Map=new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
                 s_orderFunc_Map=new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
 
@@ -149,7 +151,7 @@ public class MyOrdersFragment extends Fragment {
                 for(int i=0;i<aList1.size();i++)
                 {
                     MyOrderFuncList list=new MyOrderFuncList(
-                      aList1.get(i)
+                            aList1.get(i)
                     );
                     myOrderFuncLists.add(list);
                 }
@@ -158,6 +160,7 @@ public class MyOrdersFragment extends Fragment {
                 recyclerview_my_orders.setAdapter(myOrdersAdapter);
             }
         });
+
 
 
         ///////////////////////*************BOTTOMSHEET DIALOG**************************///////////////////
@@ -186,7 +189,7 @@ public class MyOrdersFragment extends Fragment {
 
 
                     //get order sessionMap
-                    orderSessionMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
+                    //orderSessionMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
                     recyclerview_order_session_deatils.setHasFixedSize(true);
                     recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                     ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,str[0],null,str[1], bottomSheet,orderSessionMap);
@@ -217,7 +220,7 @@ public class MyOrdersFragment extends Fragment {
                     //sessionLists.clear();
                     //selectedSessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
 
-                    orderSessionMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
+                    //orderSessionMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
                     //get session title
                     Set<String> set = orderSessionMap.keySet();
                     List<String> aList1 = new ArrayList<String>(set.size());

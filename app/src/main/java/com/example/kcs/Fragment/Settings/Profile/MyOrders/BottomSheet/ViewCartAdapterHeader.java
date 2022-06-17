@@ -91,22 +91,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         holder.recyclerview_item_list.setAdapter(viewCartAdapter);
 
 
-        //get order item view list hash map
-        /*getViewModel.getOrderItemList_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<OrderItemLists>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<OrderItemLists>> stringListLinkedHashMap) {
-                orderItemListss=new ArrayList<>();
 
-                MyLog.e(TAG,"myord>> header>>"+func_title+"-"+session_title+"-"+list.getHeader());
-                orderItemListss=stringListLinkedHashMap.get(func_title+"-"+session_title+"-"+list.getHeader());
-                holder.recyclerview_item_list.setHasFixedSize(true);
-                holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                if(orderItemListss!=null) {
-                    viewCartAdapter = new ViewCartAdapter(context, getViewModel, orderItemListss,func_title,session_title,list.getHeader(),bolen);
-                    holder.recyclerview_item_list.setAdapter(viewCartAdapter);
-                }
-            }
-        });*/
 
 
     }

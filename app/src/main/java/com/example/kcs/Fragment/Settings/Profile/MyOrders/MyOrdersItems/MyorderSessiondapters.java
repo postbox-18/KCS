@@ -128,18 +128,6 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
         holder.recyclerview_item_list.setAdapter(itemListAdapters);
 
 
-        //get hash map of my orders list
-       /* getViewModel.getF_mapMyordersMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<MyOrdersList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<MyOrdersList>> stringListLinkedHashMap) {
-                myOrdersList = stringListLinkedHashMap.get(func_title + "/" + sessionLists1.getSession_title()+"!"+sessionLists1.getDate_time());
-                getViewModel.setMyOrdersList(myOrdersList);
-                holder.recyclerview_item_list.setHasFixedSize(true);
-                holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
-                holder.recyclerview_item_list.setAdapter(itemListAdapters);
-            }
-        });*/
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get func map
