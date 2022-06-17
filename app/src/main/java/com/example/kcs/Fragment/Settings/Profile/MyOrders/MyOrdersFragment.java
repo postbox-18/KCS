@@ -3,6 +3,8 @@ package com.example.kcs.Fragment.Settings.Profile.MyOrders;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +21,7 @@ import com.example.kcs.Classes.SharedPreferences_data;
 
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapterSession;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersAdapter;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
@@ -32,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,14 +57,15 @@ public class MyOrdersFragment extends Fragment {
     private GetViewModel getViewModel;
     private RecyclerView recyclerview_my_orders;
     private List<MyOrdersList> myOrdersList = new ArrayList<>();
-    private List<MyOrderFuncList> myOrderFuncLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
+    private List<MyOrderFuncList> myOrderFuncLists = new ArrayList<>();
     private MyOrdersAdapter myOrdersAdapter;
     private String header, func_title, s_user_name,func_session_title;
     private String item = "";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private String TAG = "MyOrdersFragment";
+
     private LinkedHashMap<String, List<MyOrdersList>> myordersHashMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> selectedHeaderMap=new LinkedHashMap<>();
 
@@ -68,7 +73,15 @@ public class MyOrdersFragment extends Fragment {
     private RecyclerView recyclerview_order_session_deatils;
     private List<SelectedSessionList> selectedSessionLists=new ArrayList<>();
     private TextView func;
-    private LinkedHashMap<String, List<SelectedSessionList>> stringListLinkedHashMap=new LinkedHashMap<>();
+    //private LinkedHashMap<String, List<SelectedSessionList>> stringListLinkedHashMap=new LinkedHashMap<>();
+
+    //order hashmap
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderFunc_Map = new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
 
 
 
@@ -118,19 +131,31 @@ public class MyOrdersFragment extends Fragment {
 
         getViewModel.setFunc_Session(null);
 
-
-
-        //get Func name list
-        getViewModel.getMyOrderFuncListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<MyOrderFuncList>>() {
+        //get order func hash map
+        getViewModel.getOrderFunc_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>() {
             @Override
-            public void onChanged(List<MyOrderFuncList> myOrderFuncLists1) {
-                myOrderFuncLists = myOrderFuncLists1;
-                myOrdersAdapter = new MyOrdersAdapter(getContext(), myOrderFuncLists, getViewModel);
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> stringLinkedHashMapLinkedHashMap) {
+                orderFunc_Map=stringLinkedHashMapLinkedHashMap;
+                //get session title
+                Set<String> set = orderFunc_Map.keySet();
+                List<String> aList1 = new ArrayList<String>(set.size());
+                for (String x1 : set)
+                    aList1.add(x1);
+                myOrderFuncLists.clear();
+                for(int i=0;i<aList1.size();i++)
+                {
+                    MyOrderFuncList list=new MyOrderFuncList(
+                      aList1.get(i)
+                    );
+                    myOrderFuncLists.add(list);
+                }
+                myOrdersAdapter = new MyOrdersAdapter(getContext(), myOrderFuncLists, getViewModel,orderFunc_Map);
                 recyclerview_my_orders.setAdapter(myOrdersAdapter);
             }
         });
 
 
+///////////////////////*************BOTTOMSHEET DIALOG**************************///////////////////
         BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
         View bottom_view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_order_details, null);
         recyclerview_order_session_deatils = bottom_view.findViewById(R.id.recyclerview_order_session_deatils);
@@ -162,15 +187,7 @@ public class MyOrdersFragment extends Fragment {
                 }
             }
         });
-        //get session hash map  List
-        //get session list
-        getViewModel.getSs_f_mapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SelectedSessionList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<SelectedSessionList>> stringListLinkedHashMap1) {
-                stringListLinkedHashMap=stringListLinkedHashMap1;
 
-            }
-        });
 
 
         //get func_title  to view item list
@@ -180,7 +197,6 @@ public class MyOrdersFragment extends Fragment {
                 //click on full adapter cardview
                 if (s != null && !s.isEmpty()) {
                     func_title=s;
-
                     func.setText(s);
 
                     MyLog.e(TAG, "func_title>>string>>" + s);
@@ -190,7 +206,29 @@ public class MyOrdersFragment extends Fragment {
                     //get session list
                     MyLog.e(TAG,"SessionList>>deatils>>"+s_user_name+"\t\t"+func_title);
                     //sessionLists.clear();
-                    selectedSessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
+                    //selectedSessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
+                    orderSessionMap=orderFunc_Map.get(func_title);
+                    //get session title
+                    Set<String> set = orderSessionMap.keySet();
+                    List<String> aList1 = new ArrayList<String>(set.size());
+                    for (String x1 : set)
+                        aList1.add(x1);
+                    selectedSessionLists.clear();
+                    for(int i=0;i<aList1.size();i++)
+                    {
+                        String[] arr=(aList1.get(i)).split("_");
+                        String bolen=arr[1];
+                        String[]str=(arr[0]).split("!");
+                        String sess=str[0];
+                        String dateTime=str[1];
+                        SelectedSessionList sessionList=new SelectedSessionList();
+                        sessionList.setSession_title(sess);
+                        sessionList.setDate_time(dateTime);
+                        sessionList.setBolen(bolen);
+                        selectedSessionLists.add(sessionList);
+                    }
+
+
 
 
                     recyclerview_order_session_deatils.setHasFixedSize(true);
