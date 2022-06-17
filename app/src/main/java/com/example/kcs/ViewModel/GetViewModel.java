@@ -260,10 +260,10 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderFunc_Map) {
+   /* public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderFunc_Map) {
         this.orderFunc_Map = orderFunc_Map;
         this.orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
-    }
+    }*/
 
     public void setOrderHeaderMap(LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap) {
         this.orderHeaderMap = orderHeaderMap;
@@ -355,6 +355,9 @@ public class GetViewModel extends AndroidViewModel {
 
 
     public void setFunc_Session(String func_Session) {
+        MyLog.e(TAG,"orders>>change func_Session >>"+func_Session);
+        MyLog.e(TAG,"orders>>change orderFunc_Map setFunc_Session>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
+
         Func_Session = func_Session;
         this.Func_SessionMutable.postValue(Func_Session);
     }
@@ -659,11 +662,12 @@ public class GetViewModel extends AndroidViewModel {
                     myOrderFuncLists.add(list);*/
 
                     orderFunc_Map.put(func,orderSessionMap);
+                    MyLog.e(TAG,"orders>>change orderFunc_Map   viewmodel>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
                 }
 
                 //set func map
                 orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
-                //MyLog.e(TAG, "order>>orderFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
+                //MyLog.e(TAG,"orders>>orderFunc_Map session >>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
 
 

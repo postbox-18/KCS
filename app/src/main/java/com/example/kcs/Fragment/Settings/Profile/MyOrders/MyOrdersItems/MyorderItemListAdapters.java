@@ -31,7 +31,7 @@ public class MyorderItemListAdapters extends RecyclerView.Adapter<MyorderItemLis
     public MyorderItemListAdapters(Context context, GetViewModel getViewModel, List<MyOrdersList> myOrdersLists) {
         this.context = context;
         this.getViewModel = getViewModel;
-        this.myOrdersLists = myOrdersLists;
+        this.myOrdersLists = new ArrayList<>(myOrdersLists);
     }
 
     @NonNull

@@ -90,7 +90,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
         }
 
         String s=sessionLists1.getSession_title()+"!"+sessionLists1.getDate_time()+"_"+sessionLists1.getBolen();
-        orderHeaderMap=orderSessionMap.get(s);
+        orderHeaderMap=new LinkedHashMap<>(orderSessionMap.get(s));
         Set<String> set = orderHeaderMap.keySet();
         List<String> aList1 = new ArrayList<String>(set.size());
         for (String x1 : set)
@@ -105,17 +105,17 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             o_selectedHeaders.add(header);
             //get header list and item size
         }
-        MyLog.e(TAG,"orders>>orderHeaderMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderHeaderMap));
-        MyLog.e(TAG,"orders>>selected header>>"+new GsonBuilder().setPrettyPrinting().create().toJson(o_selectedHeaders));
+        //MyLog.e(TAG,"orders>>orderHeaderMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderHeaderMap));
+        //MyLog.e(TAG,"orders>>selected header>>"+new GsonBuilder().setPrettyPrinting().create().toJson(o_selectedHeaders));
         myOrdersList.clear();
         for(int k=0;k<o_selectedHeaders.size();k++)
         {
 
             o_orderItemLists.clear();
             String header=o_selectedHeaders.get(k).getHeader();
-            o_orderItemLists=orderHeaderMap.get(header);
+            o_orderItemLists=new ArrayList<>(orderHeaderMap.get(header));
 
-            MyLog.e(TAG,"orders>>selected item>>"+new GsonBuilder().setPrettyPrinting().create().toJson(o_orderItemLists));
+            //MyLog.e(TAG,"orders>>selected item>>"+new GsonBuilder().setPrettyPrinting().create().toJson(o_orderItemLists));
             MyOrdersList myOrdersList1=new MyOrdersList(
                     header,
                     o_orderItemLists.size()

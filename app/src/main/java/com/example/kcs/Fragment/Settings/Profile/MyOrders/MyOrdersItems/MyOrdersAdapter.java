@@ -23,6 +23,7 @@ import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemL
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrderFuncList;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -102,10 +103,10 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         });
 
         ///////////***************************clear list in live data model****************************//////////////////////
-
+        MyLog.e(TAG,"orders>>map adapter before>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
         //get selected sessions
-        orderSessionMap=orderFunc_Map.get(myOrderFuncLists1.getFunc());
+        orderSessionMap=new LinkedHashMap<>(orderFunc_Map.get(myOrderFuncLists1.getFunc()));
         //get session title
         Set<String> set = orderSessionMap.keySet();
         List<String> aList1 = new ArrayList<String>(set.size());
@@ -126,6 +127,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
             sessionLists.add(sessionList);
 
         }
+        MyLog.e(TAG,"orders>>map adapter after>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
+
         holder.recyclerview_session.setHasFixedSize(true);
         holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         MyorderSessiondapters itemListAdapters = new MyorderSessiondapters(context, myOrderFuncLists1.getFunc(),getViewModel,sessionLists,orderSessionMap);

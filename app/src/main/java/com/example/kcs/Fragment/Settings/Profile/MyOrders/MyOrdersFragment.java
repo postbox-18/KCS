@@ -31,6 +31,7 @@ import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -78,6 +79,7 @@ public class MyOrdersFragment extends Fragment {
     //order hashmap
     //func map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> s_orderFunc_Map = new LinkedHashMap<>();
     //header map
     private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
     //session map
@@ -135,7 +137,9 @@ public class MyOrdersFragment extends Fragment {
         getViewModel.getOrderFunc_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> stringLinkedHashMapLinkedHashMap) {
-                orderFunc_Map=stringLinkedHashMapLinkedHashMap;
+                orderFunc_Map=new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
+                s_orderFunc_Map=new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
+
                 //get session title
                 Set<String> set = orderFunc_Map.keySet();
                 List<String> aList1 = new ArrayList<String>(set.size());
@@ -150,12 +154,15 @@ public class MyOrdersFragment extends Fragment {
                     myOrderFuncLists.add(list);
                 }
                 myOrdersAdapter = new MyOrdersAdapter(getContext(), myOrderFuncLists, getViewModel,orderFunc_Map);
+                MyLog.e(TAG,"orders>>map main source>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
+
                 recyclerview_my_orders.setAdapter(myOrdersAdapter);
             }
         });
 
 
-///////////////////////*************BOTTOMSHEET DIALOG**************************///////////////////
+        ///////////////////////*************BOTTOMSHEET DIALOG**************************///////////////////
+
         BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
         View bottom_view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_order_details, null);
         recyclerview_order_session_deatils = bottom_view.findViewById(R.id.recyclerview_order_session_deatils);
@@ -166,6 +173,7 @@ public class MyOrdersFragment extends Fragment {
         getViewModel.getFunc_SessionMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
+                MyLog.e(TAG,"orders>>map bottom sheet>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
                 func_session_title=s;
                 //click on session adapter cardview
                 if (func_session_title != null && !func_session_title.isEmpty()) {
@@ -177,10 +185,14 @@ public class MyOrdersFragment extends Fragment {
 
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
+                    MyLog.e(TAG,"orders>>change orderFunc_Map session funcv uif>>"+new GsonBuilder().setPrettyPrinting().create().toJson(s_orderFunc_Map));
 
+
+                    //get order sessionMap
+                    orderSessionMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
                     recyclerview_order_session_deatils.setHasFixedSize(true);
                     recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,str[0],null,str[1], bottomSheet);
+                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,str[0],null,str[1], bottomSheet,orderSessionMap);
                     recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "myord>> func_session_title null");
@@ -207,7 +219,9 @@ public class MyOrdersFragment extends Fragment {
                     MyLog.e(TAG,"SessionList>>deatils>>"+s_user_name+"\t\t"+func_title);
                     //sessionLists.clear();
                     //selectedSessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
-                    orderSessionMap=orderFunc_Map.get(func_title);
+                    MyLog.e(TAG,"orders>>change orderFunc_Map session funcv else >>"+new GsonBuilder().setPrettyPrinting().create().toJson(s_orderFunc_Map));
+
+                    orderSessionMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
                     //get session title
                     Set<String> set = orderSessionMap.keySet();
                     List<String> aList1 = new ArrayList<String>(set.size());
@@ -231,9 +245,10 @@ public class MyOrdersFragment extends Fragment {
 
 
 
+
                     recyclerview_order_session_deatils.setHasFixedSize(true);
                     recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s,selectedSessionLists, null,bottomSheet);
+                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s,selectedSessionLists, null,bottomSheet,orderSessionMap);
                     recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "func_title>> orderItemView list null");
