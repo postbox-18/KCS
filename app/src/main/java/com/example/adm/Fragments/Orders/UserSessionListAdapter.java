@@ -26,6 +26,7 @@ import java.util.List;
 public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionListAdapter.ViewHolder> {
     private Context context;
     private String TAG = "UserSessionListAdapter";
+    private String s_session_title,bolen,s_date_time;
     private GetViewModel getViewModel;
     private List<SessionList> sessionLists=new ArrayList<>();
     private OrderLists orderLists1;
@@ -51,7 +52,13 @@ public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionList
     public void onBindViewHolder(@NonNull UserSessionListAdapter.ViewHolder holder, int position) {
 
         final SessionList sessionLists1 = sessionLists.get(position);
-        holder.session_title.setText(String.valueOf(sessionLists1.getSession_title()));
+        String[] str=(sessionLists1.getSession_title()).split("_");
+        bolen=str[1];
+        String[]s=(str[0]).split("!");
+        s_session_title=s[0];
+        s_date_time=s[1];
+        holder.session_title.setText(s_session_title);
+        holder.date_time.setText(s_date_time);
         //get item checked list in hash map
         getViewModel.getS_mapMutable().observe((LifecycleOwner) context, new Observer<List<LinkedHashMap<String, List<UserItemList>>>>() {
             @Override
@@ -84,11 +91,12 @@ public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionList
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView session_title;
+        private TextView session_title,date_time;
             private RecyclerView itemList;
         public ViewHolder(View view) {
             super(view);
             session_title = view.findViewById(R.id.session_title);
+            date_time = view.findViewById(R.id.date_time);
             itemList = view.findViewById(R.id.itemList);
 
 

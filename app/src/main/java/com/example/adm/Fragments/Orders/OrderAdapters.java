@@ -77,7 +77,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
                 MyLog.e(TAG,"sessions>>f_map>>stringListLinkedHashMap>>"+orderLists1.getS_user_name()+"-"+orderLists1.getFunc());
                 sessionLists=stringListLinkedHashMap.get(orderLists1.getS_user_name()+"-"+orderLists1.getFunc());
                 holder.recyclerview_session.setHasFixedSize(true);
-                holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
                 UserSessionListAdapter userSessionListAdapter=new UserSessionListAdapter(context,getViewModel,orderLists1,sessionLists);
                 holder.recyclerview_session.setAdapter(userSessionListAdapter);
 
