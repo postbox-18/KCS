@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                         MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                         editSessionMap = editFunc_Map.get(func_title);
                         MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
-                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getDate_time());
+                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime());
                         editHeaderMap = editSessionMap.get(date_time);
 
                         Set<String> stringSet = editHeaderMap.keySet();
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                             MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                             sessionMap = funcMap.get(func_title);
                             MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
-                            date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getDate_time());
+                            date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getTime());
                             headerMap = sessionMap.get(date_time);
 
                             Set<String> stringSet = headerMap.keySet();

@@ -29,6 +29,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapterSession.ViewHolder> {
     private Context context;
@@ -48,14 +49,25 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     //cancel map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
     private int n;
+    //order hashmap
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderFunc_Map = new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    //selected headers
+    private List<SelectedHeader> o_selectedHeaders=new ArrayList<>();
 
-    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String s1, BottomSheetDialog bottomSheet) {
+
+    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String s1, BottomSheetDialog bottomSheet, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.func_title = s;
         this.sess_title = s1;
         this.sessionLists = sessionLists;
         this.bottomSheet = bottomSheet;
+        this.orderSessionMap = orderSessionMap;
     }
 
 
@@ -148,23 +160,35 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 holder.delete.setImageResource(R.drawable.ic_trash3_fill_cancel);
             }
 
+            //get selected header to viewHeaderAdapter
+            orderHeaderMap=orderSessionMap.get(sess_title);
 
-            //get selected session and header hashmap
-            getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
-                @Override
-                public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-                    MyLog.e(TAG,"cancel>> stringListLinkedHashMap\n"+new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                    MyLog.e(TAG,"cancel>> sess_titlen  "+sess_title);
-                    selectedHeaders = stringListLinkedHashMap.get(sess_title);
-                    MyLog.e(TAG,"cancel>> selectedHeaders\n"+new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeaders));
+            Set<String> set = orderHeaderMap.keySet();
+            List<String> aList1 = new ArrayList<String>(set.size());
+            for (String x1 : set)
+                aList1.add(x1);
+            o_selectedHeaders.clear();
+            for(int i=0;i<aList1.size();i++)
+            {
+                SelectedHeader header=new SelectedHeader(
+                        aList1.get(i)
+                );
 
-                    ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, selectedHeaders, sess_title, func_title,bolen);
-                    holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
-                    holder.recyclerview_order_item_details.setHasFixedSize(true);
-                    holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+                o_selectedHeaders.add(header);
+                //get header list and item size
+            }
+            holder.recyclerview_order_item_details.setHasFixedSize(true);
+            holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
-                }
-            });
+            ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_title, func_title,bolen,orderHeaderMap);
+            holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
+
+
+
+
+
+
+
             //onclick
             //edit
             holder.edit.setOnClickListener(new View.OnClickListener() {
@@ -191,24 +215,37 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         else {
             final SelectedSessionList list = sessionLists.get(position);
             //set session date time bolen
-            String sess_date=list.getSession_title()+"!"+list.getDate_time()+"_"+list.getBolen();
+            String sess_date=list.getSession_title()+"!"+list.getTime()+"_"+list.getBolen();
             MyLog.e(TAG,"cancel>> session>>"+list.getSession_title());
             holder.session_title.setText(list.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
-            holder.date_time.setText(list.getDate_time());
+            holder.date_time.setText(list.getTime());
             holder.date_time.setTextColor(context.getResources().getColor(R.color.colorSecondary));
-            //get selected session and header hashmap
-            getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
-                @Override
-                public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-                    selectedHeaders = stringListLinkedHashMap.get(sess_date);
-                    ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, selectedHeaders, sess_date, func_title, list.getBolen());
-                    holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
-                    holder.recyclerview_order_item_details.setHasFixedSize(true);
-                    holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
-                }
-            });
+            //get selected header to viewHeaderAdapter
+            orderHeaderMap=orderSessionMap.get(sess_date);
+
+
+            Set<String> set = orderHeaderMap.keySet();
+            List<String> aList1 = new ArrayList<String>(set.size());
+            for (String x1 : set)
+                aList1.add(x1);
+            o_selectedHeaders.clear();
+            for(int i=0;i<aList1.size();i++)
+            {
+                SelectedHeader header=new SelectedHeader(
+                        aList1.get(i)
+                );
+
+                o_selectedHeaders.add(header);
+                //get header list and item size
+            }
+            holder.recyclerview_order_item_details.setHasFixedSize(true);
+            holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+
+            ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_date, func_title, list.getBolen(), orderHeaderMap);
+            holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
+
 
 
             //onclick

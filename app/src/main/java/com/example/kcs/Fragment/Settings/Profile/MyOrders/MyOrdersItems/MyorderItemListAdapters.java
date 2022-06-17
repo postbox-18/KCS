@@ -10,21 +10,28 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MyorderItemListAdapters extends RecyclerView.Adapter<MyorderItemListAdapters.ViewHolder> {
     private Context context;
     private String TAG = "ItemListAdapters";
     private GetViewModel getViewModel;
-    private List<MyOrdersList> myOrdersLists;
+    private List<MyOrdersList> myOrdersLists=new ArrayList<>();
+
+
+
 
     public MyorderItemListAdapters(Context context, GetViewModel getViewModel, List<MyOrdersList> myOrdersLists) {
         this.context = context;
         this.getViewModel = getViewModel;
-        this.myOrdersLists = myOrdersLists;
+        this.myOrdersLists = new ArrayList<>(myOrdersLists);
     }
 
     @NonNull

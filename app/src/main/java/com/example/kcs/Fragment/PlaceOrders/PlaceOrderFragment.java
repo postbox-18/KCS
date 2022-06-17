@@ -188,7 +188,7 @@ public class PlaceOrderFragment extends Fragment {
                     SelectedSessionList list = new SelectedSessionList();
                     list.setBolen(null);
                     list.setSession_title(arr[0]);
-                    list.setDate_time(arr[1]);
+                    list.setTime(arr[1]);
                     selectedSessionLists.add(list);
                 }
 
@@ -231,7 +231,7 @@ public class PlaceOrderFragment extends Fragment {
                     SelectedSessionList list = new SelectedSessionList();
                     list.setBolen(null);
                     list.setSession_title(arr[0]);
-                    list.setDate_time(arr[1]);
+                    list.setTime(arr[1]);
                     selectedSessionLists.add(list);
                 }
 
@@ -262,7 +262,7 @@ public class PlaceOrderFragment extends Fragment {
 
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    date_time=selectedSessionLists.get(k).getSession_title() + "-" + selectedSessionLists.get(k).getDate_time();
+                    date_time=selectedSessionLists.get(k).getSession_title() + "-" + selectedSessionLists.get(k).getTime();
                     headerMap = sessionMap.get(date_time);
                     //set selected header
                     if (headerMap != null) {
@@ -313,7 +313,7 @@ public class PlaceOrderFragment extends Fragment {
     }
 
 
-    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String date_time) {
+    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String sess_date_time) {
         n++;
         MyLog.e(TAG, "placeorders>>date_time session_str n value>>"+n);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -325,11 +325,19 @@ public class PlaceOrderFragment extends Fragment {
 
                 for (int i = 0; i < checkedLists1.size(); i++) {
                     //set session-dateTime
-                    String str=date_time.replace("-","!");
-                    String session_str=str.replace("/","-");
-                    MyLog.e(TAG, "placeorders>>date_time session_str>>"+session_str);
-                    String s=session_str+"_true";
-                    databaseReference.child(user_name).child(func_title).child(s).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
+                    String[] arr=sess_date_time.split("-");
+                    String dateTime=arr[1];
+                    String sess=arr[0];
+                    MyLog.e(TAG, "placeorders>>sess >>"+sess);
+                    String[] str=dateTime.split(" ");
+                    String date=str[0];
+                    MyLog.e(TAG, "placeorders>>date >>"+date);
+                    date=date.replace("/","-");
+                    MyLog.e(TAG, "placeorders>>date >>"+date);
+                    String time=str[1]+" "+str[2];
+                    MyLog.e(TAG, "placeorders>>time>>"+time);
+                    String session_str=sess+"!"+time+"_true";
+                    databaseReference.child(user_name).child(func_title).child(date).child(session_str).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
                 MyLog.e(TAG, "comit");
 
