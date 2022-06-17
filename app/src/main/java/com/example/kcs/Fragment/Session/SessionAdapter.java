@@ -99,7 +99,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                 else {
                     for (int k = 0; k < selectedSessionLists.size(); k++) {
                         if((sessionList1.getSession_title()).equals(selectedSessionLists.get(k).getSession_title())) {
-                            date_time = (sessionList1.getSession_title()) + "-" + (selectedSessionLists.get(k).getDate_time());
+                            date_time = (sessionList1.getSession_title()) + "-" + (selectedSessionLists.get(k).getTime());
                             headerMap = sessionMap.get(date_time);
                         break;
                         }

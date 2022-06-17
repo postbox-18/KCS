@@ -189,7 +189,7 @@ public class MyOrdersFragment extends Fragment {
 
 
                     //get order sessionMap
-                    //orderSessionMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
+                    orderDateMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
                     recyclerview_order_session_deatils.setHasFixedSize(true);
                     recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                     ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,str[0],null,str[1], bottomSheet,orderSessionMap);
@@ -236,7 +236,7 @@ public class MyOrdersFragment extends Fragment {
                         String dateTime=str[1];
                         SelectedSessionList sessionList=new SelectedSessionList();
                         sessionList.setSession_title(sess);
-                        sessionList.setDate_time(dateTime);
+                        sessionList.setTime(dateTime);
                         sessionList.setBolen(bolen);
                         selectedSessionLists.add(sessionList);
                     }

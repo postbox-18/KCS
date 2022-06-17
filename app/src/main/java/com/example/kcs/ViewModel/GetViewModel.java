@@ -1168,7 +1168,7 @@ public class GetViewModel extends AndroidViewModel {
         String[] li = session_title.split("!");
         sessionList.setSession_title(li[0]);
         sessionList.setBolen(null);
-        sessionList.setDate_time(li[1]);
+        sessionList.setTime(li[1]);
         e_sessionLists.add(sessionList);
         editSessionMap.put(session_title, editHeaderMap);
         //set

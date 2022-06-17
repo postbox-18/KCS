@@ -76,7 +76,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             //set session title and date
             holder.session_title.setText(sessionLists1.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
-            holder.date_time.setText(sessionLists1.getDate_time());
+            holder.time.setText(sessionLists1.getTime());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
 
         }
@@ -85,11 +85,11 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             //set session title and date
             holder.session_title.setText(sessionLists1.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.text_silver));
-            holder.date_time.setText(sessionLists1.getDate_time());
-            holder.date_time.setTextColor(context.getResources().getColor(R.color.text_silver));
+            holder.time.setText(sessionLists1.getTime());
+            holder.time.setTextColor(context.getResources().getColor(R.color.text_silver));
         }
 
-        String s=sessionLists1.getSession_title()+"!"+sessionLists1.getDate_time()+"_"+sessionLists1.getBolen();
+        String s=sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"_"+sessionLists1.getBolen();
         orderHeaderMap=new LinkedHashMap<>(orderSessionMap.get(s));
         Set<String> set = orderHeaderMap.keySet();
         List<String> aList1 = new ArrayList<String>(set.size());
@@ -169,7 +169,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                 editHeaderMap=new LinkedHashMap<>();
                 getViewModel.setEditHeaderMap(editHeaderMap);
                 getViewModel.setFunc_title(func_title);
-                String s = func_title + "/" + sessionLists1.getSession_title()+"!"+sessionLists1.getDate_time()+"_"+sessionLists1.getBolen();
+                String s = func_title + "/" + sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"_"+sessionLists1.getBolen();
                 getViewModel.setFunc_Session(s);
             }
         });
@@ -187,7 +187,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profile;
-        private TextView session_title, date_time;
+        private TextView session_title, time;
         private CardView session_card;
         private RecyclerView recyclerview_item_list;
 
@@ -196,7 +196,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             profile = view.findViewById(R.id.profile);
             recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
             session_title = view.findViewById(R.id.session_title);
-            date_time = view.findViewById(R.id.date_time);
+            time = view.findViewById(R.id.time);
             session_card = view.findViewById(R.id.session_card);
 
 

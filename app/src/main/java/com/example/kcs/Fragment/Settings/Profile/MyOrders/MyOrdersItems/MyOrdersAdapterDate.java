@@ -19,19 +19,19 @@ import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrderFuncList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrderFuncList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHolder> {
+public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDate.ViewHolder> {
     private Context context;
-    private String TAG="MyOrdersAdapter";
-    private List<MyOrderFuncList> myOrderFuncLists=new ArrayList<>();
+    private String TAG="MyOrdersAdapterDate";
+    //private List<MyOrderFuncList> myOrderFuncLists=new ArrayList<>();
     private List<SelectedSessionList> sessionLists=new ArrayList<>();
     private List<MyOrdersList> myOrdersList;
     private GetViewModel getViewModel;
@@ -42,39 +42,39 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
     //order hashmap
-    //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
+
     //date map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
     //header map
     private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
     //session map
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
-    //date list
+    //Date List
     private List<SelectedDateList> dateLists=new ArrayList<>();
 
-    public MyOrdersAdapter(Context context, List<MyOrderFuncList> myOrderFuncLists, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map) {
-        this.myOrderFuncLists = myOrderFuncLists;
+    public MyOrdersAdapterDate(Context context, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap, List<SelectedDateList> dateLists) {
+
         this.context = context;
         this.getViewModel = getViewModel;
-        this.orderFunc_Map = orderFunc_Map;
+        this.orderDateMap = orderDateMap;
+        this.dateLists = dateLists;
     }
 
     @NonNull
     @Override
-    public MyOrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyOrdersAdapterDate.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.myorder_cardview, parent, false);
-        return new MyOrdersAdapter.ViewHolder(view);
+        View view = layoutInflater.inflate(R.layout.select_date, parent, false);
+        return new MyOrdersAdapterDate.ViewHolder(view);
         //return view;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyOrdersAdapter.ViewHolder holder, int position) {
-        final MyOrderFuncList myOrderFuncLists1 = myOrderFuncLists.get(position);
+    public void onBindViewHolder(@NonNull MyOrdersAdapterDate.ViewHolder holder, int position) {
+        final SelectedDateList list = dateLists.get(position);
         String username=new SharedPreferences_data(context).getS_user_name();
         //get data func,header,list item size from hash map
-        holder.func.setText(myOrderFuncLists1.getFunc());
+        holder.date.setText(list.getDate());
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get func map
@@ -106,70 +106,55 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
         ///////////***************************clear list in live data model****************************//////////////////////
 
-        //get selected date
-        orderDateMap=new LinkedHashMap<>(orderFunc_Map.get(myOrderFuncLists1.getFunc()));
-        //get date list
-        Set<String> set = orderDateMap.keySet();
+        //get selected sessions
+        orderSessionMap=new LinkedHashMap<>(orderDateMap.get(list.getDate()));
+        //get session title
+        Set<String> set = orderSessionMap.keySet();
         List<String> aList1 = new ArrayList<String>(set.size());
         for (String x1 : set)
             aList1.add(x1);
-        dateLists.clear();
+        sessionLists.clear();
         for(int i=0;i<aList1.size();i++)
         {
-            SelectedDateList sessionList=new SelectedDateList(
-                    aList1.get(i)
-            );
-
-            dateLists.add(sessionList);
+            String[] arr=(aList1.get(i)).split("_");
+            String bolen=arr[1];
+            String[]str=(arr[0]).split("!");
+            String sess=str[0];
+            String dateTime=str[1];
+            SelectedSessionList sessionList=new SelectedSessionList();
+            sessionList.setSession_title(sess);
+            sessionList.setTime(dateTime);
+            sessionList.setBolen(bolen);
+            sessionLists.add(sessionList);
 
         }
 
-        holder.recyclerview_date.setHasFixedSize(true);
-        holder.recyclerview_date.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        MyOrdersAdapterDate itemListAdapters = new MyOrdersAdapterDate(context, getViewModel,orderDateMap,dateLists);
-        holder.recyclerview_date.setAdapter(itemListAdapters);
-
-
-
-        holder.card_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editFunc_Map=new LinkedHashMap<>();
-                getViewModel.setEditFuncMap(editFunc_Map);
-                editSessionMap=new LinkedHashMap<>();
-                getViewModel.setEditSessionMap(editSessionMap);
-                editHeaderMap=new LinkedHashMap<>();
-                getViewModel.setEditHeaderMap(editHeaderMap);
-                getViewModel.setFunc_title(myOrderFuncLists1.getFunc());
-                //getViewModel.SetBreadCrumsList(myOrderFuncLists1.getFunc(), 0);
-            }
-        });
+        holder.recyclerview_session.setHasFixedSize(true);
+        holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        MyorderSessiondapters itemListAdapters = new MyorderSessiondapters(context, list.getDate(), getViewModel,sessionLists,orderSessionMap);
+        holder.recyclerview_session.setAdapter(itemListAdapters);
 
     }
 
 
     @Override
     public int getItemCount() {
-        MyLog.e(TAG, "myOrderFuncLists>>49>>" + myOrderFuncLists.size());
-        return myOrderFuncLists.size();
+        MyLog.e(TAG, "myOrderFuncLists>>49>>" + dateLists.size());
+        return dateLists.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView profile;
-        private TextView   func;
-        private CardView card_view;
-        private RecyclerView recyclerview_date;
+        private TextView date;
+        private RecyclerView recyclerview_session;
 
         public ViewHolder(View view) {
             super(view);
-            profile = view.findViewById(R.id.profile);
-            recyclerview_date = view.findViewById(R.id.recyclerview_date);
-            func = view.findViewById(R.id.func);
-            card_view = view.findViewById(R.id.card_view);
+            recyclerview_session = view.findViewById(R.id.recyclerview_session);
+            date = view.findViewById(R.id.date);
+
 
 
         }
     }
 }
-

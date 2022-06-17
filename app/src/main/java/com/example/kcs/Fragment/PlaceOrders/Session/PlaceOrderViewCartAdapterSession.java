@@ -81,8 +81,8 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
         holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
 
         holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));
-        holder.date_timeS.setText(list.getDate_time());
-        String a = list.getSession_title() + "-" + list.getDate_time();
+        holder.date_timeS.setText(list.getTime());
+        String a = list.getSession_title() + "-" + list.getTime();
 
         headerMap = sessionMap.get(a);
         Set<String> stringSet = headerMap.keySet();
@@ -114,8 +114,8 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
         holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
 
         holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));
-        holder.date_timeS.setText(list.getDate_time());
-        String a = list.getSession_title() + "!" + list.getDate_time();
+        holder.date_timeS.setText(list.getTime());
+        String a = list.getSession_title() + "!" + list.getTime();
 
         editHeaderMap = editSessionMap.get(a);
         Set<String> stringSet = editHeaderMap.keySet();

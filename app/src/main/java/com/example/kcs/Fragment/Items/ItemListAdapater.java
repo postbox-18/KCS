@@ -199,7 +199,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         SelectedSessionList list = new SelectedSessionList();
                         list.setBolen(null);
                         list.setSession_title(arr[0]);
-                        list.setDate_time(arr[1]);
+                        list.setTime(arr[1]);
                         selectedSessionLists.add(list);
                     }
 

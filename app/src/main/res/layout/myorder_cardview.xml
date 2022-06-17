@@ -52,11 +52,12 @@
                         android:text="@string/wedding" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerview_session"
+                        android:id="@+id/recyclerview_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:itemCount="2"
-                        tools:listitem="@layout/select_session"/>
+                        tools:listitem="@layout/select_date"/>
+
                 </LinearLayout>
 
             </LinearLayout>

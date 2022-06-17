@@ -34,7 +34,7 @@
                 android:text="@string/session" />
 
             <TextView
-                android:id="@+id/date_time"
+                android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/btn_gradient_light"

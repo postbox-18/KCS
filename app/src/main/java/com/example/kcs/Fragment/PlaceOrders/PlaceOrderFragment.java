@@ -188,7 +188,7 @@ public class PlaceOrderFragment extends Fragment {
                     SelectedSessionList list = new SelectedSessionList();
                     list.setBolen(null);
                     list.setSession_title(arr[0]);
-                    list.setDate_time(arr[1]);
+                    list.setTime(arr[1]);
                     selectedSessionLists.add(list);
                 }
 
@@ -231,7 +231,7 @@ public class PlaceOrderFragment extends Fragment {
                     SelectedSessionList list = new SelectedSessionList();
                     list.setBolen(null);
                     list.setSession_title(arr[0]);
-                    list.setDate_time(arr[1]);
+                    list.setTime(arr[1]);
                     selectedSessionLists.add(list);
                 }
 
@@ -262,7 +262,7 @@ public class PlaceOrderFragment extends Fragment {
 
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    date_time=selectedSessionLists.get(k).getSession_title() + "-" + selectedSessionLists.get(k).getDate_time();
+                    date_time=selectedSessionLists.get(k).getSession_title() + "-" + selectedSessionLists.get(k).getTime();
                     headerMap = sessionMap.get(date_time);
                     //set selected header
                     if (headerMap != null) {

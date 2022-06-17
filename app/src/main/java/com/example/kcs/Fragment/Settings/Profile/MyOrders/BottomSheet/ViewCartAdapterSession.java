@@ -215,11 +215,11 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         else {
             final SelectedSessionList list = sessionLists.get(position);
             //set session date time bolen
-            String sess_date=list.getSession_title()+"!"+list.getDate_time()+"_"+list.getBolen();
+            String sess_date=list.getSession_title()+"!"+list.getTime()+"_"+list.getBolen();
             MyLog.e(TAG,"cancel>> session>>"+list.getSession_title());
             holder.session_title.setText(list.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
-            holder.date_time.setText(list.getDate_time());
+            holder.date_time.setText(list.getTime());
             holder.date_time.setTextColor(context.getResources().getColor(R.color.colorSecondary));
 
             //get selected header to viewHeaderAdapter
