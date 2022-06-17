@@ -210,8 +210,11 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<String> Func_SessionMutable = new MutableLiveData<>();
     //Edit HashMap
     //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_MapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>> editFunc_MapMutableLiveData = new MutableLiveData<>();
+    //date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editDateMapMutableLiveData = new MutableLiveData<>();
     //header map
     private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
     private MutableLiveData<List<SelectedHeader>> e_selectedHeadersLive = new MutableLiveData<>();
@@ -350,13 +353,13 @@ public class GetViewModel extends AndroidViewModel {
         return editSessionMapMutableLiveData;
     }
 
-    public void setEditFuncMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editMap) {
+    public void setEditFuncMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editMap) {
         this.editFunc_Map = editMap;
         this.editFunc_MapMutableLiveData.postValue(editMap);
     }
 
 
-    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> getEditFuncMapMutableLiveData() {
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>> getEditFuncMapMutableLiveData() {
         return editFunc_MapMutableLiveData;
     }
 
@@ -644,7 +647,6 @@ public class GetViewModel extends AndroidViewModel {
 
                 //set func map
                 orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
-                MyLog.e(TAG,"orders>>orderFunc_Map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
 
             }
@@ -1147,7 +1149,7 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void EditMap(String func_title, String session_title, String header, String item, int position, int n, String username, String bolen) {
+    public void EditMap(String func_title, String session_title, String header, String item, int position, int n, String username, String bolen,String date) {
         MyLog.e(TAG, "cancel>>value " + n);
 
         /////////*****Edit **********//////////////////
@@ -1174,9 +1176,10 @@ public class GetViewModel extends AndroidViewModel {
         //set
         editSessionMapMutableLiveData.postValue(editSessionMap);
 
-
+        //set date map
+        editDateMap.put(date,editSessionMap);
         //set func map
-        editFunc_Map.put(func_title, editSessionMap);
+        editFunc_Map.put(func_title, editDateMap);
         //set
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
 
@@ -1253,12 +1256,13 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Maps) {
+    public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Maps,String date) {
         MyLog.e(TAG, "cancel ");
         String[] str = session_title.split("_");
         String sess = str[0];
         String old = str[1];
-        editSessionMap = editFunc_Maps.get(func_title);
+        editDateMap = editFunc_Maps.get(func_title);
+        editSessionMap=editDateMap.get(date)
         editHeaderMap = editSessionMap.get(sess);
         if(editHeaderMap==null)
         {

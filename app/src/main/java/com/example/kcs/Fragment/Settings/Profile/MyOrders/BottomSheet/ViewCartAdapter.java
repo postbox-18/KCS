@@ -30,11 +30,11 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private String TAG = "ViewCartAdapter";
     private GetViewModel getViewModel;
-    private String func_title, session_title, header,username,bolen;
+    private String func_title, session_title, header,username,bolen,date;
     private int n;
 
 
-    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<OrderItemLists> orderItemListss, String func_title, String session_title, String header, String bolen) {
+    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<OrderItemLists> orderItemListss, String func_title, String session_title, String header, String bolen,String date) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.orderItemListss = orderItemListss;
@@ -42,6 +42,7 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
         this.header = header;
         this.session_title = session_title;
         this.bolen = bolen;
+        this.date = date;
     }
 
 
@@ -70,7 +71,7 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
             }
         });
         //set edit hash map
-        getViewModel.EditMap(func_title, session_title, header, orderItemLists1.getItemList(), position,n,username,bolen);
+        getViewModel.EditMap(func_title, session_title, header, orderItemLists1.getItemList(), position,n,username,bolen,date);
 
     }
 

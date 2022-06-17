@@ -29,7 +29,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private List<OrderItemLists> o_orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapterHeader";
-    private String session_title, func_title, bolen, sess;
+    private String session_title, func_title, bolen, sess,date;
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> header = new ArrayList<>();
@@ -38,13 +38,14 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     //header map
     private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
 
-    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title, String bolen, LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap) {
+    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title, String bolen, LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap,String date) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.header = selectedHeadersList;
         this.bolen = bolen;
         this.sess = session_title;
         this.func_title = func_title;
+        this.date = date;
         this.orderHeaderMap = orderHeaderMap;
     }
 
@@ -87,7 +88,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
         holder.recyclerview_item_list.setHasFixedSize(true);
         holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        viewCartAdapter = new ViewCartAdapter(context, getViewModel, o_orderItemListss, func_title, session_title, list.getHeader(), bolen);
+        viewCartAdapter = new ViewCartAdapter(context, getViewModel, o_orderItemListss, func_title, session_title, list.getHeader(), bolen,date);
         holder.recyclerview_item_list.setAdapter(viewCartAdapter);
 
 

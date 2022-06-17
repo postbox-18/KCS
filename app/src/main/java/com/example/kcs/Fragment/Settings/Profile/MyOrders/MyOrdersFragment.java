@@ -22,10 +22,12 @@ import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapterDate;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapterSession;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersAdapter;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
 import com.example.kcs.Fragment.Session.SessionList;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -71,7 +73,7 @@ public class MyOrdersFragment extends Fragment {
     private LinkedHashMap<String, List<SelectedHeader>> selectedHeaderMap=new LinkedHashMap<>();
 
     //bottom sheet view
-    private RecyclerView recyclerview_order_session_deatils;
+    private RecyclerView recyclerview_order_date;
     private List<SelectedSessionList> selectedSessionLists=new ArrayList<>();
     private TextView func;
     //private LinkedHashMap<String, List<SelectedSessionList>> stringListLinkedHashMap=new LinkedHashMap<>();
@@ -86,6 +88,8 @@ public class MyOrdersFragment extends Fragment {
     private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
     //session map
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    //date list
+    private List<SelectedDateList> o_dateLists=new ArrayList<>();
 
 
 
@@ -167,7 +171,7 @@ public class MyOrdersFragment extends Fragment {
 
         BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
         View bottom_view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_order_details, null);
-        recyclerview_order_session_deatils = bottom_view.findViewById(R.id.recyclerview_order_session_deatils);
+        recyclerview_order_date = bottom_view.findViewById(R.id.recyclerview_order_date);
         func = bottom_view.findViewById(R.id.func_title);
 
 
@@ -188,12 +192,29 @@ public class MyOrdersFragment extends Fragment {
                     bottomSheet.show();
 
 
-                    //get order sessionMap
+                    //get order date map
                     orderDateMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
-                    recyclerview_order_session_deatils.setHasFixedSize(true);
-                    recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,str[0],null,str[1], bottomSheet,orderSessionMap);
-                    recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
+                    //get date list
+                    Set<String> set = orderDateMap.keySet();
+                    List<String> aList1 = new ArrayList<String>(set.size());
+                    for (String x1 : set)
+                        aList1.add(x1);
+                    o_dateLists.clear();
+                    for(int i=0;i<aList1.size();i++)
+                    {
+                        SelectedDateList sessionList=new SelectedDateList(
+                                aList1.get(i)
+                        );
+
+                        o_dateLists.add(sessionList);
+
+                    }
+
+
+                    recyclerview_order_date.setHasFixedSize(true);
+                    recyclerview_order_date.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    ViewCartAdapterDate viewCartAdapter = new ViewCartAdapterDate(getContext(), getViewModel,str[0],null,str[1], bottomSheet,orderDateMap,o_dateLists);
+                    recyclerview_order_date.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "myord>> func_session_title null");
                 }
@@ -218,37 +239,35 @@ public class MyOrdersFragment extends Fragment {
                     //get session list
                     MyLog.e(TAG,"SessionList>>deatils>>"+s_user_name+"\t\t"+func_title);
                     //sessionLists.clear();
-                    //selectedSessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
 
-                    //orderSessionMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
-                    //get session title
-                    Set<String> set = orderSessionMap.keySet();
+                    MyLog.e(TAG,"orders>>orderFunc_Map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(s_orderFunc_Map));
+                    //get order date map
+                    orderDateMap=s_orderFunc_Map.get(func_title);
+                    MyLog.e(TAG, "placeorders>>func_title >>"+func_title);
+                    //get date list
+                    Set<String> set = orderDateMap.keySet();
                     List<String> aList1 = new ArrayList<String>(set.size());
                     for (String x1 : set)
                         aList1.add(x1);
-                    selectedSessionLists.clear();
+                    o_dateLists.clear();
                     for(int i=0;i<aList1.size();i++)
                     {
-                        String[] arr=(aList1.get(i)).split("_");
-                        String bolen=arr[1];
-                        String[]str=(arr[0]).split("!");
-                        String sess=str[0];
-                        String dateTime=str[1];
-                        SelectedSessionList sessionList=new SelectedSessionList();
-                        sessionList.setSession_title(sess);
-                        sessionList.setTime(dateTime);
-                        sessionList.setBolen(bolen);
-                        selectedSessionLists.add(sessionList);
+                        SelectedDateList sessionList=new SelectedDateList(
+                                aList1.get(i)
+                        );
+
+                        o_dateLists.add(sessionList);
+
                     }
 
 
 
 
 
-                    recyclerview_order_session_deatils.setHasFixedSize(true);
-                    recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(getContext(), getViewModel,s,selectedSessionLists, null,bottomSheet,orderSessionMap);
-                    recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
+                    recyclerview_order_date.setHasFixedSize(true);
+                    recyclerview_order_date.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    ViewCartAdapterDate viewCartAdapter = new ViewCartAdapterDate(getContext(), getViewModel,s,selectedSessionLists, null,bottomSheet,orderDateMap,o_dateLists);
+                    recyclerview_order_date.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "func_title>> orderItemView list null");
                 }

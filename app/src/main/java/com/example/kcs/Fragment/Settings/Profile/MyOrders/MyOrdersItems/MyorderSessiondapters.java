@@ -31,14 +31,15 @@ import java.util.Set;
 public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessiondapters.ViewHolder> {
     private Context context;
     private String TAG = "MyorderSessiondapters";
-    private String func_title;
+    private String func_title,date;
     private List<MyOrdersList> myOrdersList=new ArrayList<>();
     private List<SelectedSessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
     //edit hash map list
     private List<SelectedSessionList> e_sessionLists=new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
     //order hashmap
@@ -51,10 +52,11 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     private List<OrderItemLists> o_orderItemLists=new ArrayList<>();
 
 
-    public MyorderSessiondapters(Context context, String func_title, GetViewModel getViewModel, List<SelectedSessionList> sessionLists, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap) {
-        this.func_title = func_title;
+    public MyorderSessiondapters(Context context, String funcTitle, String date, GetViewModel getViewModel, List<SelectedSessionList> sessionLists, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap) {
+        this.func_title = funcTitle;
         this.context = context;
         this.sessionLists = sessionLists;
+        this.date = date;
         this.getViewModel = getViewModel;
         this.orderSessionMap = orderSessionMap;
     }
@@ -131,21 +133,21 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get func map
-        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
-            }
-        });
+        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
+                    @Override
+                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
+                        editFunc_Map=stringLinkedHashMapLinkedHashMap;
+                    }
+                });
 
 
-        //get session map
-        getViewModel.getEditSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> stringLinkedHashMapLinkedHashMap) {
-                editSessionMap=stringLinkedHashMapLinkedHashMap;
-            }
-        });
+                //get session map
+                getViewModel.getEditSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>() {
+                    @Override
+                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> stringLinkedHashMapLinkedHashMap) {
+                        editSessionMap = stringLinkedHashMapLinkedHashMap;
+                    }
+                });
 
 
         //get header map

@@ -38,7 +38,8 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
     //edit hash map list
     private List<SelectedSessionList> e_sessionLists=new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
     //order hashmap
@@ -78,14 +79,12 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get func map
-        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
+        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
                 editFunc_Map=stringLinkedHashMapLinkedHashMap;
-
             }
         });
-
 
         //get session map
         getViewModel.getEditSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>() {
@@ -126,7 +125,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
 
         holder.recyclerview_date.setHasFixedSize(true);
         holder.recyclerview_date.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        MyOrdersAdapterDate itemListAdapters = new MyOrdersAdapterDate(context, getViewModel,orderDateMap,dateLists);
+        MyOrdersAdapterDate itemListAdapters = new MyOrdersAdapterDate(context, getViewModel,orderDateMap,dateLists,myOrderFuncLists1.getFunc());
         holder.recyclerview_date.setAdapter(itemListAdapters);
 
 

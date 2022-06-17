@@ -37,11 +37,11 @@
                     android:textSize="18dp"
                     />
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerview_session"
+                    android:id="@+id/recyclerview_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:itemCount="5"
-                    tools:listitem="@layout/bottom_sheet_order_session" />
+                    tools:listitem="@layout/place_sheet_order_date" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>

@@ -36,7 +36,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapterSession";
-    private String func_title, s_user_name, sess_title;
+    private String func_title, s_user_name, sess_title,date;
     private List<SelectedSessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
@@ -47,7 +47,8 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
     private List<SessionDateTime> sessionDateTimes=new ArrayList<>();
     //cancel map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private int n;
     //order hashmap
     //func map
@@ -60,14 +61,15 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private List<SelectedHeader> o_selectedHeaders=new ArrayList<>();
 
 
-    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String s1, BottomSheetDialog bottomSheet, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap) {
+    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String s1, BottomSheetDialog bottomSheet, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap,String date) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.func_title = s;
         this.sess_title = s1;
+        this.date = date;
         this.sessionLists = sessionLists;
         this.bottomSheet = bottomSheet;
-        this.orderSessionMap = orderSessionMap;
+        this.orderSessionMap = new LinkedHashMap<>(orderSessionMap);
     }
 
 
@@ -114,19 +116,19 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get edit func map to cancel orders
-        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
-            }
-        });
-        //get edit selected header and session list
-        getViewModel.getE_sessionListsLive().observe((LifecycleOwner) context, new Observer<List<SelectedSessionList>>() {
-            @Override
-            public void onChanged(List<SelectedSessionList> sessionLists) {
-                e_sessionLists=sessionLists;
-            }
-        });
+        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
+                    @Override
+                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
+                        editFunc_Map=stringLinkedHashMapLinkedHashMap;
+                    }
+                });
+                //get edit selected header and session list
+                getViewModel.getE_sessionListsLive().observe((LifecycleOwner) context, new Observer<List<SelectedSessionList>>() {
+                    @Override
+                    public void onChanged(List<SelectedSessionList> sessionLists) {
+                        e_sessionLists = sessionLists;
+                    }
+                });
 
 
         e_sessionLists=new ArrayList<>();
@@ -159,31 +161,37 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 holder.cancel.setImageResource(R.drawable.ic_calendar_x_fill_cancel);
                 holder.delete.setImageResource(R.drawable.ic_trash3_fill_cancel);
             }
-
+            MyLog.e(TAG,"orders>>selected orderSessionMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderSessionMap));
+            MyLog.e(TAG, "placeorders>>sess_title >>"+sess_title);
             //get selected header to viewHeaderAdapter
             orderHeaderMap=orderSessionMap.get(sess_title);
-
-            Set<String> set = orderHeaderMap.keySet();
-            List<String> aList1 = new ArrayList<String>(set.size());
-            for (String x1 : set)
-                aList1.add(x1);
-            o_selectedHeaders.clear();
-            for(int i=0;i<aList1.size();i++)
+            MyLog.e(TAG,"orders>>selected orderHeaderMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderHeaderMap));
+            if(orderHeaderMap==null)
             {
-                SelectedHeader header=new SelectedHeader(
-                        aList1.get(i)
-                );
-
-                o_selectedHeaders.add(header);
-                //get header list and item size
+                MyLog.e(TAG,"orders>>selected orderHeaderMap is null");
+                orderHeaderMap=new LinkedHashMap<>();
             }
-            holder.recyclerview_order_item_details.setHasFixedSize(true);
-            holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+            else {
+                Set<String> set = orderHeaderMap.keySet();
+                List<String> aList1 = new ArrayList<String>(set.size());
+                for (String x1 : set)
+                    aList1.add(x1);
+                o_selectedHeaders.clear();
+                for (int i = 0; i < aList1.size(); i++) {
+                    SelectedHeader header = new SelectedHeader(
+                            aList1.get(i)
+                    );
 
-            ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_title, func_title,bolen,orderHeaderMap);
-            holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
+                    o_selectedHeaders.add(header);
+                    //get header list and item size
+                }
+                holder.recyclerview_order_item_details.setHasFixedSize(true);
+                holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
+                ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_title, func_title, bolen, orderHeaderMap,date);
+                holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
 
+            }
 
 
 
@@ -243,7 +251,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             holder.recyclerview_order_item_details.setHasFixedSize(true);
             holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
-            ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_date, func_title, list.getBolen(), orderHeaderMap);
+            ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_date, func_title, list.getBolen(), orderHeaderMap,date);
             holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
 
 
@@ -315,12 +323,12 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                     MyLog.e(TAG,"Cancel>>sess_date>>"+session_title);
                     //Cancel
                     //set cancel hash map
-                    getViewModel.CancelOrders(func_title, session_title,n,s_user_name,bolen,editFunc_Map);
+                    getViewModel.CancelOrders(func_title, session_title,n,s_user_name,bolen,editFunc_Map,date);
                 }
                 else if(n==2)
                 {
                     //Delete
-                    getViewModel.CancelOrders(func_title, session_title,n,s_user_name,bolen,editFunc_Map);
+                    getViewModel.CancelOrders(func_title, session_title,n,s_user_name,bolen,editFunc_Map,date);
 
                 }
 
