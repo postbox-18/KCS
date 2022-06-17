@@ -103,7 +103,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
         });
 
         ///////////***************************clear list in live data model****************************//////////////////////
-        MyLog.e(TAG,"orders>>map adapter before>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
         //get selected sessions
         orderSessionMap=new LinkedHashMap<>(orderFunc_Map.get(myOrderFuncLists1.getFunc()));
@@ -127,7 +126,6 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
             sessionLists.add(sessionList);
 
         }
-        MyLog.e(TAG,"orders>>map adapter after>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
         holder.recyclerview_session.setHasFixedSize(true);
         holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));

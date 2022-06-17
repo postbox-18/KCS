@@ -356,7 +356,6 @@ public class GetViewModel extends AndroidViewModel {
 
     public void setFunc_Session(String func_Session) {
         MyLog.e(TAG,"orders>>change func_Session >>"+func_Session);
-        MyLog.e(TAG,"orders>>change orderFunc_Map setFunc_Session>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
         Func_Session = func_Session;
         this.Func_SessionMutable.postValue(Func_Session);
@@ -662,12 +661,10 @@ public class GetViewModel extends AndroidViewModel {
                     myOrderFuncLists.add(list);*/
 
                     orderFunc_Map.put(func,orderSessionMap);
-                    MyLog.e(TAG,"orders>>change orderFunc_Map   viewmodel>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
                 }
 
                 //set func map
                 orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
-                //MyLog.e(TAG,"orders>>orderFunc_Map session >>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
 
 
@@ -1245,7 +1242,6 @@ public class GetViewModel extends AndroidViewModel {
             );
             e_selectedHeaders.add(list);
         }
-        //MyLog.e(TAG,"edit>>e_selectedHeaders>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(e_selectedHeaders));
         selectedHeadersList.clear();
         for (int i = 0; i < e_selectedHeaders.size(); i++) {
             header_title = e_selectedHeaders.get(i).getHeader();
@@ -1256,8 +1252,6 @@ public class GetViewModel extends AndroidViewModel {
             itemLists = f_maps.get(header_title);
 
         }
-        /*MyLog.e(TAG,"edit>>selectedHeadersList>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(selectedHeadersList));
-        MyLog.e(TAG,"edit>>itemLists>>\n"+new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));*/
         edit_selected_s_map.clear();
         e_checkedLists.clear();
         e_headerMap = new LinkedHashMap<>();
@@ -1276,7 +1270,6 @@ public class GetViewModel extends AndroidViewModel {
         }
         edit_selected_s_map.add(e_headerMap);
         check_s_mapMutable.postValue(edit_selected_s_map);
-        //MyLog.e(TAG, "edit>>edit_selected_s_map>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(edit_selected_s_map));
 
 
     }

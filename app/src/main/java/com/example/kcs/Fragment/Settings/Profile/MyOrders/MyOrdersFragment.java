@@ -154,7 +154,6 @@ public class MyOrdersFragment extends Fragment {
                     myOrderFuncLists.add(list);
                 }
                 myOrdersAdapter = new MyOrdersAdapter(getContext(), myOrderFuncLists, getViewModel,orderFunc_Map);
-                MyLog.e(TAG,"orders>>map main source>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
                 recyclerview_my_orders.setAdapter(myOrdersAdapter);
             }
@@ -173,7 +172,6 @@ public class MyOrdersFragment extends Fragment {
         getViewModel.getFunc_SessionMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                MyLog.e(TAG,"orders>>map bottom sheet>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
                 func_session_title=s;
                 //click on session adapter cardview
                 if (func_session_title != null && !func_session_title.isEmpty()) {
@@ -185,7 +183,6 @@ public class MyOrdersFragment extends Fragment {
 
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
-                    MyLog.e(TAG,"orders>>change orderFunc_Map session funcv uif>>"+new GsonBuilder().setPrettyPrinting().create().toJson(s_orderFunc_Map));
 
 
                     //get order sessionMap
@@ -219,7 +216,6 @@ public class MyOrdersFragment extends Fragment {
                     MyLog.e(TAG,"SessionList>>deatils>>"+s_user_name+"\t\t"+func_title);
                     //sessionLists.clear();
                     //selectedSessionLists=stringListLinkedHashMap.get(s_user_name+"-"+func_title);
-                    MyLog.e(TAG,"orders>>change orderFunc_Map session funcv else >>"+new GsonBuilder().setPrettyPrinting().create().toJson(s_orderFunc_Map));
 
                     orderSessionMap=new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
                     //get session title

@@ -84,8 +84,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         getViewModel.setE_selectedHeaders(e_selectedHeaders);
 
         o_orderItemListss = orderHeaderMap.get(list.getHeader());
-        MyLog.e(TAG,"orders>>orderHeaderMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderHeaderMap));
-        MyLog.e(TAG,"orders>>o_orderItemListss>>"+new GsonBuilder().setPrettyPrinting().create().toJson(o_orderItemListss));
+
         holder.recyclerview_item_list.setHasFixedSize(true);
         holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         viewCartAdapter = new ViewCartAdapter(context, getViewModel, o_orderItemListss, func_title, session_title, list.getHeader(), bolen);

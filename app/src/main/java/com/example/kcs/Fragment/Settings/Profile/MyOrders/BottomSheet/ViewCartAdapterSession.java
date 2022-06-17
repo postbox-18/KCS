@@ -162,7 +162,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
             //get selected header to viewHeaderAdapter
             orderHeaderMap=orderSessionMap.get(sess_title);
-            MyLog.e(TAG,"orders>>orderSessionMap session iff>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderSessionMap));
+
             Set<String> set = orderHeaderMap.keySet();
             List<String> aList1 = new ArrayList<String>(set.size());
             for (String x1 : set)
@@ -237,7 +237,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
             //get selected header to viewHeaderAdapter
             orderHeaderMap=orderSessionMap.get(sess_date);
-            MyLog.e(TAG,"orders>>orderSessionMap session else>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderSessionMap));
+
 
             Set<String> set = orderHeaderMap.keySet();
             List<String> aList1 = new ArrayList<String>(set.size());

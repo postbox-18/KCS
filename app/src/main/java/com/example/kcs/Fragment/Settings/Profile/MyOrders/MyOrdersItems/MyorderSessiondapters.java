@@ -105,8 +105,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             o_selectedHeaders.add(header);
             //get header list and item size
         }
-        //MyLog.e(TAG,"orders>>orderHeaderMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderHeaderMap));
-        //MyLog.e(TAG,"orders>>selected header>>"+new GsonBuilder().setPrettyPrinting().create().toJson(o_selectedHeaders));
+
         myOrdersList.clear();
         for(int k=0;k<o_selectedHeaders.size();k++)
         {
@@ -115,7 +114,6 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             String header=o_selectedHeaders.get(k).getHeader();
             o_orderItemLists=new ArrayList<>(orderHeaderMap.get(header));
 
-            //MyLog.e(TAG,"orders>>selected item>>"+new GsonBuilder().setPrettyPrinting().create().toJson(o_orderItemLists));
             MyOrdersList myOrdersList1=new MyOrdersList(
                     header,
                     o_orderItemLists.size()
