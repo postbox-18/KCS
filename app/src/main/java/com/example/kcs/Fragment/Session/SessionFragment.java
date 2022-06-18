@@ -21,6 +21,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
 import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.ItemList;
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
@@ -56,6 +57,7 @@ public class SessionFragment extends Fragment {
     private List<SessionList> sessionList=new ArrayList<>();
     //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
 
     public SessionFragment() {
         // Required empty public constructor
@@ -91,6 +93,9 @@ public class SessionFragment extends Fragment {
         fun_title=view.findViewById(R.id.fun_title);
         back_btn=view.findViewById(R.id.back_btn);
 
+        //clear edit func in myOrdersFragment
+        editFunc_Map.clear();
+        getViewModel.setEditFuncMap(editFunc_Map);
 
             //get view model
             getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {

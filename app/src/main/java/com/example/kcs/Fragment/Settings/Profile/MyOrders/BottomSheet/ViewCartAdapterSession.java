@@ -160,11 +160,9 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 holder.cancel.setImageResource(R.drawable.ic_calendar_x_fill_cancel);
                 holder.delete.setImageResource(R.drawable.ic_trash3_fill_cancel);
             }
-            MyLog.e(TAG,"orders>>selected orderSessionMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderSessionMap));
             MyLog.e(TAG, "placeorders>>sess_title >>"+sess_title);
             //get selected header to viewHeaderAdapter
             orderHeaderMap=orderSessionMap.get(sess_title);
-            MyLog.e(TAG,"orders>>selected orderHeaderMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderHeaderMap));
 
 
                 Set<String> set = orderHeaderMap.keySet();
@@ -220,10 +218,27 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             //set session date time bolen
             String sess_date=list.getSession_title()+"!"+list.getTime()+"_"+list.getBolen();
             MyLog.e(TAG,"cancel>> session>>"+list.getSession_title());
+        if((list.getBolen()).equals("true")) {
             holder.session_title.setText(list.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
             holder.date_time.setText(list.getTime());
             holder.date_time.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+            //img
+            holder.edit.setImageResource(R.drawable.ic_knife_01);
+            holder.edit.setVisibility(View.VISIBLE);
+            holder.cancel.setImageResource(R.drawable.ic_calendar_x_fill);
+            holder.delete.setImageResource(R.drawable.ic_trash3_fill);
+        }
+        else if((list.getBolen()).equals("false")) {
+            holder.session_title.setText(list.getSession_title());
+            holder.session_title.setTextColor(context.getResources().getColor(R.color.text_silver));
+            holder.date_time.setText(list.getTime());
+            holder.date_time.setTextColor(context.getResources().getColor(R.color.text_silver));
+            //img
+            holder.edit.setVisibility(View.GONE);
+            holder.cancel.setImageResource(R.drawable.ic_calendar_x_fill_cancel);
+            holder.delete.setImageResource(R.drawable.ic_trash3_fill_cancel);
+        }
 
             //get selected header to viewHeaderAdapter
             orderHeaderMap=orderSessionMap.get(sess_date);
@@ -311,7 +326,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                     getViewModel.setI_value(1);
                     e_selectedHeaders = new ArrayList<>();
                     getViewModel.setE_selectedHeaders(e_selectedHeaders);
-                    getViewModel.getSelecteds_map();
+                    getViewModel.getSelecteds_map(date);
                 }
                 else if(n==1)
                 {

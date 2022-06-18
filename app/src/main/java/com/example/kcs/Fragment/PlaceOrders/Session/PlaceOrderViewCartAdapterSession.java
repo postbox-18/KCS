@@ -20,6 +20,7 @@ import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemL
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapter;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -31,34 +32,32 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "PlaceOrderViewCartAdapterSession";
-    private String func_title,s_user_name,date_time;
-    private List<SelectedSessionList> sessionLists=new ArrayList<>();
+    private String func_title, s_user_name, date_time;
+    private List<SelectedSessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
-    private List<SelectedHeader> selectedHeaders=new ArrayList<>();
+    private List<SelectedHeader> selectedHeaders = new ArrayList<>();
     //header map
     private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
     //session map
     private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
     //edit hash map
     //edit hash map list
-    private List<SessionList> e_sessionLists=new ArrayList<>();
-    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
+    private List<SessionList> e_sessionLists = new ArrayList<>();
+    private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
 
 
-
     public PlaceOrderViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String date_time, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap) {
-        this.context=context;
-        this.getViewModel=getViewModel;
-        this.func_title=s;
-        this.sessionMap=sessionMap;
-        this.sessionLists=sessionLists;
-        this.date_time=date_time;
-        this.editSessionMap= editSessionMap;
+        this.context = context;
+        this.getViewModel = getViewModel;
+        this.func_title = s;
+        this.sessionMap = sessionMap;
+        this.sessionLists = sessionLists;
+        this.date_time = date_time;
+        this.editSessionMap = editSessionMap;
     }
-
 
 
     @NonNull
@@ -74,71 +73,67 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
     public void onBindViewHolder(@NonNull PlaceOrderViewCartAdapterSession.ViewHolder holder, int position) {
         //get user name shared prefernces
         s_user_name = new SharedPreferences_data(context).getS_user_name();
-        if(editSessionMap==null)
-        {
-        final SelectedSessionList list = sessionLists.get(position);
-        holder.session_title.setText(list.getSession_title());
-        holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
+        if (editSessionMap == null) {
+            final SelectedSessionList list = sessionLists.get(position);
 
-        holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));
-        holder.date_timeS.setText(list.getTime());
-        String a = list.getSession_title() + "-" + list.getTime();
+            holder.session_title.setText(list.getSession_title());
+            holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
+            holder.date_timeS.setText(list.getTime());
+            holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+            String a = list.getSession_title() + "!" + list.getTime();
 
-        headerMap = sessionMap.get(a);
-        Set<String> stringSet = headerMap.keySet();
-        List<String> aList = new ArrayList<String>(stringSet.size());
-        for (String x : stringSet)
-            aList.add(x);
+            headerMap = sessionMap.get(a);
+            Set<String> stringSet = headerMap.keySet();
+            List<String> aList = new ArrayList<String>(stringSet.size());
+            for (String x : stringSet)
+                aList.add(x);
 
-        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-        selectedHeaders.clear();
-        for (int i = 0; i < aList.size(); i++) {
-            MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
-            SelectedHeader list1 = new SelectedHeader(
-                    aList.get(i)
-            );
-            selectedHeaders.add(list1);
+            //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+            selectedHeaders.clear();
+            for (int i = 0; i < aList.size(); i++) {
+                MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                SelectedHeader list1 = new SelectedHeader(
+                        aList.get(i)
+                );
+                selectedHeaders.add(list1);
+            }
+
+            getViewModel.setSelectedHeadersList(selectedHeaders);
+            holder.recyclerview_order_item_details.setHasFixedSize(true);
+            holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+            PlaceOrderViewCartAdapterHeader viewCartAdapter = new PlaceOrderViewCartAdapterHeader(context, getViewModel, selectedHeaders, headerMap, null);
+            holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
+        } else {
+            final SelectedSessionList list = sessionLists.get(position);
+            holder.session_title.setText(list.getSession_title());
+            holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
+
+            holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+            holder.date_timeS.setText(list.getTime());
+            String a = list.getSession_title() + "!" + list.getTime();
+
+            editHeaderMap = editSessionMap.get(a);
+            Set<String> stringSet = editHeaderMap.keySet();
+            List<String> aList = new ArrayList<String>(stringSet.size());
+            for (String x : stringSet)
+                aList.add(x);
+
+            //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+            selectedHeaders.clear();
+            for (int i = 0; i < aList.size(); i++) {
+                MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                SelectedHeader list1 = new SelectedHeader(
+                        aList.get(i)
+                );
+                selectedHeaders.add(list1);
+            }
+
+            getViewModel.setSelectedHeadersList(selectedHeaders);
+            holder.recyclerview_order_item_details.setHasFixedSize(true);
+            holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+            PlaceOrderViewCartAdapterHeader viewCartAdapter = new PlaceOrderViewCartAdapterHeader(context, getViewModel, selectedHeaders, null, editHeaderMap);
+            holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
         }
-
-        getViewModel.setSelectedHeadersList(selectedHeaders);
-        holder.recyclerview_order_item_details.setHasFixedSize(true);
-        holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        PlaceOrderViewCartAdapterHeader viewCartAdapter = new PlaceOrderViewCartAdapterHeader(context, getViewModel, selectedHeaders, headerMap,null);
-        holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
-    }
-    else
-
-    {
-        final SelectedSessionList list = sessionLists.get(position);
-        holder.session_title.setText(list.getSession_title());
-        holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
-
-        holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));
-        holder.date_timeS.setText(list.getTime());
-        String a = list.getSession_title() + "!" + list.getTime();
-
-        editHeaderMap = editSessionMap.get(a);
-        Set<String> stringSet = editHeaderMap.keySet();
-        List<String> aList = new ArrayList<String>(stringSet.size());
-        for (String x : stringSet)
-            aList.add(x);
-
-        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-        selectedHeaders.clear();
-        for (int i = 0; i < aList.size(); i++) {
-            MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
-            SelectedHeader list1 = new SelectedHeader(
-                    aList.get(i)
-            );
-            selectedHeaders.add(list1);
-        }
-
-        getViewModel.setSelectedHeadersList(selectedHeaders);
-        holder.recyclerview_order_item_details.setHasFixedSize(true);
-        holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        PlaceOrderViewCartAdapterHeader viewCartAdapter = new PlaceOrderViewCartAdapterHeader(context, getViewModel, selectedHeaders, null,editHeaderMap);
-        holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
-    }
 
     }
 
@@ -150,7 +145,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView session_title,date_timeS;
+        private TextView session_title, date_timeS;
         private RecyclerView recyclerview_order_item_details;
 
 

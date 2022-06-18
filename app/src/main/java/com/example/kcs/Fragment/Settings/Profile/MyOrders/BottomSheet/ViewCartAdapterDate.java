@@ -135,7 +135,6 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
 
         final SelectedDateList o_dateLists1=o_dateLists.get(position);
         holder.date.setText(o_dateLists1.getDate());
-        MyLog.e(TAG,"orders>>orderDateMap"+new GsonBuilder().setPrettyPrinting().create().toJson(orderDateMap));
         MyLog.e(TAG,"orders>> o_dateLists1.getDate()"+o_dateLists1.getDate());
 
         //get order session map
@@ -160,7 +159,6 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
         }
 
 
-        MyLog.e(TAG,"orders>>ordersessioneMap"+new GsonBuilder().setPrettyPrinting().create().toJson(orderSessionMap));
         holder.recyclerview_order_session_deatils.setHasFixedSize(true);
         holder.recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(context, getViewModel,func_title,bottomSheet,orderSessionMap,o_dateLists1.getDate(),o_selectedSessionLists);

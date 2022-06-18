@@ -116,7 +116,6 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
             orderSessionMap=new LinkedHashMap<>();
         }
         else {
-            MyLog.e(TAG,"orders>>selected orderSessionMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderSessionMap));
             //get session title
             Set<String> set = orderSessionMap.keySet();
             List<String> aList1 = new ArrayList<String>(set.size());

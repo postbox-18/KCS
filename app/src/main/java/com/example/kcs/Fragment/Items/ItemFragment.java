@@ -165,7 +165,7 @@ public class ItemFragment extends Fragment {
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
                     if(session_title.equals(selectedSessionLists.get(k).getSession_title())) {
-                        date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getTime());
+                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime());
                         MyLog.e(TAG, "placeorders>>get date_time>>" + date_time);
                         if (sessionMap == null) {
                             sessionMap = new LinkedHashMap<>();

@@ -27,6 +27,7 @@ import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -213,6 +214,7 @@ public class GetViewModel extends AndroidViewModel {
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>> editFunc_MapMutableLiveData = new MutableLiveData<>();
     //date map
+    private List<SelectedDateList> e_dateLists=new ArrayList<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editDateMapMutableLiveData = new MutableLiveData<>();
     //header map
@@ -1182,11 +1184,12 @@ public class GetViewModel extends AndroidViewModel {
         editFunc_Map.put(func_title, editDateMap);
         //set
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
+        MyLog.e(TAG,"edit>>selected editFunc_Map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
 
     }
 
-    public void getSelecteds_map() {
+    public void getSelecteds_map(String date) {
 
         //get session title
         Set<String> set = editSessionMap.keySet();
@@ -1197,16 +1200,11 @@ public class GetViewModel extends AndroidViewModel {
         //set session title live
         session_titleMutable.postValue((arr[0]));
         //set date picker and time picker live
-        String[] strings = (arr[1]).split(" ");
-        MyLog.e(TAG, "edit>>date " + strings[0]);
-        MyLog.e(TAG, "edit>>time " + strings[1]);
-        MyLog.e(TAG, "edit>>am " + strings[2]);
-        String date = strings[0].replace("-", "/");
+         date = date.replace("-", "/");
         //set date picker
         date_pickerMutable.postValue(date);
-        String time = strings[1] + " " + strings[2];
         //set time picker
-        time_pickerMutable.postValue(time);
+        time_pickerMutable.postValue(arr[1]);
 
 
         //get header list

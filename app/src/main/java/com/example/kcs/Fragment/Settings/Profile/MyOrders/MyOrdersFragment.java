@@ -232,7 +232,6 @@ public class MyOrdersFragment extends Fragment {
                     MyLog.e(TAG,"SessionList>>deatils>>"+s_user_name+"\t\t"+func_title);
                     //sessionLists.clear();
 
-                    MyLog.e(TAG,"orders>>orderFunc_Map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(s_orderFunc_Map));
                     //get order date map
                     orderDateMap=s_orderFunc_Map.get(func_title);
                     MyLog.e(TAG, "placeorders>>func_title >>"+func_title);

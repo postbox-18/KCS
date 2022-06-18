@@ -87,7 +87,8 @@ public class HeaderFragment extends Fragment {
     //edit hash map list
     private List<SessionList> e_sessionLists=new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
 
@@ -195,61 +196,54 @@ public class HeaderFragment extends Fragment {
         });
 
         //get edit func map
-        /*getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
-                editSessionMap=editFunc_Map.get(funcTitle);
-                if(editSessionMap==null)
-                {
-                    editSessionMap=new LinkedHashMap<>();
-                    MyLog.e(TAG,"eeditSessionMap is null");
-                }
-                else {
-                    Set<String> stringSet = editSessionMap.keySet();
-                    List<String> aList = new ArrayList<String>(stringSet.size());
-                    for (String x : stringSet)
-                        aList.add(x);
-                    String[] str = (aList.get(0)).split("!");
-                    e_session_title = str[0];
-                    date_time = str[1];
-                    session_title.setText(e_session_title);
-                    String[] s = (str[1]).split(" ");
-                    String date = s[0].replace("-", "/");
-                    date_picker_actions.setText(date);
-                    String time = s[1] + " " + s[2];
 
-                    //change 12:12 AM to 24-hrs time
-                    SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
-                    SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
-                    String stime = null;
-                    try {
-                        stime = date24Format.format(date12Format.parse(time));
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                        MyLog.e(TAG, "time>>error>>" + e.getMessage());
+        getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
+                    @Override
+                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
+                        editFunc_Map=stringLinkedHashMapLinkedHashMap;
+                        editDateMap=editFunc_Map.get(funcTitle);
+                        MyLog.e(TAG,"edits>>date "+s_date_picker_actions);
+                        String date=s_date_picker_actions.replace("/","-");
+                        editSessionMap=editDateMap.get(date);
+                        MyLog.e(TAG,"edits>>selected editSessionMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(editSessionMap));
+
+                        Set<String> stringSet = editSessionMap.keySet();
+                            List<String> aList = new ArrayList<String>(stringSet.size());
+                            for (String x : stringSet)
+                                aList.add(x);
+                            String[] str = (aList.get(0)).split("!");
+                            e_session_title = str[0];
+                            String time = str[1];
+
+                            //change 12:12 AM to 24-hrs time
+                            SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                            SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
+                            String stime = null;
+                            try {
+                                stime = date24Format.format(date12Format.parse(time));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                MyLog.e(TAG, "time>>error>>" + e.getMessage());
+                            }
+                            MyLog.e(TAG, "time>>" + stime);
+                            String[] hrs = stime.split(":");
+                            MyLog.e(TAG, "time>>" + hrs[0]);
+                            MyLog.e(TAG, "time>>" + hrs[1]);
+
+                            //check the date and time selection
+                            //check condition if lunch or breakfast
+                            getViewModel.CheckTime(e_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
+
                     }
-                    MyLog.e(TAG, "time>>" + stime);
-                    String[] hrs = stime.split(":");
-                    MyLog.e(TAG, "time>>" + hrs[0]);
-                    MyLog.e(TAG, "time>>" + hrs[1]);
+                });
+                //get time picker hash map
+                getViewModel.getTimeListF_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<TimeList>>>() {
+                    @Override
+                    public void onChanged(LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap1) {
+                        stringListLinkedHashMap = stringListLinkedHashMap1;
 
-                    //check the date and time selection
-                    //check condition if lunch or breakfast
-                    getViewModel.CheckTime(e_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
-                }
-
-            }
-        });*/
-
-        //get time picker hash map
-        getViewModel.getTimeListF_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<TimeList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap1) {
-                stringListLinkedHashMap = stringListLinkedHashMap1;
-
-            }
-        });
+                    }
+                });
 
 
         //get alert message
