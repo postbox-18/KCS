@@ -180,7 +180,6 @@ public class PlaceOrderFragment extends Fragment {
                         editFunc_Map=stringLinkedHashMapLinkedHashMap;
                         MyLog.e(TAG, "chs>>list edit func map " );
                         editDateMap=editFunc_Map.get(func_title);
-                        MyLog.e(TAG,"orders>>selected editDateMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(editDateMap));
                         MyLog.e(TAG,"orders>>date>>"+date);
                         date=date.replace("/","-");
                         if (editDateMap == null) {
@@ -235,7 +234,6 @@ public class PlaceOrderFragment extends Fragment {
                         funcMap = stringLinkedHashMapLinkedHashMap;
                         MyLog.e(TAG, "chs>>list func map " );
                         sessionMap = funcMap.get(func_title);
-                        MyLog.e(TAG,"orders>>selected sessionMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
                         //set session list
                         Set<String> stringSet = sessionMap.keySet();
                         List<String> aList = new ArrayList<String>(stringSet.size());

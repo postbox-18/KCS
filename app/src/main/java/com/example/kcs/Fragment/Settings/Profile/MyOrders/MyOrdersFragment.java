@@ -90,6 +90,15 @@ public class MyOrdersFragment extends Fragment {
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
     //date list
     private List<SelectedDateList> o_dateLists=new ArrayList<>();
+    //Edit hash map
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
+    //date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
 
 
 
@@ -139,6 +148,9 @@ public class MyOrdersFragment extends Fragment {
 
         getViewModel.setFunc_Session(null);
 
+        //clear editfunc map
+        editFunc_Map.clear();
+        getViewModel.setEditFuncMap(editFunc_Map);
         //get order func hash map
         getViewModel.getOrderFunc_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>>() {
             @Override

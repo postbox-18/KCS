@@ -246,7 +246,6 @@ public class MainActivity extends AppCompatActivity {
                             MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                             sessionMap = funcMap.get(func_title);
                             MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
-                            MyLog.e(TAG,"orders>>sessionMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(sessionMap));
                             MyLog.e(TAG,"orders>>sess>>"+selectedSessionLists.get(k).getSession_title());
                             String[] str=(selectedSessionLists.get(k).getSession_title()).split("!");
                             date_time = str[0] + "!"+ (selectedSessionLists.get(k).getTime());

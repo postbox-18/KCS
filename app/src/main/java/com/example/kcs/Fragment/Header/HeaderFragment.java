@@ -209,7 +209,6 @@ public class HeaderFragment extends Fragment {
                 MyLog.e(TAG, "edits>>date " + s_date_picker_actions);
                 String date = s_date_picker_actions.replace("/", "-");
                 editSessionMap = editDateMap.get(date);
-                MyLog.e(TAG, "edits>>selected editSessionMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(editSessionMap));
 
                 Set<String> stringSet = editSessionMap.keySet();
                 List<String> aList = new ArrayList<String>(stringSet.size());
