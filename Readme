@@ -20,7 +20,6 @@ PENDING
 18-Save Order in phone number
 19-set forgot password
 20-cancel order delete after 15days
-21-pending in edit in grp date map
 
 FINISHED
 1-alert check box to select the func
@@ -34,4 +33,5 @@ FINISHED
 11-pending in MyOrders recyclerview
 12-problem in cart view fragment back btn
 15-lottie files for order saved
+21-pending in edit in grp date map
 18-Save order to clear all checked list
