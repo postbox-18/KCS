@@ -133,6 +133,8 @@ public class PlaceOrderFragment extends Fragment {
         order_btn = view.findViewById(R.id.order_btn);
         func_title_view = view.findViewById(R.id.func_title);
 
+        recyclerview_session.setHasFixedSize(true);
+        recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
 
 
@@ -181,41 +183,47 @@ public class PlaceOrderFragment extends Fragment {
                         MyLog.e(TAG,"orders>>selected editDateMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(editDateMap));
                         MyLog.e(TAG,"orders>>date>>"+date);
                         date=date.replace("/","-");
-                        editSessionMap=editDateMap.get(date);
+                        if (editDateMap == null) {
+                            editDateMap = new LinkedHashMap<>();
+                            MyLog.e(TAG, "edit date map is null");
 
-                        //set session list
-                        Set<String> stringSet = editSessionMap.keySet();
-                        List<String> aList = new ArrayList<String>(stringSet.size());
-                        for (String x : stringSet)
-                            aList.add(x);
-
-                        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                        selectedSessionLists.clear();
-                        for (int i = 0; i < aList.size(); i++) {
-                            String[] arr = (aList.get(i)).split("!");
-
-                            //set selected session list and session date and time
-                            MyLog.e(TAG, "chs>>list sess>> " + arr[0]);
-
-                            MyLog.e(TAG, "chs>>list time>> " + arr[1]);
-                            SelectedSessionList list = new SelectedSessionList();
-                            list.setBolen(null);
-                            list.setSession_title(arr[0]);
-                            list.setTime(date+" "+arr[1]);
-                            selectedSessionLists.add(list);
                         }
+                        else {
+                            editSessionMap = editDateMap.get(date);
 
-                        //set selected session
-                        getViewModel.setSelectedSessionLists(selectedSessionLists);
+                            //set session list
+                            Set<String> stringSet = editSessionMap.keySet();
+                            List<String> aList = new ArrayList<String>(stringSet.size());
+                            for (String x : stringSet)
+                                aList.add(x);
 
-                        if (editSessionMap == null) {
-                            editHeaderMap = new LinkedHashMap<>();
-                            // headerMap=sessionMap.get(date_time);
-                        } else {
-                            recyclerview_session.setHasFixedSize(true);
-                            recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                            viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time,null,editSessionMap);
-                            recyclerview_session.setAdapter(viewCartAdapter);
+                            //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                            selectedSessionLists.clear();
+                            for (int i = 0; i < aList.size(); i++) {
+                                String[] arr = (aList.get(i)).split("!");
+
+                                //set selected session list and session date and time
+                                MyLog.e(TAG, "chs>>list sess>> " + arr[0]);
+
+                                MyLog.e(TAG, "chs>>list time>> " + arr[1]);
+                                SelectedSessionList list = new SelectedSessionList();
+                                list.setBolen(null);
+                                list.setSession_title(arr[0]);
+                                list.setTime(date + " " + arr[1]);
+                                selectedSessionLists.add(list);
+                            }
+
+                            //set selected session
+                            getViewModel.setSelectedSessionLists(selectedSessionLists);
+
+                            if (editSessionMap == null) {
+                                editHeaderMap = new LinkedHashMap<>();
+                                // headerMap=sessionMap.get(date_time);
+                            } else {
+
+                                viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time, null, editSessionMap);
+                                recyclerview_session.setAdapter(viewCartAdapter);
+                            }
                         }
                     }
                 });

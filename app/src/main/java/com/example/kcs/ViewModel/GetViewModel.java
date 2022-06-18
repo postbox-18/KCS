@@ -1288,9 +1288,10 @@ public class GetViewModel extends AndroidViewModel {
             //remove old data
             firebaseDatabase = FirebaseDatabase.getInstance();
             databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-            MyLog.e(TAG, "cancel>> value  " + session_title);
+            MyLog.e(TAG, "cancel>>sess value  " + session_title);
+            MyLog.e(TAG, "cancel>>date value  " + date);
             //remove data
-            databaseReference.child(func_title).child(session_title).removeValue();
+            databaseReference.child(func_title).child(date).child(session_title).removeValue();
             MyLog.e(TAG, "cancel remove commit");
 
 
@@ -1312,7 +1313,7 @@ public class GetViewModel extends AndroidViewModel {
                     header_title = c_selectedHeaders.get(l).getHeader();
                     selectedHeadersList = editHeaderMap.get(header_title);
                     for (int k = 0; k < selectedHeadersList.size(); k++) {
-                        databaseReference.child(func_title).child(newData).child(header_title).child(String.valueOf(k)).setValue(selectedHeadersList.get(k).getHeader());
+                        databaseReference.child(func_title).child(date).child(newData).child(header_title).child(String.valueOf(k)).setValue(selectedHeadersList.get(k).getHeader());
                     }
                 }
             }
