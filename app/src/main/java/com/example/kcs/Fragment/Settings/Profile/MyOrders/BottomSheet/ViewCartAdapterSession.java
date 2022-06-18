@@ -326,7 +326,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                     getViewModel.setI_value(1);
                     e_selectedHeaders = new ArrayList<>();
                     getViewModel.setE_selectedHeaders(e_selectedHeaders);
-                    getViewModel.getSelecteds_map(date);
+                    getViewModel.getSelecteds_map(date,ses,dTime,b);
                 }
                 else if(n==1)
                 {
