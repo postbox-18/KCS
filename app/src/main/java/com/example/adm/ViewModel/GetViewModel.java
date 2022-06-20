@@ -141,6 +141,9 @@ public class GetViewModel extends AndroidViewModel {
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderSessionMapMutableLiveData = new MutableLiveData<>();
 
+    //click on date map
+    private String dateString;
+    private MutableLiveData<String> dateStringLive=new MutableLiveData<>();
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
@@ -151,6 +154,14 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
+    public void setDateString(String dateString) {
+        this.dateString = dateString;
+        this.dateStringLive.postValue(dateString);
+    }
+
+    public MutableLiveData<String> getDateStringLive() {
+        return dateStringLive;
+    }
 
     public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>>> getOrderMapMutableLiveData() {
         return orderMapMutableLiveData;

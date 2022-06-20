@@ -26,6 +26,7 @@ import java.util.Set;
 public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapter.ViewHolder> {
     private Context context;
     private String TAG = "UserDateListAdapter";
+    private String s_user_name,funcTitle;
     private GetViewModel getViewModel;
     //order hash map
     //date map
@@ -40,11 +41,13 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
     private List<SelectedSessionList> o_selectedSessionLists=new ArrayList<>();
 
 
-    public UserDateListAdapter(Context context, GetViewModel getViewModel, List<SelectedDateList> o_dateLists, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap) {
+    public UserDateListAdapter(Context context, GetViewModel getViewModel, List<SelectedDateList> o_dateLists, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap, String s_user_name, String funcTitle) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.o_dateLists = o_dateLists;
         this.orderDateMap = orderDateMap;
+        this.s_user_name = s_user_name;
+        this.funcTitle = funcTitle;
     }
 
     @NonNull
@@ -88,21 +91,14 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
         UserSessionListAdapter userSessionListAdapter=new UserSessionListAdapter(context,getViewModel,o_selectedSessionLists,orderSessionMap);
         holder.recyclerview_session.setAdapter(userSessionListAdapter);
 
-      /*  //on click
+      //on click
         holder.date_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editFunc_Map=new LinkedHashMap<>();
-                getViewModel.setEditFuncMap(editFunc_Map);
-                editSessionMap=new LinkedHashMap<>();
-                getViewModel.setEditSessionMap(editSessionMap);
-                editHeaderMap=new LinkedHashMap<>();
-                getViewModel.setEditHeaderMap(editHeaderMap);
-                getViewModel.setFunc_title(funcTitle);
-                String s = funcTitle + "/" + list.getDate();
-                getViewModel.setFunc_Session(s);
+                    String s=s_user_name+"/"+funcTitle+"/"+list.getDate();
+                    getViewModel.setDateString(s);
             }
-        });*/
+        });
 
 
     }

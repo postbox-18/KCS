@@ -44,7 +44,6 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        MyLog.e(TAG,"bottom>>orderItemListss>"+new GsonBuilder().setPrettyPrinting().create().toJson(o_orderItemLists));
         final OrderItemLists orderItemLists1=o_orderItemLists.get(position);
             holder.list.setText(orderItemLists1.getItemList());
 

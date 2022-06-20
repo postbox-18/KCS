@@ -52,7 +52,7 @@ public class OrdersFragment extends Fragment {
 
     //bottom sheet view
     private RecyclerView recyclerview_date_view;
-    private TextView func_title;
+    private TextView func_title,user_name;
 
     private GetViewModel getViewModel;
     //order hash map
@@ -162,11 +162,43 @@ public class OrdersFragment extends Fragment {
         BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
         View bottom_view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_order_details, null);
         func_title = bottom_view.findViewById(R.id.func_title);
+        user_name = bottom_view.findViewById(R.id.user_name);
         recyclerview_date_view = bottom_view.findViewById(R.id.recyclerview_date_view);
         recyclerview_date_view.setHasFixedSize(true);
         recyclerview_date_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
 
+        //get date map string click on date map
+        getViewModel.getDateStringLive().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                MyLog.e(TAG, "bottom>>dateString>" +s);
+                String[] str=s.split("/");
+                String name=str[0];
+                String func=str[1];
+                String date=str[2];
+
+                orderFunc_Map=new LinkedHashMap<>(b_orderMap).get(name);
+                func_title.setText(func);
+                user_name.setText(name);
+                MyLog.e(TAG, "bottom>>orderFunc_Map>" + new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
+
+                orderDateMap=new LinkedHashMap<>(orderFunc_Map).get(func);
+                MyLog.e(TAG, "bottom>>orderDateMap>" + new GsonBuilder().setPrettyPrinting().create().toJson(orderDateMap));
+
+                o_dateLists=new ArrayList<>();
+                SelectedDateList list=new SelectedDateList(
+                        date
+                );
+                o_dateLists.add(list);
+                MyLog.e(TAG, "bottom>>o_dateLists>" + new GsonBuilder().setPrettyPrinting().create().toJson(o_dateLists));
+
+                ViewCartAdapterDate viewCartAdapterDate=new ViewCartAdapterDate(getContext(),getViewModel,orderDateMap,o_dateLists);
+                recyclerview_date_view.setAdapter(viewCartAdapterDate);
+                bottomSheet.setContentView(bottom_view);
+                bottomSheet.show();
+            }
+        });
 
         //get orderItem list to view item list
         getViewModel.getOrderListsViewMutableLiveData().observe(getViewLifecycleOwner(), new Observer<OrderLists>() {
@@ -177,6 +209,7 @@ public class OrdersFragment extends Fragment {
                     MyLog.e(TAG,"SessionList>>deatils>>"+orderLists.getS_user_name()+"\t\t"+orderLists.getFunc());
                     orderFunc_Map=b_orderMap.get(orderLists.getS_user_name());
                     func_title.setText(orderLists.getFunc());
+                    user_name.setText(orderLists.getS_user_name());
                     orderDateMap=new LinkedHashMap<>(orderFunc_Map).get(orderLists.getFunc());
 
                     //get date list

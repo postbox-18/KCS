@@ -16,12 +16,22 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="user_name"
+                    android:gravity="center"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold|italic"
+                    android:textSize="22dp"
+                    />
+                <TextView
                     android:id="@+id/func_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="func"
                     android:gravity="center"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/colorSecondary"
                     android:textStyle="bold|italic"
                     android:textSize="22dp"
                     />
