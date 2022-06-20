@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SessionList;
+import com.example.adm.Fragments.Orders.BottomSheet.OrderItemLists;
 import com.example.adm.Fragments.Orders.BottomSheet.OrderLists;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
@@ -24,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder> {
     private List<OrderLists> orderLists;
@@ -32,12 +34,25 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     private String TAG = "OrderAdapters";
     private List<UserItemList> userItemLists=new ArrayList<>();
     private List<SessionList> sessionLists=new ArrayList<>();
-    private LinkedHashMap<String, List<UserItemList>> stringListLinkedHashMap=new LinkedHashMap<>();
+    //order hash map
+    //order map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderMap = new LinkedHashMap<>();
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
+    //date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    //date list
+    private List<SelectedDateList> o_dateLists=new ArrayList<>();
 
-    public OrderAdapters(Context context, List<OrderLists> orderLists, GetViewModel getViewModel) {
+    public OrderAdapters(Context context, List<OrderLists> orderLists, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderMap) {
         this.orderLists = orderLists;
         this.context = context;
         this.getViewModel = getViewModel;
+        this.orderMap = orderMap;
     }
 
     @NonNull
@@ -54,35 +69,27 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         final OrderLists orderLists1 = orderLists.get(position);
         holder.user_name.setText(orderLists1.getS_user_name());
         holder.func.setText(orderLists1.getFunc());
-        MyLog.e(TAG,"item>>name outside>"+orderLists1.getS_user_name());
-
-
-        //get session list
-        /*getViewModel.getSessionListsMutableLiveData().observe((LifecycleOwner) context, new Observer<List<SessionList>>() {
-            @Override
-            public void onChanged(List<SessionList> sessionLists) {
-                holder.recyclerview_session.setHasFixedSize(true);
-                holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                UserSessionListAdapter userSessionListAdapter=new UserSessionListAdapter(context,getViewModel,orderLists1,sessionLists);
-                holder.recyclerview_session.setAdapter(userSessionListAdapter);
-
-            }
-        });*/
-
-
-        //get session list
-        getViewModel.getSs_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap) {
-                MyLog.e(TAG,"sessions>>f_map>>stringListLinkedHashMap>>"+orderLists1.getS_user_name()+"-"+orderLists1.getFunc());
-                sessionLists=stringListLinkedHashMap.get(orderLists1.getS_user_name()+"-"+orderLists1.getFunc());
-                holder.recyclerview_session.setHasFixedSize(true);
-                holder.recyclerview_session.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                UserSessionListAdapter userSessionListAdapter=new UserSessionListAdapter(context,getViewModel,orderLists1,sessionLists);
-                holder.recyclerview_session.setAdapter(userSessionListAdapter);
-
-            }
-        });
+        MyLog.e(TAG,"item>>func >"+orderLists1.getFunc());
+        orderFunc_Map=orderMap.get(orderLists1.getS_user_name());
+        MyLog.e(TAG,"item>>orderFunc_Map>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
+        orderDateMap=orderFunc_Map.get(orderLists1.getFunc());
+        //get date list
+        Set<String> stringSet = orderDateMap.keySet();
+        List<String> aList = new ArrayList<String>(stringSet.size());
+        for (String x : stringSet)
+            aList.add(x);
+        o_dateLists.clear();
+        for (int k=0;k<aList.size();k++)
+        {
+            SelectedDateList list=new SelectedDateList(
+                    aList.get(k)
+            );
+            o_dateLists.add(list);
+        }
+        holder.recyclerview_date.setHasFixedSize(true);
+        holder.recyclerview_date.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        UserDateListAdapter userDateListAdapter=new UserDateListAdapter(context,getViewModel,o_dateLists,orderDateMap);
+        holder.recyclerview_date.setAdapter(userDateListAdapter);
 
 
 
@@ -99,14 +106,6 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
             }
         });
 
-        //get linked hash map checked
-        getViewModel.getF_mapMutable().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<UserItemList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<UserItemList>> stringListLinkedHashMap1) {
-                stringListLinkedHashMap=stringListLinkedHashMap1;
-
-            }
-        });
 
 
     }
@@ -122,7 +121,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
 
         private ImageView profile;
         private TextView user_name, func;
-        private RecyclerView recyclerview_session;
+        private RecyclerView recyclerview_date;
         private CardView item_cardView;
 
         public ViewHolder(View view) {
@@ -130,7 +129,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
             profile = view.findViewById(R.id.profile);
             user_name = view.findViewById(R.id.user_name);
             func = view.findViewById(R.id.func);
-            recyclerview_session = view.findViewById(R.id.recyclerview_session);
+            recyclerview_date = view.findViewById(R.id.recyclerview_date);
             item_cardView = view.findViewById(R.id.item_cardView);
 
 

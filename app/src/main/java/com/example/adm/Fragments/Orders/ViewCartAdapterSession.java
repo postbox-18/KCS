@@ -64,7 +64,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
         //get selected  header list and session list hash map
 
-        //get selected session and header hashmap
+       /* //get selected session and header hashmap
         getViewModel.getSh_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
@@ -75,7 +75,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
             }
-        });
+        });*/
 
 
 

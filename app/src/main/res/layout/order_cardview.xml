@@ -49,10 +49,10 @@
                         android:layout_height="wrap_content"
                         android:text="@string/wedding" />
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerview_session"
+                        android:id="@+id/recyclerview_date"
                         android:layout_width="match_parent"
                         tools:itemCount="2"
-                        tools:listitem="@layout/session_cardview"
+                        tools:listitem="@layout/date_cardview"
                         android:layout_height="wrap_content"/>
 
                    <!-- <androidx.recyclerview.widget.RecyclerView

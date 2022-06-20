@@ -10,23 +10,30 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
+import com.example.adm.Fragments.Orders.BottomSheet.OrderItemLists;
+import com.example.adm.Fragments.Orders.BottomSheet.SelectedHeader;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class UserItemListAdapters extends RecyclerView.Adapter<UserItemListAdapters.ViewHolder> {
     private Context context;
     private String TAG = "ItemListAdapters";
     private GetViewModel getViewModel;
-    private List<UserItemList> userItemLists;
 
-    public UserItemListAdapters(Context context, GetViewModel getViewModel, List<UserItemList> userItemLists) {
+    //order header title and item size
+    private List<UserItemList>  o_userItemLists=new ArrayList<>();
+
+
+
+    public UserItemListAdapters(Context context, GetViewModel getViewModel, List<UserItemList> o_userItemLists) {
         this.context = context;
         this.getViewModel = getViewModel;
-        this.userItemLists = userItemLists;
+        this.o_userItemLists = o_userItemLists;
     }
 
     @NonNull
@@ -41,7 +48,8 @@ public class UserItemListAdapters extends RecyclerView.Adapter<UserItemListAdapt
     @Override
     public void onBindViewHolder(@NonNull UserItemListAdapters.ViewHolder holder, int position) {
 
-        final UserItemList userItemList1 = userItemLists.get(position);
+
+        final UserItemList userItemList1 = o_userItemLists.get(position);
         MyLog.e(TAG, "item>>header>" + userItemList1.getHeader());
         MyLog.e(TAG, "item>>size>>" + userItemList1.getList_size());
         holder.item_size.setText(String.valueOf(userItemList1.getList_size()));
@@ -53,8 +61,8 @@ public class UserItemListAdapters extends RecyclerView.Adapter<UserItemListAdapt
 
     @Override
     public int getItemCount() {
-        MyLog.e(TAG, "userItemList>>49>>" + userItemLists.size());
-        return userItemLists.size();
+        MyLog.e(TAG, "userItemList>>49>>" + o_userItemLists.size());
+        return o_userItemLists.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
