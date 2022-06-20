@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
+import com.example.adm.Fragments.Orders.UserItemList;
+import com.example.adm.Fragments.Orders.UserItemListAdapters;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
@@ -20,26 +22,25 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterHeader.ViewHolder> {
     private Context context;
-    private List<OrderItemLists> orderItemListss = new ArrayList<>();
-    private ViewCartAdapter viewCartAdapter;
-    private String TAG = "ViewCartAdapter";
-    private String session_title;
-    private OrderLists orderLists;
+    private String TAG = "ViewCartAdapterHeader";
     private GetViewModel getViewModel;
-    private List<SelectedHeader> header=new ArrayList<>();
+    private List<SelectedHeader> o_selectedHeaders = new ArrayList<>();
+    //header map
+    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
+    //user item list
+    private List<OrderItemLists> o_orderItemLists = new ArrayList<>();
 
 
-    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, OrderLists orderLists) {
-        this.context=context;
-        this.getViewModel=getViewModel;
-        this.header=selectedHeadersList;
-        this.session_title=session_title;
-        this.orderLists=orderLists;
+    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> o_selectedHeaders, LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap) {
+        this.context = context;
+        this.getViewModel = getViewModel;
+        this.o_selectedHeaders = new ArrayList<>(o_selectedHeaders);
+        this.orderHeaderMap = new LinkedHashMap<>(orderHeaderMap);
     }
-
 
 
     @NonNull
@@ -53,20 +54,23 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final SelectedHeader list=header.get(position);
+        final SelectedHeader list = o_selectedHeaders.get(position);
         holder.header.setText(list.getHeader());
-        //get order item view list hash map
-       /* getViewModel.getOrderItemList_f_mapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<OrderItemLists>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<OrderItemLists>> stringListLinkedHashMap) {
-                orderItemListss=stringListLinkedHashMap.get(orderLists.getS_user_name()+'-'+orderLists.getFunc()+"-"+session_title+"-"+list.getHeader());
-                holder.recyclerview_item_list.setHasFixedSize(true);
-                holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                viewCartAdapter=new ViewCartAdapter(context,getViewModel,orderItemListss);
-                holder.recyclerview_item_list.setAdapter(viewCartAdapter);
-            }
-        });*/
 
+        //get item list
+
+        MyLog.e(TAG, "bottom>>o_selectedHeaders>" + new GsonBuilder().setPrettyPrinting().create().toJson(o_selectedHeaders));
+        MyLog.e(TAG, "bottom>>orderHeaderMap>" + new GsonBuilder().setPrettyPrinting().create().toJson(orderHeaderMap));
+        String header = list.getHeader();
+        MyLog.e(TAG, "bottom>>header>>" +header );
+        o_orderItemLists=new ArrayList<>();
+        o_orderItemLists=orderHeaderMap.get(header);
+        MyLog.e(TAG, "bottom>>o_orderItemLists>" + new GsonBuilder().setPrettyPrinting().create().toJson(o_orderItemLists));
+
+        holder.recyclerview_item_list.setHasFixedSize(true);
+        holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        ViewCartAdapter itemListAdapters = new ViewCartAdapter(context, getViewModel, o_orderItemLists);
+        holder.recyclerview_item_list.setAdapter(itemListAdapters);
 
 
     }
@@ -74,7 +78,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
     @Override
     public int getItemCount() {
-        return header.size();
+        return o_selectedHeaders.size();
     }
 
 

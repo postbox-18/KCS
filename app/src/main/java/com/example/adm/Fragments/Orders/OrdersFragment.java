@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
@@ -50,14 +51,16 @@ public class OrdersFragment extends Fragment {
     private RecyclerView recyclerView_order_list;
 
     //bottom sheet view
-    private RecyclerView recyclerview_session_view;
-    private List<SessionList> sessionLists=new ArrayList<>();
-    private LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap=new LinkedHashMap<>();
+    private RecyclerView recyclerview_date_view;
+    private TextView func_title;
 
     private GetViewModel getViewModel;
     //order hash map
     //order map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String,
+            LinkedHashMap<String, List<OrderItemLists>>>>>> orderMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String,
+            List<OrderItemLists>>>>>> b_orderMap = new LinkedHashMap<>();
     //func map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
     //date map
@@ -68,7 +71,10 @@ public class OrdersFragment extends Fragment {
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
     //order list
     private List<OrderLists> o_orderLists=new ArrayList<>();
+    //user name list
     private List<Username> o_usernames=new ArrayList<>();
+    //date list
+    private List<SelectedDateList> o_dateLists=new ArrayList<>();
     public OrdersFragment() {
         // Required empty public constructor
     }
@@ -106,9 +112,11 @@ public class OrdersFragment extends Fragment {
         getViewModel.getOrderMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> stringLinkedHashMapLinkedHashMap) {
-                orderMap=stringLinkedHashMapLinkedHashMap;
+                orderMap=new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
+                b_orderMap=new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
+
                 //get user name to set list
-                Set<String> stringSet = orderMap.keySet();
+                Set<String> stringSet = (orderMap).keySet();
                 List<String> aList = new ArrayList<String>(stringSet.size());
                 for (String x : stringSet)
                     aList.add(x);
@@ -125,7 +133,7 @@ public class OrdersFragment extends Fragment {
                 for(int l=0;l<o_usernames.size();l++)
                 {
                     String username=o_usernames.get(l).getUsername();
-                    orderFunc_Map=orderMap.get(username);
+                    orderFunc_Map=new LinkedHashMap<>(orderMap).get(username);
                     //get func
                     Set<String> stringSet1 = orderFunc_Map.keySet();
                     List<String> aList1 = new ArrayList<String>(stringSet1.size());
@@ -139,7 +147,7 @@ public class OrdersFragment extends Fragment {
                                 aList1.get(k)
                         );
                         o_orderLists.add(orderLists);
-                        orderAdapters=new OrderAdapters(getContext(),o_orderLists,getViewModel,orderMap);
+                        orderAdapters=new OrderAdapters(getContext(),o_orderLists,getViewModel);
                         recyclerView_order_list.setAdapter(orderAdapters);
                     }
 
@@ -150,35 +158,15 @@ public class OrdersFragment extends Fragment {
 
             }
         });
-/*
-        getViewModel.getOrderListsMutable().observe(getViewLifecycleOwner(), new Observer<List<OrderLists>>() {
-            @Override
-            public void onChanged(List<OrderLists> orderLists) {
-                recyclerView_order_list.setHasFixedSize(true);
-                recyclerView_order_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                orderAdapters=new OrderAdapters(getContext(),orderLists,getViewModel);
-                recyclerView_order_list.setAdapter(orderAdapters);
-            }
-        });*/
-
-        //Bottom sheet
+          //Bottom sheet
         BottomSheetDialog bottomSheet = new BottomSheetDialog(requireContext());
         View bottom_view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_order_details, null);
-        recyclerview_session_view = bottom_view.findViewById(R.id.recyclerview_session_view);
-        recyclerview_session_view.setHasFixedSize(true);
-        recyclerview_session_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        func_title = bottom_view.findViewById(R.id.func_title);
+        recyclerview_date_view = bottom_view.findViewById(R.id.recyclerview_date_view);
+        recyclerview_date_view.setHasFixedSize(true);
+        recyclerview_date_view.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
 
-        ///get session hash map  List
-        //get session list
-       /* getViewModel.getSs_f_mapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<SessionList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<SessionList>> stringListLinkedHashMap1) {
-                stringListLinkedHashMap=stringListLinkedHashMap1;
-
-
-            }
-        });*/
 
         //get orderItem list to view item list
         getViewModel.getOrderListsViewMutableLiveData().observe(getViewLifecycleOwner(), new Observer<OrderLists>() {
@@ -187,10 +175,27 @@ public class OrdersFragment extends Fragment {
                 if(orderLists!=null) {
                     //get session list
                     MyLog.e(TAG,"SessionList>>deatils>>"+orderLists.getS_user_name()+"\t\t"+orderLists.getFunc());
-                    sessionLists=stringListLinkedHashMap.get(orderLists.getS_user_name()+"-"+orderLists.getFunc());
+                    orderFunc_Map=b_orderMap.get(orderLists.getS_user_name());
+                    func_title.setText(orderLists.getFunc());
+                    orderDateMap=new LinkedHashMap<>(orderFunc_Map).get(orderLists.getFunc());
 
-                    ViewCartAdapterSession viewCartAdapter=new ViewCartAdapterSession(getContext(),getViewModel,sessionLists,orderLists);
-                    recyclerview_session_view.setAdapter(viewCartAdapter);
+                    //get date list
+                    Set<String> stringSet = orderDateMap.keySet();
+                    List<String> aList = new ArrayList<String>(stringSet.size());
+                    for (String x : stringSet)
+                        aList.add(x);
+                    o_dateLists=new ArrayList<>();
+                    for(int i=0;i<aList.size();i++)
+                    {
+                        SelectedDateList list=new SelectedDateList(
+                                aList.get(i)
+                        );
+                        o_dateLists.add(list);
+                    }
+
+
+                    ViewCartAdapterDate viewCartAdapterDate=new ViewCartAdapterDate(getContext(),getViewModel,orderDateMap,o_dateLists);
+                    recyclerview_date_view.setAdapter(viewCartAdapterDate);
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
                 }
@@ -200,6 +205,7 @@ public class OrdersFragment extends Fragment {
                 }
             }
         });
+
 
 
 

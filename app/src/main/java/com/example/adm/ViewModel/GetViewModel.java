@@ -124,8 +124,10 @@ public class GetViewModel extends AndroidViewModel {
     private List<OrderItemLists> o_orderItemLists = new ArrayList<>();
 
     //order map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>>> orderMapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String,
+            LinkedHashMap<String, List<OrderItemLists>>>>>> orderMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String,
+            LinkedHashMap<String, List<OrderItemLists>>>>>>> orderMapMutableLiveData = new MutableLiveData<>();
     //func map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderFunc_MapMutableLiveData = new MutableLiveData<>();
@@ -490,7 +492,7 @@ public class GetViewModel extends AndroidViewModel {
 
                 }
                     orderMapMutableLiveData.postValue(orderMap);
-                //MyLog.e(TAG,"orders>> order map"+new GsonBuilder().setPrettyPrinting().create().toJson(orderMap));
+
             }
 
             @Override

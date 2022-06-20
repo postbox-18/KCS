@@ -48,11 +48,10 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     //date list
     private List<SelectedDateList> o_dateLists=new ArrayList<>();
 
-    public OrderAdapters(Context context, List<OrderLists> orderLists, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderMap) {
+    public OrderAdapters(Context context, List<OrderLists> orderLists, GetViewModel getViewModel) {
         this.orderLists = orderLists;
         this.context = context;
         this.getViewModel = getViewModel;
-        this.orderMap = orderMap;
     }
 
     @NonNull
@@ -70,30 +69,32 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         holder.user_name.setText(orderLists1.getS_user_name());
         holder.func.setText(orderLists1.getFunc());
         MyLog.e(TAG,"item>>func >"+orderLists1.getFunc());
-        orderFunc_Map=orderMap.get(orderLists1.getS_user_name());
-        MyLog.e(TAG,"item>>orderFunc_Map>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
-        orderDateMap=orderFunc_Map.get(orderLists1.getFunc());
-        //get date list
-        Set<String> stringSet = orderDateMap.keySet();
-        List<String> aList = new ArrayList<String>(stringSet.size());
-        for (String x : stringSet)
-            aList.add(x);
-        o_dateLists.clear();
-        for (int k=0;k<aList.size();k++)
-        {
-            SelectedDateList list=new SelectedDateList(
-                    aList.get(k)
-            );
-            o_dateLists.add(list);
-        }
-        holder.recyclerview_date.setHasFixedSize(true);
-        holder.recyclerview_date.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        UserDateListAdapter userDateListAdapter=new UserDateListAdapter(context,getViewModel,o_dateLists,orderDateMap);
-        holder.recyclerview_date.setAdapter(userDateListAdapter);
+        getViewModel.getOrderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> stringLinkedHashMapLinkedHashMap) {
+                orderMap=new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
+                orderFunc_Map=new LinkedHashMap<>(orderMap).get(orderLists1.getS_user_name());
+                orderDateMap=new LinkedHashMap<>(orderFunc_Map).get(orderLists1.getFunc());
+                //get date list
+                Set<String> stringSet = orderDateMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+                o_dateLists=new ArrayList<>();
+                for (int k=0;k<aList.size();k++)
+                {
+                    SelectedDateList list=new SelectedDateList(
+                            aList.get(k)
+                    );
+                    o_dateLists.add(list);
+                }
+                holder.recyclerview_date.setHasFixedSize(true);
+                holder.recyclerview_date.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+                UserDateListAdapter userDateListAdapter=new UserDateListAdapter(context,getViewModel,o_dateLists,orderDateMap);
+                holder.recyclerview_date.setAdapter(userDateListAdapter);
 
-
-
-
+            }
+        });
 
 
 
@@ -103,6 +104,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
             public void onClick(View view) {
                 getViewModel.setFunc_title(orderLists1.getFunc());
                 getViewModel.setOrderListsView(orderLists1);
+
             }
         });
 

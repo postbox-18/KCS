@@ -78,16 +78,17 @@ public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionList
         List<String> aList = new ArrayList<String>(stringSet.size());
         for (String x : stringSet)
             aList.add(x);
-        o_selectedHeaders.clear();
+        o_selectedHeaders=new ArrayList<>();
         for(int k=0;k<aList.size();k++) {
             SelectedHeader selectedHeader=new SelectedHeader(
                     aList.get(k)
             );
             o_selectedHeaders.add(selectedHeader);
         }
+        o_userItemLists=new ArrayList<>();
         for(int i=0;i<o_selectedHeaders.size();i++) {
             String header = o_selectedHeaders.get(i).getHeader();
-            o_orderItemLists.clear();
+            o_orderItemLists=new ArrayList<>();
             o_orderItemLists = orderHeaderMap.get(header);
             //user item list
             UserItemList itemList = new UserItemList(

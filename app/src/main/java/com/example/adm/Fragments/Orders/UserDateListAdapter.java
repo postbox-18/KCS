@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,7 +69,7 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
         List<String> aList = new ArrayList<String>(stringSet.size());
         for (String x : stringSet)
             aList.add(x);
-        o_selectedSessionLists.clear();
+        o_selectedSessionLists=new ArrayList<>();
         for(int i=0;i<aList.size();i++)
         {
             SelectedSessionList sessionList = new SelectedSessionList();
@@ -87,7 +88,21 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
         UserSessionListAdapter userSessionListAdapter=new UserSessionListAdapter(context,getViewModel,o_selectedSessionLists,orderSessionMap);
         holder.recyclerview_session.setAdapter(userSessionListAdapter);
 
-
+      /*  //on click
+        holder.date_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editFunc_Map=new LinkedHashMap<>();
+                getViewModel.setEditFuncMap(editFunc_Map);
+                editSessionMap=new LinkedHashMap<>();
+                getViewModel.setEditSessionMap(editSessionMap);
+                editHeaderMap=new LinkedHashMap<>();
+                getViewModel.setEditHeaderMap(editHeaderMap);
+                getViewModel.setFunc_title(funcTitle);
+                String s = funcTitle + "/" + list.getDate();
+                getViewModel.setFunc_Session(s);
+            }
+        });*/
 
 
     }
@@ -102,10 +117,12 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView date;
+        private CardView date_card;
         private RecyclerView recyclerview_session;
         public ViewHolder(View view) {
             super(view);
             date = view.findViewById(R.id.date);
+            date_card = view.findViewById(R.id.date_card);
             recyclerview_session = view.findViewById(R.id.recyclerview_session);
 
 

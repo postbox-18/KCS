@@ -10,25 +10,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.adm.Classes.MyLog;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHolder> {
     private Context context;
-    private List<OrderItemLists> orderItemListss = new ArrayList<>();
+    private List<OrderItemLists> o_orderItemLists = new ArrayList<>();
     private String TAG = "ViewCartAdapter";
     private GetViewModel getViewModel;
 
 
-    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<OrderItemLists> orderItemListss) {
+    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<OrderItemLists> o_orderItemLists) {
         this.context=context;
         this.getViewModel=getViewModel;
-        this.orderItemListss=orderItemListss;
+        this.o_orderItemLists=o_orderItemLists;
     }
-
 
 
     @NonNull
@@ -42,7 +44,8 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final OrderItemLists orderItemLists1=orderItemListss.get(position);
+        MyLog.e(TAG,"bottom>>orderItemListss>"+new GsonBuilder().setPrettyPrinting().create().toJson(o_orderItemLists));
+        final OrderItemLists orderItemLists1=o_orderItemLists.get(position);
             holder.list.setText(orderItemLists1.getItemList());
 
 
@@ -51,7 +54,7 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return orderItemListss.size();
+        return o_orderItemLists.size();
     }
 
 
