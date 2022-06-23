@@ -9,8 +9,6 @@ FIREBASE
 PENDING
 1-alert check box to select the func (OK and CANCEL btn)
 5-search to find the item
-7-My orders cancel my order or edit my order
-9-Cancel btn
 10-Three Level Expandable View
 12-back btn  <--  func>>session>>header using breadcrumbs(INSTEAD OF SNACK BAR  )
 13-back btn  <--  func>>session>>header using breadcrumbs(INSTEAD OF SNACK BAR  )
@@ -26,6 +24,8 @@ FINISHED
 3-snack bar to place an order
 2-save orders and place final orders
 6-when snack bar is checked bottom sheet open
+7-My orders cancel my order or edit my order
+9-Cancel btn
 3-snack bar to place an order(EVERY PAGE)
 3-snack bar recyclerview number of headers list
 4-click on(VIEW CART) order btn open new fragment and list the selected item to place an order
