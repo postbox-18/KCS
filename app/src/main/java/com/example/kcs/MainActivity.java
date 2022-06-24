@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private List<UserItemList> userItemLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private UserItemListAdapters userItemListAdapters;
-    private String headerList_title, func_title, session_title,date;
+    private String headerList_title, func_title, session_title, date;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
@@ -189,54 +189,54 @@ public class MainActivity extends AppCompatActivity {
 
         //get func hash map
         getViewModel.getEditFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
-                    @Override
-                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
-                        editFunc_Map=stringLinkedHashMapLinkedHashMap;
-                    }
-                });
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
+                editFunc_Map = stringLinkedHashMapLinkedHashMap;
+            }
+        });
 
         //get time picker
         getViewModel.getDate_pickerMutable().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                date=s;
+                date = s;
             }
         });
-                //get selected session list
-                getViewModel.getSelectedSessionListsMutableLiveData().observe(this, new Observer<List<SelectedSessionList>>() {
-                    @Override
-                    public void onChanged(List<SelectedSessionList> selectedSessionLists1) {
-                        selectedSessionLists = selectedSessionLists1;
+        //get selected session list
+        getViewModel.getSelectedSessionListsMutableLiveData().observe(this, new Observer<List<SelectedSessionList>>() {
+            @Override
+            public void onChanged(List<SelectedSessionList> selectedSessionLists1) {
+                selectedSessionLists = selectedSessionLists1;
 
 
-                        for (int k = 0; k < selectedSessionLists.size(); k++) {
-                            if (session_title == null) {
+                for (int k = 0; k < selectedSessionLists.size(); k++) {
+                    if (session_title == null) {
 
-                                MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
-                                editDateMap = editFunc_Map.get(func_title);
-                                editSessionMap = editDateMap.get(date);
-                                MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
-                                date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime());
-                                editHeaderMap = editSessionMap.get(date_time);
+                        MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
+                        editDateMap = editFunc_Map.get(func_title);
+                        editSessionMap = editDateMap.get(date);
+                        MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
+                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime());
+                        editHeaderMap = editSessionMap.get(date_time);
 
-                                Set<String> stringSet = editHeaderMap.keySet();
-                                List<String> aList = new ArrayList<String>(stringSet.size());
-                                for (String x : stringSet)
-                                    aList.add(x);
+                        Set<String> stringSet = editHeaderMap.keySet();
+                        List<String> aList = new ArrayList<String>(stringSet.size());
+                        for (String x : stringSet)
+                            aList.add(x);
 
-                                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                                userItemLists.clear();
-                                for (int i = 0; i < aList.size(); i++) {
-                                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
-                                    MyLog.e(TAG, "chs>>list size " + editHeaderMap.get(aList.get(i)).size());
-                                    UserItemList userItemList = new UserItemList(
-                                            aList.get(i),
-                                            editHeaderMap.get(aList.get(i)).size()
-                                    );
-                                    userItemLists.add(userItemList);
-                                }
-                                getViewModel.setUserItemLists(userItemLists);
-                                MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
+                        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                        userItemLists.clear();
+                        for (int i = 0; i < aList.size(); i++) {
+                            MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
+                            MyLog.e(TAG, "chs>>list size " + editHeaderMap.get(aList.get(i)).size());
+                            UserItemList userItemList = new UserItemList(
+                                    aList.get(i),
+                                    editHeaderMap.get(aList.get(i)).size()
+                            );
+                            userItemLists.add(userItemList);
+                        }
+                        getViewModel.setUserItemLists(userItemLists);
+                        MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
                         /*if (userItemLists.size() > 0) {
                             snackbar.show();
                             MyLog.e(TAG, "chs>>snackbar Show");
@@ -249,9 +249,9 @@ public class MainActivity extends AppCompatActivity {
                             MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                             sessionMap = funcMap.get(func_title);
                             MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
-                            MyLog.e(TAG,"orders>>sess>>"+selectedSessionLists.get(k).getSession_title());
-                            String[] str=(selectedSessionLists.get(k).getSession_title()).split("!");
-                            date_time = str[0] + "!"+ (selectedSessionLists.get(k).getTime());
+                            MyLog.e(TAG, "orders>>sess>>" + selectedSessionLists.get(k).getSession_title());
+                            String[] str = (selectedSessionLists.get(k).getSession_title()).split("!");
+                            date_time = str[0] + "!" + (selectedSessionLists.get(k).getTime());
                             MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
                             headerMap = sessionMap.get(date_time);
 
@@ -333,15 +333,15 @@ public class MainActivity extends AppCompatActivity {
         });*/
 
 
-                //get user-item list
-                getViewModel.getUserItemListsMutableLiveData().observe(this, new Observer<List<UserItemList>>() {
-                    @Override
-                    public void onChanged(List<UserItemList> userItemLists) {
+        //get user-item list
+        getViewModel.getUserItemListsMutableLiveData().observe(this, new Observer<List<UserItemList>>() {
+            @Override
+            public void onChanged(List<UserItemList> userItemLists) {
 
-                        userItemListAdapters = new UserItemListAdapters(getApplication(), getViewModel, userItemLists);
-                        recyclerview_selected_count.setAdapter(userItemListAdapters);
-                    }
-                });
+                userItemListAdapters = new UserItemListAdapters(getApplication(), getViewModel, userItemLists);
+                recyclerview_selected_count.setAdapter(userItemListAdapters);
+            }
+        });
 
 
         //checked list
@@ -430,7 +430,15 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(Integer integer) {
                 frag_integer = integer;
                 //breadCrums
-                if (integer == 0 || integer==4) {
+                //breadCrums
+                if (integer == 0) {
+                    breadCrums.setVisibility(View.GONE);
+                } else {
+                    breadCrums.setVisibility(View.VISIBLE);
+
+                }
+
+                if (integer == 4) {
                     orderFunc_Map.clear();
                     getViewModel.setOrderFunc_Map(orderFunc_Map);
                     breadCrums.setVisibility(View.GONE);
@@ -438,12 +446,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     breadCrums.setVisibility(View.VISIBLE);
                 }
-                if(integer==1)
-                {
+                if (integer == 1) {
                     editFunc_Map.clear();
                     getViewModel.setEditFuncMap(editFunc_Map);
                 }
-
 
 
                 MyLog.e(TAG, "integer>>" + integer);
