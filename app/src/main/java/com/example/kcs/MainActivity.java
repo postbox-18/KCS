@@ -424,7 +424,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         getViewModel.setI_value(0);
-
         //get value to pass fragment
         getViewModel.getValue().observe(this, new Observer<Integer>() {
             @Override
