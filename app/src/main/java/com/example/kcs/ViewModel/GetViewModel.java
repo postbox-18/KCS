@@ -267,10 +267,10 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-   /* public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderFunc_Map) {
+    public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map) {
         this.orderFunc_Map = orderFunc_Map;
         this.orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
-    }*/
+    }
 
     public void setOrderHeaderMap(LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap) {
         this.orderHeaderMap = orderHeaderMap;

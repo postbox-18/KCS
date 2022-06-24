@@ -33,6 +33,7 @@ import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Session.SessionList;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Settings.Profile.ProfileFragment;
 import com.example.kcs.Fragment.Session.SessionFragment;
@@ -84,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
     private String date_time;
+    //order func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
     //edit hash map
     //edit hash map list
     private List<SessionList> e_sessionLists = new ArrayList<>();
@@ -428,12 +431,20 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(Integer integer) {
                 frag_integer = integer;
                 //breadCrums
-                if (integer == 0) {
+                if (integer == 0 || integer==4) {
+                    orderFunc_Map.clear();
+                    getViewModel.setOrderFunc_Map(orderFunc_Map);
                     breadCrums.setVisibility(View.GONE);
+                    snackbar.dismiss();
                 } else {
                     breadCrums.setVisibility(View.VISIBLE);
-
                 }
+                if(integer==1)
+                {
+                    editFunc_Map.clear();
+                    getViewModel.setEditFuncMap(editFunc_Map);
+                }
+
 
 
                 MyLog.e(TAG, "integer>>" + integer);
