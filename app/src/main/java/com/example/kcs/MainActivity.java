@@ -33,6 +33,7 @@ import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Session.SessionList;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Settings.Profile.ProfileFragment;
 import com.example.kcs.Fragment.Session.SessionFragment;
@@ -40,6 +41,7 @@ import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private List<UserItemList> userItemLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private UserItemListAdapters userItemListAdapters;
-    private String headerList_title, func_title, session_title;
+    private String headerList_title, func_title, session_title, date;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
@@ -83,11 +85,14 @@ public class MainActivity extends AppCompatActivity {
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
     private String date_time;
+    //order func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
     //edit hash map
     //edit hash map list
-    private List<SessionList> e_sessionLists=new ArrayList<>();
-    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
+    private List<SessionList> e_sessionLists = new ArrayList<>();
+    private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
 
@@ -182,14 +187,21 @@ public class MainActivity extends AppCompatActivity {
         recyclerview_selected_count.setLayoutManager(new LinearLayoutManager(getApplication(), LinearLayoutManager.HORIZONTAL, false));
 
 
-     //get func hash map
-        getViewModel.getEditFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
+        //get func hash map
+        getViewModel.getEditFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
+                editFunc_Map = stringLinkedHashMapLinkedHashMap;
             }
         });
 
+        //get time picker
+        getViewModel.getDate_pickerMutable().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                date = s;
+            }
+        });
         //get selected session list
         getViewModel.getSelectedSessionListsMutableLiveData().observe(this, new Observer<List<SelectedSessionList>>() {
             @Override
@@ -198,11 +210,11 @@ public class MainActivity extends AppCompatActivity {
 
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    if(session_title==null)
-                    {
+                    if (session_title == null) {
 
                         MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
-                        editSessionMap = editFunc_Map.get(func_title);
+                        editDateMap = editFunc_Map.get(func_title);
+                        editSessionMap = editDateMap.get(date);
                         MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
                         date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime());
                         editHeaderMap = editSessionMap.get(date_time);
@@ -232,13 +244,15 @@ public class MainActivity extends AppCompatActivity {
                             snackbar.dismiss();
                         }*/
                         break;
-                    }
-                    else {
+                    } else {
                         if (session_title.equals(selectedSessionLists.get(k).getSession_title())) {
                             MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                             sessionMap = funcMap.get(func_title);
                             MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
-                            date_time = selectedSessionLists.get(k).getSession_title() + "-" + (selectedSessionLists.get(k).getTime());
+                            MyLog.e(TAG, "orders>>sess>>" + selectedSessionLists.get(k).getSession_title());
+                            String[] str = (selectedSessionLists.get(k).getSession_title()).split("!");
+                            date_time = str[0] + "!" + (selectedSessionLists.get(k).getTime());
+                            MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
                             headerMap = sessionMap.get(date_time);
 
                             Set<String> stringSet = headerMap.keySet();
@@ -266,9 +280,7 @@ public class MainActivity extends AppCompatActivity {
                                 snackbar.dismiss();
                             }
                             break;
-                        }
-                        else
-                        {
+                        } else {
                             continue;
                         }
                     }
@@ -281,7 +293,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
-
 
 
             }
@@ -413,18 +424,31 @@ public class MainActivity extends AppCompatActivity {
 
 
         getViewModel.setI_value(0);
-
         //get value to pass fragment
         getViewModel.getValue().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
                 frag_integer = integer;
                 //breadCrums
+                //breadCrums
                 if (integer == 0) {
                     breadCrums.setVisibility(View.GONE);
                 } else {
                     breadCrums.setVisibility(View.VISIBLE);
 
+                }
+
+                if (integer == 4) {
+                    orderFunc_Map.clear();
+                    getViewModel.setOrderFunc_Map(orderFunc_Map);
+                    breadCrums.setVisibility(View.GONE);
+                    snackbar.dismiss();
+                } else {
+                    breadCrums.setVisibility(View.VISIBLE);
+                }
+                if (integer == 1) {
+                    editFunc_Map.clear();
+                    getViewModel.setEditFuncMap(editFunc_Map);
                 }
 
 

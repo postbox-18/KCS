@@ -31,14 +31,15 @@ import java.util.Set;
 public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessiondapters.ViewHolder> {
     private Context context;
     private String TAG = "MyorderSessiondapters";
-    private String func_title;
+    private String func_title,date;
     private List<MyOrdersList> myOrdersList=new ArrayList<>();
     private List<SelectedSessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
     //edit hash map list
     private List<SelectedSessionList> e_sessionLists=new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
     //order hashmap
@@ -51,10 +52,11 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     private List<OrderItemLists> o_orderItemLists=new ArrayList<>();
 
 
-    public MyorderSessiondapters(Context context, String func_title, GetViewModel getViewModel, List<SelectedSessionList> sessionLists, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap) {
-        this.func_title = func_title;
+    public MyorderSessiondapters(Context context, String funcTitle, String date, GetViewModel getViewModel, List<SelectedSessionList> sessionLists, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap) {
+        this.func_title = funcTitle;
         this.context = context;
         this.sessionLists = sessionLists;
+        this.date = date;
         this.getViewModel = getViewModel;
         this.orderSessionMap = orderSessionMap;
     }
@@ -90,50 +92,60 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
         }
 
         String s=sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"_"+sessionLists1.getBolen();
-        orderHeaderMap=new LinkedHashMap<>(orderSessionMap.get(s));
-        Set<String> set = orderHeaderMap.keySet();
-        List<String> aList1 = new ArrayList<String>(set.size());
-        for (String x1 : set)
-            aList1.add(x1);
-        o_selectedHeaders.clear();
-        for(int i=0;i<aList1.size();i++)
+        if(orderSessionMap==null)
         {
-            SelectedHeader header=new SelectedHeader(
-                aList1.get(i)
-            );
-
-            o_selectedHeaders.add(header);
-            //get header list and item size
+            orderSessionMap=new LinkedHashMap<>();
+            MyLog.e(TAG,"orderSessionMap is null");
         }
+        else {
 
-        myOrdersList.clear();
-        for(int k=0;k<o_selectedHeaders.size();k++)
-        {
+            if (orderHeaderMap == null) {
+                orderHeaderMap = new LinkedHashMap<>();
+                MyLog.e(TAG, "orderHeaderMap is null");
+            } else {
+                orderHeaderMap = new LinkedHashMap<>(orderSessionMap.get(s));
+                Set<String> set = orderHeaderMap.keySet();
+                List<String> aList1 = new ArrayList<String>(set.size());
+                for (String x1 : set)
+                    aList1.add(x1);
+                o_selectedHeaders.clear();
+                for (int i = 0; i < aList1.size(); i++) {
+                    SelectedHeader header = new SelectedHeader(
+                            aList1.get(i)
+                    );
 
-            o_orderItemLists.clear();
-            String header=o_selectedHeaders.get(k).getHeader();
-            o_orderItemLists=new ArrayList<>(orderHeaderMap.get(header));
+                    o_selectedHeaders.add(header);
+                    //get header list and item size
+                }
 
-            MyOrdersList myOrdersList1=new MyOrdersList(
-                    header,
-                    o_orderItemLists.size()
-            );
-            myOrdersList.add(myOrdersList1);
+                myOrdersList.clear();
+                for (int k = 0; k < o_selectedHeaders.size(); k++) {
+
+                    o_orderItemLists.clear();
+                    String header = o_selectedHeaders.get(k).getHeader();
+                    o_orderItemLists = new ArrayList<>(orderHeaderMap.get(header));
+
+                    MyOrdersList myOrdersList1 = new MyOrdersList(
+                            header,
+                            o_orderItemLists.size()
+                    );
+                    myOrdersList.add(myOrdersList1);
 
 
+                }
+                holder.recyclerview_item_list.setHasFixedSize(true);
+                holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
+                holder.recyclerview_item_list.setAdapter(itemListAdapters);
+
+            }
         }
-        holder.recyclerview_item_list.setHasFixedSize(true);
-        holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
-        holder.recyclerview_item_list.setAdapter(itemListAdapters);
-
-
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get func map
-        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>() {
+        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
                 editFunc_Map=stringLinkedHashMapLinkedHashMap;
             }
         });
@@ -143,7 +155,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
         getViewModel.getEditSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> stringLinkedHashMapLinkedHashMap) {
-                editSessionMap=stringLinkedHashMapLinkedHashMap;
+                editSessionMap = stringLinkedHashMapLinkedHashMap;
             }
         });
 
@@ -158,7 +170,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
 
         ///////////***************************clear list in live data model****************************//////////////////////
 
-        //on click
+       /* //on click
         holder.session_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,11 +181,11 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                 editHeaderMap=new LinkedHashMap<>();
                 getViewModel.setEditHeaderMap(editHeaderMap);
                 getViewModel.setFunc_title(func_title);
-                String s = func_title + "/" + sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"_"+sessionLists1.getBolen();
+                String s = func_title + "/" + sessionLists1.getSession_title()+"!"+date+"#"+sessionLists1.getTime()+"_"+sessionLists1.getBolen();
                 getViewModel.setFunc_Session(s);
             }
         });
-
+*/
 
     }
 
@@ -188,7 +200,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
 
         private ImageView profile;
         private TextView session_title, time;
-        private CardView session_card;
+        //private CardView session_card;
         private RecyclerView recyclerview_item_list;
 
         public ViewHolder(View view) {
@@ -197,11 +209,10 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
             session_title = view.findViewById(R.id.session_title);
             time = view.findViewById(R.id.time);
-            session_card = view.findViewById(R.id.session_card);
+            //session_card = view.findViewById(R.id.session_card);
 
 
         }
     }
 }
-
 

@@ -178,7 +178,8 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                 }
                     getViewModel.setCheckedLists(checkedLists);
                     headerMap.put(header, checkedLists);
-                    String s=sessionTitle+"-"+(sessionDateTimes.get(0).getDate()+" "+sessionDateTimes.get(0).getTime());
+                    String date=(sessionDateTimes.get(0).getDate()).replace("/","-");
+                    String s=sessionTitle+"!"+(date+" "+sessionDateTimes.get(0).getTime());
                     MyLog.e(TAG, "placeorders>>date_time>>" + s);
                     sessionMap.put(s,headerMap);
                     funcMap.put(funcTitle,sessionMap);
@@ -192,7 +193,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                     //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
                     selectedSessionLists.clear();
                     for (int i = 0; i < aList.size(); i++) {
-                        String[] arr = (aList.get(i)).split("-");
+                        String[] arr = (aList.get(i)).split("!");
 
                         //set selected session list and session date and time
                         MyLog.e(TAG, "chs>>list header>> " + arr[0]);

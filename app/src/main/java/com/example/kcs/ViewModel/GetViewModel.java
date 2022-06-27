@@ -27,6 +27,7 @@ import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -210,8 +211,12 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<String> Func_SessionMutable = new MutableLiveData<>();
     //Edit HashMap
     //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_MapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>> editFunc_MapMutableLiveData = new MutableLiveData<>();
+    //date map
+    private List<SelectedDateList> e_dateLists = new ArrayList<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editDateMapMutableLiveData = new MutableLiveData<>();
     //header map
     private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
     private MutableLiveData<List<SelectedHeader>> e_selectedHeadersLive = new MutableLiveData<>();
@@ -234,7 +239,7 @@ public class GetViewModel extends AndroidViewModel {
     private List<SelectedHeader> c_selectedHeaders = new ArrayList<>();
 
     //My Order HashMap
-    private List<OrderItemLists> o_orderItemLists=new ArrayList<>();
+    private List<OrderItemLists> o_orderItemLists = new ArrayList<>();
     //private List<SelectedHeader> o_selectedHeadersList=new ArrayList<>();
     //private List<MyOrdersList> o_myOrdersList=new ArrayList<>();
     //private List<MyOrderFuncList> o_myOrderFuncLists=new ArrayList<>();
@@ -253,7 +258,6 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderSessionMapMutableLiveData = new MutableLiveData<>();
 
 
-
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
@@ -263,10 +267,10 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-   /* public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderFunc_Map) {
+    public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map) {
         this.orderFunc_Map = orderFunc_Map;
         this.orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
-    }*/
+    }
 
     public void setOrderHeaderMap(LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap) {
         this.orderHeaderMap = orderHeaderMap;
@@ -350,13 +354,13 @@ public class GetViewModel extends AndroidViewModel {
         return editSessionMapMutableLiveData;
     }
 
-    public void setEditFuncMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editMap) {
+    public void setEditFuncMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editMap) {
         this.editFunc_Map = editMap;
         this.editFunc_MapMutableLiveData.postValue(editMap);
     }
 
 
-    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> getEditFuncMapMutableLiveData() {
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>> getEditFuncMapMutableLiveData() {
         return editFunc_MapMutableLiveData;
     }
 
@@ -598,10 +602,10 @@ public class GetViewModel extends AndroidViewModel {
                     MyLog.e(TAG, "onData>>datas>>" + datas);
                     MyLog.e(TAG, "MyOrdersAdapter>>func>>" + datas.getKey().toString());
                     func = datas.getKey().toString();
-                    orderDateMap=new LinkedHashMap<>();
-                    for(DataSnapshot dataTime:datas.getChildren()) {
-                        String date=dataTime.getKey().toString();
-                        orderSessionMap=new LinkedHashMap<>();
+                    orderDateMap = new LinkedHashMap<>();
+                    for (DataSnapshot dataTime : datas.getChildren()) {
+                        String date = dataTime.getKey().toString();
+                        orderSessionMap = new LinkedHashMap<>();
                         for (DataSnapshot ondata : dataTime.getChildren()) {
                             String ss = ondata.getKey().toString();
                             String[] str = ss.split("_");
@@ -637,14 +641,13 @@ public class GetViewModel extends AndroidViewModel {
                             orderSessionMap.put(ss, orderHeaderMap);
 
                         }
-                        orderDateMap.put(date,orderSessionMap);
+                        orderDateMap.put(date, orderSessionMap);
                     }
-                    orderFunc_Map.put(func,orderDateMap);
+                    orderFunc_Map.put(func, orderDateMap);
                 }
 
                 //set func map
                 orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
-                MyLog.e(TAG,"orders>>orderFunc_Map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
 
             }
@@ -1147,7 +1150,7 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void EditMap(String func_title, String session_title, String header, String item, int position, int n, String username, String bolen) {
+    public void EditMap(String func_title, String session_title, String header, String item, int position, int n, String username, String bolen, String date) {
         MyLog.e(TAG, "cancel>>value " + n);
 
         /////////*****Edit **********//////////////////
@@ -1174,36 +1177,30 @@ public class GetViewModel extends AndroidViewModel {
         //set
         editSessionMapMutableLiveData.postValue(editSessionMap);
 
-
+        //set date map
+        editDateMap.put(date, editSessionMap);
         //set func map
-        editFunc_Map.put(func_title, editSessionMap);
+        editFunc_Map.put(func_title, editDateMap);
         //set
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
 
 
     }
 
-    public void getSelecteds_map() {
+    //date,ses,dTime,b
+    public void getSelecteds_map(String date, String ses, String dTime, String b) {
+        //get header map
+        String sd = ses + "!" + dTime;
+        editHeaderMap = new LinkedHashMap<>(editSessionMap).get(sd);
 
-        //get session title
-        Set<String> set = editSessionMap.keySet();
-        List<String> aList1 = new ArrayList<String>(set.size());
-        for (String x1 : set)
-            aList1.add(x1);
-        String[] arr = (aList1.get(0)).split("!");
+
         //set session title live
-        session_titleMutable.postValue((arr[0]));
-        //set date picker and time picker live
-        String[] strings = (arr[1]).split(" ");
-        MyLog.e(TAG, "edit>>date " + strings[0]);
-        MyLog.e(TAG, "edit>>time " + strings[1]);
-        MyLog.e(TAG, "edit>>am " + strings[2]);
-        String date = strings[0].replace("-", "/");
+        session_titleMutable.postValue(ses);
         //set date picker
+        date = date.replace("-", "/");
         date_pickerMutable.postValue(date);
-        String time = strings[1] + " " + strings[2];
         //set time picker
-        time_pickerMutable.postValue(time);
+        time_pickerMutable.postValue(dTime);
 
 
         //get header list
@@ -1221,7 +1218,7 @@ public class GetViewModel extends AndroidViewModel {
             );
             e_selectedHeaders.add(list);
         }
-        selectedHeadersList.clear();
+        /*selectedHeadersList.clear();
         for (int i = 0; i < e_selectedHeaders.size(); i++) {
             header_title = e_selectedHeaders.get(i).getHeader();
             MyLog.e(TAG, "edit>>header_title>>" + header_title);
@@ -1246,6 +1243,35 @@ public class GetViewModel extends AndroidViewModel {
                     e_headerMap.put(header_title, e_checkedLists);
                 }
             }
+        }*/
+        //get item list using selected headers list
+        itemLists=new ArrayList<>();
+        selectedHeadersList=new ArrayList<>();
+        edit_selected_s_map=new ArrayList<>();
+        e_headerMap = new LinkedHashMap<>();
+        for (int k = 0; k < e_selectedHeaders.size(); k++) {
+            header_title = e_selectedHeaders.get(k).getHeader();
+            selectedHeadersList = (editHeaderMap).get(header_title);
+            //set item list from header map in data base
+            itemLists = f_maps.get(header_title);
+            e_checkedLists=new ArrayList<>();
+            for (int s = 0; s < selectedHeadersList.size(); s++) {
+                String sItem = selectedHeadersList.get(s).getHeader();
+                for (int i = 0; i < itemLists.size(); i++) {
+                    String item = itemLists.get(i).getItem();
+                    //check the item list and get position
+                    if ((sItem).equals(item)) {
+                        CheckedList checkedList = new CheckedList(
+                                item,
+                                i
+                        );
+                        e_checkedLists.add(checkedList);
+                        MyLog.e(TAG, "edit>>selected header_title>>" + header_title);
+                        e_headerMap.put(header_title, e_checkedLists);
+
+                    }
+                }
+            }
         }
         edit_selected_s_map.add(e_headerMap);
         check_s_mapMutable.postValue(edit_selected_s_map);
@@ -1253,19 +1279,18 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Maps) {
+    public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Maps, String date) {
         MyLog.e(TAG, "cancel ");
         String[] str = session_title.split("_");
         String sess = str[0];
         String old = str[1];
-        editSessionMap = editFunc_Maps.get(func_title);
+        editDateMap = editFunc_Maps.get(func_title);
+        editSessionMap = editDateMap.get(date);
         editHeaderMap = editSessionMap.get(sess);
-        if(editHeaderMap==null)
-        {
-            editHeaderMap=new LinkedHashMap<>();
-            MyLog.e(TAG,"Cancel>>sess_date editheaderMap is null");
-        }
-        else {
+        if (editHeaderMap == null) {
+            editHeaderMap = new LinkedHashMap<>();
+            MyLog.e(TAG, "Cancel>>sess_date editheaderMap is null");
+        } else {
             //get header list
             Set<String> stringSet = editHeaderMap.keySet();
             List<String> aList = new ArrayList<String>(stringSet.size());
@@ -1286,9 +1311,10 @@ public class GetViewModel extends AndroidViewModel {
             //remove old data
             firebaseDatabase = FirebaseDatabase.getInstance();
             databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-            MyLog.e(TAG, "cancel>> value  " + session_title);
+            MyLog.e(TAG, "cancel>>sess value  " + session_title);
+            MyLog.e(TAG, "cancel>>date value  " + date);
             //remove data
-            databaseReference.child(func_title).child(session_title).removeValue();
+            databaseReference.child(func_title).child(date).child(session_title).removeValue();
             MyLog.e(TAG, "cancel remove commit");
 
 
@@ -1297,7 +1323,7 @@ public class GetViewModel extends AndroidViewModel {
             } else if (old.equals("false")) {
                 old = "true";
             }
-            if(n==1) {
+            if (n == 1) {
                 //add new data
                 firebaseDatabase = FirebaseDatabase.getInstance();
                 databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
@@ -1310,7 +1336,7 @@ public class GetViewModel extends AndroidViewModel {
                     header_title = c_selectedHeaders.get(l).getHeader();
                     selectedHeadersList = editHeaderMap.get(header_title);
                     for (int k = 0; k < selectedHeadersList.size(); k++) {
-                        databaseReference.child(func_title).child(newData).child(header_title).child(String.valueOf(k)).setValue(selectedHeadersList.get(k).getHeader());
+                        databaseReference.child(func_title).child(date).child(newData).child(header_title).child(String.valueOf(k)).setValue(selectedHeadersList.get(k).getHeader());
                     }
                 }
             }

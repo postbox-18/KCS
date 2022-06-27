@@ -21,6 +21,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
 import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.ItemList;
+import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
@@ -90,6 +91,7 @@ public class SessionFragment extends Fragment {
         recyclerview_session=view.findViewById(R.id.recyclerview_session);
         fun_title=view.findViewById(R.id.fun_title);
         back_btn=view.findViewById(R.id.back_btn);
+
 
 
             //get view model

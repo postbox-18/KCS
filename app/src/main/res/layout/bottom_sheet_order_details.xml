@@ -4,6 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:nestedScrollingEnabled="false"
+    android:fitsSystemWindows="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_height="match_parent">
     <LinearLayout
         android:id="@+id/recyclerview_order_list_lay"
@@ -27,11 +30,11 @@
                     android:textSize="22dp"
                     />
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerview_order_session_deatils"
+                    android:id="@+id/recyclerview_order_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:itemCount="5"
-                    tools:listitem="@layout/bottom_sheet_order_session" />
+                    tools:listitem="@layout/bottom_sheet_order_date" />
             </LinearLayout>
 
     </LinearLayout>

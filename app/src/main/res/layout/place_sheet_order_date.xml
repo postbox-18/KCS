@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/recyclerview_order_list_lay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/robotoblackitalic"
+                app:layout_constraintTop_toTopOf="@id/session_title"
+                app:layout_constraintBottom_toBottomOf="@id/session_title"
+                app:layout_constraintHorizontal_weight="1.5"
+                app:layout_constraintStart_toEndOf="@id/session_title"
+                app:layout_constraintEnd_toStartOf="@id/edit"
+                android:text="12-12-2012"
+                android:textColor="@color/colorSecondary"
+                android:textSize="16dp"
+                android:textStyle="bold|italic" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview_order_session_deatils"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:itemCount="5"
+                tools:listitem="@layout/place_order_session" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
