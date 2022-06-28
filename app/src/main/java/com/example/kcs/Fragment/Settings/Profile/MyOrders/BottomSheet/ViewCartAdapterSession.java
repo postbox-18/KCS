@@ -29,6 +29,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapterSession.ViewHolder> {
@@ -303,7 +304,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         String[] cb=(scb[1]).split("_");
         String[] st=(scb[0]).split("!");
         String count=cb[0];
-        String b=cb[1];
+        String b=(cb[1]).toUpperCase(Locale.ROOT);
         String ses=st[0];
         String dTime=st[1];
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
