@@ -14,10 +14,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -29,6 +32,7 @@ import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Session.SessionList;
+import com.example.kcs.Login_Register.LoginActivity;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.example.kcs.ViewModel.TimeList;
@@ -73,8 +77,8 @@ public class HeaderFragment extends Fragment {
 
     //date and time
     private TextView date_picker_actions;
-    private TextView time_picker,count;
-    private String funcTitle, s_time_picker, s_date_picker_actions, e_session_title, date_time,s_count;
+    private TextView time_picker, count;
+    private String funcTitle, s_time_picker, s_date_picker_actions, e_session_title, date_time, s_count;
     private DatePickerDialog datePicker;
     private List<TimeList> timeLists = new ArrayList<>();
 
@@ -179,6 +183,23 @@ public class HeaderFragment extends Fragment {
             }
         });
 
+        //get head count
+        getViewModel.getS_countLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                s_count=s;
+                if(s==null)
+                {
+                    count.setError("please select the head count");
+                }
+                else {
+                    count.setError(null);
+                    count.setText(s_count);
+                }
+
+            }
+        });
+
         //get date picker
         getViewModel.getDate_pickerMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -200,258 +221,270 @@ public class HeaderFragment extends Fragment {
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
                 editFunc_Map = new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
                 editDateMap = editFunc_Map.get(funcTitle);
-                MyLog.e(TAG,"order>>funcTitle>>"+funcTitle);
+                MyLog.e(TAG, "order>>funcTitle>>" + funcTitle);
                 if (editDateMap == null) {
                     editDateMap = new LinkedHashMap<>();
                     MyLog.e(TAG, "edit date map is null");
 
+                } else {
+                    MyLog.e(TAG, "edits>>date " + s_date_picker_actions);
+                    String date = s_date_picker_actions.replace("/", "-");
+                    editSessionMap = editDateMap.get(date);
+
+                    Set<String> stringSet = editSessionMap.keySet();
+                    List<String> aList = new ArrayList<String>(stringSet.size());
+                    for (String x : stringSet)
+                        aList.add(x);
+                    MyLog.e(TAG, "order>>date>>" + aList.get(0));
+                    String[] scb = (aList.get(0)).split("/");
+                    s_count = scb[1];
+                    count.setText(s_count);
+                    getViewModel.setS_count(s_count);
+
+                    String[] str = (scb[0]).split("!");
+                    e_session_title = str[0];
+                    String time = str[1];
+
+                    //change 12:12 AM to 24-hrs time
+                    SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                    SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
+                    String stime = null;
+                    try {
+                        stime = date24Format.format(date12Format.parse(time));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        MyLog.e(TAG, "time>>error>>" + e.getMessage());
+                    }
+                    MyLog.e(TAG, "time>>" + stime);
+                    String[] hrs = stime.split(":");
+                    MyLog.e(TAG, "time>>" + hrs[0]);
+                    MyLog.e(TAG, "time>>" + hrs[1]);
+
+                    //check the date and time selection
+                    //check condition if lunch or breakfast
+                    getViewModel.CheckTime(e_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
                 }
-                else
-                {
-                MyLog.e(TAG, "edits>>date " + s_date_picker_actions);
-                String date = s_date_picker_actions.replace("/", "-");
-                editSessionMap = editDateMap.get(date);
-
-                Set<String> stringSet = editSessionMap.keySet();
-                List<String> aList = new ArrayList<String>(stringSet.size());
-                for (String x : stringSet)
-                    aList.add(x);
-                MyLog.e(TAG,"order>>date>>"+aList.get(0));
-                String[] scb = (aList.get(0)).split("/");
-                s_count=scb[1];
-                count.setText(s_count);
-                getViewModel.setS_count(s_count);
-
-                String[] str = (scb[0]).split("!");
-                e_session_title = str[0];
-                String time = str[1];
-
-                //change 12:12 AM to 24-hrs time
-                SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
-                SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
-                String stime = null;
-                try {
-                    stime = date24Format.format(date12Format.parse(time));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    MyLog.e(TAG, "time>>error>>" + e.getMessage());
-                }
-                MyLog.e(TAG, "time>>" + stime);
-                String[] hrs = stime.split(":");
-                MyLog.e(TAG, "time>>" + hrs[0]);
-                MyLog.e(TAG, "time>>" + hrs[1]);
-
-                //check the date and time selection
-                //check condition if lunch or breakfast
-                getViewModel.CheckTime(e_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
             }
-        }
-    });
-    //get time picker hash map
-                getViewModel.getTimeListF_MapMutableLiveData().
+        });
+        //get time picker hash map
+        getViewModel.getTimeListF_MapMutableLiveData().
 
-    observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<TimeList>>>()
+                observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<TimeList>>>() {
+                    @Override
+                    public void onChanged(LinkedHashMap<String, List<TimeList>> stringListLinkedHashMap1) {
+                        stringListLinkedHashMap = stringListLinkedHashMap1;
 
-    {
-        @Override
-        public void onChanged (LinkedHashMap < String, List < TimeList >> stringListLinkedHashMap1){
-        stringListLinkedHashMap = stringListLinkedHashMap1;
-
-    }
-    });
+                    }
+                });
 
 
-    //get alert message
+        //get alert message
         getViewModel.getAlertMutable().
 
-    observe(getViewLifecycleOwner(), new Observer<Integer>()
+                observe(getViewLifecycleOwner(), new Observer<Integer>() {
+                    @Override
+                    public void onChanged(Integer integer) {
 
-    {
-        @Override
-        public void onChanged (Integer integer){
+                        if (integer == 0) {
+                            if (s_session_title != null) {
+                                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                                alert.setMessage("You Have Selected Time is More Than " + s_session_title + " Session");
+                                alert.setTitle("Problem");
+                                alert.setCancelable(false);
+                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @SuppressLint("NotifyDataSetChanged")
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                                AlertDialog alertDialog = alert.create();
+                                alertDialog.show();
+                            } else {
+                                MyLog.e(TAG, "Session has empty value");
+                            }
+                        }
 
-        if (integer == 0) {
-            if (s_session_title != null) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setMessage("You Have Selected Time is More Than " + s_session_title + " Session");
-                alert.setTitle("Problem");
-                alert.setCancelable(false);
-                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @SuppressLint("NotifyDataSetChanged")
+                    }
+                });
+
+
+        //get session date and time
+        getViewModel.getSessionDateTimesMutableLiveData().
+
+                observe(getViewLifecycleOwner(), new Observer<List<SessionDateTime>>() {
+                    @Override
+                    public void onChanged(List<SessionDateTime> sessionDateTimes1) {
+                        sessionDateTimes = sessionDateTimes1;
+                    }
+                });
+        //get view model session title
+        getViewModel.getSession_titleMutable().
+
+                observe(getViewLifecycleOwner(), new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        s_session_title = s;
+                        session_title.setText(s);
+                        MyLog.e(TAG, "dateTime>>session>>" + s_session_title);
+                        MyLog.e(TAG, "dateTime>>date>>" + s_date_picker_actions);
+                        MyLog.e(TAG, "dateTime>>time>>" + s_time_picker);
+
+                        if ((sessionDateTimes == null || sessionDateTimes.isEmpty()) && ((s_time_picker == null) || (s_time_picker.isEmpty()))) {
+
+                            timeLists = stringListLinkedHashMap.get(s);
+                            time_picker.setText(timeLists.get(0).getTimeList());
+                            MyLog.e(TAG, "dateTime>>if");
+
+
+                        } else {
+                            //setText Date and Time
+                            for (int i = 0; i < sessionDateTimes.size(); i++) {
+                                date_picker_actions.setText(sessionDateTimes.get(i).getDate());
+                                time_picker.setText(sessionDateTimes.get(i).getTime());
+                                //set date and time
+                                getViewModel.setDate_picker(sessionDateTimes.get(i).getDate());
+                                getViewModel.setTimepicker(sessionDateTimes.get(i).getTime());
+
+                                MyLog.e(TAG, "dateTime>>else");
+                            }
+
+                        }
+
+                    }
+                });
+
+
+        //get header list
+        getViewModel.getHeaderListMutableList().
+
+                observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
+                    @Override
+                    public void onChanged(List<HeaderList> headerLists) {
+                        headerList = headerLists;
+                    }
+                });
+
+
+        //list hashmap of itemlist
+        getViewModel.getS_mapMutable().
+
+                observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>() {
+                    @Override
+                    public void onChanged(List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
+                        //recyclerview_header
+                        recyclerview_header.setHasFixedSize(true);
+                        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                        headerAdapter = new HeaderAdapter(getContext(), headerList, getViewModel, linkedHashMaps, s_session_title);
+                        getViewModel.setI_fragment(1);
+                        recyclerview_header.setAdapter(headerAdapter);
+                    }
+                });
+
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getViewModel.setI_value(6);
+            }
+        });
+
+
+        //time picker
+        time_picker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //time picker wehn select time and clik on ok btn alert the time is over lunch or breafast
+                if ((date_picker_actions.getText().toString()) != null) {
+                    // Get Current Time
+                    final Calendar c = Calendar.getInstance();
+
+                    //set selected time to show on alert machine
+                    mHour = c.get(Calendar.HOUR_OF_DAY);
+                    mMinute = c.get(Calendar.MINUTE);
+
+                    // Launch Time Picker Dialog
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                            new TimePickerDialog.OnTimeSetListener() {
+
+                                @Override
+                                public void onTimeSet(TimePicker view, int hourOfDay,
+                                                      int minute) {
+                                    //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
+                                    // txtTime.setText(hourOfDay + ":" + minute);
+
+
+                                    //check condition if lunch or breakfast
+                                    getViewModel.CheckTime(s_session_title, (date_picker_actions.getText().toString()), hourOfDay, minute, funcTitle);
+
+                                    boolean isPM = (hourOfDay >= 12);
+                                    time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+
+                                }
+                            }, mHour, mMinute, false);
+                    timePickerDialog.show();
+                } else {
+                    Toast.makeText(getContext(), "Please select date first", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+        //on click to select the date
+        date_picker_actions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
+                        // adding the selected date in the edittext
+                        date_picker_actions.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                        getViewModel.setDate_picker(date_picker_actions.getText().toString());
+                    }
+                }, year, month, day);
+
+                // set minimum date to be selected as today
+                datePicker.getDatePicker().setMinDate(calendar.getTimeInMillis());
+
+                // show the dialog
+                datePicker.show();
+            }
+        });
+        //onclick head count
+        count.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Head Count");
+                LinearLayout linearLayout = new LinearLayout(getContext());
+                final EditText countEdit = new EditText(getContext());
+
+                // write the email using which you registered
+                countEdit.setHint("10000");
+                countEdit.setMinEms(16);
+                countEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+                linearLayout.addView(countEdit);
+                linearLayout.setPadding(10, 10, 10, 10);
+                builder.setView(linearLayout);
+
+                // Click on Recover and a email will be sent to your registered email id
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        String s_count = countEdit.getText().toString().trim();
+                        count.setText(s_count);
+                        getViewModel.setS_count(s_count);
                         dialog.cancel();
                     }
                 });
-                AlertDialog alertDialog = alert.create();
-                alertDialog.show();
-            } else {
-                MyLog.e(TAG, "Session has empty value");
+
+                builder.create().show();
             }
-        }
-
-    }
-    });
-
-
-    //get session date and time
-        getViewModel.getSessionDateTimesMutableLiveData().
-
-    observe(getViewLifecycleOwner(), new Observer<List<SessionDateTime>>()
-
-    {
-        @Override
-        public void onChanged (List < SessionDateTime > sessionDateTimes1) {
-        sessionDateTimes = sessionDateTimes1;
-    }
-    });
-    //get view model session title
-        getViewModel.getSession_titleMutable().
-
-    observe(getViewLifecycleOwner(), new Observer<String>()
-
-    {
-        @Override
-        public void onChanged (String s){
-        s_session_title = s;
-        session_title.setText(s);
-        MyLog.e(TAG, "dateTime>>session>>" + s_session_title);
-        MyLog.e(TAG, "dateTime>>date>>" + s_date_picker_actions);
-        MyLog.e(TAG, "dateTime>>time>>" + s_time_picker);
-
-        if ((sessionDateTimes == null || sessionDateTimes.isEmpty()) && ((s_time_picker == null) || (s_time_picker.isEmpty()))) {
-
-            timeLists = stringListLinkedHashMap.get(s);
-            time_picker.setText(timeLists.get(0).getTimeList());
-            MyLog.e(TAG, "dateTime>>if");
-
-
-        } else {
-            //setText Date and Time
-            for (int i = 0; i < sessionDateTimes.size(); i++) {
-                date_picker_actions.setText(sessionDateTimes.get(i).getDate());
-                time_picker.setText(sessionDateTimes.get(i).getTime());
-                //set date and time
-                getViewModel.setDate_picker(sessionDateTimes.get(i).getDate());
-                getViewModel.setTimepicker(sessionDateTimes.get(i).getTime());
-
-                MyLog.e(TAG, "dateTime>>else");
-            }
-
-        }
-
-    }
-    });
-
-
-    //get header list
-        getViewModel.getHeaderListMutableList().
-
-    observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>()
-
-    {
-        @Override
-        public void onChanged (List < HeaderList > headerLists) {
-        headerList = headerLists;
-    }
-    });
-
-
-    //list hashmap of itemlist
-        getViewModel.getS_mapMutable().
-
-    observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>()
-
-    {
-        @Override
-        public void onChanged (List < LinkedHashMap < String, List < ItemList >>> linkedHashMaps){
-        //recyclerview_header
-        recyclerview_header.setHasFixedSize(true);
-        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        headerAdapter = new HeaderAdapter(getContext(), headerList, getViewModel, linkedHashMaps, s_session_title);
-        getViewModel.setI_fragment(1);
-        recyclerview_header.setAdapter(headerAdapter);
-    }
-    });
-
-
-        back_btn.setOnClickListener(new View.OnClickListener()
-
-    {
-        @Override
-        public void onClick (View view){
-        getViewModel.setI_value(6);
-    }
-    });
-
-
-    //time picker
-        time_picker.setOnClickListener(new View.OnClickListener()
-
-    {
-        @Override
-        public void onClick (View view){
-        //time picker wehn select time and clik on ok btn alert the time is over lunch or breafast
-        if ((date_picker_actions.getText().toString()) != null) {
-            // Get Current Time
-            final Calendar c = Calendar.getInstance();
-
-            //set selected time to show on alert machine
-            mHour = c.get(Calendar.HOUR_OF_DAY);
-            mMinute = c.get(Calendar.MINUTE);
-
-            // Launch Time Picker Dialog
-            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                    new TimePickerDialog.OnTimeSetListener() {
-
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay,
-                                              int minute) {
-                            //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
-                            // txtTime.setText(hourOfDay + ":" + minute);
-
-
-                            //check condition if lunch or breakfast
-                            getViewModel.CheckTime(s_session_title, (date_picker_actions.getText().toString()), hourOfDay, minute, funcTitle);
-
-                            boolean isPM = (hourOfDay >= 12);
-                            time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
-
-                        }
-                    }, mHour, mMinute, false);
-            timePickerDialog.show();
-        } else {
-            Toast.makeText(getContext(), "Please select date first", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-    });
-
-    //on click to select the date
-        date_picker_actions.setOnClickListener(new View.OnClickListener()
-
-    {
-        @Override
-        public void onClick (View view){
-        datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
-                // adding the selected date in the edittext
-                date_picker_actions.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
-                getViewModel.setDate_picker(date_picker_actions.getText().toString());
-            }
-        }, year, month, day);
-
-        // set minimum date to be selected as today
-        datePicker.getDatePicker().setMinDate(calendar.getTimeInMillis());
-
-        // show the dialog
-        datePicker.show();
-    }
-    });
+        });
 
         return view;
-}
+    }
 
 
 }
