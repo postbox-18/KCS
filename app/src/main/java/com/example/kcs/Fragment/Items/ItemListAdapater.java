@@ -230,6 +230,8 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                     Gson gson = new Gson();
                     String json = gson.toJson(checkedLists);
                     new SharedPreferences_data(context).setChecked_item_list(json);
+                    MyLog.e(TAG,"count>>selected_s_map>>"+new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
+                    MyLog.e(TAG,"count>>funcMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
 
 
                 }
