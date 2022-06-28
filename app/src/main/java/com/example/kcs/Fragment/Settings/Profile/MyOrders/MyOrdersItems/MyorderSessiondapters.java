@@ -79,7 +79,9 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             holder.session_title.setText(sessionLists1.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
             holder.time.setText(sessionLists1.getTime());
-            holder.session_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+            holder.time.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+            holder.count.setText(sessionLists1.getS_count());
+            holder.count.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
 
         }
         else if((sessionLists1.getBolen()).equals("false"))
@@ -89,9 +91,11 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             holder.session_title.setTextColor(context.getResources().getColor(R.color.text_silver));
             holder.time.setText(sessionLists1.getTime());
             holder.time.setTextColor(context.getResources().getColor(R.color.text_silver));
+            holder.count.setText(sessionLists1.getS_count());
+            holder.count.setTextColor(context.getResources().getColor(R.color.text_silver));
         }
 
-        String s=sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"_"+sessionLists1.getBolen();
+        String s=sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"-"+sessionLists1.getS_count()+"_"+sessionLists1.getBolen();
         if(orderSessionMap==null)
         {
             orderSessionMap=new LinkedHashMap<>();
@@ -199,7 +203,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profile;
-        private TextView session_title, time;
+        private TextView session_title, time,count;
         //private CardView session_card;
         private RecyclerView recyclerview_item_list;
 
@@ -209,6 +213,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
             session_title = view.findViewById(R.id.session_title);
             time = view.findViewById(R.id.time);
+            count = view.findViewById(R.id.count);
             //session_card = view.findViewById(R.id.session_card);
 
 

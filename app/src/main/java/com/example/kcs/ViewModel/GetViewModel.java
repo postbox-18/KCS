@@ -608,8 +608,9 @@ public class GetViewModel extends AndroidViewModel {
                         orderSessionMap = new LinkedHashMap<>();
                         for (DataSnapshot ondata : dataTime.getChildren()) {
                             String ss = ondata.getKey().toString();
-                            String[] str = ss.split("_");
-                            session_title = str[0];
+                            String[] cs = ss.split("-");
+                            String[] str = cs[1].split("_");
+                            session_title = cs[0];
                             MyLog.e(TAG, "MyOrdersAdapter>>session_title>>" + ondata.getKey().toString());
                             //o_myOrdersList = new ArrayList<>();
                             //o_selectedHeadersList = new ArrayList<>();
@@ -1150,9 +1151,16 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void EditMap(String func_title, String session_title, String header, String item, int position, int n, String username, String bolen, String date) {
+    public void EditMap(String func_title,  String header, String item, int position, int n, String username, String sess, String date) {
         MyLog.e(TAG, "cancel>>value " + n);
+        MyLog.e(TAG, "s_count>>sess>>" + sess);
+        String[] scb=sess.split("-");
+        String[] cb=(scb[1]).split("_");
+        String session_title=scb[0];
+        String s_count=cb[0];
 
+        MyLog.e(TAG, "s_count>>title>>" + session_title);
+        MyLog.e(TAG, "s_count>>count>>" + s_count);
         /////////*****Edit **********//////////////////
         //set header map
         SelectedHeader selectedHeader = new SelectedHeader(
@@ -1172,6 +1180,7 @@ public class GetViewModel extends AndroidViewModel {
         sessionList.setSession_title(li[0]);
         sessionList.setBolen(null);
         sessionList.setTime(li[1]);
+        sessionList.setS_count(s_count);
         e_sessionLists.add(sessionList);
         editSessionMap.put(session_title, editHeaderMap);
         //set
@@ -1183,7 +1192,7 @@ public class GetViewModel extends AndroidViewModel {
         editFunc_Map.put(func_title, editDateMap);
         //set
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
-
+        MyLog.e(TAG,"eduit>>funcMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
     }
 

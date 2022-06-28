@@ -23,4 +23,5 @@
     <string name="Veg">Veg</string>
     <string name="session">Session</string>
     <string name="date_time">12:12 AM</string>
+    <string name="count">10000</string>
 </resources>

@@ -123,14 +123,17 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
                 aList1.add(x1);
             sessionLists.clear();
             for (int i = 0; i < aList1.size(); i++) {
-                String[] arr = (aList1.get(i)).split("_");
-                String bolen = arr[1];
-                String[] str = (arr[0]).split("!");
+                String[] scb = (aList1.get(i)).split("-");
+                String[] cb = (scb[1]).split("_");
+                String bolen = cb[1];
+                String count = cb[0];
+                String[] str = (scb[0]).split("!");
                 String sess = str[0];
                 String dateTime = str[1];
                 SelectedSessionList sessionList = new SelectedSessionList();
                 sessionList.setSession_title(sess);
                 sessionList.setTime(dateTime);
+                sessionList.setS_count(count);
                 sessionList.setBolen(bolen);
                 sessionLists.add(sessionList);
 

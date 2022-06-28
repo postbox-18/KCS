@@ -1,75 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg"
     android:orientation="vertical"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
     tools:context=".Fragment.Header.HeaderFragment">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="wrap_content">
-    <include
-        layout="@layout/back_btn_layout"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/session_title"
-        android:layout_width="match_parent"
-        android:text="session_title"
-        android:textColor="@color/colorSecondary"
-        android:textAlignment="center"
-        android:fontFamily="@font/bebaskai"
-        android:textSize="@dimen/head_title"
-        android:textStyle="bold|italic"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/back_btn_layout" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="right">
-            <TextView
-                android:id="@+id/date_picker_actions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_marginEnd="15dp"
-                android:textSize="22dp"
-                android:textColor="@color/btn_gradient_light"
-                android:drawablePadding="@dimen/drawablePadding"
-                android:hint="--:--:----"
-                android:drawableStart="@drawable/ic_calendar_plus_fill"
-                android:fontFamily="@font/bebaskai"/>
-            <TextView
-                android:id="@+id/time_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:background="@null"
-                android:inputType="time"
-                android:layout_marginEnd="15dp"
-                android:textSize="22dp"
-                android:textColor="@color/btn_gradient_light"
-                android:drawablePadding="5dp"
-                android:hint="--:--:--"
-                android:drawableStart="@drawable/ic_truckclock"
-                android:fontFamily="@font/bebaskai"/>
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/session_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/bebaskai"
+                android:text="session_title"
+                android:textAlignment="center"
+                android:textColor="@color/colorSecondary"
+                android:textSize="@dimen/head_title"
+                android:textStyle="bold|italic" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/date_picker_actions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:drawableStart="@drawable/ic_calendar_plus_fill"
+                    android:drawablePadding="@dimen/drawablePadding"
+                    android:fontFamily="@font/bebaskai"
+                    android:gravity="right"
+                    android:hint="--:--:----"
+                    android:textColor="@color/btn_gradient_light"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/time_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:background="@null"
+                    android:drawableStart="@drawable/ic_truckclock"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="@font/bebaskai"
+                    android:gravity="right"
+                    android:hint="--:--:--"
+                    android:inputType="time"
+                    android:textColor="@color/btn_gradient_light"
+                    android:textSize="22dp" />
+                <TextView
+                    android:id="@+id/count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:background="@null"
+                    android:drawableStart="@drawable/ic_humanadd_01"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="@font/bebaskai"
+                    android:gravity="right"
+                    android:hint="----"
+                    android:inputType="number"
+                    android:textColor="@color/btn_gradient_light"
+                    android:textSize="22dp" />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_header"
         android:layout_width="match_parent"
-        android:layout_gravity="center"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         tools:itemCount="5"
         tools:listitem="@layout/header_layout" />
 </LinearLayout>
