@@ -207,7 +207,9 @@ public class PlaceOrderFragment extends Fragment {
                             //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
                             selectedSessionLists.clear();
                             for (int i = 0; i < aList.size(); i++) {
-                                String[] arr = (aList.get(i)).split("!");
+                                String[] scb = (aList.get(i)).split("/");
+                                String count=scb[1];
+                                String[] arr = (scb[0]).split("!");
 
                                 //set selected session list and session date and time
                                 MyLog.e(TAG, "chs>>list sess>> " + arr[0]);
@@ -216,7 +218,7 @@ public class PlaceOrderFragment extends Fragment {
                                 SelectedSessionList list = new SelectedSessionList();
                                 list.setBolen(null);
                                 list.setSession_title(arr[0]);
-                                list.setS_count(s_count);
+                                list.setS_count(count);
                                 list.setTime(date + " " + arr[1]);
                                 selectedSessionLists.add(list);
                             }
@@ -253,7 +255,9 @@ public class PlaceOrderFragment extends Fragment {
                         selectedSessionLists.clear();
                         for (int i = 0; i < aList.size(); i++) {
                             MyLog.e(TAG, "chs>>list in map>> " + aList.get(i));
-                            String[] arr = (aList.get(i)).split("!");
+                            String[] scb = (aList.get(i)).split("/");
+                            String count=scb[1];
+                            String[] arr = (scb[0]).split("!");
 
                             //set selected session list and session date and time
                             MyLog.e(TAG, "chs>>list session in map>> " + arr[0]);
@@ -261,6 +265,7 @@ public class PlaceOrderFragment extends Fragment {
                             SelectedSessionList list = new SelectedSessionList();
                             list.setBolen(null);
                             list.setSession_title(arr[0]);
+                            list.setS_count(count);
                             list.setTime(arr[1]);
                             selectedSessionLists.add(list);
                         }
@@ -292,7 +297,8 @@ public class PlaceOrderFragment extends Fragment {
 
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    date_time=selectedSessionLists.get(k).getSession_title() + "!" + selectedSessionLists.get(k).getTime();
+                    date_time=selectedSessionLists.get(k).getSession_title() + "!" + selectedSessionLists.get(k).getTime()+"/"+selectedSessionLists.get(k).getS_count();
+                    MyLog.e(TAG,"count>>date_time>>"+date_time);
                     headerMap = sessionMap.get(date_time);
                     //set selected header
                     if (headerMap != null) {
@@ -311,9 +317,7 @@ public class PlaceOrderFragment extends Fragment {
                             selectedHeadersList.add(list1);
                         }
                         getViewModel.setSelectedHeadersList(selectedHeadersList);
-                    } else {
-                        MyLog.e(TAG, "Header map is empty");
-                    }
+
 
 
 
@@ -322,10 +326,14 @@ public class PlaceOrderFragment extends Fragment {
 
                     for (int i = 0; i < selectedHeadersList.size(); i++) {
                         checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
-                        SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), selectedSessionLists.get(k).getSession_title(), checkedLists, date_time);
+                        SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), selectedSessionLists.get(k).getSession_title(), checkedLists, date_time,selectedSessionLists.get(k).getS_count());
+                    }
+                        doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
+
+                    } else {
+                        MyLog.e(TAG, "Header map is empty");
                     }
                 }
-                doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
 
 
             }
@@ -343,7 +351,7 @@ public class PlaceOrderFragment extends Fragment {
     }
 
 
-    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String date_time) {
+    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_counts) {
         n++;
         MyLog.e(TAG, "placeorders>>date_time session_str n value>>"+n);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -356,7 +364,9 @@ public class PlaceOrderFragment extends Fragment {
                 for (int i = 0; i < checkedLists1.size(); i++) {
                     //set session-dateTime
                     MyLog.e(TAG, "placeorders>>date_time value>>"+date_time);
-                    String[] str=date_time.split("!");
+                    String[] scb=date_time.split("/");
+                    String count=scb[1];
+                    String[] str=(scb[0]).split("!");
                     String  sess=str[0];
                     String[]dt=(str[1]).split(" ");
                     String date=dt[0];
@@ -365,7 +375,7 @@ public class PlaceOrderFragment extends Fragment {
                     MyLog.e(TAG, "placeorders>>date>>"+date);
                     MyLog.e(TAG, "placeorders>>time>>"+time);
 
-                    String s=sess+"!"+time+"_true";
+                    String s=sess+"!"+time+"-"+count+"_true";
                     MyLog.e(TAG, "placeorders>>ses  time>>"+s);
                     databaseReference.child(user_name).child(func_title).child(date).child(s).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }

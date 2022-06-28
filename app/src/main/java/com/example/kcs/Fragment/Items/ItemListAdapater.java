@@ -21,6 +21,7 @@ import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -43,7 +44,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
     private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
     private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
-    private String header,funcTitle,sessionTitle;
+    private String header,funcTitle,sessionTitle,s_count;
     ItemListAdapater.Unchecked unchecked;
 
     public interface Unchecked {
@@ -109,6 +110,13 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> stringLinkedHashMapLinkedHashMap) {
                 sessionMap=stringLinkedHashMapLinkedHashMap;
+            }
+        });
+        //get head count
+        getViewModel.getS_countLiveData().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                s_count=s;
             }
         });
 
@@ -179,7 +187,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                     getViewModel.setCheckedLists(checkedLists);
                     headerMap.put(header, checkedLists);
                     String date=(sessionDateTimes.get(0).getDate()).replace("/","-");
-                    String s=sessionTitle+"!"+(date+" "+sessionDateTimes.get(0).getTime());
+                    String s=sessionTitle+"!"+(date+" "+sessionDateTimes.get(0).getTime())+"/"+s_count;
                     MyLog.e(TAG, "placeorders>>date_time>>" + s);
                     sessionMap.put(s,headerMap);
                     funcMap.put(funcTitle,sessionMap);
@@ -193,7 +201,9 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                     //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
                     selectedSessionLists.clear();
                     for (int i = 0; i < aList.size(); i++) {
-                        String[] arr = (aList.get(i)).split("!");
+                        String[] scb = (aList.get(i)).split("/");
+                        String count=scb[1];
+                        String[] arr = (scb[0]).split("!");
 
                         //set selected session list and session date and time
                         MyLog.e(TAG, "chs>>list header>> " + arr[0]);
@@ -201,6 +211,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                         list.setBolen(null);
                         list.setSession_title(arr[0]);
                         list.setTime(arr[1]);
+                        list.setS_count(count);
                         selectedSessionLists.add(list);
                     }
 

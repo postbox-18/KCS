@@ -82,8 +82,8 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
             holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));
             holder.count.setText(list.getS_count());
             holder.count.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
-            String a = list.getSession_title() + "!" + list.getTime();
-
+            String a = list.getSession_title() + "!" + list.getTime()+"/"+list.getS_count();
+            MyLog.e(TAG,"count>>if>>"+a);
             headerMap = sessionMap.get(a);
             Set<String> stringSet = headerMap.keySet();
             List<String> aList = new ArrayList<String>(stringSet.size());
@@ -110,7 +110,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
             final SelectedSessionList list = sessionLists.get(position);
             holder.session_title.setText(list.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
-            MyLog.e(TAG,"count>>"+list.getS_count());
+            MyLog.e(TAG,"count>>else>>"+list.getS_count());
             holder.count.setText(list.getS_count());
             holder.count.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
             holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));

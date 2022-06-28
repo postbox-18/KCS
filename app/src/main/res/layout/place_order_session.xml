@@ -51,7 +51,7 @@
                     android:fontFamily="@font/robotoblackitalic"
                     android:gravity="left"
                     android:layout_marginStart="35dp"
-                    android:text="0000"
+                    android:text="@string/count"
                     android:textColor="@color/colorSecondary"
                     android:textSize="18dp"
                     android:textStyle="bold|italic" />

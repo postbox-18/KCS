@@ -251,7 +251,9 @@ public class MainActivity extends AppCompatActivity {
                             MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
                             MyLog.e(TAG, "orders>>sess>>" + selectedSessionLists.get(k).getSession_title());
                             String[] str = (selectedSessionLists.get(k).getSession_title()).split("!");
-                            date_time = str[0] + "!" + (selectedSessionLists.get(k).getTime());
+                            date_time = str[0] + "!" + (selectedSessionLists.get(k).getTime())+"/"+(selectedSessionLists.get(k).getS_count());
+
+
                             MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
                             headerMap = sessionMap.get(date_time);
 
