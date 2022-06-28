@@ -1306,12 +1306,17 @@ public class GetViewModel extends AndroidViewModel {
 
     public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Maps, String date) {
         MyLog.e(TAG, "cancel ");
+        MyLog.e(TAG, "cancel "+session_title);
         String[] str = session_title.split("_");
-        String sess = str[0];
+        String[] scb = (str[0]).split("-");
+        String count=scb[1];
+        String sess = scb[0];
         String old = str[1];
+        String s=sess+"/"+count;
+
         editDateMap = editFunc_Maps.get(func_title);
         editSessionMap = editDateMap.get(date);
-        editHeaderMap = editSessionMap.get(sess);
+        editHeaderMap = editSessionMap.get(s);
         if (editHeaderMap == null) {
             editHeaderMap = new LinkedHashMap<>();
             MyLog.e(TAG, "Cancel>>sess_date editheaderMap is null");
@@ -1338,6 +1343,7 @@ public class GetViewModel extends AndroidViewModel {
             databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
             MyLog.e(TAG, "cancel>>sess value  " + session_title);
             MyLog.e(TAG, "cancel>>date value  " + date);
+
             //remove data
             databaseReference.child(func_title).child(date).child(session_title).removeValue();
             MyLog.e(TAG, "cancel remove commit");
@@ -1352,7 +1358,7 @@ public class GetViewModel extends AndroidViewModel {
                 //add new data
                 firebaseDatabase = FirebaseDatabase.getInstance();
                 databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-                String newData = sess + "_" + old;
+                String newData =sess+"-"+count+ "_" + old;
                 MyLog.e(TAG, "cancel>> value  " + newData);
                 MyLog.e(TAG, "cancel add commit");
                 //set replace bolen
