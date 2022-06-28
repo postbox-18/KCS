@@ -1355,6 +1355,7 @@ public class GetViewModel extends AndroidViewModel {
                 old = "true";
             }
             if (n == 1) {
+
                 //add new data
                 firebaseDatabase = FirebaseDatabase.getInstance();
                 databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
