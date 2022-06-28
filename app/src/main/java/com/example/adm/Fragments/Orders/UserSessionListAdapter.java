@@ -69,9 +69,10 @@ public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionList
 
         holder.session_title.setText(sessionLists1.getSession_title());
         holder.date_time.setText(sessionLists1.getTime());
+        holder.count.setText(sessionLists1.getCount());
         MyLog.e(TAG,"orders>> date time "+sessionLists1.getTime());
 
-        String s=sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"_"+sessionLists1.getBolen();
+        String s=sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"-"+sessionLists1.getCount()+"_"+sessionLists1.getBolen();
         orderHeaderMap=orderSessionMap.get(s);
         //get header list
         Set<String> stringSet = orderHeaderMap.keySet();
@@ -114,13 +115,14 @@ public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionList
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView session_title,date_time;
+        private TextView session_title,date_time,count;
             private RecyclerView itemList;
         public ViewHolder(View view) {
             super(view);
             session_title = view.findViewById(R.id.session_title);
             date_time = view.findViewById(R.id.date_time);
             itemList = view.findViewById(R.id.itemList);
+            count = view.findViewById(R.id.count);
 
 
         }

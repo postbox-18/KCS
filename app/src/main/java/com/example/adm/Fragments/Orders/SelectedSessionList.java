@@ -1,13 +1,17 @@
 package com.example.adm.Fragments.Orders;
 
 public class SelectedSessionList  {
-    private  String session_title,time,bolen;
+    private  String session_title,time,bolen,count;
     public SelectedSessionList() {
 
     }
 
     public void setSession_title(String session_title) {
         this.session_title = session_title;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
     }
 
     public void setTime(String time) {
@@ -28,5 +32,9 @@ public class SelectedSessionList  {
 
     public String getTime() {
         return time;
+    }
+
+    public String getCount() {
+        return count;
     }
 }

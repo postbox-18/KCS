@@ -76,12 +76,16 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
         for(int i=0;i<aList.size();i++)
         {
             SelectedSessionList sessionList = new SelectedSessionList();
+
             String[] be = (aList.get(i)).split("_");
             String bolen=be[1];
-            String[] se=(be[0]).split("!");
+            String[] scb = (be[0]).split("-");
+            String count=scb[1];
+            String[] se=(scb[0]).split("!");
             String sess=se[0];
             String time=se[1];
             sessionList.setSession_title(sess);
+            sessionList.setCount(count);
             sessionList.setTime(time);
             sessionList.setBolen(bolen);
             o_selectedSessionLists.add(sessionList);

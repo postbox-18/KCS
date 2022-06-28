@@ -76,14 +76,18 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
         o_selectedSessionLists=new ArrayList<>();
         for(int i=0;i<aList1.size();i++) {
             SelectedSessionList sessionList = new SelectedSessionList();
+
             String[] be = (aList1.get(i)).split("_");
             String bolen=be[1];
-            String[] se=(be[0]).split("!");
+            String[] scb = (be[0]).split("-");
+            String count=scb[1];
+            String[] se=(scb[0]).split("!");
             String sess=se[0];
             String time=se[1];
             sessionList.setSession_title(sess);
             sessionList.setTime(time);
             sessionList.setBolen(bolen);
+            sessionList.setCount(count);
             o_selectedSessionLists.add(sessionList);
 
         }

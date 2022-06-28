@@ -69,8 +69,10 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     public void onBindViewHolder(@NonNull ViewCartAdapterSession.ViewHolder holder, int position) {
         final SelectedSessionList list = o_selectedSessionLists.get(position);
         holder.session_title.setText(list.getSession_title());
+        holder.count.setText(list.getCount());
+        holder.time.setText(list.getTime());
 
-        String s = list.getSession_title() + "!" + list.getTime() + "_" + list.getBolen();
+        String s = list.getSession_title() + "!" + list.getTime()+"-"+list.getCount() + "_" + list.getBolen();
         MyLog.e(TAG,"bottom>>sess>"+s);
 
         orderHeaderMap = new LinkedHashMap<>(orderSessionMap).get(s);
@@ -104,7 +106,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView session_title;
+        private TextView session_title,count,time;
         private RecyclerView recyclerview_order_item_details;
 
 
@@ -112,6 +114,8 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             super(view);
             recyclerview_order_item_details = view.findViewById(R.id.recyclerview_order_item_details);
             session_title = view.findViewById(R.id.session_title);
+            count = view.findViewById(R.id.count);
+            time = view.findViewById(R.id.time);
 
         }
     }

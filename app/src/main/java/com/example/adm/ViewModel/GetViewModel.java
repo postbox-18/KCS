@@ -462,7 +462,9 @@ public class GetViewModel extends AndroidViewModel {
                             orderSessionMap = new LinkedHashMap<>();
                             for (DataSnapshot ondata : dataTime.getChildren()) {
                                 String ss = ondata.getKey().toString();
-                                String[] str = ss.split("_");
+                                String[] scb = ss.split("-");
+                                String count=scb[1];
+                                String[] str = (scb[0]).split("_");
                                 session_title = str[0];
                                 MyLog.e(TAG, "MyOrdersAdapter>>session_title>>" + ondata.getKey().toString());
                                 //o_myOrdersList = new ArrayList<>();
