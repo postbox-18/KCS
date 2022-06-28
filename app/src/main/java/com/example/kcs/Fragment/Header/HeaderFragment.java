@@ -73,8 +73,8 @@ public class HeaderFragment extends Fragment {
 
     //date and time
     private TextView date_picker_actions;
-    private TextView time_picker;
-    private String funcTitle, s_time_picker, s_date_picker_actions, e_session_title, date_time;
+    private TextView time_picker,count;
+    private String funcTitle, s_time_picker, s_date_picker_actions, e_session_title, date_time,s_count;
     private DatePickerDialog datePicker;
     private List<TimeList> timeLists = new ArrayList<>();
 
@@ -139,6 +139,7 @@ public class HeaderFragment extends Fragment {
         recyclerview_header = view.findViewById(R.id.recyclerview_header);
         session_title = view.findViewById(R.id.session_title);
         back_btn = view.findViewById(R.id.back_btn);
+        count = view.findViewById(R.id.count);
 
 
         // initialising the calendar
@@ -197,8 +198,9 @@ public class HeaderFragment extends Fragment {
         getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map = stringLinkedHashMapLinkedHashMap;
+                editFunc_Map = new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
                 editDateMap = editFunc_Map.get(funcTitle);
+                MyLog.e(TAG,"order>>funcTitle>>"+funcTitle);
                 if (editDateMap == null) {
                     editDateMap = new LinkedHashMap<>();
                     MyLog.e(TAG, "edit date map is null");
@@ -214,7 +216,13 @@ public class HeaderFragment extends Fragment {
                 List<String> aList = new ArrayList<String>(stringSet.size());
                 for (String x : stringSet)
                     aList.add(x);
-                String[] str = (aList.get(0)).split("!");
+                MyLog.e(TAG,"order>>date>>"+aList.get(0));
+                String[] scb = (aList.get(0)).split("/");
+                s_count=scb[1];
+                count.setText(s_count);
+                getViewModel.setS_count(s_count);
+
+                String[] str = (scb[0]).split("!");
                 e_session_title = str[0];
                 String time = str[1];
 

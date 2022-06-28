@@ -68,7 +68,7 @@ public class PlaceOrderFragment extends Fragment {
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
-    private String func_title, header_title, user_name, session_title,date_time,date;
+    private String func_title, header_title, user_name, session_title,date_time,date,s_count;
     private TextView func_title_view;
     private String TAG = "PlaceOrderFragment";
     //firebase database retrieve
@@ -172,6 +172,12 @@ public class PlaceOrderFragment extends Fragment {
                 session_title = s;
             }
         });
+        getViewModel.getS_countLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                s_count=s;
+            }
+        });
 
         //get edit func map
         getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
@@ -182,6 +188,8 @@ public class PlaceOrderFragment extends Fragment {
                         editDateMap=editFunc_Map.get(func_title);
                         MyLog.e(TAG,"orders>>date>>"+date);
                         date=date.replace("/","-");
+
+
                         if (editDateMap == null) {
                             editDateMap = new LinkedHashMap<>();
                             MyLog.e(TAG, "edit date map is null");
@@ -208,6 +216,7 @@ public class PlaceOrderFragment extends Fragment {
                                 SelectedSessionList list = new SelectedSessionList();
                                 list.setBolen(null);
                                 list.setSession_title(arr[0]);
+                                list.setS_count(s_count);
                                 list.setTime(date + " " + arr[1]);
                                 selectedSessionLists.add(list);
                             }

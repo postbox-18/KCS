@@ -328,13 +328,14 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 dialog.cancel();
                 bottomSheet.dismiss();
                 getViewModel.setEcd(n);
+
                 //set value for Edit Cancel Delete
                 MyLog.e(TAG,"cancel>>value sess "+n);
                 if(n==0) {
                     getViewModel.setI_value(1);
                     e_selectedHeaders = new ArrayList<>();
                     getViewModel.setE_selectedHeaders(e_selectedHeaders);
-                    getViewModel.getSelecteds_map(date,ses,dTime,b);
+                    getViewModel.getSelecteds_map(date,ses,dTime,b,count);
                 }
                 else if(n==1)
                 {

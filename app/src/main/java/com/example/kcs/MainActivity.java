@@ -446,10 +446,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     breadCrums.setVisibility(View.VISIBLE);
                 }
-                if (integer == 1) {
+                /*if (integer == 1) {
                     editFunc_Map.clear();
                     getViewModel.setEditFuncMap(editFunc_Map);
-                }
+                }*/
 
 
                 MyLog.e(TAG, "integer>>" + integer);

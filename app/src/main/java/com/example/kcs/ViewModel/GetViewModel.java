@@ -256,7 +256,9 @@ public class GetViewModel extends AndroidViewModel {
     //session map
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderSessionMapMutableLiveData = new MutableLiveData<>();
-
+    //head count
+    private String s_count;
+    private MutableLiveData<String> s_countLiveData=new MutableLiveData<>();
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -265,6 +267,15 @@ public class GetViewModel extends AndroidViewModel {
         CheckUserDetails();
 
 
+    }
+
+    public MutableLiveData<String> getS_countLiveData() {
+        return s_countLiveData;
+    }
+
+    public void setS_count(String s_count) {
+        this.s_count = s_count;
+        this.s_countLiveData.postValue(s_count);
     }
 
     public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map) {
@@ -357,6 +368,7 @@ public class GetViewModel extends AndroidViewModel {
     public void setEditFuncMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editMap) {
         this.editFunc_Map = editMap;
         this.editFunc_MapMutableLiveData.postValue(editMap);
+
     }
 
 
@@ -1182,7 +1194,8 @@ public class GetViewModel extends AndroidViewModel {
         sessionList.setTime(li[1]);
         sessionList.setS_count(s_count);
         e_sessionLists.add(sessionList);
-        editSessionMap.put(session_title, editHeaderMap);
+        String s=session_title+"/"+s_count;
+        editSessionMap.put(s, editHeaderMap);
         //set
         editSessionMapMutableLiveData.postValue(editSessionMap);
 
@@ -1192,16 +1205,17 @@ public class GetViewModel extends AndroidViewModel {
         editFunc_Map.put(func_title, editDateMap);
         //set
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
-        MyLog.e(TAG,"eduit>>funcMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
+
 
     }
 
     //date,ses,dTime,b
-    public void getSelecteds_map(String date, String ses, String dTime, String b) {
-        //get header map
-        String sd = ses + "!" + dTime;
-        editHeaderMap = new LinkedHashMap<>(editSessionMap).get(sd);
+    public void getSelecteds_map(String date, String ses, String dTime, String b, String count) {
 
+        //get header map
+        String sd = ses + "!" + dTime+"/"+count;
+
+        editHeaderMap = new LinkedHashMap<>(editSessionMap).get(sd);
 
         //set session title live
         session_titleMutable.postValue(ses);
@@ -1210,6 +1224,8 @@ public class GetViewModel extends AndroidViewModel {
         date_pickerMutable.postValue(date);
         //set time picker
         time_pickerMutable.postValue(dTime);
+        //set head count
+        s_countLiveData.postValue(count);
 
 
         //get header list
