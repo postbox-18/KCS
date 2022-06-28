@@ -49,7 +49,7 @@ public class ItemFragment extends Fragment {
     private TextView header_title;
     private ImageView back_btn;
 
-    private String headerList_title, func_title,session_title;
+    private String headerList_title, func_title, session_title;
     private RecyclerView recyclerview_item;
 
 
@@ -59,19 +59,18 @@ public class ItemFragment extends Fragment {
     private ItemListAdapater itemListAdapater;
     //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
-    private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps=new ArrayList<>();
+    private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps = new ArrayList<>();
     //private  LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
-    private   List<SelectedHeader> selectedHeadersList = new ArrayList<>();
-    private   List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
-    private  LinkedHashMap<String, List<CheckedList>> headerMap=new LinkedHashMap<>();
-    private  LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap=new LinkedHashMap<>();
-    private  LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap=new LinkedHashMap<>();
+    private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
+    private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
+    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
 
     private String date_time;
 
 
     private String TAG = "ItemFragment";
-
 
 
     public ItemFragment() {
@@ -116,7 +115,7 @@ public class ItemFragment extends Fragment {
         getViewModel.getCheck_s_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<CheckedList>>>>() {
             @Override
             public void onChanged(List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps1) {
-                linkedHashMaps=linkedHashMaps1;
+                linkedHashMaps = new ArrayList<>(linkedHashMaps1);
 
             }
         });
@@ -143,7 +142,7 @@ public class ItemFragment extends Fragment {
         getViewModel.getSession_titleMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                session_title=s;
+                session_title = s;
             }
         });
 
@@ -164,7 +163,7 @@ public class ItemFragment extends Fragment {
                 sessionMap = funcMap.get(func_title);
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    if(session_title.equals(selectedSessionLists.get(k).getSession_title())) {
+                    if (session_title.equals(selectedSessionLists.get(k).getSession_title())) {
                         date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime());
                         MyLog.e(TAG, "placeorders>>get date_time>>" + date_time);
                         if (sessionMap == null) {
@@ -175,12 +174,9 @@ public class ItemFragment extends Fragment {
                             headerMap = sessionMap.get(date_time);
                         }
                         break;
-                    }
-                    else
-                    {
+                    } else {
                         continue;
                     }
-
 
 
                 }
@@ -198,21 +194,33 @@ public class ItemFragment extends Fragment {
             }
         });
 
+        //get header map
+        getViewModel.getHeaderMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
+                headerMap=new LinkedHashMap<>(stringListLinkedHashMap);
+            }
+        });
         //item lsit
         getViewModel.getItemHeaderMutable().observe(getViewLifecycleOwner(), new Observer<List<ItemList>>() {
             @Override
             public void onChanged(List<ItemList> itemLists1) {
-                MyLog.e(TAG, "placeorders>> ItemListAdapater" );
+                MyLog.e(TAG, "placeorders>> ItemListAdapater");
                 itemLists = itemLists1;
                 recyclerview_item.setHasFixedSize(true);
                 recyclerview_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                itemListAdapater = new ItemListAdapater(getContext(), itemLists, headerList_title, getViewModel,linkedHashMaps,headerMap);
-                recyclerview_item.setAdapter(itemListAdapater);
+                if (headerMap == null) {
+
+                    itemListAdapater = new ItemListAdapater(getContext(), itemLists, headerList_title, getViewModel, linkedHashMaps, null);
+                    recyclerview_item.setAdapter(itemListAdapater);
+                } else {
+                    itemListAdapater = new ItemListAdapater(getContext(), itemLists, headerList_title, getViewModel, linkedHashMaps, headerMap);
+                    recyclerview_item.setAdapter(itemListAdapater);
+                }
+
                 itemListAdapater.notifyDataSetChanged();
             }
         });
-
-
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {

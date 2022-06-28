@@ -206,8 +206,7 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getSelectedSessionListsMutableLiveData().observe(this, new Observer<List<SelectedSessionList>>() {
             @Override
             public void onChanged(List<SelectedSessionList> selectedSessionLists1) {
-                selectedSessionLists = selectedSessionLists1;
-
+                selectedSessionLists = new ArrayList<>(selectedSessionLists1);
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
                     if (session_title == null) {
@@ -216,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                         editDateMap = editFunc_Map.get(func_title);
                         editSessionMap = editDateMap.get(date);
                         MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
-                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime());
+                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime())+"/"+(selectedSessionLists.get(k).getS_count());
                         editHeaderMap = editSessionMap.get(date_time);
 
                         Set<String> stringSet = editHeaderMap.keySet();
@@ -225,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                             aList.add(x);
 
                         //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                        userItemLists.clear();
+                        userItemLists=new ArrayList<>();
                         for (int i = 0; i < aList.size(); i++) {
                             MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
                             MyLog.e(TAG, "chs>>list size " + editHeaderMap.get(aList.get(i)).size());
@@ -263,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                                 aList.add(x);
 
                             //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                            userItemLists.clear();
+                            userItemLists=new ArrayList<>();
                             for (int i = 0; i < aList.size(); i++) {
                                 MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
                                 MyLog.e(TAG, "chs>>list size " + headerMap.get(aList.get(i)).size());

@@ -56,7 +56,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         this.itemLists = itemLists;
         this.getViewModel = getViewModel;
         this.header = header;
-        this.selected_s_map = linkedHashMaps;
+        this.selected_s_map = new ArrayList<>(linkedHashMaps);
         this.headerMap = headerMap;
         //cartViewModel = ViewModelProviders.of((FragmentActivity) context).get(CartViewModel.class);
         //myViewModel= new ViewModelProvider((FragmentActivity)context).get(MyViewModel.class);
@@ -77,7 +77,10 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         if(headerMap==null)
         {
             headerMap=new LinkedHashMap<>();
+            MyLog.e(TAG,"headerMap is null");
         }
+        MyLog.e(TAG, "count>>headerMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+
         final ItemList itemList1 = itemLists.get(position);
 
         //img update soon

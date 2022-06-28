@@ -142,6 +142,7 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                             sessionDateTimes = new ArrayList<>();
                             getViewModel.setSessionDateTimes(sessionDateTimes);
                             getViewModel.setTimepicker("");
+                            getViewModel.setS_count("");
                             getViewModel.setDate_picker("");
 
 
@@ -160,8 +161,6 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
                             getViewModel.setCheck_s_map(selected_s_map);
 
                         }
-
-
                     }
                 });
             }

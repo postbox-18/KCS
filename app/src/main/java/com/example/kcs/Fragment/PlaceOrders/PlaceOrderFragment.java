@@ -366,7 +366,7 @@ public class PlaceOrderFragment extends Fragment {
 
         String s = sess + "!" + time + "-" + count + "_true";
         MyLog.e(TAG, "placeorders>>ses  time>>" + s);
-        databaseReference.child(func_title).child(date).child(s).removeValue();
+        databaseReference.child(func_title).child(date).child(s).child(headerList_title).removeValue();
         MyLog.e(TAG, "cancel remove commit");
 
 
