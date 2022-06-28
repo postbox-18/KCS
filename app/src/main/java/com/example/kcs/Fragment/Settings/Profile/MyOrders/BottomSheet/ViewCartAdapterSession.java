@@ -299,24 +299,24 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     }
     private void alertDialog(String session_title, int n, String bolen) {
 
-        String[] str=session_title.split("_");
-        String b=str[1];
-        String[] s=(str[0]).split("!");
-        String ses=s[0];
-        String dTime=s[1];
+        String[] scb=session_title.split("-");
+        String[] cb=(scb[1]).split("_");
+        String[] st=(scb[0]).split("!");
+        String count=cb[0];
+        String b=cb[1];
+        String ses=st[0];
+        String dTime=st[1];
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setMessage("You want to Edit the "+ses+" Session at "+dTime+" and Head Count is "+count+" Your order is "+b);
         if(n==0) {
-            alert.setMessage("You want to Edit the "+ses+" Session at "+dTime+" is "+b);
             alert.setTitle("Edit");
         }
 
         else if(n==1) {
-            alert.setMessage("You want to Cancel the  "+ses+" Session at "+dTime+" is "+b);
             alert.setTitle("Cancel");
         }
 
         else if(n==2) {
-            alert.setMessage("You want to Delete the  "+ses+" Session at "+dTime+" is "+b);
             alert.setTitle("Delete");
         }
         alert.setCancelable(false);
