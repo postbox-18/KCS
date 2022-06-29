@@ -1,0 +1,277 @@
+{
+  "Admin": {
+    "8971383568": {
+      "email": "post18@gmail.com",
+      "phone_number": "8971383568",
+      "username": "post18"
+    }
+  },
+  "Items": {
+    "Main": {
+      "Category": [
+        "Non-Veg",
+        "Veg",
+        "Dessert"
+      ],
+      "Function": {
+        "1": "Wedding",
+        "2": "Birthday Party",
+        "3": "Temple Function",
+        "7": "Others",
+        "4:": "House Warming",
+        "5:": "Corporate Events",
+        "6:": "Outdoor Catering"
+      },
+      "Img": {
+        "Function": {
+          "Birthday Party": "https://firebasestorage.googleapis.com/v0/b/speedy-actor-294117.appspot.com/o/birthday.png?alt=media&token=a3eacd7d-8ef8-4fb6-bdf7-c33fd4c07451",
+          "Corporate Events": "https://firebasestorage.googleapis.com/v0/b/speedy-actor-294117.appspot.com/o/corp.png?alt=media&token=5951cec1-39c0-484e-ad72-249c616fe493",
+          "House Warming": "https://firebasestorage.googleapis.com/v0/b/speedy-actor-294117.appspot.com/o/house.png?alt=media&token=90d47864-404a-4518-97e7-e98f8f7daf32",
+          "Wedding": "https://firebasestorage.googleapis.com/v0/b/speedy-actor-294117.appspot.com/o/wedding.png?alt=media&token=1b10dcd9-7577-4135-9d47-24459282849b"
+        }
+      },
+      "List": {
+        "Dessert": [
+          "Ice Creams",
+          "Milk Shakes",
+          "Juice",
+          "Cakes",
+          "Chocolates"
+        ],
+        "Non-Veg": [
+          "Mutton",
+          "Chicken",
+          "Fish",
+          "Prawns",
+          "Crab"
+        ],
+        "Veg": [
+          "Meals",
+          "Varitey Rices",
+          "Tiffun Items",
+          "Biryani",
+          "Gravy Recipies"
+        ]
+      },
+      "Session": [
+        "Breakfast",
+        "Lunch",
+        "Dinner"
+      ],
+      "SessionTime": {
+        "Breakfast": "06:00 AM-11:00 AM",
+        "Dinner": "05:00 PM-10:00 PM",
+        "Lunch": "12:00 PM-04:00 PM"
+      }
+    },
+    "Selected&UnSelected": {
+      "Category": [
+        "Non-Veg",
+        "Veg",
+        "Dessert"
+      ],
+      "Function": {
+        "1": "Wedding",
+        "2": "Birthday Party",
+        "3": "Temple Function",
+        "7": "Others",
+        "4:": "House Warming",
+        "5:": "Corporate Events",
+        "6:": "Outdoor Catering"
+      },
+      "Img": {
+        "Function": {
+          "Birthday Party": "https://firebasestorage.googleapis.com/v0/b/speedy-actor-294117.appspot.com/o/birthday.png?alt=media&token=a3eacd7d-8ef8-4fb6-bdf7-c33fd4c07451",
+          "Corporate Events": "https://firebasestorage.googleapis.com/v0/b/speedy-actor-294117.appspot.com/o/corp.png?alt=media&token=5951cec1-39c0-484e-ad72-249c616fe493",
+          "House Warming": "https://firebasestorage.googleapis.com/v0/b/speedy-actor-294117.appspot.com/o/house.png?alt=media&token=90d47864-404a-4518-97e7-e98f8f7daf32",
+          "Wedding": "https://firebasestorage.googleapis.com/v0/b/speedy-actor-294117.appspot.com/o/wedding.png?alt=media&token=1b10dcd9-7577-4135-9d47-24459282849b"
+        }
+      },
+      "List": {
+        "Dessert": {
+          "Cakes": "true",
+          "Chocolates": "true",
+          "Ice Creams": "true",
+          "Juice": "false",
+          "Milk Shakes": "false",
+          "Sweets ": "true"
+        },
+        "Non-Veg": {
+          "Chicken": "false",
+          "Crab": "true",
+          "Fish": "false",
+          "Mutton": "true",
+          "Prawns": "true"
+        },
+        "Veg": {
+          "Biryani": "false",
+          "Gravy Recipies": "true",
+          "Meals": "true",
+          "Mushroom ": "true",
+          "Tiffun Items": "false",
+          "Varitey Rices": "true"
+        }
+      },
+      "Session": [
+        "Breakfast",
+        "Lunch",
+        "Dinner"
+      ],
+      "SessionTime": {
+        "Breakfast": "06:00 AM-11:00 AM",
+        "Dinner": "05:00 PM-10:00 PM",
+        "Lunch": "12:00 PM-04:00 PM"
+      }
+    }
+  },
+  "Orders": {
+    "aravinth": {
+      "Birthday Party": {
+        "28-6-2022": {
+          "Lunch!03:51 PM-528_true": {
+            "Non-Veg": [
+              "Crab",
+              "Prawns"
+            ]
+          }
+        }
+      },
+      "Corporate Events": {
+        "13-6-2022": {
+          "Dinner!06:01 PM-500_true": {
+            "Veg": [
+              "Gravy Recipies",
+              "Mushroom ",
+              "Varitey Rices"
+            ]
+          }
+        },
+        "15-6-2022": {
+          "Breakfast!08:47 AM-250_true": {
+            "Dessert": [
+              "Cakes",
+              "Chocolates"
+            ]
+          },
+          "Lunch!12:56 PM-300_false": {
+            "Non-Veg": [
+              "Crab"
+            ]
+          }
+        }
+      },
+      "Others": {
+        "13-6-2022": {
+          "Lunch!03:35 PM-150_true": {
+            "Veg": [
+              "Gravy Recipies",
+              null,
+              "Varitey Rices",
+              "Mushroom "
+            ]
+          }
+        }
+      },
+      "Temple Function": {
+        "13-6-2022": {
+          "Dinner!06:01 PM-450_true": {
+            "Veg": [
+              "Gravy Recipies",
+              "Mushroom ",
+              "Varitey Rices"
+            ]
+          }
+        },
+        "20-6-2022": {
+          "Breakfast!10:15 AM-750_true": {
+            "Non-Veg": [
+              "Crab",
+              "Mutton",
+              "Prawns"
+            ]
+          }
+        }
+      },
+      "Wedding": {
+        "13-6-2022": {
+          "Breakfast!09:55 AM-850_true": {
+            "Dessert": [
+              "Chocolates"
+            ],
+            "Non-Veg": [
+              "Crab"
+            ]
+          },
+          "Lunch!12:56 PM-500_false": {
+            "Non-Veg": [
+              "Crab"
+            ],
+            "Veg": [
+              "Meals"
+            ]
+          }
+        },
+        "26-6-2022": {
+          "Breakfast!07:19 AM-600_true": {
+            "Veg": [
+              "Gravy Recipies",
+              "Meals",
+              "Mushroom "
+            ]
+          }
+        },
+        "8-6-2022": {
+          "Lunch!03:15 PM-950_true": {
+            "Veg": [
+              "Varitey Rices"
+            ]
+          }
+        }
+      }
+    },
+    "email": {
+      "Birthday Party": {
+        "20-6-2022": {
+          "Breakfast!10:15 AM-520_true": {
+            "Non-Veg": [
+              "Crab",
+              "Mutton",
+              "Prawns"
+            ]
+          }
+        }
+      },
+      "Temple Function": {
+        "28-6-2022": {
+          "Lunch!03:24 PM-660_true": {
+            "Dessert": [
+              "Cakes"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Users-Id": {
+    "8973396270": {
+      "email": "postboxat18@gmail.com",
+      "phone_number": "8973396270",
+      "username": "aravinthc"
+    },
+    "8976328460": {
+      "email": "aravinth@gmail.com",
+      "phone_number": "8976328460",
+      "username": "aravinth"
+    },
+    "9852571866": {
+      "email": "email@gmail.com",
+      "phone_number": "9852571866",
+      "username": "email"
+    },
+    "9976725450": {
+      "email": "aravinthc18@gmail.com",
+      "phone_number": "9976725450",
+      "username": "aravinthc "
+    }
+  }
+}

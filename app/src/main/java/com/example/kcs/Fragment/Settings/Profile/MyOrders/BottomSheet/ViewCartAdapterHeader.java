@@ -29,7 +29,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private List<OrderItemLists> o_orderItemListss = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapterHeader";
-    private String session_title, func_title, bolen, sess,date;
+    private String session_title, func_title, sess,date,bolen;
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> header = new ArrayList<>();
@@ -38,11 +38,10 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     //header map
     private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
 
-    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title, String bolen, LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap,String date) {
+    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title, LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap,String date) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.header = selectedHeadersList;
-        this.bolen = bolen;
         this.sess = session_title;
         this.func_title = func_title;
         this.date = date;
@@ -66,6 +65,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         holder.header.setText(list.getHeader());
         String[] str = sess.split("_");
         session_title = str[0];
+        bolen=str[1];
         if (bolen.equals("true")) {
             holder.header_layout.setBackgroundColor(context.getResources().getColor(R.color.btn_gradient_light));
         } else if (bolen.equals("false")) {
@@ -88,7 +88,8 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
         holder.recyclerview_item_list.setHasFixedSize(true);
         holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        viewCartAdapter = new ViewCartAdapter(context, getViewModel, o_orderItemListss, func_title, session_title, list.getHeader(), bolen,date);
+        MyLog.e(TAG, "s_count>>sess>>" + sess);
+        viewCartAdapter = new ViewCartAdapter(context, getViewModel, o_orderItemListss, func_title, list.getHeader(), sess,date);
         holder.recyclerview_item_list.setAdapter(viewCartAdapter);
 
 

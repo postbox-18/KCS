@@ -29,6 +29,7 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapterSession.ViewHolder> {
@@ -215,17 +216,21 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         }*/
 
             final SelectedSessionList list = o_selectedSessionLists.get(position);
-            //set session date time bolen
-            String sess_date=list.getSession_title()+"!"+list.getTime()+"_"+list.getBolen();
+
+        //set session date time bolen
+            String sess_date=list.getSession_title()+"!"+list.getTime()+"-"+list.getS_count()+"_"+list.getBolen();
             MyLog.e(TAG,"cancel>> session>>"+list.getSession_title());
         if((list.getBolen()).equals("true")) {
             holder.session_title.setText(list.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
             holder.date_time.setText(list.getTime());
             holder.date_time.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+            holder.count.setText(list.getS_count());
+            holder.count.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
             //img
             holder.edit.setImageResource(R.drawable.ic_knife_01);
             holder.edit.setVisibility(View.VISIBLE);
+
             holder.cancel.setImageResource(R.drawable.ic_calendar_x_fill);
             holder.delete.setImageResource(R.drawable.ic_trash3_fill);
         }
@@ -234,11 +239,14 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             holder.session_title.setTextColor(context.getResources().getColor(R.color.text_silver));
             holder.date_time.setText(list.getTime());
             holder.date_time.setTextColor(context.getResources().getColor(R.color.text_silver));
+            holder.count.setText(list.getS_count());
+            holder.count.setTextColor(context.getResources().getColor(R.color.text_silver));
             //img
             holder.edit.setVisibility(View.GONE);
             holder.cancel.setImageResource(R.drawable.ic_calendar_x_fill_cancel);
             holder.delete.setImageResource(R.drawable.ic_trash3_fill_cancel);
         }
+
 
             //get selected header to viewHeaderAdapter
             orderHeaderMap=orderSessionMap.get(sess_date);
@@ -260,8 +268,8 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             }
             holder.recyclerview_order_item_details.setHasFixedSize(true);
             holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-
-            ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_date, func_title, list.getBolen(), orderHeaderMap,date);
+            MyLog.e(TAG, "s_count>>sess>>" + sess_date);
+            ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_date, func_title, orderHeaderMap,date);
             holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
 
 
@@ -292,24 +300,24 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     }
     private void alertDialog(String session_title, int n, String bolen) {
 
-        String[] str=session_title.split("_");
-        String b=str[1];
-        String[] s=(str[0]).split("!");
-        String ses=s[0];
-        String dTime=s[1];
+        String[] scb=session_title.split("-");
+        String[] cb=(scb[1]).split("_");
+        String[] st=(scb[0]).split("!");
+        String count=cb[0];
+        String b=(cb[1]).toUpperCase(Locale.ROOT);
+        String ses=st[0];
+        String dTime=st[1];
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setMessage("You want to Edit the "+ses+" Session at "+dTime+" and Head Count is "+count+" Your order is "+b);
         if(n==0) {
-            alert.setMessage("You want to Edit the "+ses+" Session at "+dTime+" is "+b);
             alert.setTitle("Edit");
         }
 
         else if(n==1) {
-            alert.setMessage("You want to Cancel the  "+ses+" Session at "+dTime+" is "+b);
             alert.setTitle("Cancel");
         }
 
         else if(n==2) {
-            alert.setMessage("You want to Delete the  "+ses+" Session at "+dTime+" is "+b);
             alert.setTitle("Delete");
         }
         alert.setCancelable(false);
@@ -320,13 +328,14 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 dialog.cancel();
                 bottomSheet.dismiss();
                 getViewModel.setEcd(n);
+
                 //set value for Edit Cancel Delete
                 MyLog.e(TAG,"cancel>>value sess "+n);
                 if(n==0) {
                     getViewModel.setI_value(1);
                     e_selectedHeaders = new ArrayList<>();
                     getViewModel.setE_selectedHeaders(e_selectedHeaders);
-                    getViewModel.getSelecteds_map(date,ses,dTime,b);
+                    getViewModel.getSelecteds_map(date,ses,dTime,b,count);
                 }
                 else if(n==1)
                 {
@@ -367,7 +376,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView session_title,date_time;
+        private TextView session_title,date_time,count;
         private RecyclerView recyclerview_order_item_details;
         private ImageView edit,cancel,delete;
 
@@ -380,6 +389,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             edit = view.findViewById(R.id.edit);
             cancel = view.findViewById(R.id.cancel);
             delete = view.findViewById(R.id.delete);
+            count = view.findViewById(R.id.count);
 
 
         }

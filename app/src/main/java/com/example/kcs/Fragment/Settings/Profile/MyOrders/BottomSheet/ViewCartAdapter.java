@@ -30,18 +30,17 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
     private List<OrderItemLists> orderItemListss = new ArrayList<>();
     private String TAG = "ViewCartAdapter";
     private GetViewModel getViewModel;
-    private String func_title, session_title, header,username,bolen,date;
+    private String func_title, header,username,date,sess;
     private int n;
 
 
-    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<OrderItemLists> orderItemListss, String func_title, String session_title, String header, String bolen,String date) {
+    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<OrderItemLists> orderItemListss, String func_title, String header, String sess,String date) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.orderItemListss = orderItemListss;
         this.func_title = func_title;
         this.header = header;
-        this.session_title = session_title;
-        this.bolen = bolen;
+        this.sess = sess;
         this.date = date;
     }
 
@@ -60,6 +59,7 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
         final OrderItemLists orderItemLists1 = orderItemListss.get(position);
         holder.list.setText(orderItemLists1.getItemList());
 
+
         //get username
         username=new SharedPreferences_data(context).getS_user_name();
 
@@ -70,8 +70,10 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
                 n=integer;
             }
         });
+        MyLog.e(TAG, "s_count>>sess>>" + sess);
+
         //set edit hash map
-        getViewModel.EditMap(func_title, session_title, header, orderItemLists1.getItemList(), position,n,username,bolen,date);
+        getViewModel.EditMap(func_title, header, orderItemLists1.getItemList(), position,n,username,sess,date);
 
     }
 

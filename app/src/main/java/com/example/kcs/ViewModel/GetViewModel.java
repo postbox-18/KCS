@@ -256,7 +256,9 @@ public class GetViewModel extends AndroidViewModel {
     //session map
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderSessionMapMutableLiveData = new MutableLiveData<>();
-
+    //head count
+    private String s_count;
+    private MutableLiveData<String> s_countLiveData=new MutableLiveData<>();
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -265,6 +267,15 @@ public class GetViewModel extends AndroidViewModel {
         CheckUserDetails();
 
 
+    }
+
+    public MutableLiveData<String> getS_countLiveData() {
+        return s_countLiveData;
+    }
+
+    public void setS_count(String s_count) {
+        this.s_count = s_count;
+        this.s_countLiveData.postValue(s_count);
     }
 
     public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map) {
@@ -357,6 +368,7 @@ public class GetViewModel extends AndroidViewModel {
     public void setEditFuncMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editMap) {
         this.editFunc_Map = editMap;
         this.editFunc_MapMutableLiveData.postValue(editMap);
+
     }
 
 
@@ -608,8 +620,9 @@ public class GetViewModel extends AndroidViewModel {
                         orderSessionMap = new LinkedHashMap<>();
                         for (DataSnapshot ondata : dataTime.getChildren()) {
                             String ss = ondata.getKey().toString();
-                            String[] str = ss.split("_");
-                            session_title = str[0];
+                            String[] cs = ss.split("-");
+                            String[] str = cs[1].split("_");
+                            session_title = cs[0];
                             MyLog.e(TAG, "MyOrdersAdapter>>session_title>>" + ondata.getKey().toString());
                             //o_myOrdersList = new ArrayList<>();
                             //o_selectedHeadersList = new ArrayList<>();
@@ -1150,9 +1163,16 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void EditMap(String func_title, String session_title, String header, String item, int position, int n, String username, String bolen, String date) {
+    public void EditMap(String func_title,  String header, String item, int position, int n, String username, String sess, String date) {
         MyLog.e(TAG, "cancel>>value " + n);
+        MyLog.e(TAG, "s_count>>sess>>" + sess);
+        String[] scb=sess.split("-");
+        String[] cb=(scb[1]).split("_");
+        String session_title=scb[0];
+        String s_count=cb[0];
 
+        MyLog.e(TAG, "s_count>>title>>" + session_title);
+        MyLog.e(TAG, "s_count>>count>>" + s_count);
         /////////*****Edit **********//////////////////
         //set header map
         SelectedHeader selectedHeader = new SelectedHeader(
@@ -1172,8 +1192,10 @@ public class GetViewModel extends AndroidViewModel {
         sessionList.setSession_title(li[0]);
         sessionList.setBolen(null);
         sessionList.setTime(li[1]);
+        sessionList.setS_count(s_count);
         e_sessionLists.add(sessionList);
-        editSessionMap.put(session_title, editHeaderMap);
+        String s=session_title+"/"+s_count;
+        editSessionMap.put(s, editHeaderMap);
         //set
         editSessionMapMutableLiveData.postValue(editSessionMap);
 
@@ -1188,11 +1210,12 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     //date,ses,dTime,b
-    public void getSelecteds_map(String date, String ses, String dTime, String b) {
-        //get header map
-        String sd = ses + "!" + dTime;
-        editHeaderMap = new LinkedHashMap<>(editSessionMap).get(sd);
+    public void getSelecteds_map(String date, String ses, String dTime, String b, String count) {
 
+        //get header map
+        String sd = ses + "!" + dTime+"/"+count;
+
+        editHeaderMap = new LinkedHashMap<>(editSessionMap).get(sd);
 
         //set session title live
         session_titleMutable.postValue(ses);
@@ -1201,6 +1224,8 @@ public class GetViewModel extends AndroidViewModel {
         date_pickerMutable.postValue(date);
         //set time picker
         time_pickerMutable.postValue(dTime);
+        //set head count
+        s_countLiveData.postValue(count);
 
 
         //get header list
@@ -1281,12 +1306,17 @@ public class GetViewModel extends AndroidViewModel {
 
     public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Maps, String date) {
         MyLog.e(TAG, "cancel ");
+        MyLog.e(TAG, "cancel "+session_title);
         String[] str = session_title.split("_");
-        String sess = str[0];
+        String[] scb = (str[0]).split("-");
+        String count=scb[1];
+        String sess = scb[0];
         String old = str[1];
+        String s=sess+"/"+count;
+
         editDateMap = editFunc_Maps.get(func_title);
         editSessionMap = editDateMap.get(date);
-        editHeaderMap = editSessionMap.get(sess);
+        editHeaderMap = editSessionMap.get(s);
         if (editHeaderMap == null) {
             editHeaderMap = new LinkedHashMap<>();
             MyLog.e(TAG, "Cancel>>sess_date editheaderMap is null");
@@ -1313,6 +1343,7 @@ public class GetViewModel extends AndroidViewModel {
             databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
             MyLog.e(TAG, "cancel>>sess value  " + session_title);
             MyLog.e(TAG, "cancel>>date value  " + date);
+
             //remove data
             databaseReference.child(func_title).child(date).child(session_title).removeValue();
             MyLog.e(TAG, "cancel remove commit");
@@ -1324,10 +1355,11 @@ public class GetViewModel extends AndroidViewModel {
                 old = "true";
             }
             if (n == 1) {
+
                 //add new data
                 firebaseDatabase = FirebaseDatabase.getInstance();
                 databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-                String newData = sess + "_" + old;
+                String newData =sess+"-"+count+ "_" + old;
                 MyLog.e(TAG, "cancel>> value  " + newData);
                 MyLog.e(TAG, "cancel add commit");
                 //set replace bolen
@@ -1343,5 +1375,7 @@ public class GetViewModel extends AndroidViewModel {
         }
 
     }
+
+
 }
 

@@ -68,7 +68,7 @@ public class PlaceOrderFragment extends Fragment {
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
-    private String func_title, header_title, user_name, session_title,date_time,date;
+    private String func_title, header_title, user_name, session_title, date_time, date, s_count;
     private TextView func_title_view;
     private String TAG = "PlaceOrderFragment";
     //firebase database retrieve
@@ -88,14 +88,14 @@ public class PlaceOrderFragment extends Fragment {
     //get date and time
     private LinkedHashMap<String, List<SessionDateTime>> date_timeMap = new LinkedHashMap<>();
     //edit hash map list
-    private List<SessionList> e_sessionLists=new ArrayList<>();
-    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
+    private List<SessionList> e_sessionLists = new ArrayList<>();
+    private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
 
-    private int n=0;
+    private int n = 0;
 
 
     public PlaceOrderFragment() {
@@ -137,12 +137,11 @@ public class PlaceOrderFragment extends Fragment {
         recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
 
-
         //get date picker
         getViewModel.getDate_pickerMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                date=s;
+                date = s;
             }
         });
         //get Func_title
@@ -172,105 +171,118 @@ public class PlaceOrderFragment extends Fragment {
                 session_title = s;
             }
         });
+        getViewModel.getS_countLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                s_count = s;
+            }
+        });
 
         //get edit func map
         getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
-                    @Override
-                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
-                        editFunc_Map=stringLinkedHashMapLinkedHashMap;
-                        MyLog.e(TAG, "chs>>list edit func map " );
-                        editDateMap=editFunc_Map.get(func_title);
-                        MyLog.e(TAG,"orders>>date>>"+date);
-                        date=date.replace("/","-");
-                        if (editDateMap == null) {
-                            editDateMap = new LinkedHashMap<>();
-                            MyLog.e(TAG, "edit date map is null");
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
+                editFunc_Map = stringLinkedHashMapLinkedHashMap;
+                MyLog.e(TAG, "chs>>list edit func map ");
+                editDateMap = editFunc_Map.get(func_title);
+                MyLog.e(TAG, "orders>>date>>" + date);
+                date = date.replace("/", "-");
 
-                        }
-                        else {
-                            editSessionMap = editDateMap.get(date);
 
-                            //set session list
-                            Set<String> stringSet = editSessionMap.keySet();
-                            List<String> aList = new ArrayList<String>(stringSet.size());
-                            for (String x : stringSet)
-                                aList.add(x);
+                if (editDateMap == null) {
+                    editDateMap = new LinkedHashMap<>();
+                    MyLog.e(TAG, "edit date map is null");
 
-                            //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                            selectedSessionLists.clear();
-                            for (int i = 0; i < aList.size(); i++) {
-                                String[] arr = (aList.get(i)).split("!");
+                } else {
+                    editSessionMap = editDateMap.get(date);
 
-                                //set selected session list and session date and time
-                                MyLog.e(TAG, "chs>>list sess>> " + arr[0]);
+                    //set session list
+                    Set<String> stringSet = editSessionMap.keySet();
+                    List<String> aList = new ArrayList<String>(stringSet.size());
+                    for (String x : stringSet)
+                        aList.add(x);
 
-                                MyLog.e(TAG, "chs>>list time>> " + arr[1]);
-                                SelectedSessionList list = new SelectedSessionList();
-                                list.setBolen(null);
-                                list.setSession_title(arr[0]);
-                                list.setTime(date + " " + arr[1]);
-                                selectedSessionLists.add(list);
-                            }
+                    //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                    selectedSessionLists.clear();
+                    for (int i = 0; i < aList.size(); i++) {
+                        String[] scb = (aList.get(i)).split("/");
+                        String count = scb[1];
+                        String[] arr = (scb[0]).split("!");
 
-                            //set selected session
-                            getViewModel.setSelectedSessionLists(selectedSessionLists);
+                        //set selected session list and session date and time
+                        MyLog.e(TAG, "chs>>list sess>> " + arr[0]);
 
-                            if (editSessionMap == null) {
-                                editHeaderMap = new LinkedHashMap<>();
-                                // headerMap=sessionMap.get(date_time);
-                            } else {
-
-                                viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time, null, editSessionMap);
-                                recyclerview_session.setAdapter(viewCartAdapter);
-                            }
-                        }
+                        MyLog.e(TAG, "chs>>list time>> " + arr[1]);
+                        SelectedSessionList list = new SelectedSessionList();
+                        list.setBolen(null);
+                        list.setSession_title(arr[0]);
+                        list.setS_count(count);
+                        list.setTime(date + " " + arr[1]);
+                        selectedSessionLists.add(list);
                     }
-                });
 
-                // fun hash map of checked list
-                getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
-                    @Override
-                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
-                        funcMap = stringLinkedHashMapLinkedHashMap;
-                        MyLog.e(TAG, "chs>>list func map " );
-                        sessionMap = funcMap.get(func_title);
-                        //set session list
-                        Set<String> stringSet = sessionMap.keySet();
-                        List<String> aList = new ArrayList<String>(stringSet.size());
-                        for (String x : stringSet)
-                            aList.add(x);
+                    //set selected session
+                    getViewModel.setSelectedSessionLists(selectedSessionLists);
 
-                        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                        selectedSessionLists.clear();
-                        for (int i = 0; i < aList.size(); i++) {
-                            MyLog.e(TAG, "chs>>list in map>> " + aList.get(i));
-                            String[] arr = (aList.get(i)).split("!");
+                    if (editSessionMap == null) {
+                        editHeaderMap = new LinkedHashMap<>();
+                        // headerMap=sessionMap.get(date_time);
+                    } else {
 
-                            //set selected session list and session date and time
-                            MyLog.e(TAG, "chs>>list session in map>> " + arr[0]);
-                            MyLog.e(TAG, "chs>>list time in map>> " + arr[1]);
-                            SelectedSessionList list = new SelectedSessionList();
-                            list.setBolen(null);
-                            list.setSession_title(arr[0]);
-                            list.setTime(arr[1]);
-                            selectedSessionLists.add(list);
-                        }
-
-                        //set selected session
-                        getViewModel.setSelectedSessionLists(selectedSessionLists);
-
-                        if (sessionMap == null) {
-                            headerMap = new LinkedHashMap<>();
-                            // headerMap=sessionMap.get(date_time);
-                        } else {
-
-                            viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time, sessionMap, null);
-                            recyclerview_session.setAdapter(viewCartAdapter);
-                        }
-
-
+                        viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time, null, editSessionMap);
+                        recyclerview_session.setAdapter(viewCartAdapter);
                     }
-                });
+                }
+            }
+        });
+
+        // fun hash map of checked list
+        getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
+                funcMap = stringLinkedHashMapLinkedHashMap;
+                MyLog.e(TAG, "chs>>list func map ");
+                sessionMap = funcMap.get(func_title);
+                //set session list
+                Set<String> stringSet = sessionMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+
+                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                selectedSessionLists.clear();
+                for (int i = 0; i < aList.size(); i++) {
+                    MyLog.e(TAG, "chs>>list in map>> " + aList.get(i));
+                    String[] scb = (aList.get(i)).split("/");
+                    String count = scb[1];
+                    String[] arr = (scb[0]).split("!");
+
+                    //set selected session list and session date and time
+                    MyLog.e(TAG, "chs>>list session in map>> " + arr[0]);
+                    MyLog.e(TAG, "chs>>list time in map>> " + arr[1]);
+                    SelectedSessionList list = new SelectedSessionList();
+                    list.setBolen(null);
+                    list.setSession_title(arr[0]);
+                    list.setS_count(count);
+                    list.setTime(arr[1]);
+                    selectedSessionLists.add(list);
+                }
+
+                //set selected session
+                getViewModel.setSelectedSessionLists(selectedSessionLists);
+
+                if (sessionMap == null) {
+                    headerMap = new LinkedHashMap<>();
+                    // headerMap=sessionMap.get(date_time);
+                } else {
+
+                    viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time, sessionMap, null);
+                    recyclerview_session.setAdapter(viewCartAdapter);
+                }
+
+
+            }
+        });
 
 
         //order btn click
@@ -283,7 +295,8 @@ public class PlaceOrderFragment extends Fragment {
 
 
                 for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    date_time=selectedSessionLists.get(k).getSession_title() + "!" + selectedSessionLists.get(k).getTime();
+                    date_time = selectedSessionLists.get(k).getSession_title() + "!" + selectedSessionLists.get(k).getTime() + "/" + selectedSessionLists.get(k).getS_count();
+                    MyLog.e(TAG, "count>>date_time>>" + date_time);
                     headerMap = sessionMap.get(date_time);
                     //set selected header
                     if (headerMap != null) {
@@ -302,21 +315,20 @@ public class PlaceOrderFragment extends Fragment {
                             selectedHeadersList.add(list1);
                         }
                         getViewModel.setSelectedHeadersList(selectedHeadersList);
+
+
+                        MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
+
+                        for (int i = 0; i < selectedHeadersList.size(); i++) {
+                            checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
+                            SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), selectedSessionLists.get(k).getSession_title(), checkedLists, date_time, selectedSessionLists.get(k).getS_count());
+                        }
+                        doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
+
                     } else {
                         MyLog.e(TAG, "Header map is empty");
                     }
-
-
-
-
-                    MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
-
-                    for (int i = 0; i < selectedHeadersList.size(); i++) {
-                        checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
-                        SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), selectedSessionLists.get(k).getSession_title(), checkedLists, date_time);
-                    }
                 }
-                doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
 
 
             }
@@ -334,9 +346,33 @@ public class PlaceOrderFragment extends Fragment {
     }
 
 
-    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String date_time) {
+    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_counts) {
+        //remove old data
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Orders").child(user_name);
+        MyLog.e(TAG, "cancel>>sess value  " + session_title);
+        MyLog.e(TAG, "cancel>>date value  " + date);
+        //remove data
+        String[] scb = date_time.split("/");
+        String count = scb[1];
+        String[] str = (scb[0]).split("!");
+        String sess = str[0];
+        String[] dt = (str[1]).split(" ");
+        String date = dt[0];
+        String time = dt[1] + " " + dt[2];
+
+        MyLog.e(TAG, "placeorders>>date>>" + date);
+        MyLog.e(TAG, "placeorders>>time>>" + time);
+
+        String s = sess + "!" + time + "-" + count + "_true";
+        MyLog.e(TAG, "placeorders>>ses  time>>" + s);
+        databaseReference.child(func_title).child(date).child(s).child(headerList_title).removeValue();
+        MyLog.e(TAG, "cancel remove commit");
+
+
+        //add data
         n++;
-        MyLog.e(TAG, "placeorders>>date_time session_str n value>>"+n);
+        MyLog.e(TAG, "placeorders>>date_time session_str n value>>" + n);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -346,18 +382,20 @@ public class PlaceOrderFragment extends Fragment {
 
                 for (int i = 0; i < checkedLists1.size(); i++) {
                     //set session-dateTime
-                    MyLog.e(TAG, "placeorders>>date_time value>>"+date_time);
-                    String[] str=date_time.split("!");
-                    String  sess=str[0];
-                    String[]dt=(str[1]).split(" ");
-                    String date=dt[0];
-                    String time=dt[1]+" "+dt[2];
+                    MyLog.e(TAG, "placeorders>>date_time value>>" + date_time);
+                    String[] scb = date_time.split("/");
+                    String count = scb[1];
+                    String[] str = (scb[0]).split("!");
+                    String sess = str[0];
+                    String[] dt = (str[1]).split(" ");
+                    String date = dt[0];
+                    String time = dt[1] + " " + dt[2];
 
-                    MyLog.e(TAG, "placeorders>>date>>"+date);
-                    MyLog.e(TAG, "placeorders>>time>>"+time);
+                    MyLog.e(TAG, "placeorders>>date>>" + date);
+                    MyLog.e(TAG, "placeorders>>time>>" + time);
 
-                    String s=sess+"!"+time+"_true";
-                    MyLog.e(TAG, "placeorders>>ses  time>>"+s);
+                    String s = sess + "!" + time + "-" + count + "_true";
+                    MyLog.e(TAG, "placeorders>>ses  time>>" + s);
                     databaseReference.child(user_name).child(func_title).child(date).child(s).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
                 MyLog.e(TAG, "comit");

@@ -80,8 +80,10 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
             holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
             holder.date_timeS.setText(list.getTime());
             holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));
-            String a = list.getSession_title() + "!" + list.getTime();
-
+            holder.count.setText(list.getS_count());
+            holder.count.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
+            String a = list.getSession_title() + "!" + list.getTime()+"/"+list.getS_count();
+            MyLog.e(TAG,"count>>if>>"+a);
             headerMap = sessionMap.get(a);
             Set<String> stringSet = headerMap.keySet();
             List<String> aList = new ArrayList<String>(stringSet.size());
@@ -103,11 +105,14 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
             holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             PlaceOrderViewCartAdapterHeader viewCartAdapter = new PlaceOrderViewCartAdapterHeader(context, getViewModel, selectedHeaders, headerMap, null);
             holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
-        } else {
+        }
+        else {
             final SelectedSessionList list = sessionLists.get(position);
             holder.session_title.setText(list.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
-
+            MyLog.e(TAG,"count>>else>>"+list.getS_count());
+            holder.count.setText(list.getS_count());
+            holder.count.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
             holder.date_timeS.setTextColor(context.getResources().getColor(R.color.colorSecondary));
             holder.date_timeS.setText(list.getTime());
             String a = list.getSession_title() + "!" + list.getTime();
@@ -145,7 +150,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView session_title, date_timeS;
+        private TextView session_title, date_timeS,count;
         private RecyclerView recyclerview_order_item_details;
 
 
@@ -153,6 +158,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
             super(view);
             recyclerview_order_item_details = view.findViewById(R.id.recyclerview_order_item_details);
             session_title = view.findViewById(R.id.session_title);
+            count = view.findViewById(R.id.count);
             date_timeS = view.findViewById(R.id.date_time);
 
         }

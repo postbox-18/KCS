@@ -44,6 +44,17 @@
                     android:textColor="@color/colorSecondary"
                     android:textSize="18dp"
                     android:textStyle="bold|italic" />
+                <TextView
+                    android:id="@+id/count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/robotoblackitalic"
+                    android:gravity="left"
+                    android:layout_marginStart="35dp"
+                    android:text="@string/count"
+                    android:textColor="@color/colorSecondary"
+                    android:textSize="18dp"
+                    android:textStyle="bold|italic" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView

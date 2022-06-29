@@ -32,7 +32,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private Context context;
     private List<HeaderList>headerLists;
     private String TAG="HeaderAdapter";
-    private String s_date_picker_actions,s_time_picker,s_session_title;
+    private String s_date_picker_actions,s_time_picker,s_session_title,s_count;
     private GetViewModel getViewModel;
 
     private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
@@ -71,6 +71,15 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
                 sessionDateTimes=sessionDateTimes1;
             }
         });
+
+        //get head count
+        getViewModel.getS_countLiveData().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                s_count=s;
+            }
+        });
+
         String[] str = (headerList1.getHeader()).split("-");
         if(str.length>1) {
             Spannable word = new SpannableString(str[0]);
@@ -93,9 +102,9 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
             public void onClick(View view) {
 
                 //getHeaderFragment.getheaderFragment(headerList1,position);
-                if((sessionDateTimes==null) || (sessionDateTimes.size()==0)  )
+                if((sessionDateTimes==null) || (sessionDateTimes.size()==0) || s_count==null)
                 {
-                    Toast.makeText(context, "Please select the date & time", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please select the date , time , count", Toast.LENGTH_SHORT).show();
 
                 }
                 else {
