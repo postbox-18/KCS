@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:nestedScrollingEnabled="false"
     android:fitsSystemWindows="true"
+    android:nestedScrollingEnabled="false"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_height="match_parent">
     <LinearLayout
