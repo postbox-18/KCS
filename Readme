@@ -6,7 +6,6 @@ https://stackoverflow.com/questions/31253555/how-do-i-create-a-circular-endless-
 
 Pending
 1-Control Panel update header and also change in database which have data
-2-cancel order delete after 15days
 
 
 
@@ -22,4 +21,5 @@ Solved
         ----fun
         |
         ----nv
-        4-login activity add then get data from base
+4-login activity add then get data from base
+2-cancel order delete after 15days
