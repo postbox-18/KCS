@@ -18,7 +18,10 @@ import com.example.adm.Fragments.Orders.Classes.SelectedSessionList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +43,9 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
     //selected session list
     private List<SelectedSessionList> o_selectedSessionLists=new ArrayList<>();
 
+    //clear Date List
+    private String gn_Date,current_Date;
+    private Date date = new Date();
 
     public UserDateListAdapter(Context context, GetViewModel getViewModel, List<SelectedDateList> o_dateLists, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap, String s_user_name, String funcTitle) {
         this.context = context;
@@ -63,7 +69,7 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
     public void onBindViewHolder(@NonNull UserDateListAdapter.ViewHolder holder, int position) {
 
         final SelectedDateList list = o_dateLists.get(position);
-
+        gn_Date=list.getDate();
         holder.date.setText(list.getDate());
 
         orderSessionMap=orderDateMap.get(list.getDate());
@@ -103,6 +109,56 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
                     getViewModel.setDateString(s);
             }
         });
+
+        //clear date list
+        Date date1=new Date();
+        Date date2=new Date();
+
+        SimpleDateFormat dates = new SimpleDateFormat("dd/MM/yyyy");
+        current_Date = dates.format(date);
+        gn_Date=gn_Date.replace("-","/");
+        MyLog.e(TAG,"dates>>GN>>"+gn_Date+">>Cure>>"+current_Date);
+
+        //Setting dates
+        try {
+            date1 = dates.parse(current_Date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            date2 = dates.parse(gn_Date);
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //MyLog.e(TAG,"dates>>diff>>"+date2.before(date1));
+
+        if(date2.before(date1))
+        {
+            //Comparing dates
+            long difference = Math.abs(date1.getTime() - date2.getTime());
+            long differenceDates = difference / (24 * 60 * 60 * 1000);
+
+            //Convert long to String
+            String dayDifference = Long.toString(differenceDates);
+            MyLog.e(TAG,"dates>>differ>>"+dayDifference);
+            gn_Date=gn_Date.replace("/","-");
+            int n=Integer.parseInt(dayDifference);
+            MyLog.e(TAG,"dates>>delete>>"+n);
+            if(n>=2) {
+                getViewModel.DeleteDate(s_user_name, funcTitle, gn_Date);
+            }
+
+        }
+        else
+        {
+
+        }
+
+
+
+
 
 
     }
