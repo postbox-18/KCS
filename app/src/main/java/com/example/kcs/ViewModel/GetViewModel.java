@@ -1373,7 +1373,18 @@ public class GetViewModel extends AndroidViewModel {
         }
 
     }
+    public void DeleteDate(String s_user_name, String funcTitle, String gn_date) {
+        //remove old data
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Orders");
+        MyLog.e(TAG, "dates>> funcTitle  " + funcTitle);
+        MyLog.e(TAG, "dates>> s_user_name  " + s_user_name);
+        MyLog.e(TAG, "dates>>date   " + gn_date);
 
+        //remove data
+        databaseReference.child(s_user_name).child(funcTitle).child(gn_date).removeValue();
+        MyLog.e(TAG, "dates remove commit");
+    }
 
 }
 
