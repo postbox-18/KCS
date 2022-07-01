@@ -12,7 +12,6 @@ PENDING
 10-Three Level Expandable View
 17-Refresh swipe down
 18-Save Order in phone number
-20-cancel order delete after 15days
 21-clear hash map using alert message
 
 FINISHED
@@ -34,4 +33,6 @@ FINISHED
 15-lottie files for order saved
 16-bottom sheet in my orders scroll problem
 19-set forgot password
+20-cancel order delete after 15days
+
 

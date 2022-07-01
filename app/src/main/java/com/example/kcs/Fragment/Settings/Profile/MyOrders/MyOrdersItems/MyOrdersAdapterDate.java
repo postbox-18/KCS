@@ -24,7 +24,10 @@ import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
@@ -53,7 +56,9 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
     //Date List
     private List<SelectedDateList> dateLists=new ArrayList<>();
-
+    //clear Date List
+    private String gn_Date,current_Date;
+    private Date date = new Date();
     public MyOrdersAdapterDate(Context context, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap, List<SelectedDateList> dateLists, String funcTitle) {
 
         this.context = context;
@@ -76,6 +81,7 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
     public void onBindViewHolder(@NonNull MyOrdersAdapterDate.ViewHolder holder, int position) {
         final SelectedDateList list = dateLists.get(position);
         String username=new SharedPreferences_data(context).getS_user_name();
+        gn_Date=list.getDate();
         //get data func,header,list item size from hash map
         holder.date.setText(list.getDate());
         ///////////***************************clear list in live data model****************************//////////////////////
@@ -158,6 +164,51 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
                     getViewModel.setFunc_Session(s);
                 }
             });
+
+        }
+        //clear date list
+        Date date1=new Date();
+        Date date2=new Date();
+
+        SimpleDateFormat dates = new SimpleDateFormat("dd/MM/yyyy");
+        current_Date = dates.format(date);
+        gn_Date=gn_Date.replace("-","/");
+        MyLog.e(TAG,"dates>>GN>>"+gn_Date+">>Cure>>"+current_Date);
+
+        //Setting dates
+        try {
+            date1 = dates.parse(current_Date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            date2 = dates.parse(gn_Date);
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //MyLog.e(TAG,"dates>>diff>>"+date2.before(date1));
+
+        if(date2.before(date1))
+        {
+            //Comparing dates
+            long difference = Math.abs(date1.getTime() - date2.getTime());
+            long differenceDates = difference / (24 * 60 * 60 * 1000);
+
+            //Convert long to String
+            String dayDifference = Long.toString(differenceDates);
+            MyLog.e(TAG,"dates>>differ>>"+dayDifference);
+            gn_Date=gn_Date.replace("/","-");
+            int n=Integer.parseInt(dayDifference);
+            MyLog.e(TAG,"dates>>delete>>"+n);
+            if(n>=2) {
+                getViewModel.DeleteDate(username, funcTitle, gn_Date);
+            }
+
+        }
+        else
+        {
 
         }
     }
