@@ -911,8 +911,8 @@ public class GetViewModel extends AndroidViewModel {
                             header_title
                     );
                     headerList.add(headerList1);
-                    headerListMutableList.postValue(headerList);
                 }
+                headerListMutableList.postValue(headerList);
 
                 s_map.add(f_maps);
                 s_mapMutable.postValue(s_map);
@@ -978,9 +978,7 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public MutableLiveData<List<HeaderList>> getListMutableLiveData() {
-        return headerListMutableList;
-    }
+
 
     public MutableLiveData<List<FunList>> getFunMutableList() {
         return funMutableList;

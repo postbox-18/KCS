@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<BreadCrumbList> breadCrumbLists) {
                 breadcrumbsList = breadCrumbLists;
                 if (breadcrumbsList != null) {
-                    breadCrumbsAdapter = new BreadCrumbsAdapter(getApplicationContext(), getViewModel, breadcrumbsList);
+                    breadCrumbsAdapter = new BreadCrumbsAdapter(MainActivity.this, getViewModel, breadcrumbsList);
                     recyclerview_breadcrumbs.setAdapter(breadCrumbsAdapter);
                 }
             }
