@@ -1,4 +1,4 @@
-package com.example.adm.Fragments.Orders.BottomSheet;
+package com.example.adm.Fragments.Orders.BottomSheet.Classes;
 
 public class OrderLists {
     private final String s_user_name,  func;

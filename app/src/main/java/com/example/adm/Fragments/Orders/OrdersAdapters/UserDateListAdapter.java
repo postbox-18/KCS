@@ -1,4 +1,4 @@
-package com.example.adm.Fragments.Orders;
+package com.example.adm.Fragments.Orders.OrdersAdapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
-import com.example.adm.Classes.SessionList;
-import com.example.adm.Fragments.Orders.BottomSheet.OrderItemLists;
-import com.example.adm.Fragments.Orders.BottomSheet.OrderLists;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderItemLists;
+import com.example.adm.Fragments.Orders.Classes.SelectedDateList;
+import com.example.adm.Fragments.Orders.Classes.SelectedSessionList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 

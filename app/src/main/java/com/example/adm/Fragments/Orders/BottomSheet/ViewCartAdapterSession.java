@@ -1,6 +1,4 @@
-package com.example.adm.Fragments.Orders;
-
-import static java.security.AccessController.getContext;
+package com.example.adm.Fragments.Orders.BottomSheet;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,23 +7,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
-import com.example.adm.Classes.SessionList;
-import com.example.adm.Fragments.Orders.BottomSheet.OrderItemLists;
-import com.example.adm.Fragments.Orders.BottomSheet.OrderLists;
-import com.example.adm.Fragments.Orders.BottomSheet.SelectedHeader;
-import com.example.adm.Fragments.Orders.BottomSheet.ViewCartAdapter;
 
-import com.example.adm.Fragments.Orders.BottomSheet.ViewCartAdapterHeader;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderItemLists;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderLists;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.SelectedHeader;
+import com.example.adm.Fragments.Orders.Classes.SelectedSessionList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

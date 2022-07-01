@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -17,16 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
-import com.example.adm.Fragments.Orders.BottomSheet.SelectedHeader;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.SelectedHeader;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private List<ItemArrayList> item=new ArrayList<>();

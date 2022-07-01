@@ -1,4 +1,4 @@
-package com.example.adm.Fragments.Orders;
+package com.example.adm.Fragments.Orders.Classes;
 
 public class SelectedSessionList  {
     private  String session_title,time,bolen,count;

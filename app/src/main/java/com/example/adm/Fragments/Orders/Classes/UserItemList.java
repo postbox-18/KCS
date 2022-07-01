@@ -1,4 +1,4 @@
-package com.example.adm.Fragments.Orders;
+package com.example.adm.Fragments.Orders.Classes;
 
 public class UserItemList {
     private final int list_size;

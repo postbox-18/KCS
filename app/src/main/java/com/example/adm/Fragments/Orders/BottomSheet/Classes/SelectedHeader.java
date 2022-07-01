@@ -1,4 +1,4 @@
-package com.example.adm.Fragments.Orders.BottomSheet;
+package com.example.adm.Fragments.Orders.BottomSheet.Classes;
 
 public class SelectedHeader {
     private final String header;
