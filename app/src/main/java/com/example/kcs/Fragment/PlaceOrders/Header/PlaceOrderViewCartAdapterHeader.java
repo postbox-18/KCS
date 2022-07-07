@@ -29,7 +29,14 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> header = new ArrayList<>();
-    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
+    //item map
+    private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
+    //fun map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
     //edit hash map
     //edit hash map list
     private List<SessionList> e_sessionLists = new ArrayList<>();
@@ -38,7 +45,7 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
 
-    public PlaceOrderViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, LinkedHashMap<String, List<CheckedList>> headerMap, LinkedHashMap<String, List<SelectedHeader>> editHeaderMap) {
+    public PlaceOrderViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap, LinkedHashMap<String, List<SelectedHeader>> editHeaderMap) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.header = selectedHeadersList;
@@ -63,7 +70,7 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
             holder.header.setText(list.getHeader());
             //get Checked list hash map
 
-            checkedLists = headerMap.get(list.getHeader());
+            //checkedLists = headerMap.get(list.getHeader());
             holder.recyclerview_item_list.setHasFixedSize(true);
             holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             viewCartAdapter = new ViewCartAdapter(context, getViewModel, checkedLists,null);

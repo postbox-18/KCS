@@ -46,9 +46,14 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
     //private LinkedHashMap<String, List<CheckedList>> f_map = new LinkedHashMap<>();
     //private List<LinkedHashMap<String,List<CheckedList>>> s_map=new ArrayList<>();
     private List<LinkedHashMap<String, List<CheckedList>>> selected_s_map = new ArrayList<>();
-    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
+    //item map
+    private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
+    //fun map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
     private String header, funcTitle, sessionTitle, s_count;
     ItemListAdapater.Unchecked unchecked;
@@ -57,7 +62,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
         void getUnchecked(String item);
     }
 
-    public ItemListAdapater(Context context, List<ItemList> itemLists, String header, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps, LinkedHashMap<String, List<CheckedList>> headerMap) {
+    public ItemListAdapater(Context context, List<ItemList> itemLists, String header, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap) {
         this.context = context;
         this.itemLists = itemLists;
         this.getViewModel = getViewModel;

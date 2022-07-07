@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,9 +41,14 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
     private String date_time;
     private LinkedHashMap<String, List<SessionDateTime>> f_mapsdtMutable = new LinkedHashMap<>();
     //get header ,fun map
-    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
+    //item map
+    private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
+    //fun map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
 
     private List<LinkedHashMap<String, List<CheckedList>>> selected_s_map = new ArrayList<>();
 
@@ -114,9 +120,9 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.ViewHold
 
 
         //get func map
-        getViewModel.getFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
+        getViewModel.getFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
 
 

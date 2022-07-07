@@ -23,7 +23,7 @@ import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemList;
-import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
+import com.example.kcs.Fragment.Dish.DishSelectedList.UserDishList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
@@ -160,8 +160,8 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> alertMutable = new MutableLiveData<>();
 
     //user selected list
-    private List<UserItemList> userItemLists = new ArrayList<>();
-    private MutableLiveData<List<UserItemList>> userItemListsMutableLiveData = new MutableLiveData<>();
+    private List<UserDishList> userDishLists = new ArrayList<>();
+    private MutableLiveData<List<UserDishList>> userItemListsMutableLiveData = new MutableLiveData<>();
 
     //my orders list
     private List<MyOrdersList> myOrdersList = new ArrayList<>();
@@ -209,15 +209,20 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<SessionDateTime>> sessionDateTimesMutableLiveData = new MutableLiveData<>();
     private LinkedHashMap<String, List<SessionDateTime>> f_mapsdt = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, List<SessionDateTime>>> f_mapsdtMutableLiveData = new MutableLiveData<>();
+
+    //item map
+    private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<CheckedList>>> itemMapMutableLiveData = new MutableLiveData<>();
     //header map
-    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, List<CheckedList>>> headerMapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> headerMapMutableLiveData = new MutableLiveData<>();
     //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> sessionMapMutableLiveData = new MutableLiveData<>();
     //fun map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>> funcMapMutableLiveData = new MutableLiveData<>();
+
     //selected Session list
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
     private MutableLiveData<List<SelectedSessionList>> selectedSessionListsMutableLiveData = new MutableLiveData<>();
@@ -422,12 +427,12 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-    public void setHeaderMap(LinkedHashMap<String, List<CheckedList>> headerMap) {
+    public void setHeaderMap(LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap) {
         this.headerMap = headerMap;
         this.headerMapMutableLiveData.postValue(headerMap);
     }
 
-    public MutableLiveData<LinkedHashMap<String, List<CheckedList>>> getHeaderMapMutableLiveData() {
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> getHeaderMapMutableLiveData() {
         return headerMapMutableLiveData;
     }
 
@@ -450,21 +455,21 @@ public class GetViewModel extends AndroidViewModel {
         this.alertMutable.postValue(alert);
     }
 
-    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> getSessionMapMutableLiveData() {
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> getSessionMapMutableLiveData() {
         return sessionMapMutableLiveData;
     }
 
-    public void setSessionMap(LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap) {
+    public void setSessionMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap) {
         this.sessionMap = sessionMap;
         this.sessionMapMutableLiveData.postValue(sessionMap);
     }
 
-    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> getFuncMapMutableLiveData() {
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>> getFuncMapMutableLiveData() {
         return funcMapMutableLiveData;
     }
 
 
-    public void setFuncMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap) {
+    public void setFuncMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap) {
         this.funcMap = funcMap;
         this.funcMapMutableLiveData.postValue(funcMap);
     }
@@ -753,12 +758,12 @@ public class GetViewModel extends AndroidViewModel {
         return f_mapMutable;
     }
 
-    public void setUserItemLists(List<UserItemList> userItemLists) {
-        this.userItemLists = userItemLists;
-        this.userItemListsMutableLiveData.postValue(userItemLists);
+    public void setUserItemLists(List<UserDishList> userDishLists) {
+        this.userDishLists = userDishLists;
+        this.userItemListsMutableLiveData.postValue(userDishLists);
     }
 
-    public MutableLiveData<List<UserItemList>> getUserItemListsMutableLiveData() {
+    public MutableLiveData<List<UserDishList>> getUserItemListsMutableLiveData() {
         return userItemListsMutableLiveData;
     }
 

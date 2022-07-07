@@ -23,7 +23,7 @@ import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.Items.CheckedList;
-import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
+import com.example.kcs.Fragment.Dish.DishSelectedList.UserDishList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.PlaceOrderViewCartAdapterSession;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
@@ -35,7 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -64,7 +63,7 @@ public class PlaceOrderFragment extends Fragment {
     private PlaceOrderViewCartAdapterHeader viewCartAdapter;*/
     private AppCompatButton order_btn;
     private List<FunList> funLists = new ArrayList<>();
-    private List<UserItemList> userItemLists = new ArrayList<>();
+    private List<UserDishList> userDishLists = new ArrayList<>();
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
@@ -78,12 +77,14 @@ public class PlaceOrderFragment extends Fragment {
     private DoneDialogfragment doneDialogfragment = new DoneDialogfragment();
     private LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap = new LinkedHashMap<>();
     //hash map to get header session func;
+    //item map
+    private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
     //header map
-    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
     //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
-    //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
+    //fun map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
     //get date and time
     private LinkedHashMap<String, List<SessionDateTime>> date_timeMap = new LinkedHashMap<>();
@@ -237,9 +238,9 @@ public class PlaceOrderFragment extends Fragment {
         });
 
         // fun hash map of checked list
-        getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
+        getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
                 MyLog.e(TAG, "chs>>list func map ");
                 sessionMap = funcMap.get(func_title);
@@ -320,7 +321,7 @@ public class PlaceOrderFragment extends Fragment {
                         MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
 
                         for (int i = 0; i < selectedHeadersList.size(); i++) {
-                            checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
+                            //checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
                             SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), selectedSessionLists.get(k).getSession_title(), checkedLists, date_time, selectedSessionLists.get(k).getS_count());
                         }
                         doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");

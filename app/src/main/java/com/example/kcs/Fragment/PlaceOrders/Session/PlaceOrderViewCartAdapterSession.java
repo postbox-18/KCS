@@ -36,10 +36,14 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
     private List<SelectedSessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
+    //item map
+    private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
     //header map
-    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
     //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
+    //fun map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
     //edit hash map
     //edit hash map list
     private List<SessionList> e_sessionLists = new ArrayList<>();
@@ -49,7 +53,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
 
 
-    public PlaceOrderViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String date_time, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap) {
+    public PlaceOrderViewCartAdapterSession(Context context, GetViewModel getViewModel, String s, List<SelectedSessionList> sessionLists, String date_time, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.func_title = s;
