@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderList;
+import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -30,6 +31,7 @@ public class BreadCrumbsAdapter extends RecyclerView.Adapter<BreadCrumbsAdapter.
     private List<FunList> funLists = new ArrayList<>();
     private List<SessionList> sessionLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
+    private List<ItemList> itemLists = new ArrayList<>();
 
     public BreadCrumbsAdapter(Context context, GetViewModel getViewModel, List<BreadCrumbList> breadCrumbLists) {
         this.context = context;
@@ -74,6 +76,14 @@ public class BreadCrumbsAdapter extends RecyclerView.Adapter<BreadCrumbsAdapter.
             }
         });
 
+        //item list
+        getViewModel.getItemHeaderMutable().observe((LifecycleOwner) context, new Observer<List<ItemList>>() {
+            @Override
+            public void onChanged(List<ItemList> itemLists1) {
+                itemLists=itemLists1;
+            }
+        });
+
         final BreadCrumbList breadCrumbList1 = breadCrumbLists.get(position);
         String item = breadCrumbList1.getBreadcrumbs();
         holder.list.setText(item);
@@ -102,7 +112,15 @@ public class BreadCrumbsAdapter extends RecyclerView.Adapter<BreadCrumbsAdapter.
                         break;
                     }
                 }
-
+                //item list
+                for(int i=0;i<itemLists.size();i++)
+                {
+                    if((itemLists.get(i).getItem()).equals(item))
+                    {
+                        getViewModel.setI_value(2);
+                        break;
+                    }
+                }
             }
         });
 

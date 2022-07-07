@@ -143,6 +143,10 @@ public class GetViewModel extends AndroidViewModel {
     private String func_title;
     private MutableLiveData<String> func_title_Mutable = new MutableLiveData<>();
 
+    //Selected Item
+    private String item_title;
+    private MutableLiveData<String> item_title_Mutable = new MutableLiveData<>();
+
     //Fragment to pass
     private Integer i_value;
     private MutableLiveData<Integer> value = new MutableLiveData<>();
@@ -277,11 +281,17 @@ public class GetViewModel extends AndroidViewModel {
         firebaseDatabase = FirebaseDatabase.getInstance();
         CheckUserDetails();
 
-        ///****/////
-        GetItem();
-        ////***////
 
 
+    }
+
+    public void setItem_title(String item_title) {
+        this.item_title = item_title;
+        this.item_title_Mutable.postValue(item_title);
+    }
+
+    public MutableLiveData<String> getItem_title_Mutable() {
+        return item_title_Mutable;
     }
 
     public void setD_ItemMap(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> d_ItemMap) {

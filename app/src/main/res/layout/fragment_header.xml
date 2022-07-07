@@ -73,6 +73,7 @@
                     android:background="@null"
                     android:drawableStart="@drawable/ic_humanadd_01"
                     android:drawablePadding="5dp"
+                    android:layout_gravity="left"
                     android:fontFamily="@font/bebaskai"
                     android:gravity="right"
                     android:hint="----"

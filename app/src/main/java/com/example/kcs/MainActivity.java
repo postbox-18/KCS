@@ -21,6 +21,7 @@ import com.example.kcs.BreadCrumbs.BreadCrumbList;
 import com.example.kcs.BreadCrumbs.BreadCrumbsAdapter;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.Fragment.Dish.DishFragment;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.Header.HeaderList;
@@ -214,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                         editDateMap = editFunc_Map.get(func_title);
                         editSessionMap = editDateMap.get(date);
                         MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
-                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime())+"/"+(selectedSessionLists.get(k).getS_count());
+                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime()) + "/" + (selectedSessionLists.get(k).getS_count());
                         editHeaderMap = editSessionMap.get(date_time);
 
                         Set<String> stringSet = editHeaderMap.keySet();
@@ -223,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                             aList.add(x);
 
                         //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                        userItemLists=new ArrayList<>();
+                        userItemLists = new ArrayList<>();
                         for (int i = 0; i < aList.size(); i++) {
                             MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
                             MyLog.e(TAG, "chs>>list size " + editHeaderMap.get(aList.get(i)).size());
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                             MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
                             MyLog.e(TAG, "orders>>sess>>" + selectedSessionLists.get(k).getSession_title());
                             String[] str = (selectedSessionLists.get(k).getSession_title()).split("!");
-                            date_time = str[0] + "!" + (selectedSessionLists.get(k).getTime())+"/"+(selectedSessionLists.get(k).getS_count());
+                            date_time = str[0] + "!" + (selectedSessionLists.get(k).getTime()) + "/" + (selectedSessionLists.get(k).getS_count());
 
 
                             MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
@@ -261,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                                 aList.add(x);
 
                             //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                            userItemLists=new ArrayList<>();
+                            userItemLists = new ArrayList<>();
                             for (int i = 0; i < aList.size(); i++) {
                                 MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
                                 MyLog.e(TAG, "chs>>list size " + headerMap.get(aList.get(i)).size());
@@ -491,6 +492,10 @@ public class MainActivity extends AppCompatActivity {
                     case 6:
                         fragment = new SessionFragment();
                         fragmentTAg = "SessionFragment";
+                        break;
+                    case 7:
+                        fragment = new DishFragment();
+                        fragmentTAg = "DishFragment";
                         break;
                     default:
                         fragment = new HomeFragment();
