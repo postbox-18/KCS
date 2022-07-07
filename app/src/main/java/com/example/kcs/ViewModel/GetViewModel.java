@@ -962,7 +962,6 @@ public class GetViewModel extends AndroidViewModel {
                 /*s_map.add(f_maps);
                 s_mapMutable.postValue(s_map);*/
 
-                MyLog.e(TAG, "dish>>" + new GsonBuilder().setPrettyPrinting().create().toJson(d_ItemMap));
             }
 
             @Override

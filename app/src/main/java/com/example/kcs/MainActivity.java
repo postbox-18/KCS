@@ -266,12 +266,10 @@ public class MainActivity extends AppCompatActivity {
 
                             MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
                             headerMap = sessionMap.get(date_time);
-                            MyLog.e(TAG, "dish>>headerMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
                             MyLog.e(TAG, "dish>>headerList_title>>" +headerList_title);
 
                             itemMap = headerMap.get(headerList_title);
                             MyLog.e(TAG, "dish>>item_title>>" + item_title);
-                            MyLog.e(TAG, "dish>>itemMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
 
                             Set<String> stringSet = itemMap.keySet();
                             List<String> aList = new ArrayList<String>(stringSet.size());
@@ -289,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
                                 );
                                 userDishLists.add(userDishLists1);
                             }
-                            MyLog.e(TAG, "dish>>userDishLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(userDishLists));
 
                             getViewModel.setUserItemLists(userDishLists);
 
@@ -357,7 +354,6 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.getUserItemListsMutableLiveData().observe(this, new Observer<List<UserDishList>>() {
             @Override
             public void onChanged(List<UserDishList> userDishLists) {
-                MyLog.e(TAG, "dish>>userDishLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(userDishLists));
                 userDishListAdapters = new UserDishListAdapters(getApplication(), getViewModel, userDishLists);
                 recyclerview_selected_count.setAdapter(userDishListAdapters);
             }

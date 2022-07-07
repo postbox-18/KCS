@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
@@ -49,9 +49,9 @@
                         android:id="@+id/recyclerview_item_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="15dp"
+                        android:padding="5dp"
                         tools:itemCount="2"
-                        tools:listitem="@layout/view_cart_card_view" />
+                        tools:listitem="@layout/place_view_item" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

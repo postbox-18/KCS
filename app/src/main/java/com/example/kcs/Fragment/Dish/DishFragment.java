@@ -159,10 +159,8 @@ public class DishFragment extends Fragment {
                 MyLog.e(TAG, "dish>>func>>" + func_title);
                 MyLog.e(TAG, "dish>>sess>>" + sessionDateTimeCount);
                 MyLog.e(TAG, "dish>>header>>" + header_title);
-                MyLog.e(TAG, "dish>>funcMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
                 sessionMap=funcMap.get(func_title);
                 headerMap=sessionMap.get(sessionDateTimeCount);
-                MyLog.e(TAG, "dish>>headerMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
 
 
 

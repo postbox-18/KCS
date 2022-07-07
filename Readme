@@ -13,6 +13,7 @@ PENDING
 17-Refresh swipe down
 18-Save Order in phone number
 21-clear hash map using alert message
+22-show empty logo for my order fragment which list is empty
 
 FINISHED
 1-alert check box to select the func
