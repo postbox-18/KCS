@@ -23,8 +23,7 @@ import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.TimeList;
-import com.google.gson.GsonBuilder;
+import com.example.kcs.Classes.TimeList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

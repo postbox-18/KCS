@@ -1,4 +1,4 @@
-package com.example.kcs.ViewModel;
+package com.example.kcs.Classes;
 
 public class TimeList {
     private final String timeList;

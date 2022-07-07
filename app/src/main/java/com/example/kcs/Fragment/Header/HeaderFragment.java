@@ -25,24 +25,20 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.kcs.Classes.DishList;
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Items.ItemList;
 
-import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Session.SessionList;
-import com.example.kcs.Login_Register.LoginActivity;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.TimeList;
-import com.google.gson.GsonBuilder;
+import com.example.kcs.Classes.TimeList;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -95,6 +91,9 @@ public class HeaderFragment extends Fragment {
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
+    //dish map in list
+    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> d_ItemMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, List<DishList>> d_DishMap = new LinkedHashMap<>();
 
     public HeaderFragment() {
 
@@ -365,21 +364,19 @@ public class HeaderFragment extends Fragment {
                     }
                 });
 
-
-        //list hashmap of itemlist
-        getViewModel.getS_mapMutable().
-
-                observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>() {
-                    @Override
-                    public void onChanged(List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
-                        //recyclerview_header
-                        recyclerview_header.setHasFixedSize(true);
-                        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                        headerAdapter = new HeaderAdapter(getContext(), headerList, getViewModel, linkedHashMaps, s_session_title);
-                        getViewModel.setI_fragment(1);
-                        recyclerview_header.setAdapter(headerAdapter);
-                    }
-                });
+        //get dish map in list database
+        getViewModel.getD_ItemMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> stringLinkedHashMapLinkedHashMap) {
+                d_ItemMap=stringLinkedHashMapLinkedHashMap;
+                //recyclerview_header
+                recyclerview_header.setHasFixedSize(true);
+                recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                headerAdapter = new HeaderAdapter(getContext(), headerList, getViewModel, d_ItemMap, s_session_title);
+                getViewModel.setI_fragment(1);
+                recyclerview_header.setAdapter(headerAdapter);
+            }
+        });
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {

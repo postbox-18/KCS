@@ -5,15 +5,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.example.kcs.BreadCrumbs.BreadCrumbList;
 import com.example.kcs.Classes.CheckEmail;
+import com.example.kcs.Classes.DishList;
 import com.example.kcs.Classes.ImgFunList;
 import com.example.kcs.Classes.ImgList;
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Classes.TimeList;
 import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrderFuncList;
@@ -54,6 +54,10 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<ItemList>> itemMutable = new MutableLiveData<>();
     private List<ItemList> itemLists = new ArrayList<>();
 
+    //dish list
+    private MutableLiveData<List<DishList>> dishListsMutable = new MutableLiveData<>();
+    private List<DishList> dishLists = new ArrayList<>();
+
 
     //session list
     private MutableLiveData<List<SessionList>> sessionListMutable = new MutableLiveData<>();
@@ -87,9 +91,16 @@ public class GetViewModel extends AndroidViewModel {
     private List<ItemList> itemHeaderLists = new ArrayList<>();
 
     //Linked HashMap item list
+    private LinkedHashMap<String, List<DishList>> d_DishMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> d_ItemMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>> d_ItemMapMutableLiveData = new MutableLiveData<>();
+
+    /*private List<LinkedHashMap<String, List<DishList>>> s_map = new ArrayList<>();
+    private MutableLiveData<List<LinkedHashMap<String, List<DishList>>>> s_mapMutable = new MutableLiveData<>();*/
+    /*//Linked HashMap item list
     private LinkedHashMap<String, List<ItemList>> f_maps = new LinkedHashMap<>();
     private List<LinkedHashMap<String, List<ItemList>>> s_map = new ArrayList<>();
-    private MutableLiveData<List<LinkedHashMap<String, List<ItemList>>>> s_mapMutable = new MutableLiveData<>();
+    private MutableLiveData<List<LinkedHashMap<String, List<ItemList>>>> s_mapMutable = new MutableLiveData<>();*/
 
     //check user login
     private MutableLiveData<Boolean> EmailMutable = new MutableLiveData<>();
@@ -258,7 +269,7 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderSessionMapMutableLiveData = new MutableLiveData<>();
     //head count
     private String s_count;
-    private MutableLiveData<String> s_countLiveData=new MutableLiveData<>();
+    private MutableLiveData<String> s_countLiveData = new MutableLiveData<>();
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -266,7 +277,20 @@ public class GetViewModel extends AndroidViewModel {
         firebaseDatabase = FirebaseDatabase.getInstance();
         CheckUserDetails();
 
+        ///****/////
+        GetItem();
+        ////***////
 
+
+    }
+
+    public void setD_ItemMap(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> d_ItemMap) {
+        this.d_ItemMap = d_ItemMap;
+        this.d_ItemMapMutableLiveData.postValue(d_ItemMap);
+    }
+
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>> getD_ItemMapMutableLiveData() {
+        return d_ItemMapMutableLiveData;
     }
 
     public MutableLiveData<String> getS_countLiveData() {
@@ -805,9 +829,9 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-    public MutableLiveData<List<LinkedHashMap<String, List<ItemList>>>> getS_mapMutable() {
+    /*public MutableLiveData<List<LinkedHashMap<String, List<ItemList>>>> getS_mapMutable() {
         return s_mapMutable;
-    }
+    }*/
 
     public MutableLiveData<List<ImgFunList>> getImg_funMutableList() {
         return img_funMutableList;
@@ -867,57 +891,51 @@ public class GetViewModel extends AndroidViewModel {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               /* MyLog.e(TAG, "list>>snap>>" + snapshot);
-                int size = 0;
-                for (int k = 0; k < headerList.size(); k++) {
-                    MyLog.e(TAG, "list>>snap>>fun>>" + snapshot.child(headerList.get(k).getHeader()).getValue());
-                    itemLists = new ArrayList<>();
-                    ArrayList<String> str = new ArrayList<>();
-                    str = (ArrayList<String>) snapshot.child(headerList.get(k).getHeader()).getValue();
-                    for (String i : str) {
-                        MyLog.e(TAG, "list>>" + i);
-                        if (i != null) {
-                            ItemList itemLists1 = new ItemList(
-                                    i);
-                            itemLists.add(itemLists1);
-                        } else {
-                            continue;
-                        }
-                    }
-                    itemMutable.postValue(itemLists);
-                    f_maps.put(headerList.get(k).getHeader(), itemLists);
-                    size++;
-                }
-
-                s_map.add(f_maps);
-                s_mapMutable.postValue(s_map);*/
-
                 headerList = new ArrayList<>();
+                d_ItemMap = new LinkedHashMap<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     //MyLog.e(TAG, "list>>datasnapshot>>" + dataSnapshot);
-                    MyLog.e(TAG, "list>>datasnapshot>>key>>" + dataSnapshot.getKey().toString());
+                    MyLog.e(TAG, "dish>>datasnapshot>>key>>" + dataSnapshot.getKey().toString());
                     header_title = dataSnapshot.getKey().toString();
                     itemLists = new ArrayList<>();
+                    d_DishMap = new LinkedHashMap<>();
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         //MyLog.e(TAG, "list>>data>>" + data);
-                        MyLog.e(TAG, "list>>data>>key>>" + data.getKey().toString());
-                        ItemList itemLists1 = new ItemList();
-                        itemLists1.setItem(data.getKey().toString());
-                        itemLists1.setSelected(data.getValue().toString());
-                        itemLists.add(itemLists1);
-                        f_maps.put(header_title, itemLists);
+                        String itemKey = data.getKey().toString();
+                        String[] str = itemKey.split("_");
+                        MyLog.e(TAG, "dish>>data>>key>>" + itemKey);
+                        dishLists = new ArrayList<>();
+                        for (DataSnapshot shot : data.getChildren()) {
+                            MyLog.e(TAG, "dish>>shot>>key>>" + shot.getKey().toString());
+                            MyLog.e(TAG, "dish>>shot>>value>>" + shot.getValue().toString());
+
+                            DishList list = new DishList();
+                            list.setDish(shot.getKey().toString());
+                            list.setBoolens(shot.getValue().toString());
+                            dishLists.add(list);
+
+                        }
+                    /*  ItemList itemLists1 = new ItemList();
+                        itemLists1.setItem(str[0]);
+                        itemLists1.setSelected(str[1]);
+                        itemLists.add(itemLists1);*/
+                        d_DishMap.put(itemKey, dishLists);
                     }
-                    HeaderList headerList1 = new HeaderList(
+
+                    d_ItemMap.put(header_title, d_DishMap);
+
+                    /*HeaderList headerList1 = new HeaderList(
                             header_title
                     );
-                    headerList.add(headerList1);
+                    headerList.add(headerList1);*/
                 }
-                headerListMutableList.postValue(headerList);
+                //headerListMutableList.postValue(headerList);
 
-                s_map.add(f_maps);
-                s_mapMutable.postValue(s_map);
+                d_ItemMapMutableLiveData.postValue(d_ItemMap);
+                /*s_map.add(f_maps);
+                s_mapMutable.postValue(s_map);*/
 
-
+                MyLog.e(TAG, "dish>>" + new GsonBuilder().setPrettyPrinting().create().toJson(d_ItemMap));
             }
 
             @Override
@@ -977,7 +995,6 @@ public class GetViewModel extends AndroidViewModel {
         });
 
     }
-
 
 
     public MutableLiveData<List<FunList>> getFunMutableList() {
@@ -1058,19 +1075,37 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-    public void getheaderFragment(String header, int position, List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
+    public void getheaderFragment(String header, int position, LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> d_ItemMap) {
 
         header_title_Mutable.postValue(header);
-        List<ItemList> itemLists = s_map.get(0).get(header);
-        //itemLists=itemLists1;
-        this.itemHeaderMutable.postValue(itemLists);
-        MyLog.e(TAG, "itm>nut>>" + itemLists.size());
-        if (itemLists.size() > 0) {
-            value.postValue(2);
-
+        d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header));
+        if (d_DishMap == null) {
+            d_DishMap = new LinkedHashMap<>();
+            MyLog.e(TAG, "d_dishmap is null");
         } else {
+            Set<String> set = d_DishMap.keySet();
+            List<String> aList1 = new ArrayList<String>(set.size());
+            for (String x1 : set)
+                aList1.add(x1);
+            itemLists = new ArrayList<>();
+            for (int i = 0; i < aList1.size(); i++) {
+                String[] str = (aList1.get(i)).split("_");
+                ItemList itemList = new ItemList();
+                itemList.setItem(str[0]);
+                itemList.setSelected(str[1]);
+                itemLists.add(itemList);
+            }
+            /*List<ItemList> itemLists = s_map.get(0).get(header);
+            itemLists = itemLists1;*/
+            this.itemHeaderMutable.postValue(itemLists);
+            MyLog.e(TAG, "itm>nut>>" + itemLists.size());
+            if (itemLists.size() > 0) {
+                value.postValue(2);
 
-            Toast.makeText(getApplication(), "Empty Response", Toast.LENGTH_SHORT).show();
+            } else {
+
+                Toast.makeText(getApplication(), "Empty Response", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -1161,13 +1196,13 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void EditMap(String func_title,  String header, String item, int position, int n, String username, String sess, String date) {
+    public void EditMap(String func_title, String header, String item, int position, int n, String username, String sess, String date) {
         MyLog.e(TAG, "cancel>>value " + n);
         MyLog.e(TAG, "s_count>>sess>>" + sess);
-        String[] scb=sess.split("-");
-        String[] cb=(scb[1]).split("_");
-        String session_title=scb[0];
-        String s_count=cb[0];
+        String[] scb = sess.split("-");
+        String[] cb = (scb[1]).split("_");
+        String session_title = scb[0];
+        String s_count = cb[0];
 
         MyLog.e(TAG, "s_count>>title>>" + session_title);
         MyLog.e(TAG, "s_count>>count>>" + s_count);
@@ -1192,7 +1227,7 @@ public class GetViewModel extends AndroidViewModel {
         sessionList.setTime(li[1]);
         sessionList.setS_count(s_count);
         e_sessionLists.add(sessionList);
-        String s=session_title+"/"+s_count;
+        String s = session_title + "/" + s_count;
         editSessionMap.put(s, editHeaderMap);
         //set
         editSessionMapMutableLiveData.postValue(editSessionMap);
@@ -1211,7 +1246,7 @@ public class GetViewModel extends AndroidViewModel {
     public void getSelecteds_map(String date, String ses, String dTime, String b, String count) {
 
         //get header map
-        String sd = ses + "!" + dTime+"/"+count;
+        String sd = ses + "!" + dTime + "/" + count;
 
         editHeaderMap = new LinkedHashMap<>(editSessionMap).get(sd);
 
@@ -1268,16 +1303,30 @@ public class GetViewModel extends AndroidViewModel {
             }
         }*/
         //get item list using selected headers list
-        itemLists=new ArrayList<>();
-        selectedHeadersList=new ArrayList<>();
-        edit_selected_s_map=new ArrayList<>();
+        itemLists = new ArrayList<>();
+        selectedHeadersList = new ArrayList<>();
+        edit_selected_s_map = new ArrayList<>();
         e_headerMap = new LinkedHashMap<>();
         for (int k = 0; k < e_selectedHeaders.size(); k++) {
             header_title = e_selectedHeaders.get(k).getHeader();
             selectedHeadersList = (editHeaderMap).get(header_title);
             //set item list from header map in data base
-            itemLists = f_maps.get(header_title);
-            e_checkedLists=new ArrayList<>();
+            //itemLists = f_maps.get(header_title);
+            d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
+            Set<String> set = d_DishMap.keySet();
+            List<String> aList1 = new ArrayList<String>(set.size());
+            for (String x1 : set)
+                aList1.add(x1);
+            itemLists = new ArrayList<>();
+            for (int i = 0; i < aList1.size(); i++) {
+                String[] str = (aList1.get(i)).split("_");
+                ItemList itemList = new ItemList();
+                itemList.setItem(str[0]);
+                itemList.setSelected(str[1]);
+                itemLists.add(itemList);
+            }
+
+            e_checkedLists = new ArrayList<>();
             for (int s = 0; s < selectedHeadersList.size(); s++) {
                 String sItem = selectedHeadersList.get(s).getHeader();
                 for (int i = 0; i < itemLists.size(); i++) {
@@ -1304,13 +1353,13 @@ public class GetViewModel extends AndroidViewModel {
 
     public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Maps, String date) {
         MyLog.e(TAG, "cancel ");
-        MyLog.e(TAG, "cancel "+session_title);
+        MyLog.e(TAG, "cancel " + session_title);
         String[] str = session_title.split("_");
         String[] scb = (str[0]).split("-");
-        String count=scb[1];
+        String count = scb[1];
         String sess = scb[0];
         String old = str[1];
-        String s=sess+"/"+count;
+        String s = sess + "/" + count;
 
         editDateMap = editFunc_Maps.get(func_title);
         editSessionMap = editDateMap.get(date);
@@ -1357,7 +1406,7 @@ public class GetViewModel extends AndroidViewModel {
                 //add new data
                 firebaseDatabase = FirebaseDatabase.getInstance();
                 databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
-                String newData =sess+"-"+count+ "_" + old;
+                String newData = sess + "-" + count + "_" + old;
                 MyLog.e(TAG, "cancel>> value  " + newData);
                 MyLog.e(TAG, "cancel add commit");
                 //set replace bolen
@@ -1373,6 +1422,7 @@ public class GetViewModel extends AndroidViewModel {
         }
 
     }
+
     public void DeleteDate(String s_user_name, String funcTitle, String gn_date) {
         //remove old data
         firebaseDatabase = FirebaseDatabase.getInstance();

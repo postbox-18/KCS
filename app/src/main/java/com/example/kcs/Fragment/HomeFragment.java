@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.kcs.Classes.DishList;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunAdapter;
 import com.example.kcs.Fragment.Func.FunList;
@@ -78,7 +79,6 @@ public class HomeFragment extends Fragment {
     private String TAG="HomeFragment";
     //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
-    private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
 
     public HomeFragment() {
 
@@ -130,28 +130,11 @@ public class HomeFragment extends Fragment {
 
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
-        /*GetHeader();
-        GetFun();*/
 
-        getViewModel.getS_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>() {
-            @Override
-            public void onChanged(List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps1) {
-                linkedHashMaps=linkedHashMaps1;
-            }
-        });
-        /*getViewModel.getListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
-            @Override
-            public void onChanged(List<HeaderList> headerLists1) {
-                headerList=headerLists1;
-                //recyclerview_header
-                recyclerview_header.setHasFixedSize(true);
-                recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                //headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,linkedHashMaps, f_mapsdtMutable);
-                getViewModel.setI_fragment(0);
-                recyclerview_header.setAdapter(headerAdapter);
 
-            }
-        });*/
+
+
+
 
         //get fun list
         getViewModel.getFunMutableList().observe(getViewLifecycleOwner(), new Observer<List<FunList>>() {
