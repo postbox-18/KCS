@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         View parentLayout = findViewById(android.R.id.content);
         recyclerview_breadcrumbs = findViewById(R.id.recyclerview_breadcrumbs);
         breadCrums = findViewById(R.id.breadCrums);
-
         MyLog.e(TAG, "logout>> main activity ");
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
         firebaseDatabase = FirebaseDatabase.getInstance();
