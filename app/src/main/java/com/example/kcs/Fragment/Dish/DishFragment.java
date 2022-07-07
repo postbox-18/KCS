@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
@@ -41,7 +42,7 @@ public class DishFragment extends Fragment {
 
 
     private TextView itemText;
-    private String item_title, header_title;
+    private String func_title,sessionDateTimeCount,item_title, header_title;
 
     //Dish Adapter
     private DishAdapter dishAdapter;
@@ -54,6 +55,15 @@ public class DishFragment extends Fragment {
     private LinkedHashMap<String, List<DishList>> d_DishMap = new LinkedHashMap<>();
     private String TAG = "DishFragment";
     private List<DishList> dishLists = new ArrayList<>();
+    private List<LinkedHashMap<String, List<CheckedList>>> selected_s_map = new ArrayList<>();
+    //item map
+    private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
+    //fun map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
 
     public DishFragment() {
         // Required empty public constructor
@@ -99,6 +109,21 @@ public class DishFragment extends Fragment {
         recyclerview_dish.setHasFixedSize(true);
         recyclerview_dish.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
+        //get func title
+        getViewModel.getFunc_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                func_title=s;
+            }
+        });
+        //get session title
+        getViewModel.getSessionDateTimeCountMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                sessionDateTimeCount=s;
+            }
+        });
+
         //get header title
         getViewModel.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -108,12 +133,38 @@ public class DishFragment extends Fragment {
             }
         });
 
+
         //get item map in list database
         getViewModel.getD_ItemMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> stringLinkedHashMapLinkedHashMap) {
                 d_ItemMap = stringLinkedHashMapLinkedHashMap;
                 MyLog.e(TAG, "dish>> map>>"+d_ItemMap.size());
+
+            }
+        });
+        //get selected dish list
+        getViewModel.getCheck_s_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<CheckedList>>>>() {
+            @Override
+            public void onChanged(List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps) {
+                selected_s_map=new ArrayList<>(linkedHashMaps);
+            }
+        });
+
+        //get func map
+        getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> stringLinkedHashMapLinkedHashMap) {
+                funcMap=stringLinkedHashMapLinkedHashMap;
+                MyLog.e(TAG, "dish>>func>>" + func_title);
+                MyLog.e(TAG, "dish>>sess>>" + sessionDateTimeCount);
+                MyLog.e(TAG, "dish>>header>>" + header_title);
+                MyLog.e(TAG, "dish>>funcMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
+                sessionMap=funcMap.get(func_title);
+                headerMap=sessionMap.get(sessionDateTimeCount);
+                MyLog.e(TAG, "dish>>headerMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
+
+
 
             }
         });
@@ -142,7 +193,7 @@ public class DishFragment extends Fragment {
                             MyLog.e(TAG, "dish>>d_DishMap header>>" + header_title);
                             MyLog.e(TAG, "dish>>d_DishMap item_title>>" + item_title);
                             dishLists = d_DishMap.get(item_title);
-                            dishAdapter = new DishAdapter(getContext(), dishLists, getViewModel);
+                            dishAdapter = new DishAdapter(getContext(), dishLists, getViewModel,selected_s_map,headerMap);
                             recyclerview_dish.setAdapter(dishAdapter);
                         }
                     }

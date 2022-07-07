@@ -272,17 +272,8 @@ public class MainActivity extends AppCompatActivity {
                             itemMap = headerMap.get(headerList_title);
                             MyLog.e(TAG, "dish>>item_title>>" + item_title);
                             MyLog.e(TAG, "dish>>itemMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
-                            checkedLists=new ArrayList<>();
-                            checkedLists=itemMap.get(item_title);
-                            userDishLists=new ArrayList<>();
-                            UserDishList list=new UserDishList(
-                                    item_title,
-                                    checkedLists.size()
-                            );
-                            userDishLists.add(list);
-                            MyLog.e(TAG, "dish>>userDishLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(userDishLists));
-                            getViewModel.setUserItemLists(userDishLists);
-                           /* Set<String> stringSet = itemMap.keySet();
+
+                            Set<String> stringSet = itemMap.keySet();
                             List<String> aList = new ArrayList<String>(stringSet.size());
                             for (String x : stringSet)
                                 aList.add(x);
@@ -297,8 +288,10 @@ public class MainActivity extends AppCompatActivity {
                                         itemMap.get(aList.get(i)).size()
                                 );
                                 userDishLists.add(userDishLists1);
-                            }*/
+                            }
+                            MyLog.e(TAG, "dish>>userDishLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(userDishLists));
 
+                            getViewModel.setUserItemLists(userDishLists);
 
                             if (userDishLists.size() > 0) {
                                 snackbar.show();

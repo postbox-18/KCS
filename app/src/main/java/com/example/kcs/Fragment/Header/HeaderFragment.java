@@ -185,12 +185,10 @@ public class HeaderFragment extends Fragment {
         getViewModel.getS_countLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                s_count=s;
-                if(s==null)
-                {
+                s_count = s;
+                if (s == null) {
                     count.setError("please select the head count");
-                }
-                else {
+                } else {
                     count.setError(null);
                     count.setText(s_count);
                 }
@@ -367,7 +365,7 @@ public class HeaderFragment extends Fragment {
         getViewModel.getD_ItemMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> stringLinkedHashMapLinkedHashMap) {
-                d_ItemMap=stringLinkedHashMapLinkedHashMap;
+                d_ItemMap = stringLinkedHashMapLinkedHashMap;
                 //recyclerview_header
                 recyclerview_header.setHasFixedSize(true);
                 recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -451,11 +449,15 @@ public class HeaderFragment extends Fragment {
         count.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Head Count");
                 LinearLayout linearLayout = new LinearLayout(getContext());
                 final EditText countEdit = new EditText(getContext());
-
+                if(!(countEdit.getText().toString()).isEmpty()) {
+                    countEdit.setText(count.getText().toString());
+                }
                 // write the email using which you registered
                 countEdit.setHint("10000");
                 countEdit.setMinEms(16);

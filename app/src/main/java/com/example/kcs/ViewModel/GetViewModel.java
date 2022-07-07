@@ -115,6 +115,9 @@ public class GetViewModel extends AndroidViewModel {
     //Session Fragment title
     private String session_title;
     private MutableLiveData<String> session_titleMutable = new MutableLiveData<>();
+    //Session date count title
+    private String sessionDateTimeCount;
+    private MutableLiveData<String> sessionDateTimeCountMutable = new MutableLiveData<>();
     //date time
     private String date_time;
     private MutableLiveData<String> date_timeLive = new MutableLiveData<>();
@@ -288,6 +291,15 @@ public class GetViewModel extends AndroidViewModel {
 
 
 
+    }
+
+    public void setSessionDateTimeCount(String sessionDateTimeCount) {
+        this.sessionDateTimeCount = sessionDateTimeCount;
+        this.sessionDateTimeCountMutable.postValue(sessionDateTimeCount);
+    }
+
+    public MutableLiveData<String> getSessionDateTimeCountMutable() {
+        return sessionDateTimeCountMutable;
     }
 
     public void setItem_title(String item_title) {

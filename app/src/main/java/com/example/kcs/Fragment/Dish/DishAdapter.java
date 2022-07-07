@@ -2,6 +2,7 @@ package com.example.kcs.Fragment.Dish;
 
 import static androidx.fragment.app.FragmentManager.TAG;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -55,10 +56,12 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
 
 
 
-    public DishAdapter(Context context, List<DishList> dishLists, GetViewModel getViewModel) {
+    public DishAdapter(Context context, List<DishList> dishLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> selected_s_map, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap) {
         this.context = context;
         this.dishLists = dishLists;
         this.getViewModel = getViewModel;
+        this.selected_s_map = new ArrayList<>(selected_s_map);
+        this.headerMap = new LinkedHashMap<>(headerMap);
 
     }
 
@@ -72,7 +75,13 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DishAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DishAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        if(headerMap==null)
+        {
+            headerMap=new LinkedHashMap<>();
+            MyLog.e(TAG,"headerMap is null");
+        }
+
         //get head count
         getViewModel.getS_countLiveData().observe((LifecycleOwner) context, new Observer<String>() {
             @Override
@@ -116,6 +125,34 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                 sessionDateTimes = stringListLinkedHashMap.get(funcTitle + "-" + sessionTitle);
             }
         });
+
+
+        //check if checked list item already selected
+        if (selected_s_map.size() > 0) {
+            for (int k = 0; k < selected_s_map.size(); k++) {
+                checkedLists = selected_s_map.get(k).get(item_title);
+                if (checkedLists != null) {
+                    for (int i = 0; i < checkedLists.size(); i++) {
+                        final CheckedList checkedLists1 = checkedLists.get(i);
+                        MyLog.e(TAG, "checked>>" + checkedLists1.getPosition());
+                        MyLog.e(TAG, "checked>>" + position);
+                        if (checkedLists1.getPosition() == position) {
+                            //MyLog.e(TAG, "checked>>" + checkedLists1.getItemList());
+                            holder.dish_check.setChecked(true);
+
+                        }
+                    }
+                } else {
+                    checkedLists=new ArrayList<>();
+                    MyLog.e(TAG, "checked>> selected size is null>>");
+                }
+            }
+        }
+        else {
+            MyLog.e(TAG, "checked>>selected  map size is null>>");
+        }
+        MyLog.e(TAG, "hashmap>>size>>" + selected_s_map.size());
+
 
 
         final DishList dishLists1 = dishLists.get(position);
@@ -166,12 +203,14 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                     }
                     getViewModel.setCheckedLists(checkedLists);
                     itemMap.put(item_title,checkedLists);
+                    MyLog.e(TAG, "dish>>headerMap before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
                     headerMap.put(header_title, itemMap);
                     String date = (sessionDateTimes.get(0).getDate()).replace("/", "-");
                     String s = sessionTitle + "!" + (date + " " + sessionDateTimes.get(0).getTime()) + "/" + s_count;
                     MyLog.e(TAG, "placeorders>>date_time>>" + s);
                     sessionMap.put(s, headerMap);
                     funcMap.put(funcTitle, sessionMap);
+                    getViewModel.setSessionDateTimeCount(s);
 
                     //set session list
                     Set<String> stringSet = sessionMap.keySet();
