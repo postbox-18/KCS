@@ -1,11 +1,16 @@
 package com.example.kcs.Fragment.Items;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -68,12 +73,49 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
     public ItemListAdapater.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
-        View view = layoutInflater.inflate(R.layout.item_checkbox_list, parent, false);
+        View view = layoutInflater.inflate(R.layout.item_cardview_list, parent, false);
         return new ItemListAdapater.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemListAdapater.ViewHolder holder, int position) {
+        final ItemList itemList=itemLists.get(position);
+
+        holder.header_title.setText(itemList.getItem());
+        if(itemList.getSelected().equals("true")) {
+            String[] str = (itemList.getItem()).split("-");
+            if(str.length>1) {
+                Spannable word = new SpannableString(str[0]);
+                word.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.colorSecondary)), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.header_title.setText(word);
+                Spannable wordTwo = new SpannableString(str[1]);
+                wordTwo.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.colorPrimary)), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.header_title.append(wordTwo);
+            }
+            else
+            {
+                holder.header_title.setText(itemList.getItem());
+                holder.header_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+            }
+        }
+
+        else if(itemList.getSelected().equals("false")) {
+            holder.header_title.setTextColor(context.getResources().getColor(R.color.text_silver));
+            holder.header_title_q.setTextColor(context.getResources().getColor(R.color.text_silver));
+            holder.header_img.setImageResource(R.drawable.logo);
+
+        }
+        //onclick
+        holder.header_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+
+        /*
         if(headerMap==null)
         {
             headerMap=new LinkedHashMap<>();
@@ -240,7 +282,7 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                 }
             }
         });
-
+*/
 
     }
 
@@ -260,13 +302,16 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private CheckBox item_check;
-        private CardView item_check_card;
+        private CardView header_card;
+        private ImageView header_img;
+        private TextView header_title,header_title_q;
 
         public ViewHolder(View view) {
             super(view);
-            item_check = view.findViewById(R.id.item_check);
-            item_check_card = view.findViewById(R.id.item_check_card);
+            header_img=view.findViewById(R.id.header_img);
+            header_title=view.findViewById(R.id.header_title);
+            header_card=view.findViewById(R.id.header_card);
+            header_title_q=view.findViewById(R.id.header_title_q);
 
         }
     }

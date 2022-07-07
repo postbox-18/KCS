@@ -25,9 +25,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.kcs.Classes.DishList;
+import com.example.kcs.Fragment.Dish.DishList;
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Fragment.Items.ItemList;
 
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Session.SessionList;

@@ -54,7 +54,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_weight="3.5"
                     tools:itemCount="5"
-                    tools:listitem="@layout/item_checkbox_list" />
+                    tools:listitem="@layout/item_cardview_list" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

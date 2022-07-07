@@ -1,4 +1,4 @@
-package com.example.kcs.Classes;
+package com.example.kcs.Fragment.Dish;
 
 public class DishList {
     private String dish,boolens;

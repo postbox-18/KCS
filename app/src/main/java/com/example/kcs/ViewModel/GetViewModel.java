@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.kcs.BreadCrumbs.BreadCrumbList;
 import com.example.kcs.Classes.CheckEmail;
-import com.example.kcs.Classes.DishList;
+import com.example.kcs.Fragment.Dish.DishList;
 import com.example.kcs.Classes.ImgFunList;
 import com.example.kcs.Classes.ImgList;
 import com.example.kcs.Classes.MyLog;

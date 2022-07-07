@@ -18,12 +18,9 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.kcs.Classes.DishList;
-import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Fragment.Items.ItemList;
+import com.example.kcs.Fragment.Dish.DishList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
