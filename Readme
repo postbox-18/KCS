@@ -15,6 +15,7 @@ PENDING
 21-clear hash map using alert message
 22-show empty logo for my order fragment which list is empty
 23-edit date time and count  in place order fragment
+24-clear reset data after order btn is clicked
 
 FINISHED
 1-alert check box to select the func

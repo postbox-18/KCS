@@ -335,16 +335,18 @@ public class PlaceOrderFragment extends Fragment {
                             itemLists=new ArrayList<>();
                             for(int j=0;j<aList.size();j++)
                             {
-                                String[] str=(aList.get(i).split("_"));
+                                String[] str=(aList.get(j).split("_"));
                                 ItemList itemList=new ItemList();
                                 itemList.setItem(str[0]);
                                 itemList.setSelected(str[1]);
                                 itemLists.add(itemList);
                             }
+                            MyLog.e(TAG, "dish>>itemMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
+                            MyLog.e(TAG, "dish>>itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
+
 
                             checkedLists=new ArrayList<>();
                             for(int l=0;l<itemLists.size();l++) {
-                                MyLog.e(TAG, "dish>>itemMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
                                 MyLog.e(TAG, "dish>>item title>>" + itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected());
                                 checkedLists=itemMap.get(itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected());
                                 MyLog.e(TAG, "dish>>checkedLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
@@ -424,7 +426,7 @@ public class PlaceOrderFragment extends Fragment {
 
                     String s = sess + "!" + time + "-" + count + "_true";
                     MyLog.e(TAG, "placeorders>>ses  time>>" + s);
-                    databaseReference.child(user_name).child(func_title).child(date).child(s).child(headerList_title).child(item_title).child(checkedLists1.get(i).getItemList()).setValue("true");
+                    databaseReference.child(user_name).child(func_title).child(date).child(s).child(headerList_title).child(item_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
                 MyLog.e(TAG, "comit");
 
