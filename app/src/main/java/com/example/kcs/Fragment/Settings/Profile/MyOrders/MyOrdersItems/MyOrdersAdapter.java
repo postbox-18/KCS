@@ -65,7 +65,7 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
     @Override
     public MyOrdersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.myorder_cardview, parent, false);
+        View view = layoutInflater.inflate(R.layout.select_func, parent, false);
         return new MyOrdersAdapter.ViewHolder(view);
         //return view;
     }

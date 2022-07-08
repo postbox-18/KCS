@@ -28,7 +28,7 @@
            <androidx.recyclerview.widget.RecyclerView
                android:id="@+id/recyclerview_my_orders"
                android:layout_width="match_parent"
-               tools:listitem="@layout/myorder_cardview"
+               tools:listitem="@layout/select_func"
                android:layout_height="wrap_content"
                tools:itemCount="3"/>
        </LinearLayout>

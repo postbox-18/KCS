@@ -10,13 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MyorderItemListAdapters extends RecyclerView.Adapter<MyorderItemListAdapters.ViewHolder> {
@@ -38,7 +35,7 @@ public class MyorderItemListAdapters extends RecyclerView.Adapter<MyorderItemLis
     @Override
     public MyorderItemListAdapters.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.myorderlist_cardview, parent, false);
+        View view = layoutInflater.inflate(R.layout.select_item, parent, false);
         return new MyorderItemListAdapters.ViewHolder(view);
         //return view;
     }
