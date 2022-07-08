@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.kcs.Classes.MyLog;
+import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -22,11 +23,12 @@ import com.example.kcs.ViewModel.GetViewModel;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterHeader.ViewHolder> {
     private Context context;
     private List<OrderDishLists> o_orderDishListsses = new ArrayList<>();
-    private ViewCartAdapter viewCartAdapter;
+    private ViewCartAdapterItem viewCartAdapterItem;
     private String TAG = "ViewCartAdapterHeader";
     private String session_title, func_title, sess,date,bolen;
 
@@ -45,6 +47,8 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
     //Item map
     private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
+    private List<SelecteItemList> selecteItemLists=new ArrayList<>();
+
 
     public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap, String date) {
         this.context = context;
@@ -98,12 +102,26 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         getViewModel.setE_selectedHeaders(e_selectedHeaders);
 
         //o_orderDishListsses = orderHeaderMap.get(list.getHeader());
+        orderItemMap=orderHeaderMap.get(list.getHeader());
+        Set<String> stringSet = orderItemMap.keySet();
+        List<String> aList = new ArrayList<String>(stringSet.size());
+        for (String x : stringSet)
+            aList.add(x);
+        selecteItemLists=new ArrayList<>();
+        for(int i=0;i<aList.size();i++)
+        {
+            String [] arr=(aList.get(i)).split("_");
+            SelecteItemList itemList=new SelecteItemList();
+            itemList.setItem(arr[0]);
+            itemList.setSelected(arr[1]);
+            selecteItemLists.add(itemList);
+        }
 
         holder.recyclerview_item_list.setHasFixedSize(true);
         holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         MyLog.e(TAG, "s_count>>sess>>" + sess);
-        viewCartAdapter = new ViewCartAdapter(context, getViewModel, o_orderDishListsses, func_title, list.getHeader(), sess,date);
-        holder.recyclerview_item_list.setAdapter(viewCartAdapter);
+        viewCartAdapterItem = new ViewCartAdapterItem(context, getViewModel, selecteItemLists, orderItemMap,func_title, list.getHeader(), sess,date);
+        holder.recyclerview_item_list.setAdapter(viewCartAdapterItem);
 
 
 

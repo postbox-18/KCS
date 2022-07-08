@@ -30,7 +30,7 @@ import java.util.Set;
 public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDate.ViewHolder> {
     private Context context;
     private List<OrderDishLists> orderDishListsses = new ArrayList<>();
-    private ViewCartAdapter viewCartAdapter;
+    private ViewCartAdapterItem viewCartAdapterItem;
     private String TAG = "ViewCartAdapterDate";
     private String func_title, s_user_name, sess_title;
 

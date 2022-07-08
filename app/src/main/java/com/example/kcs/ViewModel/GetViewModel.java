@@ -304,6 +304,10 @@ public class GetViewModel extends AndroidViewModel {
         this.selected_dateMutable.postValue(selected_date);
     }
 
+    public MutableLiveData<String> getSelected_dateMutable() {
+        return selected_dateMutable;
+    }
+
     public void setSessionDateTimeCount(String sessionDateTimeCount) {
         this.sessionDateTimeCount = sessionDateTimeCount;
         this.sessionDateTimeCountMutable.postValue(sessionDateTimeCount);
@@ -1217,7 +1221,7 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void EditMap(String func_title, String header, String item, int position, int n, String username, String sess, String date) {
+    public void EditMap(String func_title, String header, String item, String item_title, int position, int n, String username, String sess, String date) {
         MyLog.e(TAG, "cancel>>value " + n);
         MyLog.e(TAG, "s_count>>sess>>" + sess);
         String[] scb = sess.split("-");

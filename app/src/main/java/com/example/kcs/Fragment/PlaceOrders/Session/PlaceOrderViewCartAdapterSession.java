@@ -17,7 +17,7 @@ import com.example.kcs.Fragment.PlaceOrders.Header.PlaceOrderViewCartAdapterHead
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapter;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapterItem;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
@@ -29,7 +29,7 @@ import java.util.Set;
 public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<PlaceOrderViewCartAdapterSession.ViewHolder> {
     private Context context;
     private List<OrderDishLists> orderDishListsses = new ArrayList<>();
-    private ViewCartAdapter viewCartAdapter;
+    private ViewCartAdapterItem viewCartAdapterItem;
     private String TAG = "PlaceOrderViewCartAdapterSession";
     private String func_title, s_user_name, date_time;
     private List<SelectedSessionList> sessionLists = new ArrayList<>();

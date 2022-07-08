@@ -34,7 +34,7 @@ import java.util.Set;
 public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapterSession.ViewHolder> {
     private Context context;
     private List<OrderDishLists> orderDishListsses = new ArrayList<>();
-    private ViewCartAdapter viewCartAdapter;
+    private ViewCartAdapterItem viewCartAdapterItem;
     private String TAG = "ViewCartAdapterSession";
     private String func_title, s_user_name, sess_title, date;
     private GetViewModel getViewModel;
