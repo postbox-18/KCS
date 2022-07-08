@@ -25,7 +25,7 @@ import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.Dish.DishSelectedList.UserDishList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
 import com.google.firebase.database.DataSnapshot;
@@ -145,6 +145,9 @@ public class GetViewModel extends AndroidViewModel {
     //Selected Func
     private String func_title;
     private MutableLiveData<String> func_title_Mutable = new MutableLiveData<>();
+    //Selected Func
+    private String selected_date;
+    private MutableLiveData<String> selected_dateMutable = new MutableLiveData<>();
 
     //Selected Item
     private String item_title;
@@ -185,8 +188,8 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<LinkedHashMap<String, List<SelectedHeader>>> sh_f_mapMutableLiveData = new MutableLiveData<>();*/
 
     //selected Item list
-    private List<OrderItemLists> orderItemLists = new ArrayList<>();
-    private MutableLiveData<List<OrderItemLists>> orderItemListsMutableLiveData = new MutableLiveData<>();
+    private List<OrderDishLists> orderDishLists = new ArrayList<>();
+    private MutableLiveData<List<OrderDishLists>> orderItemListsMutableLiveData = new MutableLiveData<>();
     /*private LinkedHashMap<String, List<OrderItemLists>> orderItemList_f_map = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> orderItemList_f_mapMutableLiveData = new MutableLiveData<>();*/
 
@@ -262,23 +265,26 @@ public class GetViewModel extends AndroidViewModel {
     private List<SelectedHeader> c_selectedHeaders = new ArrayList<>();
 
     //My Order HashMap
-    private List<OrderItemLists> o_orderItemLists = new ArrayList<>();
+    private List<OrderDishLists> o_orderDishLists = new ArrayList<>();
     //private List<SelectedHeader> o_selectedHeadersList=new ArrayList<>();
     //private List<MyOrdersList> o_myOrdersList=new ArrayList<>();
     //private List<MyOrderFuncList> o_myOrderFuncLists=new ArrayList<>();
     //private List<SelectedSessionList> o_selectedSessionLists=new ArrayList<>();
     //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderFunc_MapMutableLiveData = new MutableLiveData<>();
-    //date map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderDateMapMutableLiveData = new MutableLiveData<>();
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> orderHeaderMapMutableLiveData = new MutableLiveData<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderSessionMapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>> orderFunc_MapMutableLiveData = new MutableLiveData<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDate_Map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderDate_MapMutableLiveData = new MutableLiveData<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderSessionMapMutableLiveData = new MutableLiveData<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderHeaderMapMutableLiveData = new MutableLiveData<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<OrderDishLists>>> orderItemMapMutableLiveData = new MutableLiveData<>();
     //head count
     private String s_count;
     private MutableLiveData<String> s_countLiveData = new MutableLiveData<>();
@@ -291,6 +297,11 @@ public class GetViewModel extends AndroidViewModel {
 
 
 
+    }
+
+    public void setSelected_date(String selected_date) {
+        this.selected_date = selected_date;
+        this.selected_dateMutable.postValue(selected_date);
     }
 
     public void setSessionDateTimeCount(String sessionDateTimeCount) {
@@ -329,35 +340,13 @@ public class GetViewModel extends AndroidViewModel {
         this.s_countLiveData.postValue(s_count);
     }
 
-    public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map) {
+    public void setOrderFunc_Map(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map) {
         this.orderFunc_Map = orderFunc_Map;
         this.orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
     }
 
-    public void setOrderHeaderMap(LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap) {
-        this.orderHeaderMap = orderHeaderMap;
-        this.orderHeaderMapMutableLiveData.postValue(orderHeaderMap);
-    }
-
-    public void setOrderSessionMap(LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap) {
-        this.orderSessionMap = orderSessionMap;
-        this.orderSessionMapMutableLiveData.postValue(orderSessionMap);
-    }
-
-    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> getOrderDateMapMutableLiveData() {
-        return orderDateMapMutableLiveData;
-    }
-
-    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> getOrderFunc_MapMutableLiveData() {
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>> getOrderFunc_MapMutableLiveData() {
         return orderFunc_MapMutableLiveData;
-    }
-
-    public MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> getOrderHeaderMapMutableLiveData() {
-        return orderHeaderMapMutableLiveData;
-    }
-
-    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> getOrderSessionMapMutableLiveData() {
-        return orderSessionMapMutableLiveData;
     }
 
     public MutableLiveData<Integer> getEcdLive() {
@@ -665,7 +654,7 @@ public class GetViewModel extends AndroidViewModel {
                     MyLog.e(TAG, "onData>>datas>>" + datas);
                     MyLog.e(TAG, "MyOrdersAdapter>>func>>" + datas.getKey().toString());
                     func = datas.getKey().toString();
-                    orderDateMap = new LinkedHashMap<>();
+                    orderDate_Map = new LinkedHashMap<>();
                     for (DataSnapshot dataTime : datas.getChildren()) {
                         String date = dataTime.getKey().toString();
                         orderSessionMap = new LinkedHashMap<>();
@@ -680,38 +669,44 @@ public class GetViewModel extends AndroidViewModel {
                             orderHeaderMap = new LinkedHashMap<>();
                             for (DataSnapshot dataSnapshot : ondata.getChildren()) {
                                 //get item list
-                                o_orderItemLists = new ArrayList<>();
 
                                 header_title = dataSnapshot.getKey().toString();
                                 MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
                                 MyLog.e(TAG, "onData>>header_title>>" + dataSnapshot.getKey().toString());
                                 size = 0;
-                                for (DataSnapshot shot : dataSnapshot.getChildren()) {
-                                    MyLog.e(TAG, "onData>>shots>>" + shot);
-                                    MyLog.e(TAG, "onData>>shots>>" + shot.getKey().toString());
-                                    //get item list
-                                    OrderItemLists itemLists = new OrderItemLists(
-                                            shot.getValue().toString()
-                                    );
-                                    o_orderItemLists.add(itemLists);
-                                    size++;
+                                orderItemMap=new LinkedHashMap<>();
+                                for (DataSnapshot itemShot:dataSnapshot.getChildren()) {
+                                    String item=itemShot.getKey().toString();
+                                    o_orderDishLists = new ArrayList<>();
+                                    for (DataSnapshot shot : itemShot.getChildren()) {
+                                        MyLog.e(TAG, "onData>>shots>>" + shot);
+                                        MyLog.e(TAG, "onData>>shots>>" + shot.getKey().toString());
+                                        //get item list
+                                        OrderDishLists itemLists = new OrderDishLists(
+                                                shot.getValue().toString()
+                                        );
+                                        o_orderDishLists.add(itemLists);
+                                        size++;
+                                    }
+                                    orderItemMap.put(item,o_orderDishLists);
                                 }
 
                                 MyLog.e(TAG, "onData>>size>" + size);
-                                orderHeaderMap.put(header_title, o_orderItemLists);
+                                orderHeaderMap.put(header_title, orderItemMap);
 
 
                             }
                             orderSessionMap.put(ss, orderHeaderMap);
 
                         }
-                        orderDateMap.put(date, orderSessionMap);
+                        orderDate_Map.put(date, orderSessionMap);
                     }
-                    orderFunc_Map.put(func, orderDateMap);
+                    orderFunc_Map.put(func, orderDate_Map);
                 }
 
                 //set func map
                 orderFunc_MapMutableLiveData.postValue(orderFunc_Map);
+                MyLog.e(TAG,"order_dish>>orderFunc_Map\n"+new GsonBuilder().setPrettyPrinting().create().toJson(orderFunc_Map));
 
 
             }
@@ -729,7 +724,7 @@ public class GetViewModel extends AndroidViewModel {
         return orderItemList_f_mapMutableLiveData;
     }*/
 
-    public MutableLiveData<List<OrderItemLists>> getOrderItemListsMutableLiveData() {
+    public MutableLiveData<List<OrderDishLists>> getOrderItemListsMutableLiveData() {
         return orderItemListsMutableLiveData;
     }
 

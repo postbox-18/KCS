@@ -18,7 +18,6 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,7 +25,7 @@ import java.util.List;
 
 public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterHeader.ViewHolder> {
     private Context context;
-    private List<OrderItemLists> o_orderItemListss = new ArrayList<>();
+    private List<OrderDishLists> o_orderDishListsses = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapterHeader";
     private String session_title, func_title, sess,date,bolen;
@@ -35,10 +34,19 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private List<SelectedHeader> header = new ArrayList<>();
     //edit hash map list
     private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
+    //order hash map
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDate_Map = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
 
-    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title, LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap,String date) {
+    public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap, String date) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.header = selectedHeadersList;
@@ -62,6 +70,11 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final SelectedHeader list = header.get(position);
 
+
+        //set header title
+        getViewModel.setHeader_title(list.getHeader());
+
+
         holder.header.setText(list.getHeader());
         String[] str = sess.split("_");
         session_title = str[0];
@@ -84,12 +97,12 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         e_selectedHeaders = new ArrayList<>();
         getViewModel.setE_selectedHeaders(e_selectedHeaders);
 
-        o_orderItemListss = orderHeaderMap.get(list.getHeader());
+        //o_orderDishListsses = orderHeaderMap.get(list.getHeader());
 
         holder.recyclerview_item_list.setHasFixedSize(true);
         holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         MyLog.e(TAG, "s_count>>sess>>" + sess);
-        viewCartAdapter = new ViewCartAdapter(context, getViewModel, o_orderItemListss, func_title, list.getHeader(), sess,date);
+        viewCartAdapter = new ViewCartAdapter(context, getViewModel, o_orderDishListsses, func_title, list.getHeader(), sess,date);
         holder.recyclerview_item_list.setAdapter(viewCartAdapter);
 
 

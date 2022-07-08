@@ -21,7 +21,6 @@ import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.Selected
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -30,7 +29,7 @@ import java.util.Set;
 
 public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDate.ViewHolder> {
     private Context context;
-    private List<OrderItemLists> orderItemListss = new ArrayList<>();
+    private List<OrderDishLists> orderDishListsses = new ArrayList<>();
     private ViewCartAdapter viewCartAdapter;
     private String TAG = "ViewCartAdapterDate";
     private String func_title, s_user_name, sess_title;
@@ -47,20 +46,24 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private int n;
-    //order hashmap
-    //date map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    //order hash map
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     //selected headers
     private List<SelectedHeader> o_selectedHeaders=new ArrayList<>();
     private List<SelectedSessionList> o_selectedSessionLists=new ArrayList<>();
     private List<SelectedDateList> o_dateLists=new ArrayList<>();
 
 
-    public ViewCartAdapterDate(Context context, GetViewModel getViewModel, String func_title, BottomSheetDialog bottomSheet, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap, List<SelectedDateList> o_dateLists) {
+    public ViewCartAdapterDate(Context context, GetViewModel getViewModel, String func_title, BottomSheetDialog bottomSheet, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap, List<SelectedDateList> o_dateLists) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.func_title = func_title;
@@ -133,7 +136,14 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
         editHeaderMap=new LinkedHashMap<>();
         getViewModel.setEditHeaderMap(editHeaderMap);
 
+
         final SelectedDateList o_dateLists1=o_dateLists.get(position);
+
+
+        //set date
+        getViewModel.setSelected_date(o_dateLists1.getDate());
+
+
         holder.date.setText(o_dateLists1.getDate());
         MyLog.e(TAG,"orders>> o_dateLists1.getDate()"+o_dateLists1.getDate());
 

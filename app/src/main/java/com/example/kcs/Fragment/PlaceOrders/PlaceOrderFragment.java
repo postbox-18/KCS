@@ -341,15 +341,12 @@ public class PlaceOrderFragment extends Fragment {
                                 itemList.setSelected(str[1]);
                                 itemLists.add(itemList);
                             }
-                            MyLog.e(TAG, "dish>>itemMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
-                            MyLog.e(TAG, "dish>>itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
 
 
                             checkedLists=new ArrayList<>();
                             for(int l=0;l<itemLists.size();l++) {
                                 MyLog.e(TAG, "dish>>item title>>" + itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected());
                                 checkedLists=itemMap.get(itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected());
-                                MyLog.e(TAG, "dish>>checkedLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
                                 String item=itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected();
                                 SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(),item, selectedSessionLists.get(k).getSession_title(), checkedLists, date_time, selectedSessionLists.get(k).getS_count());
                             }

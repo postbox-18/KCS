@@ -14,30 +14,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
-import com.example.kcs.Fragment.Items.CheckedList;
-import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
-import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHolder> {
     private Context context;
-    private List<OrderItemLists> orderItemListss = new ArrayList<>();
+    private List<OrderDishLists> orderDishListsses = new ArrayList<>();
     private String TAG = "ViewCartAdapter";
     private GetViewModel getViewModel;
     private String func_title, header,username,date,sess;
     private int n;
 
 
-    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<OrderItemLists> orderItemListss, String func_title, String header, String sess,String date) {
+    public ViewCartAdapter(Context context, GetViewModel getViewModel, List<OrderDishLists> orderDishListsses, String func_title, String header, String sess, String date) {
         this.context = context;
         this.getViewModel = getViewModel;
-        this.orderItemListss = orderItemListss;
+        this.orderDishListsses = orderDishListsses;
         this.func_title = func_title;
         this.header = header;
         this.sess = sess;
@@ -56,8 +51,8 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final OrderItemLists orderItemLists1 = orderItemListss.get(position);
-        holder.list.setText(orderItemLists1.getItemList());
+        final OrderDishLists orderDishLists1 = orderDishListsses.get(position);
+        holder.list.setText(orderDishLists1.getItemList());
 
 
         //get username
@@ -73,14 +68,14 @@ public class ViewCartAdapter extends RecyclerView.Adapter<ViewCartAdapter.ViewHo
         MyLog.e(TAG, "s_count>>sess>>" + sess);
 
         //set edit hash map
-        getViewModel.EditMap(func_title, header, orderItemLists1.getItemList(), position,n,username,sess,date);
+        getViewModel.EditMap(func_title, header, orderDishLists1.getItemList(), position,n,username,sess,date);
 
     }
 
 
     @Override
     public int getItemCount() {
-        return orderItemListss.size();
+        return orderDishListsses.size();
     }
 
 

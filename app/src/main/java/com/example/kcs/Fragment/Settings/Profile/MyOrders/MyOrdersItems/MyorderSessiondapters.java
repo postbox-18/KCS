@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,8 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
-import com.example.kcs.Fragment.Session.SessionList;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.gson.GsonBuilder;
@@ -42,17 +40,23 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
-    //order hashmap
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    //order hash map
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDate_Map = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     //get selected headers
     private List<SelectedHeader> o_selectedHeaders=new ArrayList<>();
-    private List<OrderItemLists> o_orderItemLists=new ArrayList<>();
+    private List<OrderDishLists> o_orderDishLists =new ArrayList<>();
 
 
-    public MyorderSessiondapters(Context context, String funcTitle, String date, GetViewModel getViewModel, List<SelectedSessionList> sessionLists, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap) {
+    public MyorderSessiondapters(Context context, String funcTitle, String date, GetViewModel getViewModel, List<SelectedSessionList> sessionLists, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap) {
         this.func_title = funcTitle;
         this.context = context;
         this.sessionLists = sessionLists;
@@ -122,25 +126,37 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                     //get header list and item size
                 }
 
-                myOrdersList.clear();
                 for (int k = 0; k < o_selectedHeaders.size(); k++) {
 
-                    o_orderItemLists.clear();
                     String header = o_selectedHeaders.get(k).getHeader();
-                    o_orderItemLists = new ArrayList<>(orderHeaderMap.get(header));
+                    orderItemMap = orderHeaderMap.get(header);
+                    Set<String> stringSet = orderItemMap.keySet();
+                    List<String> aList = new ArrayList<String>(stringSet.size());
+                    for (String x : stringSet)
+                        aList.add(x);
+                    o_orderDishLists=new ArrayList<>();
+                    MyLog.e(TAG, "order_dish>>orderItemMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemMap));
+                    for(int l=0;l<aList.size();l++)
+                    {
+                        o_orderDishLists=orderItemMap.get(aList.get(l));
+                        MyLog.e(TAG, "order_dish>>o_orderDishLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(o_orderDishLists));
+                        myOrdersList=new ArrayList<>();
+                        MyOrdersList myOrdersList1 = new MyOrdersList(
+                                header,
+                                o_orderDishLists.size()
+                        );
+                        myOrdersList.add(myOrdersList1);
+                        MyLog.e(TAG, "order_dish>>myOrdersList>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
+                        holder.recyclerview_item_list.setHasFixedSize(true);
+                        holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                        MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
+                        holder.recyclerview_item_list.setAdapter(itemListAdapters);
+                    }
 
-                    MyOrdersList myOrdersList1 = new MyOrdersList(
-                            header,
-                            o_orderItemLists.size()
-                    );
-                    myOrdersList.add(myOrdersList1);
 
 
                 }
-                holder.recyclerview_item_list.setHasFixedSize(true);
-                holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
-                holder.recyclerview_item_list.setAdapter(itemListAdapters);
+
 
             }
         }
