@@ -56,12 +56,12 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
 
 
 
-    public DishAdapter(Context context, List<DishList> dishLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> selected_s_map, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap) {
+    public DishAdapter(Context context, List<DishList> dishLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> selected_s_map, LinkedHashMap<String, List<CheckedList>> itemMap) {
         this.context = context;
         this.dishLists = dishLists;
         this.getViewModel = getViewModel;
         this.selected_s_map = new ArrayList<>(selected_s_map);
-        this.headerMap =headerMap;
+        this.itemMap =itemMap;
 
     }
 
@@ -76,10 +76,10 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull DishAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        if(headerMap==null)
+        if(itemMap==null)
         {
-            headerMap=new LinkedHashMap<>();
-            MyLog.e(TAG,"headerMap is null");
+            itemMap=new LinkedHashMap<>();
+            MyLog.e(TAG,"itemMap is null");
         }
 
         //get head count
@@ -202,7 +202,9 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                         }
                     }
                     getViewModel.setCheckedLists(checkedLists);
+                    MyLog.e(TAG, "dish>>itemMap before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
                     itemMap.put(item_title,checkedLists);
+                    MyLog.e(TAG, "dish>>itemMap after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
                     headerMap.put(header_title, itemMap);
                     String date = (sessionDateTimes.get(0).getDate()).replace("/", "-");
                     String s = sessionTitle + "!" + (date + " " + sessionDateTimes.get(0).getTime()) + "/" + s_count;

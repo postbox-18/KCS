@@ -191,7 +191,8 @@ public class DishFragment extends Fragment {
                             MyLog.e(TAG, "dish>>d_DishMap header>>" + header_title);
                             MyLog.e(TAG, "dish>>d_DishMap item_title>>" + item_title);
                             dishLists = d_DishMap.get(item_title);
-                            dishAdapter = new DishAdapter(getContext(), dishLists, getViewModel,selected_s_map,headerMap);
+                            itemMap=headerMap.get(header_title);
+                            dishAdapter = new DishAdapter(getContext(), dishLists, getViewModel,selected_s_map,itemMap);
                             recyclerview_dish.setAdapter(dishAdapter);
                         }
                     }
