@@ -202,9 +202,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                         }
                     }
                     getViewModel.setCheckedLists(checkedLists);
-                    MyLog.e(TAG, "dish>>itemMap before>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
                     itemMap.put(item_title,checkedLists);
-                    MyLog.e(TAG, "dish>>itemMap after>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
                     headerMap.put(header_title, itemMap);
                     String date = (sessionDateTimes.get(0).getDate()).replace("/", "-");
                     String s = sessionTitle + "!" + (date + " " + sessionDateTimes.get(0).getTime()) + "/" + s_count;
@@ -251,8 +249,6 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                     Gson gson = new Gson();
                     String json = gson.toJson(checkedLists);
                     new SharedPreferences_data(context).setChecked_item_list(json);
-                    MyLog.e(TAG, "dish>>selected_s_map>>" + new GsonBuilder().setPrettyPrinting().create().toJson(selected_s_map));
-                    MyLog.e(TAG, "dish>>funcMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(funcMap));
 
 
                 }

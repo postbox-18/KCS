@@ -20,10 +20,12 @@ import android.widget.Toast;
 import com.example.kcs.DialogFragment.DoneDialogfragment;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.Fragment.Dish.DishList;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Dish.DishSelectedList.UserDishList;
+import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.PlaceOrderViewCartAdapterSession;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
@@ -35,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -91,6 +94,8 @@ public class PlaceOrderFragment extends Fragment {
     //edit hash map list
     private List<SessionList> e_sessionLists = new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
+    private List<ItemList> itemLists = new ArrayList<>();
+    private List<DishList> dishLists = new ArrayList<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
@@ -322,7 +327,30 @@ public class PlaceOrderFragment extends Fragment {
 
                         for (int i = 0; i < selectedHeadersList.size(); i++) {
                             //checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
-                            SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), selectedSessionLists.get(k).getSession_title(), checkedLists, date_time, selectedSessionLists.get(k).getS_count());
+                            itemMap = headerMap.get(selectedHeadersList.get(i).getHeader());
+                            Set<String> stringSet = itemMap.keySet();
+                            List<String> aList = new ArrayList<String>(stringSet.size());
+                            for (String x : stringSet)
+                                aList.add(x);
+                            itemLists=new ArrayList<>();
+                            for(int j=0;j<aList.size();j++)
+                            {
+                                String[] str=(aList.get(i).split("_"));
+                                ItemList itemList=new ItemList();
+                                itemList.setItem(str[0]);
+                                itemList.setSelected(str[1]);
+                                itemLists.add(itemList);
+                            }
+
+                            checkedLists=new ArrayList<>();
+                            for(int l=0;l<itemLists.size();l++) {
+                                MyLog.e(TAG, "dish>>itemMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
+                                MyLog.e(TAG, "dish>>item title>>" + itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected());
+                                checkedLists=itemMap.get(itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected());
+                                MyLog.e(TAG, "dish>>checkedLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
+                                String item=itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected();
+                                SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(),item, selectedSessionLists.get(k).getSession_title(), checkedLists, date_time, selectedSessionLists.get(k).getS_count());
+                            }
                         }
                         doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
 
@@ -346,8 +374,7 @@ public class PlaceOrderFragment extends Fragment {
         return view;
     }
 
-
-    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_counts) {
+    private void SaveOrders(String func_title, String user_name, String headerList_title, String item_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_count) {
         //remove old data
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders").child(user_name);
@@ -367,7 +394,7 @@ public class PlaceOrderFragment extends Fragment {
 
         String s = sess + "!" + time + "-" + count + "_true";
         MyLog.e(TAG, "placeorders>>ses  time>>" + s);
-        databaseReference.child(func_title).child(date).child(s).child(headerList_title).removeValue();
+        databaseReference.child(func_title).child(date).child(s).child(headerList_title).child(item_title).removeValue();
         MyLog.e(TAG, "cancel remove commit");
 
 
@@ -397,7 +424,7 @@ public class PlaceOrderFragment extends Fragment {
 
                     String s = sess + "!" + time + "-" + count + "_true";
                     MyLog.e(TAG, "placeorders>>ses  time>>" + s);
-                    databaseReference.child(user_name).child(func_title).child(date).child(s).child(headerList_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
+                    databaseReference.child(user_name).child(func_title).child(date).child(s).child(headerList_title).child(item_title).child(checkedLists1.get(i).getItemList()).setValue("true");
                 }
                 MyLog.e(TAG, "comit");
 
@@ -420,6 +447,11 @@ public class PlaceOrderFragment extends Fragment {
                 Toast.makeText(getContext(), "Fail to add data " + error, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_counts) {
+
     }
 
 }

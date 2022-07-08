@@ -65,9 +65,7 @@ public class PlaceOrderViewCartAdapterItem extends RecyclerView.Adapter<PlaceOrd
         {
             holder.layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
         }
-        MyLog.e(TAG, "dish>>itemMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
         checkedLists=itemMap.get(itemLists1.getItem()+"_"+itemLists1.getSelected());
-        MyLog.e(TAG, "dish>>checkedLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
         holder.recyclerview_dish.setHasFixedSize(true);
         holder.recyclerview_dish.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         PlaceOrderViewAdapterDish placeOrderViewAdapterDish = new PlaceOrderViewAdapterDish(context, getViewModel, checkedLists);

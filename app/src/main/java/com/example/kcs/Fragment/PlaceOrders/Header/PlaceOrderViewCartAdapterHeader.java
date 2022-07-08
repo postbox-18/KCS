@@ -78,7 +78,6 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
             //get Checked list hash map
 
             itemMap = headerMap.get(list.getHeader());
-            MyLog.e(TAG, "dish>>itemMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemMap));
             Set<String> stringSet = itemMap.keySet();
             List<String> aList = new ArrayList<String>(stringSet.size());
             for (String x : stringSet)
@@ -93,7 +92,6 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
                 itemLists.add(itemList);
             }
 
-            MyLog.e(TAG, "dish>>itemLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemLists));
 
 
             PlaceOrderViewCartAdapterItem placeOrderViewCartAdapterItem = new PlaceOrderViewCartAdapterItem(context, getViewModel, itemMap,itemLists);

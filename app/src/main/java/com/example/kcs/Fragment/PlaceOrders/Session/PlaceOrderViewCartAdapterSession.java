@@ -89,7 +89,6 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
             String a = list.getSession_title() + "!" + list.getTime()+"/"+list.getS_count();
             MyLog.e(TAG,"count>>if>>"+a);
             headerMap = sessionMap.get(a);
-            MyLog.e(TAG, "dish>>headerMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(headerMap));
             Set<String> stringSet = headerMap.keySet();
             List<String> aList = new ArrayList<String>(stringSet.size());
             for (String x : stringSet)
