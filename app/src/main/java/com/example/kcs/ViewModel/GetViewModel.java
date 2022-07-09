@@ -16,6 +16,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.TimeList;
 import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.SelectedItemList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrderFuncList;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.Classes.SharedPreferences_data;
@@ -255,6 +256,7 @@ public class GetViewModel extends AndroidViewModel {
     //Item map
     //selected Dish list
     private List<SelectedDishList> selectedDishLists = new ArrayList<>();
+    private List<SelectedItemList> selectedItemLists = new ArrayList<>();
     private MutableLiveData<List<SelectedDishList>> selectedDishListsMutableLiveData = new MutableLiveData<>();
     private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, List<SelectedDishList>>> editItemMapMutableLiveData = new MutableLiveData<>();
@@ -262,7 +264,7 @@ public class GetViewModel extends AndroidViewModel {
 
     //get selected map in place order
     private List<LinkedHashMap<String, List<CheckedList>>> edit_selected_s_map = new ArrayList<>();
-    private LinkedHashMap<String, List<CheckedList>> e_headerMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, List<CheckedList>> e_ItemMap = new LinkedHashMap<>();
     private List<CheckedList> e_checkedLists = new ArrayList<>();
 
     //Cancel
@@ -301,7 +303,6 @@ public class GetViewModel extends AndroidViewModel {
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
         CheckUserDetails();
-
 
 
     }
@@ -691,9 +692,9 @@ public class GetViewModel extends AndroidViewModel {
                                 MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
                                 MyLog.e(TAG, "onData>>header_title>>" + dataSnapshot.getKey().toString());
                                 size = 0;
-                                orderItemMap=new LinkedHashMap<>();
-                                for (DataSnapshot itemShot:dataSnapshot.getChildren()) {
-                                    String item=itemShot.getKey().toString();
+                                orderItemMap = new LinkedHashMap<>();
+                                for (DataSnapshot itemShot : dataSnapshot.getChildren()) {
+                                    String item = itemShot.getKey().toString();
                                     o_orderDishLists = new ArrayList<>();
                                     for (DataSnapshot shot : itemShot.getChildren()) {
                                         MyLog.e(TAG, "onData>>shots>>" + shot);
@@ -705,7 +706,7 @@ public class GetViewModel extends AndroidViewModel {
                                         o_orderDishLists.add(itemLists);
                                         size++;
                                     }
-                                    orderItemMap.put(item,o_orderDishLists);
+                                    orderItemMap.put(item, o_orderDishLists);
                                 }
 
                                 MyLog.e(TAG, "onData>>size>" + size);
@@ -1246,18 +1247,17 @@ public class GetViewModel extends AndroidViewModel {
         MyLog.e(TAG, "s_count>>count>>" + s_count);
         /////////*****Edit **********//////////////////
         //set item map
-        selectedDishLists=new ArrayList<>();
-        for(int i=0;i<dish.size();i++) {
+        selectedDishLists = new ArrayList<>();
+        for (int i = 0; i < dish.size(); i++) {
             SelectedDishList selectedDishList = new SelectedDishList(
                     dish.get(i).getItemList()
             );
             selectedDishLists.add(selectedDishList);
         }
         //put item map
-        editItemMap.put(item_title,selectedDishLists);
+        editItemMap.put(item_title, selectedDishLists);
         //put header map
         editHeaderMap.put(header, editItemMap);
-
 
 
         //set SelectedSessionList map
@@ -1289,8 +1289,7 @@ public class GetViewModel extends AndroidViewModel {
         //set item map
         editItemMapMutableLiveData.postValue(editItemMap);
 
-        MyLog.e(TAG,"edit_dish>>editFunc_Map\n"+new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
-
+        MyLog.e(TAG, "edit_dish>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
 
     }
@@ -1298,10 +1297,6 @@ public class GetViewModel extends AndroidViewModel {
     //date,ses,dTime,b
     public void getSelecteds_map(String date, String ses, String dTime, String b, String count) {
 
-        //get header map
-        String sd = ses + "!" + dTime + "/" + count;
-
-        editHeaderMap = new LinkedHashMap<>(editSessionMap).get(sd);
 
         //set session title live
         session_titleMutable.postValue(ses);
@@ -1314,6 +1309,11 @@ public class GetViewModel extends AndroidViewModel {
         s_countLiveData.postValue(count);
 
 
+/*
+        //get header map
+        String sd = ses + "!" + dTime + "/" + count;
+
+        editHeaderMap = new LinkedHashMap<>(editSessionMap).get(sd);
         //get header list
         Set<String> stringSet = editHeaderMap.keySet();
         List<String> aList = new ArrayList<String>(stringSet.size());
@@ -1321,7 +1321,7 @@ public class GetViewModel extends AndroidViewModel {
             aList.add(x);
 
         MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-       /* e_selectedHeaders.clear();
+       *//* e_selectedHeaders.clear();
         for (int i = 0; i < aList.size(); i++) {
             //set selected header list
             SelectedHeader list = new SelectedHeader(
@@ -1337,7 +1337,7 @@ public class GetViewModel extends AndroidViewModel {
         e_headerMap = new LinkedHashMap<>();
         for (int k = 0; k < e_selectedHeaders.size(); k++) {
             header_title = e_selectedHeaders.get(k).getHeader();
-            selectedHeadersList = (editHeaderMap).get(header_title);*/
+            selectedHeadersList = (editHeaderMap).get(header_title);*//*
             //set item list from header map in data base
             //itemLists = f_maps.get(header_title);
             d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
@@ -1372,11 +1372,108 @@ public class GetViewModel extends AndroidViewModel {
                     }
                 }
             }
+        }*/
+
+
+///////////////**GET POSITION FOR DISH ITEM************/////////
+        MyLog.e(TAG,"edit_dish>>d_ItemMap header_title"+header_title);
+        MyLog.e(TAG,"edit_dish>>d_ItemMap\n"+new GsonBuilder().setPrettyPrinting().create().toJson(d_ItemMap));
+        d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
+        ///////////////**GET POSITION FOR DISH ITEM************/////////
+/*
+
+        Set<String> set2 = d_DishMap.keySet();
+        List<String> aList2 = new ArrayList<String>(set2.size());
+        for (String x2 : set2)
+            aList2.add(x2);
+        itemLists = new ArrayList<>();
+        for (int p = 0; p < aList2.size(); p++) {
+            String[] str = (aList2.get(p)).split("_");
+            ItemList itemList = new ItemList();
+            itemList.setItem(str[0]);
+            itemList.setSelected(str[1]);
+            itemLists.add(itemList);
         }
-        /*edit_selected_s_map.add(e_headerMap);
-        check_s_mapMutable.postValue(edit_selected_s_map);*/
+        dishLists=new ArrayList<>();
+        for(int q=0;q<itemLists.size();q++)
+        {
+            DishList dishList=new DishList();
+            dishList.setDish(itemLists.get(q).getItem());
+            dishList.setBoolens(null);
+            dishLists.add(dishList);
+
+        }
+        MyLog.e(TAG, "edit_dish>>get editItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editItemMap));
+*/
+
+        ///////////////**END END GET POSITION FOR DISH ITEMEND END ************/////////
+        ///////////////**END END GET POSITION FOR DISH ITEMEND END ************/////////
 
 
+        MyLog.e(TAG, "edit_dish>>get editItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editItemMap));
+        Set<String> set = editItemMap.keySet();
+        List<String> aList1 = new ArrayList<String>(set.size());
+        for (String x1 : set)
+            aList1.add(x1);
+
+        selectedItemLists = new ArrayList<>();
+        for (int i = 0; i < aList1.size(); i++) {
+            SelectedItemList itemList = new SelectedItemList();
+            String[] str = (aList1.get(i)).split("_");
+            itemList.setItem(str[0]);
+            itemList.setSelected(str[1]);
+            selectedItemLists.add(itemList);
+        }
+        e_ItemMap = new LinkedHashMap<>();
+
+
+        for (int i = 0; i < selectedItemLists.size(); i++) {
+            String item = selectedItemLists.get(i).getItem() + "_" + selectedItemLists.get(i).getSelected();
+
+            dishLists=new ArrayList<>();
+            ////////////**********************//////////////
+            dishLists=d_DishMap.get(item);
+            MyLog.e(TAG,"edit_dish>>d_DishMap\n"+new GsonBuilder().setPrettyPrinting().create().toJson(d_DishMap));
+            MyLog.e(TAG,"edit_dish>>dishLists\n"+new GsonBuilder().setPrettyPrinting().create().toJson(dishLists));
+
+            ////////////**********************//////////////
+
+            selectedDishLists = new ArrayList<>();
+            selectedDishLists = editItemMap.get(item);
+            checkedLists = new ArrayList<>();
+            for (int j = 0; j < selectedDishLists.size(); j++) {
+                String e_dish=selectedDishLists.get(j).getDish();
+                for(int l=0;l<dishLists.size();l++)
+                {
+                    String dish=dishLists.get(l).getDish();
+                    if(e_dish.equals(dish)) {
+                        CheckedList checkedList = new CheckedList(
+                                e_dish,
+                                l
+                        );
+                        checkedLists.add(checkedList);
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    MyLog.e(TAG, "edit_dish>>checkedLists in\n" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
+
+
+                }
+                MyLog.e(TAG, "edit_dish>>checkedLists out\n" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
+
+                e_ItemMap.put(item, checkedLists);
+
+            }
+        }
+
+        MyLog.e(TAG, "edit_dish>>get e_ItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(e_ItemMap));
+
+        edit_selected_s_map.add(e_ItemMap);
+        check_s_mapMutable.postValue(edit_selected_s_map);
+
+    }
 
 
     public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Maps, String date) {
