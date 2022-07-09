@@ -1289,7 +1289,6 @@ public class GetViewModel extends AndroidViewModel {
         //set item map
         editItemMapMutableLiveData.postValue(editItemMap);
 
-        MyLog.e(TAG, "edit_dish>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
 
     }
@@ -1377,7 +1376,6 @@ public class GetViewModel extends AndroidViewModel {
 
 ///////////////**GET POSITION FOR DISH ITEM************/////////
         MyLog.e(TAG,"edit_dish>>d_ItemMap header_title"+header_title);
-        MyLog.e(TAG,"edit_dish>>d_ItemMap\n"+new GsonBuilder().setPrettyPrinting().create().toJson(d_ItemMap));
         d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
         ///////////////**GET POSITION FOR DISH ITEM************/////////
 /*
@@ -1403,14 +1401,12 @@ public class GetViewModel extends AndroidViewModel {
             dishLists.add(dishList);
 
         }
-        MyLog.e(TAG, "edit_dish>>get editItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editItemMap));
 */
 
         ///////////////**END END GET POSITION FOR DISH ITEMEND END ************/////////
         ///////////////**END END GET POSITION FOR DISH ITEMEND END ************/////////
 
 
-        MyLog.e(TAG, "edit_dish>>get editItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editItemMap));
         Set<String> set = editItemMap.keySet();
         List<String> aList1 = new ArrayList<String>(set.size());
         for (String x1 : set)
@@ -1433,8 +1429,6 @@ public class GetViewModel extends AndroidViewModel {
             dishLists=new ArrayList<>();
             ////////////**********************//////////////
             dishLists=d_DishMap.get(item);
-            MyLog.e(TAG,"edit_dish>>d_DishMap\n"+new GsonBuilder().setPrettyPrinting().create().toJson(d_DishMap));
-            MyLog.e(TAG,"edit_dish>>dishLists\n"+new GsonBuilder().setPrettyPrinting().create().toJson(dishLists));
 
             ////////////**********************//////////////
 
@@ -1457,18 +1451,15 @@ public class GetViewModel extends AndroidViewModel {
                     {
                         continue;
                     }
-                    MyLog.e(TAG, "edit_dish>>checkedLists in\n" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
 
 
                 }
-                MyLog.e(TAG, "edit_dish>>checkedLists out\n" + new GsonBuilder().setPrettyPrinting().create().toJson(checkedLists));
 
                 e_ItemMap.put(item, checkedLists);
 
             }
         }
 
-        MyLog.e(TAG, "edit_dish>>get e_ItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(e_ItemMap));
 
         edit_selected_s_map.add(e_ItemMap);
         check_s_mapMutable.postValue(edit_selected_s_map);

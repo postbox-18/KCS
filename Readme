@@ -16,6 +16,7 @@ PENDING
 22-show empty logo for my order fragment which list is empty
 23-edit date time and count  in place order fragment
 24-clear reset data after order btn is clicked
+25-click on edit button and goes to header fragment edit date time count
 
 FINISHED
 1-alert check box to select the func
