@@ -89,17 +89,6 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         }
 
 
-        //get edit selected header list
-      /*  getViewModel.getE_selectedHeadersLive().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
-            @Override
-            public void onChanged(List<SelectedHeader> selectedHeaders) {
-                e_selectedHeaders = selectedHeaders;
-            }
-        });
-
-        e_selectedHeaders = new ArrayList<>();
-        getViewModel.setE_selectedHeaders(e_selectedHeaders);*/
-
         //o_orderDishListsses = orderHeaderMap.get(list.getHeader());
         orderItemMap=orderHeaderMap.get(list.getHeader());
         Set<String> stringSet = orderItemMap.keySet();

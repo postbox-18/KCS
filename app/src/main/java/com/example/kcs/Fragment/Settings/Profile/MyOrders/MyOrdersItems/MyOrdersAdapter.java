@@ -95,24 +95,35 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
                         editFunc_Map=stringLinkedHashMapLinkedHashMap;
                     }
                 });
-
-               /* //get session map
-                getViewModel.getEditSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>() {
-                    @Override
-                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> stringLinkedHashMapLinkedHashMap) {
-                        editSessionMap = stringLinkedHashMapLinkedHashMap;
-                    }
-                });
-
-
-        //get header map
-        getViewModel.getEditHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
+        //get date map
+        getViewModel.getEditDateMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-                editHeaderMap=stringListLinkedHashMap;
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> stringLinkedHashMapLinkedHashMap) {
+                editDateMap=stringLinkedHashMapLinkedHashMap;
             }
-        });*/
+        });
 
+        //get session map
+        getViewModel.getEditSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> stringLinkedHashMapLinkedHashMap) {
+                editSessionMap=stringLinkedHashMapLinkedHashMap;
+            }
+        });
+        //get header map
+        getViewModel.getEditHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> stringLinkedHashMapLinkedHashMap) {
+                editHeaderMap=stringLinkedHashMapLinkedHashMap;
+            }
+        });
+        //get item map
+        getViewModel.getEditItemMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedDishList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SelectedDishList>> stringListLinkedHashMap) {
+                editItemMap=stringListLinkedHashMap;
+            }
+        });
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get selected date
@@ -145,12 +156,21 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.ViewHo
             public void onClick(View view) {
                 editFunc_Map=new LinkedHashMap<>();
                 getViewModel.setEditFuncMap(editFunc_Map);
-              /*  editSessionMap=new LinkedHashMap<>();
+
+                editDateMap=new LinkedHashMap<>();
+                getViewModel.setEditDateMap(editDateMap);
+
+
+                editSessionMap=new LinkedHashMap<>();
                 getViewModel.setEditSessionMap(editSessionMap);
+
                 editHeaderMap=new LinkedHashMap<>();
-                getViewModel.setEditHeaderMap(editHeaderMap);*/
+                getViewModel.setEditHeaderMap(editHeaderMap);
+
+                editItemMap=new LinkedHashMap<>();
+                getViewModel.setEditItemMap(editItemMap);
+
                 getViewModel.setFunc_title(myOrderFuncLists1.getFunc());
-                //getViewModel.SetBreadCrumsList(myOrderFuncLists1.getFunc(), 0);
             }
         });
 

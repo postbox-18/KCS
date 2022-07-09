@@ -315,10 +315,37 @@ public class GetViewModel extends AndroidViewModel {
         return selected_dateMutable;
     }
 
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> getEditDateMapMutableLiveData() {
+        return editDateMapMutableLiveData;
+    }
+
+    public void setEditDateMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap) {
+        this.editDateMap = editDateMap;
+        this.editDateMapMutableLiveData.postValue(editDateMap);
+    }
+
     public void setSessionDateTimeCount(String sessionDateTimeCount) {
         MyLog.e(TAG, "s_counts>>sess set  sessionDateTimeCount >>" + sessionDateTimeCount);
         this.sessionDateTimeCount = sessionDateTimeCount;
         this.sessionDateTimeCountMutable.postValue(sessionDateTimeCount);
+    }
+
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> getEditHeaderMapMutableLiveData() {
+        return editHeaderMapMutableLiveData;
+    }
+
+    public void setEditHeaderMap(LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap) {
+        this.editHeaderMap = editHeaderMap;
+        this.editHeaderMapMutableLiveData.postValue(editHeaderMap);
+    }
+
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> getEditSessionMapMutableLiveData() {
+        return editSessionMapMutableLiveData;
+    }
+
+    public void setEditSessionMap(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap) {
+        this.editSessionMap = editSessionMap;
+        this.editSessionMapMutableLiveData.postValue(editSessionMap);
     }
 
     public MutableLiveData<String> getSessionDateTimeCountMutable() {
@@ -537,18 +564,14 @@ public class GetViewModel extends AndroidViewModel {
         return f_mapsdtMutableLiveData;
     }
 
-
-/*    public MutableLiveData<LinkedHashMap<String, List<SelectedHeader>>> getSh_f_mapMutableLiveData() {
-        return sh_f_mapMutableLiveData;
+    public MutableLiveData<LinkedHashMap<String, List<SelectedDishList>>> getEditItemMapMutableLiveData() {
+        return editItemMapMutableLiveData;
     }
 
-    public MutableLiveData<LinkedHashMap<String, List<SelectedSessionList>>> getSs_f_mapMutableLiveData() {
-        return ss_f_mapMutableLiveData;
+    public void setEditItemMap(LinkedHashMap<String, List<SelectedDishList>> editItemMap) {
+        this.editItemMap = editItemMap;
+        this.editItemMapMutableLiveData.postValue(editItemMap);
     }
-
-    public MutableLiveData<LinkedHashMap<String, List<MyOrdersList>>> getF_mapMyordersMutableLiveData() {
-        return f_mapMyordersMutableLiveData;
-    }*/
 
     public void setBreadCrumbLists(List<BreadCrumbList> breadCrumbLists) {
         this.breadCrumbLists = breadCrumbLists;
@@ -1230,10 +1253,11 @@ public class GetViewModel extends AndroidViewModel {
             );
             selectedDishLists.add(selectedDishList);
         }
+        //put item map
         editItemMap.put(item_title,selectedDishLists);
+        //put header map
         editHeaderMap.put(header, editItemMap);
-        //set
-        editHeaderMapMutableLiveData.postValue(editHeaderMap);
+
 
 
         //set SelectedSessionList map
@@ -1248,15 +1272,23 @@ public class GetViewModel extends AndroidViewModel {
         e_sessionLists.add(sessionList);
         String s = session_title + "/" + s_count;
         editSessionMap.put(s, editHeaderMap);
-        //set
-        editSessionMapMutableLiveData.postValue(editSessionMap);
 
-        //set date map
+        //put date map
         editDateMap.put(date, editSessionMap);
-        //set func map
+        //put func map
         editFunc_Map.put(func_title, editDateMap);
-        //set
+
+        //set func map
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
+        //set date map
+        editDateMapMutableLiveData.postValue(editDateMap);
+        //set session map
+        editSessionMapMutableLiveData.postValue(editSessionMap);
+        //set header map
+        editHeaderMapMutableLiveData.postValue(editHeaderMap);
+        //set item map
+        editItemMapMutableLiveData.postValue(editItemMap);
+
         MyLog.e(TAG,"edit_dish>>editFunc_Map\n"+new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
 

@@ -43,7 +43,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private List<SelectedSessionList> e_sessionLists = new ArrayList<>();
     private BottomSheetDialog bottomSheet;
     //edit hash map list
-    private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
+    private List<SelectedDishList> selectedDishLists=new ArrayList<>();
     private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
     //cancel map
     //Edit HashMap
@@ -110,21 +110,13 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 getViewModel.setEcd(n);
             }
         });
-        //get header map
-       /* getViewModel.getEditHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
+        //get item map
+        getViewModel.getEditItemMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedDishList>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-                editHeaderMap = stringListLinkedHashMap;
+            public void onChanged(LinkedHashMap<String, List<SelectedDishList>> stringListLinkedHashMap) {
+                editItemMap=stringListLinkedHashMap;
             }
         });
-        //get edit selected header list
-        getViewModel.getE_selectedHeadersLive().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
-            @Override
-            public void onChanged(List<SelectedHeader> selectedHeaders) {
-                e_selectedHeaders = selectedHeaders;
-            }
-        });*/
-
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get edit func map to cancel orders
@@ -146,87 +138,10 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
         e_sessionLists = new ArrayList<>();
         getViewModel.setE_sessionLists(e_sessionLists);
-        editHeaderMap = new LinkedHashMap<>();
-        //getViewModel.setEditHeaderMap(editHeaderMap);
-
-        /*if (o_selectedSessionLists == null) {
-            String[] s=sess_title.split("!");
-            String[] date_time=(s[1]).split("_");
-            String bolen=date_time[1];
-            if(bolen.equals("true")) {
-                holder.session_title.setText(s[0]);
-                holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
-                holder.date_time.setText(date_time[0]);
-                holder.date_time.setTextColor(context.getResources().getColor(R.color.colorSecondary));
-                //img
-                holder.edit.setImageResource(R.drawable.ic_knife_01);
-                holder.edit.setVisibility(View.VISIBLE);
-                holder.cancel.setImageResource(R.drawable.ic_calendar_x_fill);
-                holder.delete.setImageResource(R.drawable.ic_trash3_fill);
-            }
-            else if(bolen.equals("false")) {
-                holder.session_title.setText(s[0]);
-                holder.session_title.setTextColor(context.getResources().getColor(R.color.text_silver));
-                holder.date_time.setText(date_time[0]);
-                holder.date_time.setTextColor(context.getResources().getColor(R.color.text_silver));
-                //img
-                holder.edit.setVisibility(View.GONE);
-                holder.cancel.setImageResource(R.drawable.ic_calendar_x_fill_cancel);
-                holder.delete.setImageResource(R.drawable.ic_trash3_fill_cancel);
-            }
-            MyLog.e(TAG, "placeorders>>sess_title >>"+sess_title);
-            //get selected header to viewHeaderAdapter
-            orderHeaderMap=orderSessionMap.get(sess_title);
+        editItemMap = new LinkedHashMap<>();
+        getViewModel.setEditItemMap(editItemMap);
 
 
-                Set<String> set = orderHeaderMap.keySet();
-                List<String> aList1 = new ArrayList<String>(set.size());
-                for (String x1 : set)
-                    aList1.add(x1);
-                o_selectedHeaders.clear();
-                for (int i = 0; i < aList1.size(); i++) {
-                    SelectedHeader header = new SelectedHeader(
-                            aList1.get(i)
-                    );
-
-                    o_selectedHeaders.add(header);
-                    //get header list and item size
-                }
-                holder.recyclerview_order_item_details.setHasFixedSize(true);
-                holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-
-                ViewCartAdapterHeader viewCartAdapter = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, sess_title, func_title, bolen, orderHeaderMap,date);
-                holder.recyclerview_order_item_details.setAdapter(viewCartAdapter);
-
-
-
-
-
-
-
-            //onclick
-            //edit
-            holder.edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    alertDialog(sess_title,0, bolen);
-                }
-            });
-            //cancel
-            holder.cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    alertDialog(sess_title,1, bolen);
-                }
-            });//edit
-            holder.delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    alertDialog(sess_title,2, bolen);
-                }
-            });
-
-        }*/
 
         final SelectedSessionList list = o_selectedSessionLists.get(position);
 
@@ -346,8 +261,6 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 MyLog.e(TAG, "cancel>>value sess " + n);
                 if (n == 0) {
                     getViewModel.setI_value(1);
-                    e_selectedHeaders = new ArrayList<>();
-                    //getViewModel.setE_selectedHeaders(e_selectedHeaders);
                     getViewModel.getSelecteds_map(date, ses, dTime, b, count);
                 } else if (n == 1) {
                     MyLog.e(TAG, "Cancel>>sess_date>>" + session_title);

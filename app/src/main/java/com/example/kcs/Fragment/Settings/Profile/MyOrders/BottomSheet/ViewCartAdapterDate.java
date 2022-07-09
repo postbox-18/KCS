@@ -43,18 +43,9 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
 
 
     //edit hash map list
-    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
     private List<SessionDateTime> sessionDateTimes=new ArrayList<>();
     //cancel map
     //Edit HashMap
-    //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Map = new LinkedHashMap<>();
-    //Date map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap = new LinkedHashMap<>();
-    //Session map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap = new LinkedHashMap<>();
-    //Header map
-    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
     //Item map
     private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
 
@@ -113,31 +104,17 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
                 getViewModel.setEcd(n);
             }
         });
-        /*//get header map
-        getViewModel.getEditHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
+        //get item map
+        getViewModel.getEditItemMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedDishList>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-                editHeaderMap=stringListLinkedHashMap;
+            public void onChanged(LinkedHashMap<String, List<SelectedDishList>> stringListLinkedHashMap) {
+                editItemMap=stringListLinkedHashMap;
             }
         });
-        //get edit selected header list
-        getViewModel.getE_selectedHeadersLive().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
-            @Override
-            public void onChanged(List<SelectedHeader> selectedHeaders) {
-                e_selectedHeaders=selectedHeaders;
-            }
-        });*/
 
         ///////////***************************clear list in live data model****************************//////////////////////
 
-        //get edit func map to cancel orders
-        //get edit func map
-        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
-            }
-        });
+
         //get edit selected header and session list
         getViewModel.getE_sessionListsLive().observe((LifecycleOwner) context, new Observer<List<SelectedSessionList>>() {
             @Override
@@ -149,7 +126,8 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
 
         e_sessionLists=new ArrayList<>();
         getViewModel.setE_sessionLists(e_sessionLists);
-        editHeaderMap=new LinkedHashMap<>();
+        editItemMap=new LinkedHashMap<>();
+        getViewModel.setEditItemMap(editItemMap);
         //getViewModel.setEditHeaderMap(editHeaderMap);
 
 
