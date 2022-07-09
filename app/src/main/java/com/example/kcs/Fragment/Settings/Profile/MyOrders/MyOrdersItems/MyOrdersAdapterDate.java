@@ -20,6 +20,7 @@ import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.SelectedDishList;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,10 +40,21 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
     //edit hash map list
     private List<SelectedSessionList> e_sessionLists=new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
+
+
+    //Edit HashMap
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
+
+
     //order hash map
     //func map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
@@ -87,13 +99,14 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get func map
-        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
+        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
                     @Override
-                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
+                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> stringLinkedHashMapLinkedHashMap) {
                         editFunc_Map=stringLinkedHashMapLinkedHashMap;
                     }
                 });
 
+/*
 
                 //get session map
                 getViewModel.getEditSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>() {
@@ -111,11 +124,12 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
                 editHeaderMap=stringListLinkedHashMap;
             }
         });
+*/
 
-        ///////////***************************clear list in live data model****************************//////////////////////
+                ///////////***************************clear list in live data model****************************//////////////////////
 
-        //get selected sessions
-        orderSessionMap=orderDateMap.get(list.getDate());
+                //get selected sessions
+                orderSessionMap = orderDateMap.get(list.getDate());
         if(orderSessionMap==null)
         {
             MyLog.e(TAG,"orders>>selected orderSessionMap is null");
@@ -156,9 +170,9 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
                     editFunc_Map=new LinkedHashMap<>();
                     getViewModel.setEditFuncMap(editFunc_Map);
                     editSessionMap=new LinkedHashMap<>();
-                    getViewModel.setEditSessionMap(editSessionMap);
+                   /* getViewModel.setEditSessionMap(editSessionMap);
                     editHeaderMap=new LinkedHashMap<>();
-                    getViewModel.setEditHeaderMap(editHeaderMap);
+                    getViewModel.setEditHeaderMap(editHeaderMap);*/
                     getViewModel.setFunc_title(funcTitle);
                     String s = funcTitle + "/" + list.getDate();
                     getViewModel.setFunc_Session(s);

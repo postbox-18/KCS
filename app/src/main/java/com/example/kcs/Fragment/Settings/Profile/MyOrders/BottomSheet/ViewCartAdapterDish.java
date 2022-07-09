@@ -23,19 +23,24 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class ViewCartAdapterDish  extends RecyclerView.Adapter<ViewCartAdapterDish.ViewHolder> {
+public class ViewCartAdapterDish extends RecyclerView.Adapter<ViewCartAdapterDish.ViewHolder> {
     private Context context;
     private List<OrderDishLists> orderDishListsses = new ArrayList<>();
     private String TAG = "ViewCartAdapterDish";
     private GetViewModel getViewModel;
-    private String func_title, header,username,date,sess,item_title;
+    private String func_title, header, username, date, sess, item_title;
     private int n;
 
 
-    public ViewCartAdapterDish(Context context, GetViewModel getViewModel, List<OrderDishLists> orderDishListsses) {
+    public ViewCartAdapterDish(Context context, GetViewModel getViewModel, List<OrderDishLists> orderDishListsses, String func_title, String date, String sess, String header, String item) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.orderDishListsses = orderDishListsses;
+        this.func_title = func_title;
+        this.date = date;
+        this.sess = sess;
+        this.header = header;
+        this.item_title = item;
     }
 
 
@@ -55,34 +60,41 @@ public class ViewCartAdapterDish  extends RecyclerView.Adapter<ViewCartAdapterDi
 
 
         //get username
-        username=new SharedPreferences_data(context).getS_user_name();
-
+        username = new SharedPreferences_data(context).getS_user_name();
+/*
         //get func title
         getViewModel.getFunc_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                func_title=s;
+                func_title = s;
             }
         });
+
         //get date
         getViewModel.getSelected_dateMutable().observe((LifecycleOwner) context, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                date=s;
+                date = s;
+                MyLog.e(TAG, "s_counts>>date get >>" + date);
+
             }
         });
         //get session title
         getViewModel.getSessionDateTimeCountMutable().observe((LifecycleOwner) context, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                sess=s;
+                sess = s;
+                MyLog.e(TAG, "s_counts>>sess get >>" + sess);
+
             }
         });
         //get header title
         getViewModel.getHeader_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                header=s;
+                header = s;
+                MyLog.e(TAG, "s_counts>>header get >>" + header);
+
             }
 
         });
@@ -90,22 +102,34 @@ public class ViewCartAdapterDish  extends RecyclerView.Adapter<ViewCartAdapterDi
         getViewModel.getItem_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                item_title=s;
+                item_title = s;
+                MyLog.e(TAG, "s_counts>>item get >>" + item_title);
+
             }
-        });
+        });*/
 
 
         //get Edit Cancel Delete
         getViewModel.getEcdLive().observe((LifecycleOwner) context, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                n=integer;
+                n = integer;
             }
         });
-        MyLog.e(TAG, "s_count>>sess>>" + sess);
 
-        //set edit hash map
-        //getViewModel.EditMap(func_title, header, orderDishLists1.getItemList(),item_title, position,n,username,sess,date);
+        if (func_title == null && header == null && orderDishLists1.getItemList() == null && item_title == null && sess == null && date == null)
+        {
+            MyLog.e(TAG, "s_count>>if null \nfunc>>" + func_title+"\nheader>>"+header+"\n>>dish>>"+orderDishLists1.getItemList()
+                    +"\nitem title>>"+item_title+"\nsess>>"+sess+"\ndate>>"+date+"\nn>>"+n);
+
+        }
+        else {
+            MyLog.e(TAG, "s_count>>else is not null \nfunc>>" + func_title+"\nheader>>"+header+"\n>>dish>>"+orderDishLists1.getItemList()
+                    +"\nitem title>>"+item_title+"\nsess>>"+sess+"\ndate>>"+date+"\nn>>"+n);
+            //set edit hash map
+            getViewModel.EditMap(func_title, header, orderDishListsses, item_title, position, n, username, sess, date);
+        }
+
 
     }
 

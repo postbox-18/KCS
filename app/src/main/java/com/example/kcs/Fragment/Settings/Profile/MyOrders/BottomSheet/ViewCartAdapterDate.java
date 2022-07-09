@@ -20,6 +20,7 @@ import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.SelectedDishList;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -38,13 +39,27 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
     private List<SelectedSessionList> e_sessionLists=new ArrayList<>();
     private BottomSheetDialog bottomSheet;
+
+
+
     //edit hash map list
     private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
-    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
     private List<SessionDateTime> sessionDateTimes=new ArrayList<>();
     //cancel map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
+    //Edit HashMap
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
+
+
+
     private int n;
     //order hash map
     //func map
@@ -98,7 +113,7 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
                 getViewModel.setEcd(n);
             }
         });
-        //get header map
+        /*//get header map
         getViewModel.getEditHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
@@ -111,14 +126,15 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
             public void onChanged(List<SelectedHeader> selectedHeaders) {
                 e_selectedHeaders=selectedHeaders;
             }
-        });
+        });*/
 
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get edit func map to cancel orders
-        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
+        //get edit func map
+        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> stringLinkedHashMapLinkedHashMap) {
                 editFunc_Map=stringLinkedHashMapLinkedHashMap;
             }
         });
@@ -134,7 +150,7 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
         e_sessionLists=new ArrayList<>();
         getViewModel.setE_sessionLists(e_sessionLists);
         editHeaderMap=new LinkedHashMap<>();
-        getViewModel.setEditHeaderMap(editHeaderMap);
+        //getViewModel.setEditHeaderMap(editHeaderMap);
 
 
         final SelectedDateList o_dateLists1=o_dateLists.get(position);

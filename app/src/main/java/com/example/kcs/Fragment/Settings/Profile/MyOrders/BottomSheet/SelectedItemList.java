@@ -1,8 +1,8 @@
 package com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet;
 
-public class SelecteItemList {
+public class SelectedItemList {
     private  String item,selected;
-    public SelecteItemList() {
+    public SelectedItemList() {
 
     }
 

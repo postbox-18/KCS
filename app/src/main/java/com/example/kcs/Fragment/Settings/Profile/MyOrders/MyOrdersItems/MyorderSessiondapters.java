@@ -19,6 +19,7 @@ import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.SelectedDishList;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
@@ -36,10 +37,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     //edit hash map list
     private List<SelectedSessionList> e_sessionLists=new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
+
     //order hash map
     //func map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
@@ -135,18 +133,15 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                     for (String x : stringSet)
                         aList.add(x);
                     o_orderDishLists=new ArrayList<>();
-                    MyLog.e(TAG, "order_dish>>orderItemMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemMap));
                     for(int l=0;l<aList.size();l++)
                     {
                         o_orderDishLists=orderItemMap.get(aList.get(l));
-                        MyLog.e(TAG, "order_dish>>o_orderDishLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(o_orderDishLists));
                         myOrdersList=new ArrayList<>();
                         MyOrdersList myOrdersList1 = new MyOrdersList(
                                 header,
                                 o_orderDishLists.size()
                         );
                         myOrdersList.add(myOrdersList1);
-                        MyLog.e(TAG, "order_dish>>myOrdersList>>" + new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
                         holder.recyclerview_item_list.setHasFixedSize(true);
                         holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                         MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
@@ -160,52 +155,11 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
 
             }
         }
-        ///////////***************************clear list in live data model****************************//////////////////////
-
-        //get func map
-        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
-            }
-        });
 
 
-        //get session map
-        getViewModel.getEditSessionMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> stringLinkedHashMapLinkedHashMap) {
-                editSessionMap = stringLinkedHashMapLinkedHashMap;
-            }
-        });
 
 
-        //get header map
-        getViewModel.getEditHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedHeader>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<SelectedHeader>> stringListLinkedHashMap) {
-                editHeaderMap=stringListLinkedHashMap;
-            }
-        });
 
-        ///////////***************************clear list in live data model****************************//////////////////////
-
-       /* //on click
-        holder.session_card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editFunc_Map=new LinkedHashMap<>();
-                getViewModel.setEditFuncMap(editFunc_Map);
-                editSessionMap=new LinkedHashMap<>();
-                getViewModel.setEditSessionMap(editSessionMap);
-                editHeaderMap=new LinkedHashMap<>();
-                getViewModel.setEditHeaderMap(editHeaderMap);
-                getViewModel.setFunc_title(func_title);
-                String s = func_title + "/" + sessionLists1.getSession_title()+"!"+date+"#"+sessionLists1.getTime()+"_"+sessionLists1.getBolen();
-                getViewModel.setFunc_Session(s);
-            }
-        });
-*/
 
     }
 

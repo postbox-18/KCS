@@ -18,7 +18,7 @@ import com.example.kcs.Fragment.PlaceOrders.Items.PlaceOrderViewCartAdapterItem;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
+import com.example.kcs.ViewModel.SelectedDishList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -44,11 +44,19 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
     //edit hash map list
     private List<SessionList> e_sessionLists = new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editFunc_Map = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
+    //Edit HashMap
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
 
-    public PlaceOrderViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap, LinkedHashMap<String, List<SelectedHeader>> editHeaderMap) {
+    public PlaceOrderViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.header = selectedHeadersList;
@@ -105,7 +113,7 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
             holder.header.setText(list.getHeader());
             //get Checked list hash map
 
-            e_selectedHeaders = editHeaderMap.get(list.getHeader());
+            //e_selectedHeaders = editHeaderMap.get(list.getHeader());
             holder.recyclerview_item_list.setHasFixedSize(true);
             holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
             placeOrderViewCartAdapterItem = new PlaceOrderViewCartAdapterItem(context, getViewModel, null,null);

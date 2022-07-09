@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -47,7 +46,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
     //Item map
     private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
-    private List<SelecteItemList> selecteItemLists=new ArrayList<>();
+    private List<SelectedItemList> selectedItemLists =new ArrayList<>();
 
 
     public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap, String date) {
@@ -91,7 +90,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
 
 
         //get edit selected header list
-        getViewModel.getE_selectedHeadersLive().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
+      /*  getViewModel.getE_selectedHeadersLive().observe((LifecycleOwner) context, new Observer<List<SelectedHeader>>() {
             @Override
             public void onChanged(List<SelectedHeader> selectedHeaders) {
                 e_selectedHeaders = selectedHeaders;
@@ -99,7 +98,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         });
 
         e_selectedHeaders = new ArrayList<>();
-        getViewModel.setE_selectedHeaders(e_selectedHeaders);
+        getViewModel.setE_selectedHeaders(e_selectedHeaders);*/
 
         //o_orderDishListsses = orderHeaderMap.get(list.getHeader());
         orderItemMap=orderHeaderMap.get(list.getHeader());
@@ -107,20 +106,20 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         List<String> aList = new ArrayList<String>(stringSet.size());
         for (String x : stringSet)
             aList.add(x);
-        selecteItemLists=new ArrayList<>();
+        selectedItemLists =new ArrayList<>();
         for(int i=0;i<aList.size();i++)
         {
             String [] arr=(aList.get(i)).split("_");
-            SelecteItemList itemList=new SelecteItemList();
+            SelectedItemList itemList=new SelectedItemList();
             itemList.setItem(arr[0]);
             itemList.setSelected(arr[1]);
-            selecteItemLists.add(itemList);
+            selectedItemLists.add(itemList);
         }
 
         holder.recyclerview_item_list.setHasFixedSize(true);
         holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         MyLog.e(TAG, "s_count>>sess>>" + sess);
-        viewCartAdapterItem = new ViewCartAdapterItem(context, getViewModel, selecteItemLists, orderItemMap,func_title, list.getHeader(), sess,date);
+        viewCartAdapterItem = new ViewCartAdapterItem(context, getViewModel, selectedItemLists, orderItemMap,func_title, list.getHeader(), sess,date);
         holder.recyclerview_item_list.setAdapter(viewCartAdapterItem);
 
 

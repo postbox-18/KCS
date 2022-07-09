@@ -8,15 +8,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyorderItemListAdapters;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
@@ -42,13 +37,13 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
     private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
     //Item map
     private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
-    private List<SelecteItemList> selecteItemLists = new ArrayList<>();
+    private List<SelectedItemList> selectedItemLists = new ArrayList<>();
 
 
-    public ViewCartAdapterItem(Context context, GetViewModel getViewModel, List<SelecteItemList> selecteItemLists, LinkedHashMap<String, List<OrderDishLists>> orderItemMap, String func_title, String header, String sess, String date) {
+    public ViewCartAdapterItem(Context context, GetViewModel getViewModel, List<SelectedItemList> selectedItemLists, LinkedHashMap<String, List<OrderDishLists>> orderItemMap, String func_title, String header, String sess, String date) {
         this.context = context;
         this.getViewModel = getViewModel;
-        this.selecteItemLists = selecteItemLists;
+        this.selectedItemLists = selectedItemLists;
         this.orderItemMap = orderItemMap;
         this.func_title = func_title;
         this.header = header;
@@ -68,26 +63,26 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final SelecteItemList selecteItemLists1 = selecteItemLists.get(position);
-        String item=selecteItemLists1.getItem()+"_"+selecteItemLists1.getSelected();
-        holder.item.setText(selecteItemLists1.getItem());
+        final SelectedItemList selectedItemLists1 = selectedItemLists.get(position);
+        String item= selectedItemLists1.getItem()+"_"+ selectedItemLists1.getSelected();
+        holder.item.setText(selectedItemLists1.getItem());
 
         //set item title
         getViewModel.setItem_title(item);
 
-        if(selecteItemLists1.getSelected().equals("true"))
+        if(selectedItemLists1.getSelected().equals("true"))
         {
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.btn_gradient_light));
         }
-        else if(selecteItemLists1.getSelected().equals("false"))
+        else if(selectedItemLists1.getSelected().equals("false"))
         {
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
 
         }
         orderDishListsses=orderItemMap.get(item);
         holder.recyclerview_dish_list.setHasFixedSize(true);
-        holder.recyclerview_dish_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        ViewCartAdapterDish viewCartAdapterDish = new ViewCartAdapterDish(context, getViewModel, orderDishListsses);
+        holder.recyclerview_dish_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        ViewCartAdapterDish viewCartAdapterDish = new ViewCartAdapterDish(context, getViewModel, orderDishListsses,func_title,date,sess,header,item);
         holder.recyclerview_dish_list.setAdapter(viewCartAdapterDish);
 
 
@@ -96,7 +91,7 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
 
     @Override
     public int getItemCount() {
-        return selecteItemLists.size();
+        return selectedItemLists.size();
     }
 
 
