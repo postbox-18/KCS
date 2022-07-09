@@ -71,7 +71,6 @@ public class PlaceOrderViewCartAdapterItem extends RecyclerView.Adapter<PlaceOrd
         PlaceOrderViewAdapterDish placeOrderViewAdapterDish = new PlaceOrderViewAdapterDish(context, getViewModel, checkedLists);
         holder.recyclerview_dish.setAdapter(placeOrderViewAdapterDish);
 
-
     }
 
 
