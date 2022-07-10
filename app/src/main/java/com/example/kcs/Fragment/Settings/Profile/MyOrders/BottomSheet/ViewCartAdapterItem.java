@@ -77,11 +77,7 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
         MyLog.e(TAG,"bolen>>"+bolen);
         if (bolen.equals("true")) {
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.btn_gradient_light));
-        } else if (bolen.equals("false")) {
-            holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
-        }
-
-        /*if(selectedItemLists1.getSelected().equals("true"))
+            if(selectedItemLists1.getSelected().equals("true"))
         {
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.btn_gradient_light));
         }
@@ -89,7 +85,13 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
         {
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
 
-        }*/
+        }
+
+        } else if (bolen.equals("false")) {
+            holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
+        }
+
+
         orderDishListsses=orderItemMap.get(item);
         holder.recyclerview_dish_list.setHasFixedSize(true);
         holder.recyclerview_dish_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
