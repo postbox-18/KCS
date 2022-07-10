@@ -86,7 +86,6 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
 
         }
-
         } else if (bolen.equals("false")) {
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
         }
