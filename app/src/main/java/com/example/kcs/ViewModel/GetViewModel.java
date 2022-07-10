@@ -1374,36 +1374,9 @@ public class GetViewModel extends AndroidViewModel {
         }*/
 
 
-///////////////**GET POSITION FOR DISH ITEM************/////////
+        ///////////////**GET POSITION FOR DISH ITEM************/////////
         MyLog.e(TAG,"edit_dish>>d_ItemMap header_title"+header_title);
         d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
-        ///////////////**GET POSITION FOR DISH ITEM************/////////
-/*
-
-        Set<String> set2 = d_DishMap.keySet();
-        List<String> aList2 = new ArrayList<String>(set2.size());
-        for (String x2 : set2)
-            aList2.add(x2);
-        itemLists = new ArrayList<>();
-        for (int p = 0; p < aList2.size(); p++) {
-            String[] str = (aList2.get(p)).split("_");
-            ItemList itemList = new ItemList();
-            itemList.setItem(str[0]);
-            itemList.setSelected(str[1]);
-            itemLists.add(itemList);
-        }
-        dishLists=new ArrayList<>();
-        for(int q=0;q<itemLists.size();q++)
-        {
-            DishList dishList=new DishList();
-            dishList.setDish(itemLists.get(q).getItem());
-            dishList.setBoolens(null);
-            dishLists.add(dishList);
-
-        }
-*/
-
-        ///////////////**END END GET POSITION FOR DISH ITEMEND END ************/////////
         ///////////////**END END GET POSITION FOR DISH ITEMEND END ************/////////
 
 
@@ -1524,14 +1497,36 @@ public class GetViewModel extends AndroidViewModel {
                 databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
                 String newData = sess + "-" + count + "_" + old;
                 MyLog.e(TAG, "cancel>> value  " + newData);
-                MyLog.e(TAG, "cancel add commit");
                 //set replace bolen
-                selectedHeadersList.clear();
                 for (int l = 0; l < c_selectedHeaders.size(); l++) {
                     header_title = c_selectedHeaders.get(l).getHeader();
-                    //selectedHeadersList = editHeaderMap.get(header_title);
-                    for (int k = 0; k < selectedHeadersList.size(); k++) {
-                        databaseReference.child(func_title).child(date).child(newData).child(header_title).child(String.valueOf(k)).setValue(selectedHeadersList.get(k).getHeader());
+                    editItemMap=editHeaderMap.get(header_title);
+
+                    Set<String> stringSet2 = editItemMap.keySet();
+                    List<String> aList2 = new ArrayList<String>(stringSet2.size());
+                    for (String x2 : stringSet2)
+                        aList2.add(x2);
+                    selectedItemLists=new ArrayList<>();
+                    for(int p=0;p<aList2.size();p++)
+                    {
+                        String[]arr=(aList2.get(p)).split("_");
+                        SelectedItemList list=new SelectedItemList();
+                        list.setItem(arr[0]);
+                        list.setSelected(arr[1]);
+                        selectedItemLists.add(list);
+                    }
+                    for (int k = 0; k < selectedItemLists.size(); k++) {
+
+                        String item=selectedItemLists.get(k).getItem()+"_"+selectedItemLists.get(k).getSelected();
+                        selectedDishLists=new ArrayList<>();
+                        MyLog.e(TAG,"cancels>>editItemMap\n"+new GsonBuilder().setPrettyPrinting().create().toJson(editItemMap));
+                        selectedDishLists=editItemMap.get(item);
+                        MyLog.e(TAG,"cancels>>selectedDishLists\n"+new GsonBuilder().setPrettyPrinting().create().toJson(selectedDishLists));
+                        for(int q=0;q<selectedDishLists.size();q++) {
+                            MyLog.e(TAG, "cancels>>\nfunc>>"+func_title+"\ndate>>"+date+"\nsess>>"+newData+"\nheader>>"+header_title+"\nitem>>"+item+"\ndish>>"+selectedDishLists.get(q).getDish());
+                            MyLog.e(TAG, "cancels>> add commit");
+                            databaseReference.child(func_title).child(date).child(newData).child(header_title).child(item).child(String.valueOf(q)).setValue(selectedDishLists.get(q).getDish());
+                        }
                     }
                 }
             }

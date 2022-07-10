@@ -82,6 +82,7 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         String[] str = sess.split("_");
         session_title = str[0];
         bolen=str[1];
+        MyLog.e(TAG,"bolen>>"+bolen);
         if (bolen.equals("true")) {
             holder.header_layout.setBackgroundColor(context.getResources().getColor(R.color.btn_gradient_light));
         } else if (bolen.equals("false")) {

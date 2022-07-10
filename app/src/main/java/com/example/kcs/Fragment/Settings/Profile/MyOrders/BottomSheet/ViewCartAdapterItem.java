@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.kcs.Classes.MyLog;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 
@@ -38,6 +39,7 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
     //Item map
     private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     private List<SelectedItemList> selectedItemLists = new ArrayList<>();
+    private String session_title,bolen;
 
 
     public ViewCartAdapterItem(Context context, GetViewModel getViewModel, List<SelectedItemList> selectedItemLists, LinkedHashMap<String, List<OrderDishLists>> orderItemMap, String func_title, String header, String sess, String date) {
@@ -69,8 +71,17 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
 
         //set item title
         getViewModel.setItem_title(item);
+        String[] str = sess.split("_");
+        session_title = str[0];
+        bolen=str[1];
+        MyLog.e(TAG,"bolen>>"+bolen);
+        if (bolen.equals("true")) {
+            holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.btn_gradient_light));
+        } else if (bolen.equals("false")) {
+            holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
+        }
 
-        if(selectedItemLists1.getSelected().equals("true"))
+        /*if(selectedItemLists1.getSelected().equals("true"))
         {
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.btn_gradient_light));
         }
@@ -78,7 +89,7 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
         {
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
 
-        }
+        }*/
         orderDishListsses=orderItemMap.get(item);
         holder.recyclerview_dish_list.setHasFixedSize(true);
         holder.recyclerview_dish_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
