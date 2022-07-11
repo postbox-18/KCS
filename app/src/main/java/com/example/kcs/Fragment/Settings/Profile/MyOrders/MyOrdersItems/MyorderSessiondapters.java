@@ -30,13 +30,13 @@ import java.util.Set;
 public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessiondapters.ViewHolder> {
     private Context context;
     private String TAG = "MyorderSessiondapters";
-    private String func_title,date;
-    private List<MyOrdersList> myOrdersList=new ArrayList<>();
+    private String func_title, date;
+    private List<MyOrdersList> myOrdersList = new ArrayList<>();
     private List<SelectedSessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
     //edit hash map list
-    private List<SelectedSessionList> e_sessionLists=new ArrayList<>();
-    private List<SelectedHeader> e_selectedHeaders=new ArrayList<>();
+    private List<SelectedSessionList> e_sessionLists = new ArrayList<>();
+    private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
 
     //order hash map
     //func map
@@ -50,8 +50,8 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     //Item map
     private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     //get selected headers
-    private List<SelectedHeader> o_selectedHeaders=new ArrayList<>();
-    private List<OrderDishLists> o_orderDishLists =new ArrayList<>();
+    private List<SelectedHeader> o_selectedHeaders = new ArrayList<>();
+    private List<OrderDishLists> o_orderDishLists = new ArrayList<>();
 
 
     public MyorderSessiondapters(Context context, String funcTitle, String date, GetViewModel getViewModel, List<SelectedSessionList> sessionLists, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap) {
@@ -76,7 +76,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     public void onBindViewHolder(@NonNull MyorderSessiondapters.ViewHolder holder, int position) {
         final SelectedSessionList sessionLists1 = sessionLists.get(position);
 
-        if((sessionLists1.getBolen()).equals("true")) {
+        if ((sessionLists1.getBolen()).equals("true")) {
             //set session title and date
             holder.session_title.setText(sessionLists1.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
@@ -85,9 +85,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             holder.count.setText(sessionLists1.getS_count());
             holder.count.setTextColor(context.getResources().getColor(R.color.btn_gradient_light));
 
-        }
-        else if((sessionLists1.getBolen()).equals("false"))
-        {
+        } else if ((sessionLists1.getBolen()).equals("false")) {
             //set session title and date
             holder.session_title.setText(sessionLists1.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.text_silver));
@@ -97,13 +95,11 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
             holder.count.setTextColor(context.getResources().getColor(R.color.text_silver));
         }
 
-        String s=sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"-"+sessionLists1.getS_count()+"_"+sessionLists1.getBolen();
-        if(orderSessionMap==null)
-        {
-            orderSessionMap=new LinkedHashMap<>();
-            MyLog.e(TAG,"orderSessionMap is null");
-        }
-        else {
+        String s = sessionLists1.getSession_title() + "!" + sessionLists1.getTime() + "-" + sessionLists1.getS_count() + "_" + sessionLists1.getBolen();
+        if (orderSessionMap == null) {
+            orderSessionMap = new LinkedHashMap<>();
+            MyLog.e(TAG, "orderSessionMap is null");
+        } else {
 
             if (orderHeaderMap == null) {
                 orderHeaderMap = new LinkedHashMap<>();
@@ -123,31 +119,44 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                     o_selectedHeaders.add(header);
                     //get header list and item size
                 }
-
+                myOrdersList = new ArrayList<>();
                 for (int k = 0; k < o_selectedHeaders.size(); k++) {
 
                     String header = o_selectedHeaders.get(k).getHeader();
+                    MyLog.e(TAG, "orders>>orderHeaderMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(orderHeaderMap));
                     orderItemMap = orderHeaderMap.get(header);
+                    MyLog.e(TAG, "orders>>orderItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemMap));
                     Set<String> stringSet = orderItemMap.keySet();
                     List<String> aList = new ArrayList<String>(stringSet.size());
                     for (String x : stringSet)
                         aList.add(x);
-                    o_orderDishLists=new ArrayList<>();
-                    for(int l=0;l<aList.size();l++)
+                    MyOrdersList myOrdersList1 = new MyOrdersList(
+                            header,
+                            aList.size()
+                    );
+                    myOrdersList.add(myOrdersList1);
+                    MyLog.e(TAG, "orders>>myOrdersList\n" + new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
+                    holder.recyclerview_item_list.setHasFixedSize(true);
+                    holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                    MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
+                    holder.recyclerview_item_list.setAdapter(itemListAdapters);
+                  /*  for(int l=0;l<aList.size();l++)
                     {
+                        o_orderDishLists=new ArrayList<>();
                         o_orderDishLists=orderItemMap.get(aList.get(l));
+                        MyLog.e(TAG,"orders>>o_orderDishLists\n"+new GsonBuilder().setPrettyPrinting().create().toJson(o_orderDishLists));
                         myOrdersList=new ArrayList<>();
                         MyOrdersList myOrdersList1 = new MyOrdersList(
                                 header,
                                 o_orderDishLists.size()
                         );
                         myOrdersList.add(myOrdersList1);
+                        MyLog.e(TAG,"orders>>myOrdersList\n"+new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
                         holder.recyclerview_item_list.setHasFixedSize(true);
                         holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                         MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
                         holder.recyclerview_item_list.setAdapter(itemListAdapters);
-                    }
-
+                    }*/
 
 
                 }
@@ -155,10 +164,6 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
 
             }
         }
-
-
-
-
 
 
     }
@@ -173,7 +178,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profile;
-        private TextView session_title, time,count;
+        private TextView session_title, time, count;
         //private CardView session_card;
         private RecyclerView recyclerview_item_list;
 

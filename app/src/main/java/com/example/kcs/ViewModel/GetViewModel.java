@@ -1519,9 +1519,7 @@ public class GetViewModel extends AndroidViewModel {
 
                         String item=selectedItemLists.get(k).getItem()+"_"+selectedItemLists.get(k).getSelected();
                         selectedDishLists=new ArrayList<>();
-                        MyLog.e(TAG,"cancels>>editItemMap\n"+new GsonBuilder().setPrettyPrinting().create().toJson(editItemMap));
                         selectedDishLists=editItemMap.get(item);
-                        MyLog.e(TAG,"cancels>>selectedDishLists\n"+new GsonBuilder().setPrettyPrinting().create().toJson(selectedDishLists));
                         for(int q=0;q<selectedDishLists.size();q++) {
                             MyLog.e(TAG, "cancels>>\nfunc>>"+func_title+"\ndate>>"+date+"\nsess>>"+newData+"\nheader>>"+header_title+"\nitem>>"+item+"\ndish>>"+selectedDishLists.get(q).getDish());
                             MyLog.e(TAG, "cancels>> add commit");
