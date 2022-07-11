@@ -66,36 +66,36 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
         holder.header_cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                n++;
-                if (n % 2 == 0) {
-                    holder.header_title_set.setText(item1.getHeader());
-                    holder.item_cardView.setVisibility(View.VISIBLE);
 
-                    dishListMap = itemArrayMap.get(item1.getHeader());
-                    Set<String> stringSet = dishListMap.keySet();
-                    List<String> aList = new ArrayList<String>(stringSet.size());
-                    for (String x : stringSet)
-                        aList.add(x);
-                    itemList = new ArrayList<>();
-                    for (int i = 0; i < aList.size(); i++) {
-                        String[] str = (aList.get(i)).split("_");
-                        ItemArrayList list = new ItemArrayList();
-                        list.setItem(str[0]);
-                        list.setSelected(str[1]);
-                        itemList.add(list);
-                    }
+                holder.header_title_set.setText(item1.getHeader());
+                holder.item_cardView.setVisibility(View.VISIBLE);
 
-                    ItemAdapter itemAdapter = new ItemAdapter(context, getViewModel, itemList, dishListMap);
-                    holder.recyclerview_item_list.setAdapter(itemAdapter);
+                dishListMap = itemArrayMap.get(item1.getHeader());
+                Set<String> stringSet = dishListMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+                itemList = new ArrayList<>();
+                for (int i = 0; i < aList.size(); i++) {
+                    String[] str = (aList.get(i)).split("_");
+                    ItemArrayList list = new ItemArrayList();
+                    list.setItem(str[0]);
+                    list.setSelected(str[1]);
+                    itemList.add(list);
+                }
 
+                /*ItemAdapter itemAdapter = new ItemAdapter(context, getViewModel, itemList, dishListMap);
+                holder.recyclerview_item_list.setAdapter(itemAdapter);*/
+                getViewModel.setItemArrayList(itemList);
+                getViewModel.setDishListMap(dishListMap);
+                getViewModel.setHeader_title(item1.getHeader());
+                getViewModel.setI_value(3);
                 /*//get item list
                 //itemList=itemArrayMap.get(item1.getHeader());
                 getViewModel.setHeader_title(item1.getHeader());
                 getViewModel.setItemArrayList(itemList);
                 getViewModel.setI_value(3);*/
-                } else if (n % 2 != 0) {
-                    holder.item_cardView.setVisibility(View.GONE);
-                }
+
             }
         });
     }
@@ -109,7 +109,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView header_title,header_title_set;
+        private TextView header_title, header_title_set;
         private CardView header_cardView, item_cardView;
         private RecyclerView recyclerview_item_list;
 

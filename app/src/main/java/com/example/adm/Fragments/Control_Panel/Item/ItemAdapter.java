@@ -82,17 +82,20 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.item_cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                n++;
-                if (n % 2 == 0) {
+
                     holder.dish_cardView.setVisibility(View.VISIBLE);
                     holder.item_title_set.setText(item1.getItem());
                     String item = item1.getItem() + "_" + item1.getSelected();
                     dishLists = dishListMap.get(item);
-                    DishAdapter dishAdapter = new DishAdapter(context, dishLists, getViewModel, header_title, item);
-                    holder.recyclerview_dish_list.setAdapter(dishAdapter);
-                } else if (n % 2 != 0) {
-                    holder.dish_cardView.setVisibility(View.GONE);
-                }
+
+                 /*   DishAdapter dishAdapter = new DishAdapter(context, dishLists, getViewModel, header_title, item);
+                    holder.recyclerview_dish_list.setAdapter(dishAdapter);*/
+
+                    getViewModel.setDishLists(dishLists);
+                    getViewModel.setHeader_title(header_title);
+                    getViewModel.setItem_title(item);
+                    getViewModel.setI_value(4);
+
 
 
             }

@@ -16,12 +16,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.adm.Fragments.Control_Panel.Dish.DishList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -45,12 +47,13 @@ public class ItemFragment extends Fragment {
     private TextView header_title;
     private FloatingActionButton add;
     private GetViewModel getViewModel;
+    //dish map
+    private LinkedHashMap<String, List<DishList>> dishListMap = new LinkedHashMap<>();
 
     //alert
     private String header_titles,s_item,selected;
     private EditText item;
     private TextInputLayout item_inputLayout;
-    //private AppCompatButton ok;
     private GetViewModel  getViewModel1;
 
     public static ItemFragment newInstance(String param1, String param2) {
@@ -80,9 +83,39 @@ public class ItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_item, container, false);
-
         getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
+
         recyclerView_item = view.findViewById(R.id.recyclerview_item_list);
+        header_title = view.findViewById(R.id.header_title_set);
+
+        //get item list
+        getViewModel.getItemListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<ItemArrayList>>() {
+            @Override
+            public void onChanged(List<ItemArrayList> itemArrayLists) {
+                itemList = itemArrayLists;
+            }
+        });
+
+        //get dish map
+        getViewModel.getDishListMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<DishList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<DishList>> stringListLinkedHashMap) {
+                dishListMap = stringListLinkedHashMap;
+            }
+        });
+
+        //get header title
+        getViewModel.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                header_title.setText(s);
+                ItemAdapter itemAdapter = new ItemAdapter(getContext(), getViewModel, itemList, dishListMap);
+                recyclerView_item.setAdapter(itemAdapter);
+            }
+        });
+
+
+      /*  recyclerView_item = view.findViewById(R.id.recyclerview_item_list);
         header_title = view.findViewById(R.id.header_title);
         add = view.findViewById(R.id.add);
 
@@ -113,7 +146,7 @@ public class ItemFragment extends Fragment {
                 alertBox(view);
 
             }
-        });
+        });*/
 
 
         return view;
@@ -124,14 +157,14 @@ public class ItemFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         final View customLayout = getLayoutInflater().inflate(R.layout.add_itembox, null);
         getViewModel1 = new ViewModelProvider(getActivity()).get(GetViewModel.class);
-        item=customLayout.findViewById(R.id.item);
+        item = customLayout.findViewById(R.id.item);
         //item_inputLayout=customLayout.findViewById(R.id.itemTextInputLayout);
         //ok=customLayout.findViewById(R.id.ok);
         //get header title;
         getViewModel1.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                header_titles=s;
+                header_titles = s;
             }
         });
         /*ok.setOnClickListener(new View.OnClickListener() {
@@ -152,9 +185,9 @@ public class ItemFragment extends Fragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                s_item=item.getText().toString();
-                selected="true";
-               // getViewModel1.updateItem(header_titles,s_item,selected);
+                s_item = item.getText().toString();
+                selected = "true";
+                // getViewModel1.updateItem(header_titles,s_item,selected);
                 getViewModel1.setI_value(1);
                 Toast.makeText(getContext(), "Item Added", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();

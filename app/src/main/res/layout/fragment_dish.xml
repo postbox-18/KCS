@@ -3,35 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.Control_Panel.Item.ItemFragment">
+    tools:context=".Fragments.Control_Panel.Dish.DishFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            android:layout_height="match_parent">
             <include layout="@layout/back_btn_layout" />
-
             <androidx.cardview.widget.CardView
-                android:id="@+id/item_cardView"
+                android:id="@+id/dish_cardView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:cardBackgroundColor="@color/light_blue_color"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="3dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
+                app:cardElevation="3dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -41,45 +35,40 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-
                         <TextView
-                            android:id="@+id/header_title_set"
+                            android:id="@+id/item_title_set"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textSize="22dp"
+                            android:padding="8dp"
                             android:background="@color/colorPrimary"
                             android:gravity="center"
-                            android:padding="8dp"
-                            android:text="header"
                             android:textColor="@color/White"
-                            android:textSize="22dp"
-                            android:textStyle="bold|italic" />
-
+                            android:textStyle="bold|italic"
+                            android:text="header"/>
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recyclerview_item_list"
+                            android:id="@+id/recyclerview_dish_list"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
                             tools:itemCount="2"
-                            tools:listitem="@layout/item_cardview" />
+                            tools:listitem="@layout/dish_cardview"
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
                 </LinearLayout>
-
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_margin="50dp"
-                    android:visibility="gone"
-                    android:backgroundTint="@color/colorPrimary"
+                    android:layout_margin="10dp"
                     android:src="@drawable/ic_plus_solid"
+                    android:backgroundTint="@color/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_gravity="bottom|right"/>
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </LinearLayout>
-
 
 </LinearLayout>
