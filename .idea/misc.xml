@@ -56,6 +56,7 @@
         <entry key="app/src/main/res/layout/dialog_loading.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/dish_cardview.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/fragment_control__panel.xml" value="0.15904232578024796" />
+        <entry key="app/src/main/res/layout/fragment_dish.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/fragment_header.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_item.xml" value="0.16" />
