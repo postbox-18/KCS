@@ -10,11 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 
 import com.example.adm.Fragments.Control_Panel.Dish.DishList;
+import com.example.adm.Fragments.Control_Panel.Item.ItemAdapter;
 import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
@@ -22,20 +24,24 @@ import com.example.adm.ViewModel.GetViewModel;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder> {
     private List<HeaderList> headerLists;
     private Context context;
-    private String TAG="HeaderAdapter";
+    private String TAG = "HeaderAdapter";
     private GetViewModel getViewModel;
+    private int n = 1;
     //header map
-    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> itemArrayMap=new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> itemArrayMap = new LinkedHashMap<>();
     //dish map
     private LinkedHashMap<String, List<DishList>> dishListMap = new LinkedHashMap<>();
     private List<ItemArrayList> itemList = new ArrayList<>();
-    public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel) {
+
+    public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> itemArrayListMap) {
         this.headerLists = headerLists;
         this.context = context;
+        this.itemArrayMap = itemArrayListMap;
         this.getViewModel = getViewModel;
     }
 
@@ -52,27 +58,44 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     public void onBindViewHolder(@NonNull HeaderAdapter.ViewHolder holder, int position) {
         final HeaderList item1 = headerLists.get(position);
         holder.header_title.setText(item1.getHeader());
-
-        //get hash map
-        getViewModel.getItemArrayListMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> stringListLinkedHashMap) {
-                itemArrayMap=stringListLinkedHashMap;
+        holder.recyclerview_item_list.setHasFixedSize(true);
+        holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
 
-            }
-        });
         //onclick
         holder.header_cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                n++;
+                if (n % 2 == 0) {
+                    holder.header_title_set.setText(item1.getHeader());
+                    holder.item_cardView.setVisibility(View.VISIBLE);
 
-                //get item list
+                    dishListMap = itemArrayMap.get(item1.getHeader());
+                    Set<String> stringSet = dishListMap.keySet();
+                    List<String> aList = new ArrayList<String>(stringSet.size());
+                    for (String x : stringSet)
+                        aList.add(x);
+                    itemList = new ArrayList<>();
+                    for (int i = 0; i < aList.size(); i++) {
+                        String[] str = (aList.get(i)).split("_");
+                        ItemArrayList list = new ItemArrayList();
+                        list.setItem(str[0]);
+                        list.setSelected(str[1]);
+                        itemList.add(list);
+                    }
+
+                    ItemAdapter itemAdapter = new ItemAdapter(context, getViewModel, itemList, dishListMap);
+                    holder.recyclerview_item_list.setAdapter(itemAdapter);
+
+                /*//get item list
                 //itemList=itemArrayMap.get(item1.getHeader());
                 getViewModel.setHeader_title(item1.getHeader());
                 getViewModel.setItemArrayList(itemList);
-                getViewModel.setI_value(3);
-
+                getViewModel.setI_value(3);*/
+                } else if (n % 2 != 0) {
+                    holder.item_cardView.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -86,13 +109,17 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView header_title;
-        private CardView header_cardView;
+        private TextView header_title,header_title_set;
+        private CardView header_cardView, item_cardView;
+        private RecyclerView recyclerview_item_list;
 
         public ViewHolder(View view) {
             super(view);
             header_title = view.findViewById(R.id.header_title);
+            header_title_set = view.findViewById(R.id.header_title_set);
             header_cardView = view.findViewById(R.id.header_cardView);
+            recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
+            item_cardView = view.findViewById(R.id.item_cardView);
         }
     }
 }

@@ -154,7 +154,7 @@ public class ItemFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 s_item=item.getText().toString();
                 selected="true";
-                getViewModel1.updateItem(header_titles,s_item,selected);
+               // getViewModel1.updateItem(header_titles,s_item,selected);
                 getViewModel1.setI_value(1);
                 Toast.makeText(getContext(), "Item Added", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();

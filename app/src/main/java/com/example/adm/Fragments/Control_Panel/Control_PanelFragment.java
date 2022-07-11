@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.adm.Fragments.Control_Panel.Dish.DishList;
 import com.example.adm.Fragments.Control_Panel.Header.HeaderAdapter;
 import com.example.adm.Fragments.Control_Panel.Header.HeaderList;
 import com.example.adm.R;
@@ -22,7 +24,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,22 +48,13 @@ public class Control_PanelFragment extends Fragment {
     private List<HeaderList> headerList=new ArrayList<>();
     private HeaderAdapter headerAdapter;
 
-    /*private RecyclerView recyclerView_func;
-    private List<FuncList> funcList=new ArrayList<>();
-    private FuncAdapter funcAdapter;
-
-    private RecyclerView recyclerView_item;
-    private ItemAdapter itemAdapter;
-    private List<ItemArrayList> itemList=new ArrayList<>();*/
-
     private ImageView back_btn;
     private GetViewModel getViewModel;
+    //item map
+    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> itemArrayListMap = new LinkedHashMap<>();
+    //dish map
+    private LinkedHashMap<String, List<DishList>> dishListMap = new LinkedHashMap<>();
 
-    //Update Data in firebase
-    //firebase database retrieve
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
-    private AppCompatButton update_btn;
 
     private String TAG="Control_PanelFragment";
     public Control_PanelFragment() {
@@ -91,56 +86,38 @@ public class Control_PanelFragment extends Fragment {
         getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
 
         back_btn=view.findViewById(R.id.back_btn);
-        update_btn=view.findViewById(R.id.update_btn);
         recyclerview_header=view.findViewById(R.id.recyclerview_header);
 
 
         recyclerview_header.setHasFixedSize(true);
-        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
 
         headerList=new ArrayList<>();
-        //firebase
-        firebaseDatabase = FirebaseDatabase.getInstance();
 
 
-        //get header list
-        getViewModel.getHeaderListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
+        //get item map list
+        getViewModel.getItemArrayListMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>>() {
             @Override
-            public void onChanged(List<HeaderList> headerLists) {
-                headerAdapter=new HeaderAdapter(getContext(),headerLists,getViewModel);
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> stringLinkedHashMapLinkedHashMap) {
+                itemArrayListMap=stringLinkedHashMapLinkedHashMap;
+                Set<String> stringSet = itemArrayListMap.keySet();
+                List<String> aList = new ArrayList<String>(stringSet.size());
+                for (String x : stringSet)
+                    aList.add(x);
+                headerList=new ArrayList<>();
+                for(int i=0;i<aList.size();i++)
+                {
+                    HeaderList list=new HeaderList(
+                            aList.get(i)
+                    );
+                    headerList.add(list);
+                }
+                headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,itemArrayListMap);
                 recyclerview_header.setAdapter(headerAdapter);
+
             }
         });
-
-       /* //get item list
-        getViewModel.getItemListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<ItemArrayList>>() {
-            @Override
-            public void onChanged(List<ItemArrayList> itemArrayLists) {
-
-                itemAdapter=new ItemAdapter(getContext(),itemArrayLists,getViewModel);
-                recyclerView_item.setAdapter(itemAdapter);
-            }
-        });
-
-        //get func list
-        getViewModel.getFuncListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<FuncList>>() {
-            @Override
-            public void onChanged(List<FuncList> funcLists) {
-                funcAdapter=new FuncAdapter(getContext(),funcLists,getViewModel);
-                recyclerView_func.setAdapter(funcAdapter);
-            }
-        });*/
-
-
-        //click update btn
-        /*update_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getViewModel.UpdateListBase();
-            }
-        });*/
-
 
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -799,10 +799,17 @@ public class GetViewModel extends AndroidViewModel {
     }*/
 
 
-    public void updateItem(String header_title, String item, String selected) {
+    public void updateItem(String header_title, String item, String dish,String selected) {
+
         MyLog.e(TAG, "switchs>>updateItem");
-        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
-        databaseReference.child(header_title).child(item).setValue(selected);
+        if(dish==null) {
+            databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
+            String item_b=item+"_"+selected;
+            databaseReference.child(header_title).setValue(item_b);
+        }else{
+            databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
+            databaseReference.child(header_title).child(item).child(dish).setValue(selected);
+        }
 
     }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_height="wrap_content">
@@ -10,38 +10,44 @@
     android:layout_height="wrap_content"
     android:layout_margin="15dp"
     android:orientation="vertical">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/item_cardView"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/item_cardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="10dp"
+        >
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="horizontal"
-            app:cardBackgroundColor="@color/light_blue_color"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="3dp">
-            <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="vertical">
+            <androidx.cardview.widget.CardView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:orientation="horizontal"
+                app:cardCornerRadius="10dp"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/skcs_logo"/>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="horizontal">
-        <TextView
-            android:id="@+id/item_title"
-            android:layout_width="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@color/colorSecondary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:textSize="18dp"
-            android:padding="8dp"
-            android:textStyle="bold|italic"
-            android:paddingStart="15dp"
-            app:layout_constraintEnd_toStartOf="@id/switchView"
-            android:layout_height="wrap_content"
-            android:text="item"/>
+                android:textColor="@color/colorPrimary"
+                android:textSize="14dp"
+                android:padding="8dp"
+                android:textStyle="bold|italic"
+                android:gravity="center"
+                android:text="item list "/>
                 <Switch
                     android:id="@+id/switchView"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -50,9 +56,75 @@
                     app:layout_constraintStart_toEndOf="@id/item_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:ignore="UseSwitchCompatOrMaterialXml" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 
 </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include layout="@layout/back_btn_layout" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/dish_cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardBackgroundColor="@color/light_blue_color"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="3dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/item_title_set"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="22dp"
+                            android:padding="8dp"
+                            android:background="@color/colorPrimary"
+                            android:gravity="center"
+                            android:textColor="@color/White"
+                            android:textStyle="bold|italic"
+                            android:text="header"/>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerview_dish_list"
+                            android:layout_width="match_parent"
+                            tools:itemCount="2"
+                            tools:listitem="@layout/dish_cardview"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                </LinearLayout>
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_plus_solid"
+                    android:backgroundTint="@color/colorPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_gravity="bottom|right"/>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
 </LinearLayout>
