@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.SelectedHeader;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderHeaderLists;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 
@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private List<ItemArrayList> item=new ArrayList<>();
-    private List<SelectedHeader> selectedHeaders=new ArrayList<>();
+    private List<OrderHeaderLists> orderHeaderLists =new ArrayList<>();
     private Context context;
     private String TAG="ItemAdapter",header_title;
     private GetViewModel getViewModel;

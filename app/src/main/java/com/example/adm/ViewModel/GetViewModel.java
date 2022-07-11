@@ -15,7 +15,7 @@ import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.FuncList
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.HeaderList;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
 import com.example.adm.Fragments.Control_Panel.UpdatedList;
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderItemLists;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderDishLists;
 import com.example.adm.Fragments.Orders.Classes.UserItemList;
 import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderLists;
 import com.example.adm.Fragments.Users.UserDetailsList;
@@ -47,6 +47,9 @@ public class GetViewModel extends AndroidViewModel {
     //Selected Func
     private String func_title;
     private MutableLiveData<String> func_title_Mutable = new MutableLiveData<>();
+    //Selected item
+    private String item_title;
+    private MutableLiveData<String> item_title_Mutable = new MutableLiveData<>();
 
     //fragment
     private Integer i_value;
@@ -95,8 +98,8 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<UpdatedList>> updatedListsMutableLiveData = new MutableLiveData<>();
 
     //selected Item list
-    private List<OrderItemLists> orderItemLists = new ArrayList<>();
-    private MutableLiveData<List<OrderItemLists>> orderItemListsMutableLiveData = new MutableLiveData<>();
+    private List<OrderDishLists> orderDishLists = new ArrayList<>();
+    private MutableLiveData<List<OrderDishLists>> orderItemListsMutableLiveData = new MutableLiveData<>();
     /*private LinkedHashMap<String, List<OrderItemLists>> orderItemList_f_map = new LinkedHashMap<>();
     private MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> orderItemList_f_mapMutableLiveData = new MutableLiveData<>();*/
 
@@ -118,29 +121,30 @@ public class GetViewModel extends AndroidViewModel {
     private List<CheckEmail> checkEmails = new ArrayList<>();
     private MutableLiveData<List<CheckEmail>> checkEmailsMutableLiveData = new MutableLiveData<>();
     //My Order HashMap
-    private List<OrderItemLists> o_orderItemLists = new ArrayList<>();
+    private List<OrderDishLists> o_orderDishLists = new ArrayList<>();
 
     //order map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String,
-            LinkedHashMap<String, List<OrderItemLists>>>>>> orderMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String,
-            LinkedHashMap<String, List<OrderItemLists>>>>>>> orderMapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>> orderMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>>> orderMapMutableLiveData = new MutableLiveData<>();
     //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderFunc_MapMutableLiveData = new MutableLiveData<>();
-    //date map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderDateMapMutableLiveData = new MutableLiveData<>();
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> orderHeaderMapMutableLiveData = new MutableLiveData<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderSessionMapMutableLiveData = new MutableLiveData<>();
-
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>> orderFunc_MapMutableLiveData = new MutableLiveData<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderDate_MapMutableLiveData = new MutableLiveData<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderSessionMapMutableLiveData = new MutableLiveData<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderHeaderMapMutableLiveData = new MutableLiveData<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<OrderDishLists>>> orderItemMapMutableLiveData = new MutableLiveData<>();
     //click on date map
     private String dateString;
-    private MutableLiveData<String> dateStringLive=new MutableLiveData<>();
+    private MutableLiveData<String> dateStringLive = new MutableLiveData<>();
+
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
@@ -149,6 +153,15 @@ public class GetViewModel extends AndroidViewModel {
         CheckUserDetails();
 
 
+    }
+
+    public void setItem_title(String item_title) {
+        this.item_title = item_title;
+        this.item_title_Mutable.postValue(item_title);
+    }
+
+    public MutableLiveData<String> getItem_title_Mutable() {
+        return item_title_Mutable;
     }
 
     public void setDateString(String dateString) {
@@ -160,7 +173,7 @@ public class GetViewModel extends AndroidViewModel {
         return dateStringLive;
     }
 
-    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>>> getOrderMapMutableLiveData() {
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>>> getOrderMapMutableLiveData() {
         return orderMapMutableLiveData;
     }
 
@@ -226,10 +239,10 @@ public class GetViewModel extends AndroidViewModel {
         return sessionListsMutableLiveData;
     }*/
 
- /*   public MutableLiveData<List<SelectedHeader>> getSelectedHeadersMutableLiveData() {
-        return selectedHeadersMutableLiveData;
-    }
-*/
+    /*   public MutableLiveData<List<SelectedHeader>> getSelectedHeadersMutableLiveData() {
+           return selectedHeadersMutableLiveData;
+       }
+   */
     public void setOrderListsView(OrderLists orderListsView) {
         this.orderListsView = orderListsView;
         this.orderListsViewMutableLiveData.postValue(orderListsView);
@@ -243,7 +256,7 @@ public class GetViewModel extends AndroidViewModel {
         return orderItemList_f_mapMutableLiveData;
     }*/
 
-    public MutableLiveData<List<OrderItemLists>> getOrderItemListsMutableLiveData() {
+    public MutableLiveData<List<OrderDishLists>> getOrderItemListsMutableLiveData() {
         return orderItemListsMutableLiveData;
     }
 
@@ -460,7 +473,7 @@ public class GetViewModel extends AndroidViewModel {
                             for (DataSnapshot ondata : dataTime.getChildren()) {
                                 String ss = ondata.getKey().toString();
                                 String[] scb = ss.split("-");
-                                String count=scb[1];
+                                String count = scb[1];
                                 String[] str = (scb[0]).split("_");
                                 session_title = str[0];
                                 MyLog.e(TAG, "MyOrdersAdapter>>session_title>>" + ondata.getKey().toString());
@@ -469,25 +482,30 @@ public class GetViewModel extends AndroidViewModel {
                                 orderHeaderMap = new LinkedHashMap<>();
                                 for (DataSnapshot dataSnapshot : ondata.getChildren()) {
                                     //get item list
-                                    o_orderItemLists = new ArrayList<>();
 
                                     header_title = dataSnapshot.getKey().toString();
                                     MyLog.e(TAG, "onData>>dataonData>>" + dataSnapshot);
                                     MyLog.e(TAG, "onData>>header_title>>" + dataSnapshot.getKey().toString());
                                     size = 0;
+                                    orderItemMap = new LinkedHashMap<>();
                                     for (DataSnapshot shot : dataSnapshot.getChildren()) {
                                         MyLog.e(TAG, "onData>>shots>>" + shot);
                                         MyLog.e(TAG, "onData>>shots>>" + shot.getKey().toString());
-                                        //get item list
-                                        OrderItemLists itemLists = new OrderItemLists(
-                                                shot.getValue().toString()
-                                        );
-                                        o_orderItemLists.add(itemLists);
-                                        size++;
+                                        String item = shot.getKey().toString();
+                                        o_orderDishLists = new ArrayList<>();
+                                        for (DataSnapshot dishShot : shot.getChildren()) {
+                                            //get item list
+                                            OrderDishLists itemLists = new OrderDishLists(
+                                                    dishShot.getValue().toString()
+                                            );
+                                            o_orderDishLists.add(itemLists);
+                                            size++;
+                                        }
+                                        orderItemMap.put(item, o_orderDishLists);
                                     }
 
                                     MyLog.e(TAG, "onData>>size>" + size);
-                                    orderHeaderMap.put(header_title, o_orderItemLists);
+                                    orderHeaderMap.put(header_title, orderItemMap);
 
 
                                 }
@@ -501,7 +519,7 @@ public class GetViewModel extends AndroidViewModel {
                     orderMap.put(s_user_name, orderFunc_Map);
 
                 }
-                    orderMapMutableLiveData.postValue(orderMap);
+                orderMapMutableLiveData.postValue(orderMap);
 
             }
 

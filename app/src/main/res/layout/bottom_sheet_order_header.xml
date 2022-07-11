@@ -46,7 +46,6 @@
                         android:id="@+id/recyclerview_item_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="15dp"
                         tools:itemCount="2"
                         tools:listitem="@layout/bottom_sheet_order_item_list" />
                 </LinearLayout>

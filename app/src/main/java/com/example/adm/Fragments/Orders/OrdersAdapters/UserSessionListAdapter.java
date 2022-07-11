@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderItemLists;
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.SelectedHeader;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderDishLists;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderHeaderLists;
 import com.example.adm.Fragments.Orders.Classes.SelectedSessionList;
 import com.example.adm.Fragments.Orders.Classes.UserItemList;
 import com.example.adm.R;
@@ -29,20 +29,28 @@ public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionList
     private String s_session_title,bolen,date,time;
     private GetViewModel getViewModel;
     //order hash map
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    //order map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>> orderMap = new LinkedHashMap<>();
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     //selected session list
     private List<SelectedSessionList> o_selectedSessionLists=new ArrayList<>();
     //selected header list
-    private List<SelectedHeader> o_selectedHeaders=new ArrayList<>();
+    private List<OrderHeaderLists> o_Order_HeaderLists =new ArrayList<>();
     //order header title and item size
     private List<UserItemList>  o_userItemLists=new ArrayList<>();
     //order item list
-    private List<OrderItemLists> o_orderItemLists=new ArrayList<>();
+    private List<OrderDishLists> o_orderDishLists =new ArrayList<>();
 
-    public UserSessionListAdapter(Context context, GetViewModel getViewModel, List<SelectedSessionList> o_selectedSessionLists, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap) {
+    public UserSessionListAdapter(Context context, GetViewModel getViewModel, List<SelectedSessionList> o_selectedSessionLists, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.orderSessionMap = orderSessionMap;
@@ -72,26 +80,29 @@ public class UserSessionListAdapter extends RecyclerView.Adapter<UserSessionList
         String s=sessionLists1.getSession_title()+"!"+sessionLists1.getTime()+"-"+sessionLists1.getCount()+"_"+sessionLists1.getBolen();
         orderHeaderMap=orderSessionMap.get(s);
         //get header list
-        Set<String> stringSet = orderHeaderMap.keySet();
-        List<String> aList = new ArrayList<String>(stringSet.size());
-        for (String x : stringSet)
-            aList.add(x);
-        o_selectedHeaders=new ArrayList<>();
-        for(int k=0;k<aList.size();k++) {
-            SelectedHeader selectedHeader=new SelectedHeader(
-                    aList.get(k)
+        Set<String> stringSet1 = orderHeaderMap.keySet();
+        List<String> aList1 = new ArrayList<String>(stringSet1.size());
+        for (String x1 : stringSet1)
+            aList1.add(x1);
+        o_Order_HeaderLists =new ArrayList<>();
+        for(int k=0;k<aList1.size();k++) {
+            OrderHeaderLists orderHeaderLists =new OrderHeaderLists(
+                    aList1.get(k)
             );
-            o_selectedHeaders.add(selectedHeader);
+            o_Order_HeaderLists.add(orderHeaderLists);
         }
         o_userItemLists=new ArrayList<>();
-        for(int i=0;i<o_selectedHeaders.size();i++) {
-            String header = o_selectedHeaders.get(i).getHeader();
-            o_orderItemLists=new ArrayList<>();
-            o_orderItemLists = orderHeaderMap.get(header);
+        for(int i = 0; i< o_Order_HeaderLists.size(); i++) {
+            String header = o_Order_HeaderLists.get(i).getHeader();
+            orderItemMap = orderHeaderMap.get(header);
+            Set<String> stringSet = orderItemMap.keySet();
+            List<String> aList = new ArrayList<String>(stringSet.size());
+            for (String x : stringSet)
+                aList.add(x);
             //user item list
             UserItemList itemList = new UserItemList(
                     header,
-                    o_orderItemLists.size()
+                    aList.size()
             );
             o_userItemLists.add(itemList);
 

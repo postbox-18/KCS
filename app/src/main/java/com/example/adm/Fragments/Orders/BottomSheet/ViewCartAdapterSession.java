@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderItemLists;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderDishLists;
 import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderLists;
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.SelectedHeader;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderHeaderLists;
 import com.example.adm.Fragments.Orders.Classes.SelectedSessionList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -27,24 +28,32 @@ import java.util.Set;
 public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapterSession.ViewHolder> {
     private Context context;
     private String TAG = "ViewCartAdapterSession";
-    private List<SelectedHeader> o_selectedHeaders = new ArrayList<>();
+    private List<OrderHeaderLists> o_Order_HeaderLists = new ArrayList<>();
     private List<SelectedSessionList> o_selectedSessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
     private OrderLists orderLists;
 
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    //order hash map
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     //order item list
-    private List<OrderItemLists> o_orderItemLists = new ArrayList<>();
+    private List<OrderDishLists> o_orderDishLists = new ArrayList<>();
+    private String name, func, date;
 
 
-    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap, String date, List<SelectedSessionList> o_selectedSessionLists) {
+    public ViewCartAdapterSession(Context context, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap, String date, List<SelectedSessionList> o_selectedSessionLists, String name, String func) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.orderSessionMap = new LinkedHashMap<>(orderSessionMap);
-        this.o_selectedSessionLists = new ArrayList<>(o_selectedSessionLists);
+        this.name = name;
+        this.o_selectedSessionLists = o_selectedSessionLists;
+        this.func = func;
+        this.date = date;
+
     }
 
 
@@ -64,27 +73,27 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         holder.count.setText(list.getCount());
         holder.time.setText(list.getTime());
 
-        String s = list.getSession_title() + "!" + list.getTime()+"-"+list.getCount() + "_" + list.getBolen();
-        MyLog.e(TAG,"bottom>>sess>"+s);
-
+        String s = list.getSession_title() + "!" + list.getTime() + "-" + list.getCount() + "_" + list.getBolen();
+        MyLog.e(TAG, "bottom>>sess>" + s);
         orderHeaderMap = new LinkedHashMap<>(orderSessionMap).get(s);
+
         //get header list
         Set<String> stringSet = orderHeaderMap.keySet();
 
         List<String> aList = new ArrayList<String>(stringSet.size());
         for (String x : stringSet)
             aList.add(x);
-        o_selectedHeaders=new ArrayList<>();
+        o_Order_HeaderLists = new ArrayList<>();
         for (int k = 0; k < aList.size(); k++) {
-            SelectedHeader selectedHeader = new SelectedHeader(
+            OrderHeaderLists orderHeaderLists = new OrderHeaderLists(
                     aList.get(k)
             );
-            o_selectedHeaders.add(selectedHeader);
+            o_Order_HeaderLists.add(orderHeaderLists);
         }
 
         holder.recyclerview_order_item_details.setHasFixedSize(true);
         holder.recyclerview_order_item_details.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        ViewCartAdapterHeader itemListAdapters = new ViewCartAdapterHeader(context, getViewModel, o_selectedHeaders, orderHeaderMap);
+        ViewCartAdapterHeader itemListAdapters = new ViewCartAdapterHeader(context, getViewModel, o_Order_HeaderLists, orderHeaderMap,name,func,date,s);
         holder.recyclerview_order_item_details.setAdapter(itemListAdapters);
 
 
@@ -98,7 +107,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView session_title,count,time;
+        private TextView session_title, count, time;
         private RecyclerView recyclerview_order_item_details;
 
 

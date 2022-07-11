@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderItemLists;
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.SelectedHeader;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderDishLists;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderHeaderLists;
 import com.example.adm.Fragments.Orders.Classes.SelectedDateList;
 import com.example.adm.Fragments.Orders.Classes.SelectedSessionList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -29,21 +30,25 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
     private GetViewModel getViewModel;
 
     //order hashmap
-    //date map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     //selected headers
-    private List<SelectedHeader> o_selectedHeaders=new ArrayList<>();
+    private List<OrderHeaderLists> o_Order_HeaderLists =new ArrayList<>();
     private List<SelectedSessionList> o_selectedSessionLists=new ArrayList<>();
     private List<SelectedDateList> o_dateLists=new ArrayList<>();
+    private String name,func;
 
-
-    public ViewCartAdapterDate(Context context, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap, List<SelectedDateList> o_dateLists) {
+    public ViewCartAdapterDate(Context context, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap, List<SelectedDateList> o_dateLists, String name, String func) {
         this.context = context;
         this.getViewModel = getViewModel;
+        this.func = func;
+        this.name = name;
         this.orderDateMap = new LinkedHashMap<>(orderDateMap);
         this.o_dateLists = new ArrayList<>(o_dateLists);
     }
@@ -64,6 +69,7 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
         final SelectedDateList o_dateLists1=o_dateLists.get(position);
         holder.date.setText(o_dateLists1.getDate());
         MyLog.e(TAG,"orders>> o_dateLists1.getDate()>>"+o_dateLists1.getDate());
+
         //get order session map
         orderSessionMap=new LinkedHashMap<>(orderDateMap).get(o_dateLists1.getDate());
 
@@ -93,7 +99,7 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
 
         holder.recyclerview_order_session_deatils.setHasFixedSize(true);
         holder.recyclerview_order_session_deatils.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(context, getViewModel,orderSessionMap,o_dateLists1.getDate(),o_selectedSessionLists);
+        ViewCartAdapterSession viewCartAdapter = new ViewCartAdapterSession(context, getViewModel,orderSessionMap,o_dateLists1.getDate(),o_selectedSessionLists,name,func);
         holder.recyclerview_order_session_deatils.setAdapter(viewCartAdapter);
 
     }

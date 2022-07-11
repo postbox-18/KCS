@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderItemLists;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderDishLists;
 import com.example.adm.Fragments.Orders.Classes.SelectedDateList;
 import com.example.adm.Fragments.Orders.Classes.SelectedSessionList;
 import com.example.adm.R;
@@ -32,12 +32,19 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
     private String s_user_name,funcTitle;
     private GetViewModel getViewModel;
     //order hash map
-    //date map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    //order map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>> orderMap = new LinkedHashMap<>();
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
+
     //selected date list
     private List<SelectedDateList> o_dateLists=new ArrayList<>();
     //selected session list
@@ -47,7 +54,7 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
     private String gn_Date,current_Date;
     private Date date = new Date();
 
-    public UserDateListAdapter(Context context, GetViewModel getViewModel, List<SelectedDateList> o_dateLists, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap, String s_user_name, String funcTitle) {
+    public UserDateListAdapter(Context context, GetViewModel getViewModel, List<SelectedDateList> o_dateLists, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap, String s_user_name, String funcTitle) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.o_dateLists = o_dateLists;

@@ -1,8 +1,8 @@
 package com.example.adm.Fragments.Orders.BottomSheet.Classes;
 
-public class SelectedHeader {
+public class OrderHeaderLists {
     private final String header;
-    public SelectedHeader(String header) {
+    public OrderHeaderLists(String header) {
         this.header=header;
     }
 

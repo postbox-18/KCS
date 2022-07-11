@@ -10,13 +10,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SessionList;
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderItemLists;
+import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderDishLists;
 import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderLists;
 import com.example.adm.Fragments.Orders.Classes.SelectedDateList;
 import com.example.adm.Fragments.Orders.Classes.UserItemList;
@@ -37,15 +38,17 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     private List<SessionList> sessionLists=new ArrayList<>();
     //order hash map
     //order map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> orderMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>> orderMap = new LinkedHashMap<>();
     //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
-    //date map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     //date list
     private List<SelectedDateList> o_dateLists=new ArrayList<>();
 
@@ -70,9 +73,9 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
         holder.user_name.setText(orderLists1.getS_user_name());
         holder.func.setText(orderLists1.getFunc());
         MyLog.e(TAG,"item>>func >"+orderLists1.getFunc());
-        getViewModel.getOrderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>>>() {
+        getViewModel.getOrderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>> stringLinkedHashMapLinkedHashMap) {
                 orderMap=new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
                 orderFunc_Map=new LinkedHashMap<>(orderMap).get(orderLists1.getS_user_name());
                 orderDateMap=new LinkedHashMap<>(orderFunc_Map).get(orderLists1.getFunc());

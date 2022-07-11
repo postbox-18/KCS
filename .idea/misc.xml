@@ -47,6 +47,7 @@
         <entry key="app/src/main/res/layout/bottom_sheet_list_header_item_list.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/bottom_sheet_order_date.xml" value="0.15818725951261223" />
         <entry key="app/src/main/res/layout/bottom_sheet_order_details.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/bottom_sheet_order_dish_list.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/bottom_sheet_order_header.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/bottom_sheet_order_item_list.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/bottom_sheet_order_session.xml" value="0.15904232578024796" />
