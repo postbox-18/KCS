@@ -1,5 +1,6 @@
 package com.example.adm.Fragments.Control_Panel.Item;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
+import com.example.adm.Fragments.Control_Panel.Dish.DishList;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
 import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderHeaderLists;
 import com.example.adm.R;
@@ -30,7 +32,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private Context context;
     private String TAG="ItemAdapter",header_title;
     private GetViewModel getViewModel;
-    private LinkedHashMap<String,List<ItemArrayList>> selectedHeaderMap=new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> selectedHeaderMap=new LinkedHashMap<>();
     public ItemAdapter(Context context, List<ItemArrayList> item, GetViewModel getViewModel) {
         this.item = item;
         this.context = context;
@@ -47,26 +49,26 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         final ItemArrayList item1 = item.get(position);
         holder.item_title.setText(item1.getItem());
 
 
-        //get hash map
-        getViewModel.getItemArrayListMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<ItemArrayList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<ItemArrayList>> stringListLinkedHashMap) {
-                selectedHeaderMap=stringListLinkedHashMap;
-            }
-        });
+        //get item hash map
+        getViewModel.getItemArrayListMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>>() {
+                    @Override
+                    public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> stringLinkedHashMapLinkedHashMap) {
+                        selectedHeaderMap=stringLinkedHashMapLinkedHashMap;
+                    }
+                });
 
-        //get header title
-        getViewModel.getHeader_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                header_title=s;
-            }
-        });
+                //get header title
+                getViewModel.getHeader_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        header_title = s;
+                    }
+                });
 
         if((item1.getSelected()).equals("true"))
         {

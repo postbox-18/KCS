@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 
+import com.example.adm.Fragments.Control_Panel.Dish.DishList;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.HeaderList;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
 import com.example.adm.R;
@@ -30,7 +31,10 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private Context context;
     private String TAG="HeaderAdapter";
     private GetViewModel getViewModel;
-    private LinkedHashMap<String, List<ItemArrayList>> itemArrayMap=new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> itemArrayMap=new LinkedHashMap<>();
+    //dish map
+    private LinkedHashMap<String, List<DishList>> dishListMap = new LinkedHashMap<>();
     private List<ItemArrayList> itemList = new ArrayList<>();
     public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel) {
         this.headerLists = headerLists;
@@ -53,9 +57,9 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
         holder.header_title.setText(item1.getHeader());
 
         //get hash map
-        getViewModel.getItemArrayListMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<ItemArrayList>>>() {
+        getViewModel.getItemArrayListMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<ItemArrayList>> stringListLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> stringListLinkedHashMap) {
                 itemArrayMap=stringListLinkedHashMap;
 
 
@@ -67,7 +71,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
             public void onClick(View view) {
 
                 //get item list
-                itemList=itemArrayMap.get(item1.getHeader());
+                //itemList=itemArrayMap.get(item1.getHeader());
                 getViewModel.setHeader_title(item1.getHeader());
                 getViewModel.setItemArrayList(itemList);
                 getViewModel.setI_value(3);

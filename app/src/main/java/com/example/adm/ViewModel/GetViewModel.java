@@ -11,6 +11,7 @@ import com.example.adm.Classes.CheckEmail;
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SessionList;
 import com.example.adm.Classes.SharedPreferences_data;
+import com.example.adm.Fragments.Control_Panel.Dish.DishList;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.FuncList;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.HeaderList;
 import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -84,9 +86,14 @@ public class GetViewModel extends AndroidViewModel {
     //item list
     private List<ItemArrayList> itemList = new ArrayList<>();
     private MutableLiveData<List<ItemArrayList>> itemListMutableLiveData = new MutableLiveData<>();
-    //header map
-    private LinkedHashMap<String, List<ItemArrayList>> itemArrayListMap = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, List<ItemArrayList>>> itemArrayListMapMutableLiveData = new MutableLiveData<>();
+    //dish list
+    private List<DishList> dishLists = new ArrayList<>();
+    //item map
+    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> itemArrayListMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>> itemArrayListMapMutableLiveData = new MutableLiveData<>();
+    //dish map
+    private LinkedHashMap<String, List<DishList>> dishListMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<DishList>>> dishListMapMutableLiveData = new MutableLiveData<>();
     //session list
     private List<SessionList> sessionLists = new ArrayList<>();
     /*private LinkedHashMap<String, List<SessionList>> ss_f_map = new LinkedHashMap<>();
@@ -204,22 +211,12 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-    public void setItemArrayListMap(LinkedHashMap<String, List<ItemArrayList>> itemArrayListMap) {
+    public void setItemArrayListMap(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> itemArrayListMap) {
         this.itemArrayListMap = itemArrayListMap;
         this.itemArrayListMapMutableLiveData.postValue(itemArrayListMap);
     }
 
-    public MutableLiveData<LinkedHashMap<String, List<ItemArrayList>>> getItemArrayListMapMutableLiveData() {
-        return itemArrayListMapMutableLiveData;
-    }
-
-
-    public void setCheckItemArrayListMap(LinkedHashMap<String, List<ItemArrayList>> itemArrayListMap) {
-        this.itemArrayListMap = itemArrayListMap;
-        this.itemArrayListMapMutableLiveData.postValue(itemArrayListMap);
-    }
-
-    public MutableLiveData<LinkedHashMap<String, List<ItemArrayList>>> getCheckItemArrayListMapMutableLiveData() {
+    public MutableLiveData<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>> getItemArrayListMapMutableLiveData() {
         return itemArrayListMapMutableLiveData;
     }
 
@@ -300,32 +297,35 @@ public class GetViewModel extends AndroidViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "list>>snap>>" + snapshot);
                 int size = 0;
-
+                itemArrayListMap = new LinkedHashMap<>();
                 headerList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     //MyLog.e(TAG, "list>>datasnapshot>>" + dataSnapshot);
                     MyLog.e(TAG, "list>>datasnapshot>>key>>" + dataSnapshot.getKey().toString());
                     header_title = dataSnapshot.getKey().toString();
-                    itemList = new ArrayList<>();
+                    dishListMap = new LinkedHashMap<>();
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         //MyLog.e(TAG, "list>>data>>" + data);
                         MyLog.e(TAG, "list>>data>>key>>" + data.getKey().toString());
-                        ItemArrayList itemList1 = new ItemArrayList();
-                        itemList1.setItem(data.getKey().toString());
-                        itemList1.setSelected(data.getValue().toString());
-                        itemList.add(itemList1);
-                        itemArrayListMap.put(header_title, itemList);
+                        String item = data.getKey().toString();
+                        dishLists = new ArrayList<>();
+                        for (DataSnapshot dishShot : data.getChildren()) {
+                            MyLog.e(TAG, "list>>dishShot>>key>>" + dishShot.getKey().toString());
+                            MyLog.e(TAG, "list>>dishShot>>value>>" + dishShot.getValue().toString());
+
+                            DishList list = new DishList();
+                            list.setDish(dishShot.getKey().toString());
+                            list.setBolen(dishShot.getValue().toString());
+                            dishLists.add(list);
+                        }
+                        dishListMap.put(item, dishLists);
                     }
-                    HeaderList headerList1 = new HeaderList(
-                            header_title
-                    );
-                    headerList.add(headerList1);
-                    headerListMutableLiveData.postValue(headerList);
+                    itemArrayListMap.put(header_title, dishListMap);
                 }
 
                 itemArrayListMapMutableLiveData.postValue(itemArrayListMap);
-                size++;
 
+                MyLog.e(TAG, "bottom>>itemArrayListMap>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemArrayListMap));
 
             }
 
