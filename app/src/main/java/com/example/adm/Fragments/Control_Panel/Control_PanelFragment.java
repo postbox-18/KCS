@@ -14,12 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.adm.Fragments.Control_Panel.Func.FuncAdapter;
-import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.FuncList;
 import com.example.adm.Fragments.Control_Panel.Header.HeaderAdapter;
-import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.HeaderList;
-import com.example.adm.Fragments.Control_Panel.Item.ItemAdapter;
-import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.ItemArrayList;
+import com.example.adm.Fragments.Control_Panel.Header.HeaderList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 import com.google.firebase.database.DatabaseReference;

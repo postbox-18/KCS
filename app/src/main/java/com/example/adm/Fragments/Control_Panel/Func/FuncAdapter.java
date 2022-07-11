@@ -10,8 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
-import com.example.adm.Fragments.Control_Panel.Selected_UnSelected_List.FuncList;
-import com.example.adm.Fragments.Control_Panel.UpdatedList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 

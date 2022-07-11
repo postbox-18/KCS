@@ -1,4 +1,4 @@
-package com.example.adm.Fragments.Control_Panel;
+package com.example.adm.Fragments.Control_Panel.Func;
 
 public class UpdatedList {
     private  final String title,update_text;
