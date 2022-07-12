@@ -1,7 +1,9 @@
 package com.example.adm.Fragments.Control_Panel.Dish;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,13 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -46,7 +54,16 @@ public class DishFragment extends Fragment {
     private String header_title,item;
     private TextView itemText;
     private GetViewModel getViewModel;
+    private FloatingActionButton add;
+
     private String TAG="DishFragment";
+
+    //alert
+    private String header_titles,s_dish,selected;
+    private EditText dishEditText;
+    private TextView head;
+    private TextInputLayout dish_inputLayout;
+    private GetViewModel  getViewModel1;
     public DishFragment() {
         // Required empty public constructor
     }
@@ -87,6 +104,8 @@ public class DishFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_dish, container, false);
         RecyclerView recyclerview_dish_list=view.findViewById(R.id.recyclerview_dish_list);
         itemText=view.findViewById(R.id.item_title_set);
+        add = view.findViewById(R.id.add);
+
         recyclerview_dish_list.setHasFixedSize(true);
         recyclerview_dish_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
@@ -119,9 +138,55 @@ public class DishFragment extends Fragment {
                 recyclerview_dish_list.setAdapter(dishAdapter);
             }
         });
+        //on click
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //addItemBox.show(getParentFragmentManager(),"AddItemBox");
+                alertBox(view,item);
 
+            }
+        });
 
 
         return view;
+    }
+    private void alertBox(View view, String item) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        final View customLayout = getLayoutInflater().inflate(R.layout.add_itembox, null);
+        getViewModel1 = new ViewModelProvider(getActivity()).get(GetViewModel.class);
+        dishEditText = customLayout.findViewById(R.id.item);
+        head = customLayout.findViewById(R.id.head);
+        dishEditText.setHint("Dish");
+        head.setText("Dish To Add..");
+        //dish_inputLayout=customLayout.findViewById(R.id.itemTextInputLayout);
+        //ok=customLayout.findViewById(R.id.ok);
+        //get header title;
+        getViewModel1.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                header_titles = s;
+            }
+        });
+   
+
+        builder.setView(customLayout);
+        // add a button
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                s_dish = dishEditText.getText().toString();
+                selected = "true";
+                getViewModel1.updateItem(header_titles,item,s_dish,selected,null);
+                Toast.makeText(getContext(), "Dish Added", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+            }
+        });
+
+        AlertDialog dialog
+                = builder.create();
+        dialog.show();
     }
 }

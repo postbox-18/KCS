@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,8 @@ import com.example.adm.ViewModel.GetViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.GsonBuilder;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -53,8 +56,10 @@ public class ItemFragment extends Fragment {
     private LinkedHashMap<String, List<DishList>> dishListMap = new LinkedHashMap<>();
 
     //alert
-    private String header_titles,s_item,selected;
-    private EditText item;
+    private String header_titles,s_item,s_dish,selected;
+    private EditText item,dish;
+    private TextView head;
+    private LinearLayout layout;
     private TextInputLayout item_inputLayout;
     private GetViewModel  getViewModel1;
 
@@ -86,7 +91,7 @@ public class ItemFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_item, container, false);
         getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
-
+        add = view.findViewById(R.id.add);
         recyclerView_item = view.findViewById(R.id.recyclerview_item_list);
         header_title = view.findViewById(R.id.header_title_set);
 
@@ -124,28 +129,6 @@ public class ItemFragment extends Fragment {
         });
 
 
-      /*  recyclerView_item = view.findViewById(R.id.recyclerview_item_list);
-        header_title = view.findViewById(R.id.header_title);
-        add = view.findViewById(R.id.add);
-
-        recyclerView_item.setHasFixedSize(true);
-        recyclerView_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-
-        //get header title
-        getViewModel.getHeader_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                header_title.setText(s);
-            }
-        });
-        //get item list
-        getViewModel.getItemListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<ItemArrayList>>() {
-            @Override
-            public void onChanged(List<ItemArrayList> itemArrayLists) {
-                itemAdapter = new ItemAdapter(getContext(), itemArrayLists, getViewModel);
-                recyclerView_item.setAdapter(itemAdapter);
-            }
-        });
 
         //on click
         add.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +138,7 @@ public class ItemFragment extends Fragment {
                 alertBox(view);
 
             }
-        });*/
+        });
 
 
         return view;
@@ -167,6 +150,16 @@ public class ItemFragment extends Fragment {
         final View customLayout = getLayoutInflater().inflate(R.layout.add_itembox, null);
         getViewModel1 = new ViewModelProvider(getActivity()).get(GetViewModel.class);
         item = customLayout.findViewById(R.id.item);
+        head = customLayout.findViewById(R.id.head);
+        layout = customLayout.findViewById(R.id.layout);
+        dish = customLayout.findViewById(R.id.dish);
+
+        layout.setVisibility(View.VISIBLE);
+
+        item.setHint("Item");
+        dish.setHint("Dish");
+
+        head.setText("Item To Add..");
         //item_inputLayout=customLayout.findViewById(R.id.itemTextInputLayout);
         //ok=customLayout.findViewById(R.id.ok);
         //get header title;
@@ -176,18 +169,6 @@ public class ItemFragment extends Fragment {
                 header_titles = s;
             }
         });
-        /*ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                s_item=item.getText().toString();
-                selected="true";
-                getViewModel1.updateItem(header_titles,s_item,selected);
-                getViewModel1.setI_value(1);
-                Toast.makeText(getContext(), "Item Added", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-
-            }
-        });*/
 
         builder.setView(customLayout);
         // add a button
@@ -195,11 +176,23 @@ public class ItemFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 s_item = item.getText().toString();
-                selected = "true";
-                // getViewModel1.updateItem(header_titles,s_item,selected);
-                getViewModel1.setI_value(1);
-                Toast.makeText(getContext(), "Item Added", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                s_dish = dish.getText().toString();
+                if(s_item.isEmpty())
+                {
+                    item.setError("Please enter the item");
+                }
+                else if(s_dish.isEmpty())
+                {
+                    dish.setError("Please enter the dish");
+                }
+                else {
+                    selected = "true";
+                    String items=s_item+"_true";
+                    //getViewModel1.updateItem(header_titles,item,s_dish,selected,null);
+                    getViewModel1.updateItem(header_titles, items, s_dish, selected, null);
+                    Toast.makeText(getContext(), "Item Added", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
 
             }
         });

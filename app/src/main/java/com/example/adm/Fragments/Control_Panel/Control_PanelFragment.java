@@ -90,7 +90,7 @@ public class Control_PanelFragment extends Fragment {
 
 
         recyclerview_header.setHasFixedSize(true);
-        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
 
         headerList=new ArrayList<>();

@@ -43,8 +43,8 @@ public class GetViewModel extends AndroidViewModel {
 
 
     //refresh
-    private Integer refresh=-1;
-    private MutableLiveData<Integer> refreshLiveData=new MutableLiveData<>();
+    private Integer refresh = -1;
+    private MutableLiveData<Integer> refreshLiveData = new MutableLiveData<>();
 
     //Selected Header
     private String header_title;
@@ -565,8 +565,6 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-
-
     public void setFunc_title(String func_title) {
         this.func_title = func_title;
         func_title_Mutable.postValue(func_title);
@@ -580,6 +578,7 @@ public class GetViewModel extends AndroidViewModel {
         this.i_value = i_value;
         this.value.postValue(i_value);
     }
+
     public MutableLiveData<Integer> getValue() {
         return value;
     }
@@ -675,58 +674,54 @@ public class GetViewModel extends AndroidViewModel {
     public void updateItem(String header_title, String item, String dish, String selected, List<DishList> dishLists) {
 
         MyLog.e(TAG, "switchs>>updateItem");
-        MyLog.e(TAG, "switchs>>dishLists>>"+new GsonBuilder().setPrettyPrinting().create().toJson(dishLists));
-        MyLog.e(TAG, "switchs>>\nheader>>"+header_title+"\nitem>>"+item+"\ndish>>"+dish+"\nselected>>"+selected);
+        MyLog.e(TAG, "switchs>>dishLists>>" + new GsonBuilder().setPrettyPrinting().create().toJson(dishLists));
+        MyLog.e(TAG, "switchs>>\nheader>>" + header_title + "\nitem>>" + item + "\ndish>>" + dish + "\nselected>>" + selected);
 
 
+        if (dish == null) {
+            databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
+            String item_b = item + "_" + selected;
+            for (int i = 0; i < dishLists.size(); i++) {
 
-        if(dish==null) {
-            for(int i=0;i<dishLists.size();i++) {
-                databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
-                String item_b = item + "_" + selected;
                 MyLog.e(TAG, "switchs>>commit");
                 //remove data list
-                String oldData="";
-                if(selected.equals("true"))
-                {
-                    oldData="false";
-                }
-                else
-                {
-                    oldData="true";
+                String oldData = "";
+                if (selected.equals("true")) {
+                    oldData = "false";
+                } else {
+                    oldData = "true";
                 }
 
                 //remove data list
-                databaseReference.child(header_title).child(item+"_"+oldData).removeValue();
+                databaseReference.child(header_title).child(item + "_" + oldData).removeValue();
 
                 //add data list
                 databaseReference.child(header_title).child(item_b).child(dishLists.get(i).getDish()).setValue(dishLists.get(i).getBolen());
+
             }
+
             //get list reload to get item map
             //GetUpdateItem();
             //refreshLiveData.postValue(3);
-            setI_value(1);
-        }else{
+        } else {
             databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
-            String[]str=item.split("_");
-            String oldItem=str[0];
-            String newBolen=str[1];
+            String[] str = item.split("_");
+            String oldItem = str[0];
+            String newBolen = str[1];
             //remove data list
-            String oldData="";
-            if(newBolen.equals("true"))
-            {
-                oldData="false";
-            }
-            else
-            {
-                oldData="true";
+            String oldData = "";
+            if (newBolen.equals("true")) {
+                oldData = "false";
+            } else {
+                oldData = "true";
             }
 
             //remove data list
-            databaseReference.child(header_title).child(oldItem+"_"+oldData).removeValue();
+            databaseReference.child(header_title).child(oldItem + "_" + oldData).removeValue();
             //add data list
             databaseReference.child(header_title).child(item).child(dish).setValue(selected);
         }
+        setI_value(1);
 
     }
 

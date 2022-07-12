@@ -21,6 +21,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Item To Add.."
@@ -37,6 +38,46 @@
                     android:singleLine="true"
                     android:imeOptions="actionDone"
                     android:hint="item"
+                    android:padding="15dp" />
+
+
+            <!--<androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/ok"
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/update_btn"
+                android:text="OK"
+                android:textColor="@color/White"
+                android:textSize="18dp"
+                android:textStyle="bold|italic" />-->
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dish To Add.."
+                android:textColor="@color/colorPrimary"
+                android:textSize="18dp"
+                android:textStyle="bold|italic" />
+
+
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dish"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:hint="Dish"
                     android:padding="15dp" />
 
 
