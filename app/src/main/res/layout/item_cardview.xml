@@ -8,11 +8,14 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="15dp"
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="15dp"
+    android:layout_marginStart="75dp"
+    android:layout_marginEnd="75dp"
     android:orientation="vertical">
     <androidx.cardview.widget.CardView
         android:id="@+id/item_cardView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal"
@@ -22,19 +25,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <androidx.cardview.widget.CardView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:orientation="horizontal"
-                app:cardCornerRadius="10dp"
-                >
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/skcs_logo"/>
-            </androidx.cardview.widget.CardView>
+            android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/skcs_logo"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/item_title"
                 android:layout_width="match_parent"
@@ -45,9 +45,15 @@
                 android:textStyle="bold|italic"
                 android:gravity="center"
                 android:text="item list "/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:orientation="vertical">
                 <Switch
                     android:id="@+id/switchView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -56,7 +62,8 @@
                     app:layout_constraintStart_toEndOf="@id/item_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     tools:ignore="UseSwitchCompatOrMaterialXml" />
-
+            </LinearLayout>
+        </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
