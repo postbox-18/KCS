@@ -95,7 +95,6 @@ public class DishFragment extends Fragment {
             @Override
             public void onChanged(List<DishList> dishLists1) {
                 dishLists=dishLists1;
-                MyLog.e(TAG,"panel>>itemList>>"+new GsonBuilder().setPrettyPrinting().create().toJson(dishLists));
             }
         });
         //get header title

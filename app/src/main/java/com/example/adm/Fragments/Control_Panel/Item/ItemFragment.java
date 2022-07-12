@@ -107,7 +107,6 @@ public class ItemFragment extends Fragment {
             @Override
             public void onChanged(LinkedHashMap<String, List<DishList>> stringListLinkedHashMap) {
                 dishListMap = stringListLinkedHashMap;
-                MyLog.e(TAG, "maps>>dishListMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(dishListMap));
 
             }
         });

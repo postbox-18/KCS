@@ -357,7 +357,6 @@ public class GetViewModel extends AndroidViewModel {
 
                 itemArrayListMapMutableLiveData.postValue(itemArrayListMap);
 
-                MyLog.e(TAG, "bottom>>itemArrayListMap>" + new GsonBuilder().setPrettyPrinting().create().toJson(itemArrayListMap));
 
             }
 

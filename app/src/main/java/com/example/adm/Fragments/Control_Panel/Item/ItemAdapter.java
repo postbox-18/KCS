@@ -81,7 +81,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.item_cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyLog.e(TAG, "maps>>dishListMap item click>>"+new GsonBuilder().setPrettyPrinting().create().toJson(dishListMap));
                 //holder.item_title_set.setText(item1.getItem());
                     String item = item1.getItem() + "_" + item1.getSelected();
                     dishLists = dishListMap.get(item);
