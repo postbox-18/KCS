@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -66,7 +67,16 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
             holder.dish_title.setTextColor(context.getResources().getColor(R.color.light_gray));
         }
 
+        //onclick
+        holder.trash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String dish=item1.getDish()+"_"+item1.getBolen();
+                getViewModel.DeleteItem(header_title,item,dish);
 
+                //getViewModel.updateItem(header_title, item, item1.getDish(), null,null,0);
+            }
+        });
 
 
         holder.switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -104,12 +114,14 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
         private TextView dish_title;
         private Switch switchView;
         private CardView dish_cardView;
+        private ImageView trash;
 
         public ViewHolder(View view) {
             super(view);
             dish_title = view.findViewById(R.id.dish_title);
             dish_cardView = view.findViewById(R.id.dish_cardView);
             switchView = view.findViewById(R.id.switchView);
+            trash = view.findViewById(R.id.trashImg);
 
         }
     }

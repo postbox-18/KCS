@@ -727,6 +727,7 @@ public class GetViewModel extends AndroidViewModel {
 
 
     public void DeleteDate(String s_user_name, String funcTitle, String gn_date) {
+
         //remove old data
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");
@@ -737,5 +738,24 @@ public class GetViewModel extends AndroidViewModel {
         //remove data
         databaseReference.child(s_user_name).child(funcTitle).child(gn_date).removeValue();
         MyLog.e(TAG, "dates remove commit");
+    }
+
+    public void DeleteItem(String header_title, String item, String dish) {
+
+        MyLog.e(TAG, "switchs>>\nheader>>" + header_title + "\nitem>>" + item + "\ndish>>" + dish);
+        databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
+
+        //remove data list
+        if (dish == null) {
+            databaseReference.child(header_title).child(item).removeValue();
+        } else {
+            String[] str = dish.split("_");
+
+            //databaseReference.child(header_title).child(item).child(str[0]).child(str[1]).removeValue();
+            databaseReference.child(header_title).child(item).child(str[0]).removeValue();
+        }
+        setI_value(1);
+
+
     }
 }

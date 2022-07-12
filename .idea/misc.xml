@@ -33,6 +33,7 @@
         <entry key="app/src/main/res/drawable/ic_menu_camera.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_plus_lg.xml" value="0.1205" />
         <entry key="app/src/main/res/drawable/ic_plus_solid.xml" value="0.1205" />
+        <entry key="app/src/main/res/drawable/ic_trash3.xml" value="0.125" />
         <entry key="app/src/main/res/drawable/mytabs.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/tab_bottom.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/tab_react.xml" value="0.184" />
@@ -73,6 +74,7 @@
         <entry key="app/src/main/res/layout/search_bar.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/session_cardview.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/topic_activity.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/trash_layout.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/update_btn_layout.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/user_details_cardview.xml" value="0.1" />
       </map>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -100,6 +101,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
 
         //onclick
+        holder.trash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String item = item1.getItem() + "_" + item1.getSelected();
+                dishLists = dishListMap.get(item);
+                getViewModel.DeleteItem(header_title,item,null);
+                //getViewModel.updateItem(header_title, item, null, null,dishLists);
+            }
+        });
+
+        //onclick
         holder.switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -115,7 +127,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 String item = item1.getItem() + "_" + item1.getSelected();
                 dishLists = dishListMap.get(item);
                 //selectedHeaderMap.get(header_title).get(position).setSelected(String.valueOf(b));
-                getViewModel.updateItem(header_title, itemArrayLists.get(position).getItem(), null, String.valueOf(b),dishLists);
+                getViewModel.updateItem(header_title, item, null, String.valueOf(b),dishLists);
 
 
             }
@@ -134,11 +146,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         private TextView item_title;
         private Switch switchView;
         private CardView item_cardView;
+        private ImageView trash;
 
         public ViewHolder(View view) {
             super(view);
             item_title = view.findViewById(R.id.item_title);
             item_cardView = view.findViewById(R.id.item_cardView);
+            trash = view.findViewById(R.id.trashImg);
             //item_title_set = view.findViewById(R.id.item_title_set);
             //recyclerview_dish_list = view.findViewById(R.id.recyclerview_dish_list);
             //dish_cardView = view.findViewById(R.id.dish_cardView);
