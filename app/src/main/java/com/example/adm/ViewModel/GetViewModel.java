@@ -42,6 +42,10 @@ public class GetViewModel extends AndroidViewModel {
     private DatabaseReference databaseReference;
 
 
+    //refresh
+    private Integer refresh=-1;
+    private MutableLiveData<Integer> refreshLiveData=new MutableLiveData<>();
+
     //Selected Header
     private String header_title;
     private MutableLiveData<String> header_title_Mutable = new MutableLiveData<>();
@@ -160,7 +164,15 @@ public class GetViewModel extends AndroidViewModel {
 
         CheckUserDetails();
 
+    }
 
+    public MutableLiveData<Integer> getRefreshLiveData() {
+        return refreshLiveData;
+    }
+
+    public void setRefresh(Integer refresh) {
+        this.refresh = refresh;
+        this.refreshLiveData.postValue(refresh);
     }
 
     public MutableLiveData<List<DishList>> getDishListsMutableLiveData() {
@@ -661,15 +673,59 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-    public void updateItem(String header_title, String item, String dish,String selected) {
+    public void updateItem(String header_title, String item, String dish, String selected, List<DishList> dishLists) {
 
         MyLog.e(TAG, "switchs>>updateItem");
+        MyLog.e(TAG, "switchs>>dishLists>>"+new GsonBuilder().setPrettyPrinting().create().toJson(dishLists));
+        MyLog.e(TAG, "switchs>>\nheader>>"+header_title+"\nitem>>"+item+"\ndish>>"+dish+"\nselected>>"+selected);
+
+
+
         if(dish==null) {
-            databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
-            String item_b=item+"_"+selected;
-            databaseReference.child(header_title).setValue(item_b);
+            for(int i=0;i<dishLists.size();i++) {
+                databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
+                String item_b = item + "_" + selected;
+                MyLog.e(TAG, "switchs>>commit");
+                //remove data list
+                String oldData="";
+                if(selected.equals("true"))
+                {
+                    oldData="false";
+                }
+                else
+                {
+                    oldData="true";
+                }
+
+                //remove data list
+                databaseReference.child(header_title).child(item+"_"+oldData).removeValue();
+
+                //add data list
+                databaseReference.child(header_title).child(item_b).child(dishLists.get(i).getDish()).setValue(dishLists.get(i).getBolen());
+            }
+            //get list reload to get item map
+            //GetUpdateItem();
+            //refreshLiveData.postValue(3);
+            setI_value(1);
         }else{
             databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
+            String[]str=item.split("_");
+            String oldItem=str[0];
+            String newBolen=str[1];
+            //remove data list
+            String oldData="";
+            if(newBolen.equals("true"))
+            {
+                oldData="false";
+            }
+            else
+            {
+                oldData="true";
+            }
+
+            //remove data list
+            databaseReference.child(header_title).child(oldItem+"_"+oldData).removeValue();
+            //add data list
             databaseReference.child(header_title).child(item).child(dish).setValue(selected);
         }
 

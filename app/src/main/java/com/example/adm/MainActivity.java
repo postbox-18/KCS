@@ -16,11 +16,13 @@ import com.example.adm.Fragments.Control_Panel.Item.ItemFragment;
 import com.example.adm.Fragments.HomeFragment;
 import com.example.adm.Fragments.ProfileFragment;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 
 public class MainActivity extends AppCompatActivity {
     private String TAG = "MainActivity";
     private GetViewModel getViewModel;
+    private int integer = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,20 @@ public class MainActivity extends AppCompatActivity {
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
 
         MyLog.e(TAG, "logout>> main activity ");
+
+        //get refresh
+        getViewModel.getRefreshLiveData().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer1) {
+                integer = integer1;
+                finish();
+                startActivity(getIntent());
+                getViewModel.setI_value(integer);
+                MyLog.e(TAG, "maps>>itemArrayListMap set>");
+
+            }
+        });
+
 
         //load data base
         getViewModel.GetOrdesList();
@@ -41,8 +57,9 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.GetUpdateFun();
         getViewModel.GetUpdateItem();
 
-
-        getViewModel.setI_value(0);
+        if (integer < 0) {
+            getViewModel.setI_value(0);
+        }
         //get value to pass fragment
         getViewModel.getValue().observe(this, new Observer<Integer>() {
             @Override

@@ -16,11 +16,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.adm.Classes.MyLog;
 import com.example.adm.Fragments.Control_Panel.Dish.DishList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -88,10 +90,14 @@ public class ItemFragment extends Fragment {
         recyclerView_item = view.findViewById(R.id.recyclerview_item_list);
         header_title = view.findViewById(R.id.header_title_set);
 
+        recyclerView_item.setHasFixedSize(true);
+        recyclerView_item.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+
         //get item list
         getViewModel.getItemListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<ItemArrayList>>() {
             @Override
             public void onChanged(List<ItemArrayList> itemArrayLists) {
+                MyLog.e(TAG,"panel>>itemList>>"+itemList);
                 itemList = itemArrayLists;
             }
         });
@@ -101,6 +107,8 @@ public class ItemFragment extends Fragment {
             @Override
             public void onChanged(LinkedHashMap<String, List<DishList>> stringListLinkedHashMap) {
                 dishListMap = stringListLinkedHashMap;
+                MyLog.e(TAG, "maps>>dishListMap>>"+new GsonBuilder().setPrettyPrinting().create().toJson(dishListMap));
+
             }
         });
 
@@ -109,7 +117,9 @@ public class ItemFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 header_title.setText(s);
-                ItemAdapter itemAdapter = new ItemAdapter(getContext(), getViewModel, itemList, dishListMap);
+
+                MyLog.e(TAG,"panel>>header_title>>"+header_title);
+                ItemAdapter itemAdapter = new ItemAdapter(getContext(), getViewModel, itemList, dishListMap,s);
                 recyclerView_item.setAdapter(itemAdapter);
             }
         });

@@ -11,18 +11,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
-import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
-import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderHeaderLists;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
@@ -89,7 +84,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
 
                 }
                 //selectedHeaderMap.get(header_title).get(position).setSelected(String.valueOf(b));
-                getViewModel.updateItem(header_title, item, dishLists.get(position).getDish(),String.valueOf(b));
+                getViewModel.updateItem(header_title, item, dishLists.get(position).getDish(),String.valueOf(b), null);
 
 
 

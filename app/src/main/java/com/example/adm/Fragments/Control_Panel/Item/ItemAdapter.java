@@ -22,6 +22,7 @@ import com.example.adm.Fragments.Control_Panel.Dish.DishList;
 import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderHeaderLists;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -40,15 +41,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private List<DishList> dishLists = new ArrayList<>();
     private int n = 1;
 
-    public ItemAdapter(Context context, List<ItemArrayList> item, GetViewModel getViewModel) {
 
-    }
-
-    public ItemAdapter(Context context, GetViewModel getViewModel, List<ItemArrayList> itemList, LinkedHashMap<String, List<DishList>> dishListMap) {
+    public ItemAdapter(Context context, GetViewModel getViewModel, List<ItemArrayList> itemList, LinkedHashMap<String, List<DishList>> dishListMap, String header_title) {
         this.itemArrayLists = itemList;
         this.context = context;
         this.getViewModel = getViewModel;
         this.dishListMap = dishListMap;
+        this.header_title = header_title;
     }
 
     @NonNull
@@ -76,15 +75,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             holder.item_title.setTextColor(context.getResources().getColor(R.color.light_gray));
         }
 
-        holder.recyclerview_dish_list.setHasFixedSize(true);
-        holder.recyclerview_dish_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        /*holder.recyclerview_dish_list.setHasFixedSize(true);
+        holder.recyclerview_dish_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));*/
         //onclick
         holder.item_cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                    holder.dish_cardView.setVisibility(View.VISIBLE);
-                    holder.item_title_set.setText(item1.getItem());
+                MyLog.e(TAG, "maps>>dishListMap item click>>"+new GsonBuilder().setPrettyPrinting().create().toJson(dishListMap));
+                //holder.item_title_set.setText(item1.getItem());
                     String item = item1.getItem() + "_" + item1.getSelected();
                     dishLists = dishListMap.get(item);
 
@@ -106,6 +104,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         holder.switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
                 if (compoundButton.isChecked()) {
                     MyLog.e(TAG, "switch>>get enabled" + b);
                     holder.item_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
@@ -114,8 +113,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                     holder.item_title.setTextColor(context.getResources().getColor(R.color.light_gray));
 
                 }
+                String item = item1.getItem() + "_" + item1.getSelected();
+                dishLists = dishListMap.get(item);
                 //selectedHeaderMap.get(header_title).get(position).setSelected(String.valueOf(b));
-                getViewModel.updateItem(header_title, itemArrayLists.get(position).getItem(), null, String.valueOf(b));
+                getViewModel.updateItem(header_title, itemArrayLists.get(position).getItem(), null, String.valueOf(b),dishLists);
 
 
             }
@@ -131,18 +132,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView item_title, item_title_set;
+        private TextView item_title;
         private Switch switchView;
-        private CardView item_cardView, dish_cardView;
-        private RecyclerView recyclerview_dish_list;
+        private CardView item_cardView;
 
         public ViewHolder(View view) {
             super(view);
             item_title = view.findViewById(R.id.item_title);
             item_cardView = view.findViewById(R.id.item_cardView);
-            item_title_set = view.findViewById(R.id.item_title_set);
-            recyclerview_dish_list = view.findViewById(R.id.recyclerview_dish_list);
-            dish_cardView = view.findViewById(R.id.dish_cardView);
+            //item_title_set = view.findViewById(R.id.item_title_set);
+            //recyclerview_dish_list = view.findViewById(R.id.recyclerview_dish_list);
+            //dish_cardView = view.findViewById(R.id.dish_cardView);
             switchView = view.findViewById(R.id.switchView);
 
         }

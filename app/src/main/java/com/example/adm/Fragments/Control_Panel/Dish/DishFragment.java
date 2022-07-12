@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -12,8 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.adm.Classes.MyLog;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -42,6 +46,7 @@ public class DishFragment extends Fragment {
     private String header_title,item;
     private TextView itemText;
     private GetViewModel getViewModel;
+    private String TAG="DishFragment";
     public DishFragment() {
         // Required empty public constructor
     }
@@ -82,22 +87,15 @@ public class DishFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_dish, container, false);
         RecyclerView recyclerview_dish_list=view.findViewById(R.id.recyclerview_dish_list);
         itemText=view.findViewById(R.id.item_title_set);
-
-        //get item title
-        getViewModel.getItem_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                item=s;
-                String []str=s.split("_");
-                itemText.setText(str[0]);
-            }
-        });
+        recyclerview_dish_list.setHasFixedSize(true);
+        recyclerview_dish_list.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         //get dish list
         getViewModel.getDishListsMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<DishList>>() {
             @Override
             public void onChanged(List<DishList> dishLists1) {
                 dishLists=dishLists1;
+                MyLog.e(TAG,"panel>>itemList>>"+new GsonBuilder().setPrettyPrinting().create().toJson(dishLists));
             }
         });
         //get header title
@@ -105,10 +103,25 @@ public class DishFragment extends Fragment {
             @Override
             public void onChanged(String s) {
                 header_title=s;
+                MyLog.e(TAG,"panel>>header_title>>"+header_title);
             }
         });
-        DishAdapter dishAdapter = new DishAdapter(getContext(), dishLists, getViewModel, header_title, item);
-        recyclerview_dish_list.setAdapter(dishAdapter);
+
+
+        //get item title
+        getViewModel.getItem_title_Mutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                item=s;
+                MyLog.e(TAG,"panel>>item title>>"+item);
+                String []str=s.split("_");
+                itemText.setText(str[0]);
+                DishAdapter dishAdapter = new DishAdapter(getContext(), dishLists, getViewModel, header_title, item);
+                recyclerview_dish_list.setAdapter(dishAdapter);
+            }
+        });
+
+
 
         return view;
     }

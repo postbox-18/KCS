@@ -58,8 +58,8 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     public void onBindViewHolder(@NonNull HeaderAdapter.ViewHolder holder, int position) {
         final HeaderList item1 = headerLists.get(position);
         holder.header_title.setText(item1.getHeader());
-        holder.recyclerview_item_list.setHasFixedSize(true);
-        holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        /*holder.recyclerview_item_list.setHasFixedSize(true);
+        holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));*/
 
 
         //onclick
@@ -67,8 +67,8 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
             @Override
             public void onClick(View view) {
 
-                holder.header_title_set.setText(item1.getHeader());
-                holder.item_cardView.setVisibility(View.VISIBLE);
+                //holder.header_title_set.setText(item1.getHeader());
+//                holder.item_cardView.setVisibility(View.VISIBLE);
 
                 dishListMap = itemArrayMap.get(item1.getHeader());
                 Set<String> stringSet = dishListMap.keySet();
@@ -109,17 +109,16 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView header_title, header_title_set;
-        private CardView header_cardView, item_cardView;
-        private RecyclerView recyclerview_item_list;
+        private TextView header_title;
+        private CardView header_cardView;
 
         public ViewHolder(View view) {
             super(view);
             header_title = view.findViewById(R.id.header_title);
-            header_title_set = view.findViewById(R.id.header_title_set);
+            //header_title_set = view.findViewById(R.id.header_title_set);
             header_cardView = view.findViewById(R.id.header_cardView);
-            recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
-            item_cardView = view.findViewById(R.id.item_cardView);
+            //recyclerview_item_list = view.findViewById(R.id.recyclerview_item_list);
+            //item_cardView = view.findViewById(R.id.item_cardView);
         }
     }
 }
