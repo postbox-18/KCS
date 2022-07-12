@@ -1,4 +1,4 @@
-package com.example.kcs.Fragment.Items.ItemSelectedList;
+package com.example.kcs.Fragment.Dish.DishSelectedList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,20 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
-public class UserItemListAdapters extends RecyclerView.Adapter<UserItemListAdapters.ViewHolder> {
+public class UserDishListAdapters extends RecyclerView.Adapter<UserDishListAdapters.ViewHolder> {
     private Context context;
     private String TAG = "ItemListAdapters";
     private GetViewModel getViewModel;
-    private List<UserItemList> userItemLists;
+    private List<UserDishList> userDishLists;
 
-    public UserItemListAdapters(Context context, GetViewModel getViewModel, List<UserItemList> userItemLists) {
+    public UserDishListAdapters(Context context, GetViewModel getViewModel, List<UserDishList> userDishLists) {
         this.context = context;
         this.getViewModel = getViewModel;
-        this.userItemLists = userItemLists;
+        this.userDishLists = userDishLists;
     }
 
     @NonNull
@@ -41,11 +40,11 @@ public class UserItemListAdapters extends RecyclerView.Adapter<UserItemListAdapt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        final UserItemList userItemList1 = userItemLists.get(position);
-        MyLog.e(TAG, "items>>header>" + userItemList1.getHeader());
-        MyLog.e(TAG, "items>>size>>" + userItemList1.getList_size());
-        holder.item_size.setText(String.valueOf(userItemList1.getList_size()));
-        holder.header.setText(userItemList1.getHeader());
+        final UserDishList userDishList1 = userDishLists.get(position);
+        MyLog.e(TAG, "items>>header>" + userDishList1.getHeader());
+        MyLog.e(TAG, "items>>size>>" + userDishList1.getList_size());
+        holder.item_size.setText(String.valueOf(userDishList1.getList_size()));
+        holder.header.setText(userDishList1.getHeader());
 
 
     }
@@ -53,8 +52,8 @@ public class UserItemListAdapters extends RecyclerView.Adapter<UserItemListAdapt
 
     @Override
     public int getItemCount() {
-        MyLog.e(TAG, "userItemList>>49>>" + userItemLists.size());
-        return userItemLists.size();
+        MyLog.e(TAG, "userItemList>>49>>" + userDishLists.size());
+        return userDishLists.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

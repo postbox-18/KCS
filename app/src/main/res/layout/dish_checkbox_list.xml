@@ -16,7 +16,7 @@
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/item_check_card"
+                android:id="@+id/dish_check_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -33,7 +33,7 @@
                     android:orientation="vertical">
 
                     <CheckBox
-                        android:id="@+id/item_check"
+                        android:id="@+id/dish_check"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingStart="10dp"

@@ -14,27 +14,29 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_margin="5dp"
             app:cardCornerRadius="5dp"
             app:cardElevation="3dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <LinearLayout
-                    android:id="@+id/item_layout"
+                    android:id="@+id/layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/btn_gradient_light"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/item"
+                        android:id="@+id/list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="item"
-                        android:padding="15dp"
                         android:fontFamily="@font/bebaskai"
+                        android:padding="15dp"
+                        android:text="Item"
                         android:textColor="@color/white"
                         android:textStyle="bold|italic" />
                 </LinearLayout>
@@ -45,12 +47,12 @@
                     android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerview_dish_list"
+                        android:id="@+id/recyclerview_dish"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="15dp"
                         tools:itemCount="2"
-                        tools:listitem="@layout/bottom_sheet_order_dish_list" />
+                        tools:listitem="@layout/place_view_dish" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

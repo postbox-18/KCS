@@ -18,11 +18,9 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Fragment.Items.ItemList;
+import com.example.kcs.Fragment.Dish.DishList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -35,14 +33,16 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
     private String s_date_picker_actions,s_time_picker,s_session_title,s_count;
     private GetViewModel getViewModel;
 
-    private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
+    //dish map in list
+    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> d_ItemMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, List<DishList>> d_DishMap = new LinkedHashMap<>();
     private List<SessionDateTime> sessionDateTimes=new ArrayList<>();
 
-    public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps,String s_session_title) {
+    public HeaderAdapter(Context context, List<HeaderList> headerLists, GetViewModel getViewModel, LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> linkedHashMaps, String s_session_title) {
         this.context=context;
         this.headerLists=headerLists;
         this.getViewModel=getViewModel;
-        this.linkedHashMaps=linkedHashMaps;
+        this.d_ItemMap=linkedHashMaps;
         this.s_session_title=s_session_title;
 
 
@@ -108,7 +108,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<HeaderAdapter.ViewHolder
 
                 }
                 else {
-                    getViewModel.getheaderFragment(headerList1.getHeader(),position,linkedHashMaps);
+                    getViewModel.getheaderFragment(headerList1.getHeader(),position,d_ItemMap);
                     getViewModel.SetBreadCrumsList(headerList1.getHeader(), 2);
 
                 }

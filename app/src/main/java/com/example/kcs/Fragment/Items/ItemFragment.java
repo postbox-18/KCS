@@ -63,9 +63,14 @@ public class ItemFragment extends Fragment {
     //private  LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap=new LinkedHashMap<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
-    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
+    //item map
+    private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
+    //header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
+    //session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
+    //fun map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
 
     private String date_time;
 
@@ -156,9 +161,9 @@ public class ItemFragment extends Fragment {
         });
 
         //get fun map
-        getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
+        getViewModel.getFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
                 sessionMap = funcMap.get(func_title);
 
@@ -195,9 +200,9 @@ public class ItemFragment extends Fragment {
         });
 
         //get header map
-        getViewModel.getHeaderMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, List<CheckedList>>>() {
+        getViewModel.getHeaderMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> stringListLinkedHashMap) {
                 headerMap=new LinkedHashMap<>(stringListLinkedHashMap);
             }
         });

@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,24 +26,20 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.kcs.Fragment.Dish.DishList;
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
-import com.example.kcs.Fragment.Items.ItemList;
 
-import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Session.SessionList;
-import com.example.kcs.Login_Register.LoginActivity;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.TimeList;
-import com.google.gson.GsonBuilder;
+import com.example.kcs.Classes.TimeList;
+import com.example.kcs.ViewModel.SelectedDishList;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -91,10 +88,22 @@ public class HeaderFragment extends Fragment {
     //edit hash map list
     private List<SessionList> e_sessionLists = new ArrayList<>();
     private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
+
+    //Edit HashMap
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
+
+    //dish map in list
+    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> d_ItemMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, List<DishList>> d_DishMap = new LinkedHashMap<>();
 
     public HeaderFragment() {
 
@@ -187,12 +196,10 @@ public class HeaderFragment extends Fragment {
         getViewModel.getS_countLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                s_count=s;
-                if(s==null)
-                {
+                s_count = s;
+                if (s == null) {
                     count.setError("please select the head count");
-                }
-                else {
+                } else {
                     count.setError(null);
                     count.setText(s_count);
                 }
@@ -216,10 +223,11 @@ public class HeaderFragment extends Fragment {
 
         //get edit func map
 
-        getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
+        //get edit func map
+        getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map = new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> stringLinkedHashMapLinkedHashMap) {
+                editFunc_Map=stringLinkedHashMapLinkedHashMap;
                 editDateMap = editFunc_Map.get(funcTitle);
                 MyLog.e(TAG, "order>>funcTitle>>" + funcTitle);
                 if (editDateMap == null) {
@@ -365,21 +373,19 @@ public class HeaderFragment extends Fragment {
                     }
                 });
 
-
-        //list hashmap of itemlist
-        getViewModel.getS_mapMutable().
-
-                observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>() {
-                    @Override
-                    public void onChanged(List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps) {
-                        //recyclerview_header
-                        recyclerview_header.setHasFixedSize(true);
-                        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                        headerAdapter = new HeaderAdapter(getContext(), headerList, getViewModel, linkedHashMaps, s_session_title);
-                        getViewModel.setI_fragment(1);
-                        recyclerview_header.setAdapter(headerAdapter);
-                    }
-                });
+        //get dish map in list database
+        getViewModel.getD_ItemMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> stringLinkedHashMapLinkedHashMap) {
+                d_ItemMap = stringLinkedHashMapLinkedHashMap;
+                //recyclerview_header
+                recyclerview_header.setHasFixedSize(true);
+                recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                headerAdapter = new HeaderAdapter(getContext(), headerList, getViewModel, d_ItemMap, s_session_title);
+                getViewModel.setI_fragment(1);
+                recyclerview_header.setAdapter(headerAdapter);
+            }
+        });
 
 
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -455,11 +461,15 @@ public class HeaderFragment extends Fragment {
         count.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Head Count");
                 LinearLayout linearLayout = new LinearLayout(getContext());
                 final EditText countEdit = new EditText(getContext());
-
+                if(!(countEdit.getText().toString()).isEmpty()) {
+                    countEdit.setText(count.getText().toString());
+                }
                 // write the email using which you registered
                 countEdit.setHint("10000");
                 countEdit.setMinEms(16);

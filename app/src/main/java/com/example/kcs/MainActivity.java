@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,27 +22,29 @@ import com.example.kcs.BreadCrumbs.BreadCrumbList;
 import com.example.kcs.BreadCrumbs.BreadCrumbsAdapter;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.Fragment.Dish.DishFragment;
+import com.example.kcs.Fragment.Dish.DishList;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderFragment;
 import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.HomeFragment;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.Items.ItemFragment;
-import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemList;
-import com.example.kcs.Fragment.Items.ItemSelectedList.UserItemListAdapters;
+import com.example.kcs.Fragment.Dish.DishSelectedList.UserDishList;
+import com.example.kcs.Fragment.Dish.DishSelectedList.UserDishListAdapters;
 import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Session.SessionList;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Settings.Profile.ProfileFragment;
 import com.example.kcs.Fragment.Session.SessionFragment;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.SelectedDishList;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -67,34 +70,52 @@ public class MainActivity extends AppCompatActivity {
     //private AppCompatButton order_btn, cancel_btn;
     //private List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps = new ArrayList<>();
     private LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap = new LinkedHashMap<>();
-    private List<UserItemList> userItemLists = new ArrayList<>();
+    private List<UserDishList> userDishLists = new ArrayList<>();
+    //private List<ItemList> itemLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
-    private UserItemListAdapters userItemListAdapters;
-    private String headerList_title, func_title, session_title, date;
+    private List<DishList> dishLists = new ArrayList<>();
+    private UserDishListAdapters userDishListAdapters;
+    private String headerList_title, func_title, session_title, date, item_title;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
     private CardView view_cart_cardView;
     private String user_name;
     private Integer integer, frag_integer = -1;
+    //item map
+    private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
     //header map
-    private LinkedHashMap<String, List<CheckedList>> headerMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
     //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> sessionMap = new LinkedHashMap<>();
-    //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> funcMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
+    //fun map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
     private String date_time;
-    //order func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
+    //order hash map
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDate_Map = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     //edit hash map
     //edit hash map list
-    private List<SessionList> e_sessionLists = new ArrayList<>();
-    private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
-    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
+    //Edit HashMap
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +181,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        //get item title
+        getViewModel.getItem_title_Mutable().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                item_title = s;
+            }
+        });
 
         //get header list
         getViewModel.getHeaderListMutableList().observe(this, new Observer<List<HeaderList>>() {
@@ -185,12 +213,12 @@ public class MainActivity extends AppCompatActivity {
         recyclerview_selected_count.setHasFixedSize(true);
         recyclerview_selected_count.setLayoutManager(new LinearLayoutManager(getApplication(), LinearLayoutManager.HORIZONTAL, false));
 
-
         //get func hash map
-        getViewModel.getEditFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>>>() {
+        //get edit func map
+        getViewModel.getEditFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map = stringLinkedHashMapLinkedHashMap;
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> stringLinkedHashMapLinkedHashMap) {
+                editFunc_Map=stringLinkedHashMapLinkedHashMap;
             }
         });
 
@@ -214,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                         editDateMap = editFunc_Map.get(func_title);
                         editSessionMap = editDateMap.get(date);
                         MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
-                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime())+"/"+(selectedSessionLists.get(k).getS_count());
+                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + (selectedSessionLists.get(k).getTime()) + "/" + (selectedSessionLists.get(k).getS_count());
                         editHeaderMap = editSessionMap.get(date_time);
 
                         Set<String> stringSet = editHeaderMap.keySet();
@@ -223,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                             aList.add(x);
 
                         //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                        userItemLists=new ArrayList<>();
+                      /*  userItemLists = new ArrayList<>();
                         for (int i = 0; i < aList.size(); i++) {
                             MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
                             MyLog.e(TAG, "chs>>list size " + editHeaderMap.get(aList.get(i)).size());
@@ -234,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                             userItemLists.add(userItemList);
                         }
                         getViewModel.setUserItemLists(userItemLists);
-                        MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
+                        MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());*/
                         /*if (userItemLists.size() > 0) {
                             snackbar.show();
                             MyLog.e(TAG, "chs>>snackbar Show");
@@ -249,31 +277,36 @@ public class MainActivity extends AppCompatActivity {
                             MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
                             MyLog.e(TAG, "orders>>sess>>" + selectedSessionLists.get(k).getSession_title());
                             String[] str = (selectedSessionLists.get(k).getSession_title()).split("!");
-                            date_time = str[0] + "!" + (selectedSessionLists.get(k).getTime())+"/"+(selectedSessionLists.get(k).getS_count());
+                            date_time = str[0] + "!" + (selectedSessionLists.get(k).getTime()) + "/" + (selectedSessionLists.get(k).getS_count());
 
 
                             MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
                             headerMap = sessionMap.get(date_time);
+                            MyLog.e(TAG, "dish>>headerList_title>>" +headerList_title);
 
-                            Set<String> stringSet = headerMap.keySet();
+                            itemMap = headerMap.get(headerList_title);
+                            MyLog.e(TAG, "dish>>item_title>>" + item_title);
+
+                            Set<String> stringSet = itemMap.keySet();
                             List<String> aList = new ArrayList<String>(stringSet.size());
                             for (String x : stringSet)
                                 aList.add(x);
 
                             //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                            userItemLists=new ArrayList<>();
+                            userDishLists = new ArrayList<>();
                             for (int i = 0; i < aList.size(); i++) {
                                 MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
-                                MyLog.e(TAG, "chs>>list size " + headerMap.get(aList.get(i)).size());
-                                UserItemList userItemList = new UserItemList(
+                                MyLog.e(TAG, "chs>>list size " + itemMap.get(aList.get(i)).size());
+                                UserDishList userDishLists1 = new UserDishList(
                                         aList.get(i),
-                                        headerMap.get(aList.get(i)).size()
+                                        itemMap.get(aList.get(i)).size()
                                 );
-                                userItemLists.add(userItemList);
+                                userDishLists.add(userDishLists1);
                             }
-                            getViewModel.setUserItemLists(userItemLists);
-                            MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
-                            if (userItemLists.size() > 0) {
+
+                            getViewModel.setUserItemLists(userDishLists);
+
+                            if (userDishLists.size() > 0) {
                                 snackbar.show();
                                 MyLog.e(TAG, "chs>>snackbar Show");
                             } else {
@@ -289,9 +322,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //func map
-        getViewModel.getFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>() {
+        getViewModel.getFuncMapMutableLiveData().observe(this, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
 
 
@@ -334,12 +367,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         //get user-item list
-        getViewModel.getUserItemListsMutableLiveData().observe(this, new Observer<List<UserItemList>>() {
+        getViewModel.getUserItemListsMutableLiveData().observe(this, new Observer<List<UserDishList>>() {
             @Override
-            public void onChanged(List<UserItemList> userItemLists) {
-
-                userItemListAdapters = new UserItemListAdapters(getApplication(), getViewModel, userItemLists);
-                recyclerview_selected_count.setAdapter(userItemListAdapters);
+            public void onChanged(List<UserDishList> userDishLists) {
+                userDishListAdapters = new UserDishListAdapters(getApplication(), getViewModel, userDishLists);
+                recyclerview_selected_count.setAdapter(userDishListAdapters);
             }
         });
 
@@ -491,6 +523,10 @@ public class MainActivity extends AppCompatActivity {
                     case 6:
                         fragment = new SessionFragment();
                         fragmentTAg = "SessionFragment";
+                        break;
+                    case 7:
+                        fragment = new DishFragment();
+                        fragmentTAg = "DishFragment";
                         break;
                     default:
                         fragment = new HomeFragment();

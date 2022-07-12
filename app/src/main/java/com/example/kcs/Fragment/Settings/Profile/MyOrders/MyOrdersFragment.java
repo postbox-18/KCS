@@ -3,7 +3,6 @@ package com.example.kcs.Fragment.Settings.Profile.MyOrders;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,19 +20,17 @@ import com.example.kcs.Classes.SharedPreferences_data;
 
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderItemLists;
+import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapterDate;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapterSession;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersAdapter;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
-import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.SelectedDishList;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -78,27 +75,31 @@ public class MyOrdersFragment extends Fragment {
     private TextView func;
     //private LinkedHashMap<String, List<SelectedSessionList>> stringListLinkedHashMap=new LinkedHashMap<>();
 
-    //order hashmap
+    //order hash map
     //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> orderFunc_Map = new LinkedHashMap<>();
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> s_orderFunc_Map = new LinkedHashMap<>();
-    //date map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>> orderDateMap = new LinkedHashMap<>();
-    //header map
-    private LinkedHashMap<String, List<OrderItemLists>> orderHeaderMap = new LinkedHashMap<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>> orderSessionMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> orderFunc_Map = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> s_orderFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDate_Map = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>> orderSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     //date list
     private List<SelectedDateList> o_dateLists = new ArrayList<>();
-    //Edit hash map
+    //Edit HashMap
     //func map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>>> editFunc_Map = new LinkedHashMap<>();
-    //date map
-    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>>> editDateMap = new LinkedHashMap<>();
-    //header map
-    private LinkedHashMap<String, List<SelectedHeader>> editHeaderMap = new LinkedHashMap<>();
-    //session map
-    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedHeader>>> editSessionMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
 
 
     public MyOrdersFragment() {
@@ -150,9 +151,9 @@ public class MyOrdersFragment extends Fragment {
         editFunc_Map.clear();
         getViewModel.setEditFuncMap(editFunc_Map);
         //get order func hash map
-        getViewModel.getOrderFunc_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>>>() {
+        getViewModel.getOrderFunc_MapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>>() {
             @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderItemLists>>>>> stringLinkedHashMapLinkedHashMap) {
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>> stringLinkedHashMapLinkedHashMap) {
                 orderFunc_Map = new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
                 s_orderFunc_Map = new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
 
@@ -205,8 +206,12 @@ public class MyOrdersFragment extends Fragment {
                         MyLog.e(TAG, "s_orderFunc_Map is null");
 
                     } else {
+
+                        //set func title
+                        getViewModel.setFunc_title(func_title);
+
                         //get order date map
-                        orderDateMap = new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
+                        orderDate_Map = new LinkedHashMap<>(s_orderFunc_Map.get(func_title));
                         o_dateLists.clear();
                         SelectedDateList selectedDateList1 = new SelectedDateList(
                                 date
@@ -216,7 +221,7 @@ public class MyOrdersFragment extends Fragment {
 
                         recyclerview_order_date.setHasFixedSize(true);
                         recyclerview_order_date.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                        ViewCartAdapterDate viewCartAdapter = new ViewCartAdapterDate(getContext(), getViewModel, str[0], bottomSheet, orderDateMap, o_dateLists);
+                        ViewCartAdapterDate viewCartAdapter = new ViewCartAdapterDate(getContext(), getViewModel, str[0], bottomSheet, orderDate_Map, o_dateLists);
                         recyclerview_order_date.setAdapter(viewCartAdapter);
                     }
                 } else {
@@ -244,10 +249,10 @@ public class MyOrdersFragment extends Fragment {
                     //sessionLists.clear();
 
                     //get order date map
-                    orderDateMap = s_orderFunc_Map.get(func_title);
+                    orderDate_Map = s_orderFunc_Map.get(func_title);
                     MyLog.e(TAG, "placeorders>>func_title >>" + func_title);
                     //get date list
-                    Set<String> set = orderDateMap.keySet();
+                    Set<String> set = orderDate_Map.keySet();
                     List<String> aList1 = new ArrayList<String>(set.size());
                     for (String x1 : set)
                         aList1.add(x1);
@@ -264,7 +269,7 @@ public class MyOrdersFragment extends Fragment {
 
                     recyclerview_order_date.setHasFixedSize(true);
                     recyclerview_order_date.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-                    ViewCartAdapterDate viewCartAdapter = new ViewCartAdapterDate(getContext(), getViewModel, func_title, bottomSheet, orderDateMap, o_dateLists);
+                    ViewCartAdapterDate viewCartAdapter = new ViewCartAdapterDate(getContext(), getViewModel, func_title, bottomSheet, orderDate_Map, o_dateLists);
                     recyclerview_order_date.setAdapter(viewCartAdapter);
                 } else {
                     MyLog.e(TAG, "func_title>> orderItemView list null");

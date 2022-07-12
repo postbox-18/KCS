@@ -1,5 +1,8 @@
-package com.example.kcs.Fragment.Items;
+package com.example.kcs.Fragment.Dish;
 
+import static androidx.fragment.app.FragmentManager.TAG;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -21,8 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
-
 import com.example.kcs.Fragment.Header.SessionDateTime;
+import com.example.kcs.Fragment.Items.CheckedList;
+import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
@@ -34,98 +38,231 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.ViewHolder> {
+public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
     private Context context;
-    private List<ItemList> itemLists;
-    private List<CheckedList> checkedLists = new ArrayList<>();
-    //private List<CheckedList> selected_checkedLists = new ArrayList<>();
-    private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
-    private String TAG = "ItemListAdapater";
-    //private MyViewModel myViewModel;
+    private List<DishList> dishLists = new ArrayList<>();
     private GetViewModel getViewModel;
-    //private LinkedHashMap<String, List<CheckedList>> f_map = new LinkedHashMap<>();
-    //private List<LinkedHashMap<String,List<CheckedList>>> s_map=new ArrayList<>();
+    private String TAG = "DishAdapter";
+    private List<CheckedList> checkedLists = new ArrayList<>();
     private List<LinkedHashMap<String, List<CheckedList>>> selected_s_map = new ArrayList<>();
-    //item map
+
     private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
-    //header map
     private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
-    //session map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
-    //fun map
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
+    private String funcTitle, sessionTitle, header_title, item_title,s_count;
+    private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
-    private String header, funcTitle, sessionTitle, s_count;
-    ItemListAdapater.Unchecked unchecked;
 
-    public interface Unchecked {
-        void getUnchecked(String item);
-    }
 
-    public ItemListAdapater(Context context, List<ItemList> itemLists, String header, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> linkedHashMaps, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap) {
+
+    public DishAdapter(Context context, List<DishList> dishLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> selected_s_map, LinkedHashMap<String, List<CheckedList>> itemMap) {
         this.context = context;
-        this.itemLists = itemLists;
+        this.dishLists = dishLists;
         this.getViewModel = getViewModel;
-        this.header = header;
-        this.selected_s_map = new ArrayList<>(linkedHashMaps);
-        this.headerMap = headerMap;
-        //cartViewModel = ViewModelProviders.of((FragmentActivity) context).get(CartViewModel.class);
-        //myViewModel= new ViewModelProvider((FragmentActivity)context).get(MyViewModel.class);
+        this.selected_s_map = new ArrayList<>(selected_s_map);
+        this.itemMap =itemMap;
 
     }
 
     @NonNull
     @Override
-    public ItemListAdapater.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DishAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
-        View view = layoutInflater.inflate(R.layout.item_cardview_list, parent, false);
-        return new ItemListAdapater.ViewHolder(view);
+        View view = layoutInflater.inflate(R.layout.dish_checkbox_list, parent, false);
+        return new DishAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemListAdapater.ViewHolder holder, int position) {
-        final ItemList itemList = itemLists.get(position);
+    public void onBindViewHolder(@NonNull DishAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        if(itemMap==null)
+        {
+            itemMap=new LinkedHashMap<>();
+            MyLog.e(TAG,"itemMap is null");
+        }
 
-        holder.header_title.setText(itemList.getItem());
-        if (itemList.getSelected().equals("true")) {
-            String[] str = (itemList.getItem()).split("-");
+        //get head count
+        getViewModel.getS_countLiveData().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                s_count = s;
+            }
+        });
+
+        //get func title
+        getViewModel.getFunc_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                funcTitle = s;
+            }
+        });
+        //get session title
+        getViewModel.getSession_titleMutable().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                sessionTitle = s;
+            }
+        });
+        //get header title
+        getViewModel.getHeader_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                header_title = s;
+            }
+        });
+        //get item title
+        getViewModel.getItem_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                item_title = s;
+            }
+        });
+        //get Session Date Time
+        getViewModel.getF_mapsdtMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SessionDateTime>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
+                sessionDateTimes = stringListLinkedHashMap.get(funcTitle + "-" + sessionTitle);
+            }
+        });
+
+
+        //check if checked list item already selected
+        if (selected_s_map.size() > 0) {
+            for (int k = 0; k < selected_s_map.size(); k++) {
+                checkedLists = selected_s_map.get(k).get(item_title);
+                if (checkedLists != null) {
+                    for (int i = 0; i < checkedLists.size(); i++) {
+                        final CheckedList checkedLists1 = checkedLists.get(i);
+                        MyLog.e(TAG, "checked>>" + checkedLists1.getPosition());
+                        MyLog.e(TAG, "checked>>" + position);
+                        if (checkedLists1.getPosition() == position) {
+                            //MyLog.e(TAG, "checked>>" + checkedLists1.getItemList());
+                            holder.dish_check.setChecked(true);
+
+                        }
+                    }
+                } else {
+                    checkedLists=new ArrayList<>();
+                    MyLog.e(TAG, "checked>> selected size is null>>");
+                }
+            }
+        }
+        else {
+            MyLog.e(TAG, "checked>>selected  map size is null>>");
+        }
+        MyLog.e(TAG, "hashmap>>size>>" + selected_s_map.size());
+
+
+
+        final DishList dishLists1 = dishLists.get(position);
+        holder.dish_check.setText(dishLists1.getDish());
+        if (dishLists1.getBoolens().equals("true")) {
+            String[] str = (dishLists1.getDish()).split("-");
             if (str.length > 1) {
                 Spannable word = new SpannableString(str[0]);
                 word.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.colorSecondary)), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                holder.header_title.setText(word);
+                holder.dish_check.setText(word);
                 Spannable wordTwo = new SpannableString(str[1]);
                 wordTwo.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.colorPrimary)), 0, wordTwo.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                holder.header_title.append(wordTwo);
+                holder.dish_check.append(wordTwo);
             } else {
-                holder.header_title.setText(itemList.getItem());
-                holder.header_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
+                holder.dish_check.setText(dishLists1.getDish());
+                holder.dish_check.setTextColor(context.getResources().getColor(R.color.colorSecondary));
             }
-        } else if (itemList.getSelected().equals("false")) {
-            holder.header_title.setTextColor(context.getResources().getColor(R.color.text_silver));
-            holder.header_title_q.setTextColor(context.getResources().getColor(R.color.text_silver));
-            holder.header_img.setImageResource(R.drawable.logo);
+        } else if (dishLists1.getBoolens().equals("false")) {
+            holder.dish_check.setTextColor(context.getResources().getColor(R.color.light_gray));
+            holder.dish_check.setEnabled(false);
 
         }
 
-        //onclick
-        holder.header_card.setOnClickListener(new View.OnClickListener() {
+
+        holder.dish_check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                if (itemList.getSelected().equals("true")) {
-                    getViewModel.setItem_title(itemList.getItem()+"_"+itemList.getSelected());
-                    getViewModel.setI_value(7);
-                    getViewModel.setHeader_title(header);
-                    getViewModel.SetBreadCrumsList(itemList.getItem(), 3);
-                } else if (itemList.getSelected().equals("false")) {
-                    Toast.makeText(context, "Please select another Item", Toast.LENGTH_SHORT).show();
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (dishLists1.getDish() != null) {
+                    if (checkedLists == null) {
+                        MyLog.e(TAG, "placeorders>>date_time checkedLists null");
+                        checkedLists = new ArrayList<>();
+                    } else {
+                        if (holder.dish_check.isChecked()) {
+
+                            CheckedList checkedLists1 = new CheckedList(
+                                    dishLists1.getDish(),
+                                    position
+                            );
+                            checkedLists.add(checkedLists1);
+
+
+                            //notifyDataSetChanged();
+                        } else {
+                            //unchecked.getUnchecked(dishLists1.getItem());
+                            GetUncheckLists(dishLists1.getDish());
+
+                        }
+                    }
+                    getViewModel.setCheckedLists(checkedLists);
+                    itemMap.put(item_title,checkedLists);
+                    headerMap.put(header_title, itemMap);
+                    String date = (sessionDateTimes.get(0).getDate()).replace("/", "-");
+                    String s = sessionTitle + "!" + (date + " " + sessionDateTimes.get(0).getTime()) + "/" + s_count;
+                    MyLog.e(TAG, "placeorders>>date_time>>" + s);
+                    sessionMap.put(s, headerMap);
+                    funcMap.put(funcTitle, sessionMap);
+                    getViewModel.setSessionDateTimeCount(s);
+
+                    //set session list
+                    Set<String> stringSet = sessionMap.keySet();
+                    List<String> aList = new ArrayList<String>(stringSet.size());
+                    for (String x : stringSet)
+                        aList.add(x);
+
+                    //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                    selectedSessionLists.clear();
+                    for (int i = 0; i < aList.size(); i++) {
+                        String[] scb = (aList.get(i)).split("/");
+                        String count = scb[1];
+                        String[] arr = (scb[0]).split("!");
+
+                        //set selected session list and session date and time
+                        MyLog.e(TAG, "chs>>list header>> " + arr[0]);
+                        SelectedSessionList list = new SelectedSessionList();
+                        list.setBolen(null);
+                        list.setSession_title(arr[0]);
+                        list.setTime(arr[1]);
+                        list.setS_count(count);
+                        selectedSessionLists.add(list);
+                    }
+
+                   /* //set header map
+                    getViewModel.setHeaderMap(headerMap);
+                    //set session map
+                    getViewModel.setSessionMap(sessionMap);*/
+                    //set func map
+                    getViewModel.setFuncMap(funcMap);
+                    MyLog.e(TAG, "selected_s_map>>size>>" + selected_s_map.size());
+                    selected_s_map.add(itemMap);
+                    getViewModel.setCheck_s_map(selected_s_map);
+                    //set selected session
+                    getViewModel.setSelectedSessionLists(selectedSessionLists);
+
+                    Gson gson = new Gson();
+                    String json = gson.toJson(checkedLists);
+                    new SharedPreferences_data(context).setChecked_item_list(json);
+
 
                 }
             }
-            });
 
-
-
+            private void GetUncheckLists(String dish) {
+                for (int i = 0; i < checkedLists.size(); i++) {
+                    if (dish.equals(checkedLists.get(i).getItemList())) {
+                        checkedLists.remove(i);
+                        break;
+                    }
+                }
+            }
+        });
         /*
         if(headerMap==null)
         {
@@ -290,37 +427,33 @@ public class ItemListAdapater extends RecyclerView.Adapter<ItemListAdapater.View
                 }
             }
         });
-*/
 
-        }
 
-        private void GetUncheckList (String item){
-            for (int i = 0; i < checkedLists.size(); i++) {
-                if (item.equals(checkedLists.get(i).getItemList())) {
-                    checkedLists.remove(i);
-                    break;
-                }
+    }
+
+    private void GetUncheckList (String item){
+        for (int i = 0; i < checkedLists.size(); i++) {
+            if (item.equals(checkedLists.get(i).getItemList())) {
+                checkedLists.remove(i);
+                break;
             }
-        }
+        }*/
+    }
 
-        @Override
-        public int getItemCount () {
-            return itemLists.size();
-        }
+    @Override
+    public int getItemCount() {
+        return dishLists.size();
+    }
 
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private CardView header_card;
-            private ImageView header_img;
-            private TextView header_title, header_title_q;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private CheckBox dish_check;
 
-            public ViewHolder(View view) {
-                super(view);
-                header_img = view.findViewById(R.id.header_img);
-                header_title = view.findViewById(R.id.header_title);
-                header_card = view.findViewById(R.id.header_card);
-                header_title_q = view.findViewById(R.id.header_title_q);
+        public ViewHolder(View view) {
+            super(view);
+            dish_check = view.findViewById(R.id.dish_check);
 
-            }
+
         }
     }
+}

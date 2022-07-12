@@ -2,7 +2,6 @@ package com.example.kcs.Fragment;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -15,10 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.Func.FunAdapter;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderAdapter;
@@ -28,14 +25,10 @@ import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -78,7 +71,6 @@ public class HomeFragment extends Fragment {
     private String TAG="HomeFragment";
     //private MyViewModel myViewModel;
     private GetViewModel getViewModel;
-    private List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps;
 
     public HomeFragment() {
 
@@ -130,28 +122,11 @@ public class HomeFragment extends Fragment {
 
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
-        /*GetHeader();
-        GetFun();*/
 
-        getViewModel.getS_mapMutable().observe(getViewLifecycleOwner(), new Observer<List<LinkedHashMap<String, List<ItemList>>>>() {
-            @Override
-            public void onChanged(List<LinkedHashMap<String, List<ItemList>>> linkedHashMaps1) {
-                linkedHashMaps=linkedHashMaps1;
-            }
-        });
-        /*getViewModel.getListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<HeaderList>>() {
-            @Override
-            public void onChanged(List<HeaderList> headerLists1) {
-                headerList=headerLists1;
-                //recyclerview_header
-                recyclerview_header.setHasFixedSize(true);
-                recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                //headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,linkedHashMaps, f_mapsdtMutable);
-                getViewModel.setI_fragment(0);
-                recyclerview_header.setAdapter(headerAdapter);
 
-            }
-        });*/
+
+
+
 
         //get fun list
         getViewModel.getFunMutableList().observe(getViewLifecycleOwner(), new Observer<List<FunList>>() {
