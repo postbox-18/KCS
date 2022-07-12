@@ -680,7 +680,8 @@ public class GetViewModel extends AndroidViewModel {
 
         if (dish == null) {
             databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
-            String item_b = item + "_" + selected;
+            String[] str=item.split("_");
+            String item_b = str[0] + "_" + selected;
             for (int i = 0; i < dishLists.size(); i++) {
 
                 MyLog.e(TAG, "switchs>>commit");
@@ -691,9 +692,10 @@ public class GetViewModel extends AndroidViewModel {
                 } else {
                     oldData = "true";
                 }
+                MyLog.e(TAG, "switchs>>commit");
 
                 //remove data list
-                databaseReference.child(header_title).child(item + "_" + oldData).removeValue();
+                databaseReference.child(header_title).child(str[0] + "_" + oldData).removeValue();
 
                 //add data list
                 databaseReference.child(header_title).child(item_b).child(dishLists.get(i).getDish()).setValue(dishLists.get(i).getBolen());
