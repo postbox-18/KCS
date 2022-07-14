@@ -301,6 +301,9 @@ public class GetViewModel extends AndroidViewModel {
     //head count
     private String s_count;
     private MutableLiveData<String> s_countLiveData = new MutableLiveData<>();
+    //old DateTimeCount
+    private String oldDateTimeCount;
+    private MutableLiveData<String> oldDateTimeCountLiveData = new MutableLiveData<>();
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -311,6 +314,14 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
+    public MutableLiveData<String> getOldDateTimeCountLiveData() {
+        return oldDateTimeCountLiveData;
+    }
+
+    public void setOldDateTimeCount(String oldDateTimeCount) {
+        this.oldDateTimeCount = oldDateTimeCount;
+        this.oldDateTimeCountLiveData.postValue(oldDateTimeCount);
+    }
 
     public MutableLiveData<Integer> getRefreshLiveData() {
         return refreshLiveData;
@@ -1303,6 +1314,7 @@ public class GetViewModel extends AndroidViewModel {
         editHeaderMapMutableLiveData.postValue(editHeaderMap);
         //set item map
         editItemMapMutableLiveData.postValue(editItemMap);
+        MyLog.e(TAG, "editOrders>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
     }
 
@@ -1319,6 +1331,10 @@ public class GetViewModel extends AndroidViewModel {
         time_pickerMutable.postValue(dTime);
         //set head count
         s_countLiveData.postValue(count);
+
+        //set old date time count
+        String oldDateTimeCount=date+"_"+dTime+"_"+count;
+        oldDateTimeCountLiveData.postValue(oldDateTimeCount);
 
 
 /*

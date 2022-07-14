@@ -75,7 +75,7 @@ public class HeaderFragment extends Fragment {
     //date and time
     private TextView date_picker_actions;
     private TextView time_picker, count;
-    private String funcTitle, s_time_picker, s_date_picker_actions, e_session_title, date_time, s_count;
+    private String funcTitle, s_time_picker, s_date_picker_actions, e_session_title, date_time, s_count,oldDateTimeCount;
     private DatePickerDialog datePicker;
     private List<TimeList> timeLists = new ArrayList<>();
 
@@ -221,7 +221,13 @@ public class HeaderFragment extends Fragment {
             }
         });
 
-        //get edit func map
+        //get oldDateTimeCount
+        getViewModel.getOldDateTimeCountLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                oldDateTimeCount=s;
+            }
+        });
 
         //get edit func map
         getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
@@ -237,7 +243,16 @@ public class HeaderFragment extends Fragment {
                 } else {
                     MyLog.e(TAG, "edits>>date " + s_date_picker_actions);
                     String date = s_date_picker_actions.replace("/", "-");
-                    editSessionMap = editDateMap.get(date);
+                    //oldDateTimeCount
+                    String[]arr=oldDateTimeCount.split("_");
+                    String oldDate=arr[0];
+                    String oldTime=arr[1];
+                    String oldCount=arr[2];
+                    MyLog.e(TAG, "edits>>oldDate " + oldDate);
+                    oldDate = oldDate.replace("/", "-");
+
+
+                    editSessionMap = editDateMap.get(oldDate);
 
                     Set<String> stringSet = editSessionMap.keySet();
                     List<String> aList = new ArrayList<String>(stringSet.size());
@@ -467,7 +482,8 @@ public class HeaderFragment extends Fragment {
                 builder.setTitle("Head Count");
                 LinearLayout linearLayout = new LinearLayout(getContext());
                 final EditText countEdit = new EditText(getContext());
-                if(!(countEdit.getText().toString()).isEmpty()) {
+
+                if(!(count.getText().toString()).isEmpty()) {
                     countEdit.setText(count.getText().toString());
                 }
                 // write the email using which you registered

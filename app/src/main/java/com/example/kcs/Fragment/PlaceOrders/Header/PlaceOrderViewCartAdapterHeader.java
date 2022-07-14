@@ -102,7 +102,7 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
 
 
 
-            PlaceOrderViewCartAdapterItem placeOrderViewCartAdapterItem = new PlaceOrderViewCartAdapterItem(context, getViewModel, itemMap,itemLists);
+            PlaceOrderViewCartAdapterItem placeOrderViewCartAdapterItem = new PlaceOrderViewCartAdapterItem(context, getViewModel, itemMap,itemLists,null);
             //placeOrderViewCartAdapterItem = new PlaceOrderViewCartAdapterItem(context, getViewModel, itemMap,null);
             holder.recyclerview_item_list.setAdapter(placeOrderViewCartAdapterItem);
         } else {
@@ -113,10 +113,26 @@ public class PlaceOrderViewCartAdapterHeader extends RecyclerView.Adapter<PlaceO
             holder.header.setText(list.getHeader());
             //get Checked list hash map
 
-            //e_selectedHeaders = editHeaderMap.get(list.getHeader());
+            editItemMap = editHeaderMap.get(list.getHeader());
+            Set<String> stringSet = editItemMap.keySet();
+            List<String> aList = new ArrayList<String>(stringSet.size());
+            for (String x : stringSet)
+                aList.add(x);
+            itemLists=new ArrayList<>();
+            for(int i=0;i<aList.size();i++)
+            {
+                ItemList itemList=new ItemList();
+                String[] str=(aList.get(i)).split("_");
+                itemList.setItem(str[0]);
+                itemList.setSelected(str[1]);
+                itemLists.add(itemList);
+            }
+
+
             holder.recyclerview_item_list.setHasFixedSize(true);
             holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-            placeOrderViewCartAdapterItem = new PlaceOrderViewCartAdapterItem(context, getViewModel, null,null);
+            //placeOrderViewCartAdapterItem = new PlaceOrderViewCartAdapterItem(context, getViewModel, null,null);
+            PlaceOrderViewCartAdapterItem placeOrderViewCartAdapterItem = new PlaceOrderViewCartAdapterItem(context, getViewModel, null,itemLists,editItemMap);
             //placeOrderViewCartAdapterItem = new PlaceOrderViewCartAdapterItem(context, getViewModel, null,e_selectedHeaders);
             holder.recyclerview_item_list.setAdapter(placeOrderViewCartAdapterItem);
         }

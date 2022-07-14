@@ -71,7 +71,7 @@ public class PlaceOrderFragment extends Fragment {
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
-    private String func_title, header_title, user_name, session_title, date_time, date, s_count;
+    private String func_title, header_title, user_name, session_title, date_time, date, time, s_count, oldDateTimeCount;
     private TextView func_title_view;
     private String TAG = "PlaceOrderFragment";
     //firebase database retrieve
@@ -108,6 +108,8 @@ public class PlaceOrderFragment extends Fragment {
     private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
     //Item map
     private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
+    //selected dish
+    private List<SelectedDishList> selectedDishLists = new ArrayList<>();
 
     private int n = 0;
 
@@ -151,6 +153,13 @@ public class PlaceOrderFragment extends Fragment {
         recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
 
+        //get time picker
+        getViewModel.getTime_pickerMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                time = s;
+            }
+        });
         //get date picker
         getViewModel.getDate_pickerMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -192,15 +201,28 @@ public class PlaceOrderFragment extends Fragment {
             }
         });
 
+        //get oldDateTimeCount
+        getViewModel.getOldDateTimeCountLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                oldDateTimeCount = s;
+            }
+        });
         //get edit func map
         getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
+                editFunc_Map = stringLinkedHashMapLinkedHashMap;
                 MyLog.e(TAG, "chs>>list edit func map ");
                 editDateMap = editFunc_Map.get(func_title);
+                String[] str = oldDateTimeCount.split("_");
+                String oldDate = str[0];
+                String oldTime = str[1];
+                String oldCount = str[2];
+
+                MyLog.e(TAG, "orders>>date>>old date>>" + oldDate);
                 MyLog.e(TAG, "orders>>date>>" + date);
-                date = date.replace("/", "-");
+                oldDate = oldDate.replace("/", "-");
 
 
                 if (editDateMap == null) {
@@ -208,7 +230,8 @@ public class PlaceOrderFragment extends Fragment {
                     MyLog.e(TAG, "edit date map is null");
 
                 } else {
-                    editSessionMap = editDateMap.get(date);
+
+                    editSessionMap = editDateMap.get(oldDate);
 
                     //set session list
                     Set<String> stringSet = editSessionMap.keySet();
@@ -231,21 +254,16 @@ public class PlaceOrderFragment extends Fragment {
                         list.setBolen(null);
                         list.setSession_title(arr[0]);
                         list.setS_count(count);
-                        list.setTime(date + " " + arr[1]);
+                        list.setTime(oldDate + " " + arr[1]);
                         selectedSessionLists.add(list);
                     }
 
                     //set selected session
                     getViewModel.setSelectedSessionLists(selectedSessionLists);
+                    MyLog.e(TAG, "edits>>editSessionMap " + editSessionMap.size());
+                    viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, null, editSessionMap);
+                    recyclerview_session.setAdapter(viewCartAdapter);
 
-                    if (editSessionMap == null) {
-                        editHeaderMap = new LinkedHashMap<>();
-                        // headerMap=sessionMap.get(date_time);
-                    } else {
-
-                        viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time, null, editSessionMap);
-                        recyclerview_session.setAdapter(viewCartAdapter);
-                    }
                 }
             }
         });
@@ -256,45 +274,51 @@ public class PlaceOrderFragment extends Fragment {
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
 
-                MyLog.e(TAG, "chs>>list func map ");
-                sessionMap = funcMap.get(func_title);
-                //set session list
-                Set<String> stringSet = sessionMap.keySet();
-                List<String> aList = new ArrayList<String>(stringSet.size());
-                for (String x : stringSet)
-                    aList.add(x);
+                if (editFunc_Map.size() == 0) {
 
-                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                selectedSessionLists.clear();
-                for (int i = 0; i < aList.size(); i++) {
-                    MyLog.e(TAG, "chs>>list in map>> " + aList.get(i));
-                    String[] scb = (aList.get(i)).split("/");
-                    String count = scb[1];
-                    String[] arr = (scb[0]).split("!");
+                    MyLog.e(TAG, "chs>>editSessionMap is null");
+                    MyLog.e(TAG, "chs>>list func map ");
+                    sessionMap = funcMap.get(func_title);
+                    //set session list
+                    Set<String> stringSet = sessionMap.keySet();
+                    List<String> aList = new ArrayList<String>(stringSet.size());
+                    for (String x : stringSet)
+                        aList.add(x);
 
-                    //set selected session list and session date and time
-                    MyLog.e(TAG, "chs>>list session in map>> " + arr[0]);
-                    MyLog.e(TAG, "chs>>list time in map>> " + arr[1]);
-                    SelectedSessionList list = new SelectedSessionList();
-                    list.setBolen(null);
-                    list.setSession_title(arr[0]);
-                    list.setS_count(count);
-                    list.setTime(arr[1]);
-                    selectedSessionLists.add(list);
-                }
+                    //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                    selectedSessionLists.clear();
+                    for (int i = 0; i < aList.size(); i++) {
+                        MyLog.e(TAG, "chs>>list in map>> " + aList.get(i));
+                        String[] scb = (aList.get(i)).split("/");
+                        String count = scb[1];
+                        String[] arr = (scb[0]).split("!");
 
-                //set selected session
-                getViewModel.setSelectedSessionLists(selectedSessionLists);
+                        //set selected session list and session date and time
+                        MyLog.e(TAG, "chs>>list session in map>> " + arr[0]);
+                        MyLog.e(TAG, "chs>>list time in map>> " + arr[1]);
+                        SelectedSessionList list = new SelectedSessionList();
+                        list.setBolen(null);
+                        list.setSession_title(arr[0]);
+                        list.setS_count(count);
+                        list.setTime(arr[1]);
+                        selectedSessionLists.add(list);
+                    }
 
-                if (sessionMap == null) {
-                    headerMap = new LinkedHashMap<>();
-                    // headerMap=sessionMap.get(date_time);
+                    //set selected session
+                    getViewModel.setSelectedSessionLists(selectedSessionLists);
+
+                    if (sessionMap == null) {
+                        headerMap = new LinkedHashMap<>();
+                        // headerMap=sessionMap.get(date_time);
+                    } else {
+
+                        viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, sessionMap, null);
+                        recyclerview_session.setAdapter(viewCartAdapter);
+                    }
                 } else {
+                    MyLog.e(TAG, "chs>>editFunc_Map have value");
 
-                    viewCartAdapter = new PlaceOrderViewCartAdapterSession(getContext(), getViewModel, func_title, selectedSessionLists, date_time, sessionMap, null);
-                    recyclerview_session.setAdapter(viewCartAdapter);
                 }
-
 
             }
         });
@@ -304,67 +328,171 @@ public class PlaceOrderFragment extends Fragment {
         order_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
-                sessionMap = funcMap.get(func_title);
-                MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
+
+                if (oldDateTimeCount == null) {
+                    MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
+                    sessionMap = funcMap.get(func_title);
+                    MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
 
 
-                for (int k = 0; k < selectedSessionLists.size(); k++) {
-                    date_time = selectedSessionLists.get(k).getSession_title() + "!" + selectedSessionLists.get(k).getTime() + "/" + selectedSessionLists.get(k).getS_count();
-                    MyLog.e(TAG, "count>>date_time>>" + date_time);
-                    headerMap = sessionMap.get(date_time);
-                    //set selected header
-                    if (headerMap != null) {
-                        Set<String> stringSet1 = headerMap.keySet();
-                        List<String> aList1 = new ArrayList<String>(stringSet1.size());
-                        for (String x1 : stringSet1)
-                            aList1.add(x1);
+                    for (int k = 0; k < selectedSessionLists.size(); k++) {
+                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + selectedSessionLists.get(k).getTime() + "/" + selectedSessionLists.get(k).getS_count();
+                        MyLog.e(TAG, "count>>date_time>>" + date_time);
+                        headerMap = sessionMap.get(date_time);
+                        //set selected header
+                        if (headerMap != null) {
+                            Set<String> stringSet1 = headerMap.keySet();
+                            List<String> aList1 = new ArrayList<String>(stringSet1.size());
+                            for (String x1 : stringSet1)
+                                aList1.add(x1);
 
-                        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                        selectedHeadersList.clear();
-                        for (int i = 0; i < aList1.size(); i++) {
-                            MyLog.e(TAG, "chs>>list header>> " + aList1.get(i));
-                            SelectedHeader list1 = new SelectedHeader(
-                                    aList1.get(i)
-                            );
-                            selectedHeadersList.add(list1);
-                        }
-                        getViewModel.setSelectedHeadersList(selectedHeadersList);
-
-
-                        MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
-
-                        for (int i = 0; i < selectedHeadersList.size(); i++) {
-                            //checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
-                            itemMap = headerMap.get(selectedHeadersList.get(i).getHeader());
-                            Set<String> stringSet = itemMap.keySet();
-                            List<String> aList = new ArrayList<String>(stringSet.size());
-                            for (String x : stringSet)
-                                aList.add(x);
-                            itemLists=new ArrayList<>();
-                            for(int j=0;j<aList.size();j++)
-                            {
-                                String[] str=(aList.get(j).split("_"));
-                                ItemList itemList=new ItemList();
-                                itemList.setItem(str[0]);
-                                itemList.setSelected(str[1]);
-                                itemLists.add(itemList);
+                            //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                            selectedHeadersList.clear();
+                            for (int i = 0; i < aList1.size(); i++) {
+                                MyLog.e(TAG, "chs>>list header>> " + aList1.get(i));
+                                SelectedHeader list1 = new SelectedHeader(
+                                        aList1.get(i)
+                                );
+                                selectedHeadersList.add(list1);
                             }
+                            getViewModel.setSelectedHeadersList(selectedHeadersList);
 
 
-                            checkedLists=new ArrayList<>();
-                            for(int l=0;l<itemLists.size();l++) {
-                                MyLog.e(TAG, "dish>>item title>>" + itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected());
-                                checkedLists=itemMap.get(itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected());
-                                String item=itemLists.get(l).getItem()+"_"+itemLists.get(l).getSelected();
-                                SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(),item, selectedSessionLists.get(k).getSession_title(), checkedLists, date_time, selectedSessionLists.get(k).getS_count());
+                            MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
+
+                            for (int i = 0; i < selectedHeadersList.size(); i++) {
+                                //checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
+                                itemMap = headerMap.get(selectedHeadersList.get(i).getHeader());
+                                Set<String> stringSet = itemMap.keySet();
+                                List<String> aList = new ArrayList<String>(stringSet.size());
+                                for (String x : stringSet)
+                                    aList.add(x);
+                                itemLists = new ArrayList<>();
+                                for (int j = 0; j < aList.size(); j++) {
+                                    String[] str = (aList.get(j).split("_"));
+                                    ItemList itemList = new ItemList();
+                                    itemList.setItem(str[0]);
+                                    itemList.setSelected(str[1]);
+                                    itemLists.add(itemList);
+                                }
+
+
+                                checkedLists = new ArrayList<>();
+                                for (int l = 0; l < itemLists.size(); l++) {
+                                    MyLog.e(TAG, "dish>>item title>>" + itemLists.get(l).getItem() + "_" + itemLists.get(l).getSelected());
+                                    checkedLists = itemMap.get(itemLists.get(l).getItem() + "_" + itemLists.get(l).getSelected());
+                                    String item = itemLists.get(l).getItem() + "_" + itemLists.get(l).getSelected();
+                                    SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), item, selectedSessionLists.get(k).getSession_title(), checkedLists, date_time, selectedSessionLists.get(k).getS_count(), null);
+                                }
                             }
-                        }
-                        doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
+                            doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
 
-                    } else {
-                        MyLog.e(TAG, "Header map is empty");
+                        } else {
+                            MyLog.e(TAG, "Header map is empty");
+                        }
                     }
+                } else {
+                    MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
+                    editDateMap = editFunc_Map.get(func_title);
+                    MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
+                    String[] str = oldDateTimeCount.split("_");
+                    String oldDate = str[0];
+                    String oldTime = str[1];
+                    String oldCount = str[2];
+                    oldDate = oldDate.replace("/", "-");
+                    editSessionMap = editDateMap.get(oldDate);
+                    Set<String> stringSet12 = editSessionMap.keySet();
+                    List<String> aList12 = new ArrayList<String>(stringSet12.size());
+                    for (String x12 : stringSet12)
+                        aList12.add(x12);
+                    selectedSessionLists = new ArrayList<>();
+
+                    for (int i = 0; i < aList12.size(); i++) {
+                        SelectedSessionList sessionList = new SelectedSessionList();
+                        String[] arrCount = (aList12.get(i)).split("/");
+                        sessionList.setS_count(arrCount[1]);
+                        String[] arrSess = (arrCount[0]).split("!");
+                        sessionList.setTime(arrSess[1]);
+                        sessionList.setSession_title(arrSess[0]);
+                        selectedSessionLists.add(sessionList);
+                    }
+
+
+                    for (int k = 0; k < selectedSessionLists.size(); k++) {
+
+                        date_time = selectedSessionLists.get(k).getSession_title() + "!" + oldTime + "/" + oldCount;
+                        MyLog.e(TAG, "count>>date_time>>" + date_time);
+                        MyLog.e(TAG, "count>>date_time>> key>>" + editSessionMap.keySet());
+
+                        editHeaderMap = editSessionMap.get(date_time);
+                        //set selected header
+                        if (editHeaderMap != null) {
+                            Set<String> stringSet1 = editHeaderMap.keySet();
+                            List<String> aList1 = new ArrayList<String>(stringSet1.size());
+                            for (String x1 : stringSet1)
+                                aList1.add(x1);
+
+                            //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
+                            selectedHeadersList.clear();
+                            for (int i = 0; i < aList1.size(); i++) {
+                                MyLog.e(TAG, "chs>>list header>> " + aList1.get(i));
+                                SelectedHeader list1 = new SelectedHeader(
+                                        aList1.get(i)
+                                );
+                                selectedHeadersList.add(list1);
+                            }
+                            getViewModel.setSelectedHeadersList(selectedHeadersList);
+
+
+                            MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
+
+                            for (int i = 0; i < selectedHeadersList.size(); i++) {
+                                //checkedLists = headerMap.get(selectedHeadersList.get(i).getHeader());
+                                editItemMap = editHeaderMap.get(selectedHeadersList.get(i).getHeader());
+                                Set<String> stringSet = editItemMap.keySet();
+                                List<String> aList = new ArrayList<String>(stringSet.size());
+                                for (String x : stringSet)
+                                    aList.add(x);
+                                itemLists = new ArrayList<>();
+                                for (int j = 0; j < aList.size(); j++) {
+                                    String[] arr = (aList.get(j).split("_"));
+                                    ItemList itemList = new ItemList();
+                                    itemList.setItem(arr[0]);
+                                    itemList.setSelected(arr[1]);
+                                    itemLists.add(itemList);
+                                }
+
+
+                                for (int l = 0; l < itemLists.size(); l++) {
+                                    MyLog.e(TAG, "dish>>item title>>" + itemLists.get(l).getItem() + "_" + itemLists.get(l).getSelected());
+                                    selectedDishLists = new ArrayList<>();
+                                    selectedDishLists = editItemMap.get(itemLists.get(l).getItem() + "_" + itemLists.get(l).getSelected());
+                                    checkedLists = new ArrayList<>();
+                                    for (int q = 0; q < selectedDishLists.size(); q++) {
+                                        CheckedList list = new CheckedList(
+                                                selectedDishLists.get(q).getDish(),
+                                                0
+                                        );
+                                        checkedLists.add(list);
+                                    }
+
+                                    String item = itemLists.get(l).getItem() + "_" + itemLists.get(l).getSelected();
+                                    //Dinner!30-7-2022 06:23 PM/80
+                                    date = date.replace("/", "-");
+                                    String date_Time = session_title + "!" + date + " " + time + "/" + s_count;
+                                    MyLog.e(TAG, "placeorder>>date_Time>>" + date_Time);
+
+                                    SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), item, selectedSessionLists.get(k).getSession_title(), checkedLists, date_Time, selectedSessionLists.get(k).getS_count(), oldDateTimeCount);
+
+                                }
+                            }
+                            doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
+
+                        } else {
+                            MyLog.e(TAG, "editHeaderMap map is empty");
+                        }
+                    }
+
                 }
 
 
@@ -382,27 +510,35 @@ public class PlaceOrderFragment extends Fragment {
         return view;
     }
 
-    private void SaveOrders(String func_title, String user_name, String headerList_title, String item_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_count) {
+    private void SaveOrders(String func_title, String user_name, String headerList_title, String item_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_count, String oldDateTimeCount) {
+
+
         //remove old data
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders").child(user_name);
         MyLog.e(TAG, "cancel>>sess value  " + session_title);
         MyLog.e(TAG, "cancel>>date value  " + date);
         //remove data
-        String[] scb = date_time.split("/");
+      /*  String[] scb = date_time.split("/");
         String count = scb[1];
         String[] str = (scb[0]).split("!");
         String sess = str[0];
         String[] dt = (str[1]).split(" ");
         String date = dt[0];
-        String time = dt[1] + " " + dt[2];
+        String time = dt[1] + " " + dt[2];*/
+        String[] str = oldDateTimeCount.split("_");
+        String oldDate = str[0];
+        String oldTime = str[1];
+        String oldCount = str[2];
 
-        MyLog.e(TAG, "placeorders>>date>>" + date);
-        MyLog.e(TAG, "placeorders>>time>>" + time);
+        MyLog.e(TAG, "placeorders>>time>>" + oldTime);
+        MyLog.e(TAG, "placeorders>>oldCount>>" + oldCount);
 
-        String s = sess + "!" + time + "-" + count + "_true";
+        String s = session_title + "!" + oldTime + "-" + oldCount + "_true";
         MyLog.e(TAG, "placeorders>>ses  time>>" + s);
-        databaseReference.child(func_title).child(date).child(s).child(headerList_title).child(item_title).removeValue();
+        oldDate=oldDate.replace("/","-");
+        MyLog.e(TAG, "placeorders>>date>>" + oldDate);
+        databaseReference.child(func_title).child(oldDate).child(s).child(headerList_title).child(item_title).removeValue();
         MyLog.e(TAG, "cancel remove commit");
 
 
@@ -438,13 +574,6 @@ public class PlaceOrderFragment extends Fragment {
 
                 stringListLinkedHashMap.clear();
 
-                //clear all data checked list
-                 /*stringListLinkedHashMap.clear();
-                getViewModel.setF_map(stringListLinkedHashMap);
-                userItemLists.clear();
-                getViewModel.setUserItemLists(userItemLists);
-                //Toast.makeText(getContext(), "Data Added", Toast.LENGTH_SHORT).show();
-                doneDialogfragment.dismiss();*/
 
             }
 
@@ -458,8 +587,5 @@ public class PlaceOrderFragment extends Fragment {
     }
 
 
-    private void SaveOrders(String func_title, String user_name, String headerList_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_counts) {
-
-    }
 
 }

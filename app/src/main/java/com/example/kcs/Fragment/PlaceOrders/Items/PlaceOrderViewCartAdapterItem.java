@@ -18,7 +18,7 @@ import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.PlaceOrderViewAdapterDish;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
+import com.example.kcs.ViewModel.SelectedDishList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -27,21 +27,24 @@ import java.util.List;
 public class PlaceOrderViewCartAdapterItem extends RecyclerView.Adapter<PlaceOrderViewCartAdapterItem.ViewHolder> {
     private Context context;
     private List<CheckedList> checkedLists = new ArrayList<>();
-    private List<ItemList> itemLists=new ArrayList<>();
+    private List<ItemList> itemLists = new ArrayList<>();
     private String TAG = "PlaceOrderViewCartAdapterItem";
     private GetViewModel getViewModel;
     private List<SelectedHeader> e_selectedHeaders = new ArrayList<>();
     //item map
     private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
+    //selected dish list
+    private List<SelectedDishList> selectedDishLists = new ArrayList<>();
 
-
-    public PlaceOrderViewCartAdapterItem(Context context, GetViewModel getViewModel, LinkedHashMap<String, List<CheckedList>> itemMap, List<ItemList> itemLists) {
-        this.context=context;
-        this.getViewModel=getViewModel;
-        this.itemMap=itemMap;
-        this.itemLists=itemLists;
+    public PlaceOrderViewCartAdapterItem(Context context, GetViewModel getViewModel, LinkedHashMap<String, List<CheckedList>> itemMap, List<ItemList> itemLists, LinkedHashMap<String, List<SelectedDishList>> editItemMap) {
+        this.context = context;
+        this.getViewModel = getViewModel;
+        this.itemMap = itemMap;
+        this.editItemMap = editItemMap;
+        this.itemLists = itemLists;
     }
-
 
 
     @NonNull
@@ -56,16 +59,28 @@ public class PlaceOrderViewCartAdapterItem extends RecyclerView.Adapter<PlaceOrd
     @Override
     public void onBindViewHolder(@NonNull PlaceOrderViewCartAdapterItem.ViewHolder holder, int position) {
         MyLog.e(TAG, "dish>>PlaceOrderViewCartAdapterItem");
-        final ItemList itemLists1=itemLists.get(position);
+        final ItemList itemLists1 = itemLists.get(position);
         holder.list.setText(itemLists1.getItem());
-        if((itemLists1.getSelected()).equals("true"))
-        {
+        if ((itemLists1.getSelected()).equals("true")) {
             holder.layout.setBackgroundColor(context.getResources().getColor(R.color.btn_gradient_light));
-        } else if((itemLists1.getSelected()).equals("false"))
-        {
+        } else if ((itemLists1.getSelected()).equals("false")) {
             holder.layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
         }
-        checkedLists=itemMap.get(itemLists1.getItem()+"_"+itemLists1.getSelected());
+        if (editItemMap == null) {
+            MyLog.e(TAG, "editItemMap ia null");
+            checkedLists = itemMap.get(itemLists1.getItem() + "_" + itemLists1.getSelected());
+        } else {
+            selectedDishLists = new ArrayList<>();
+            selectedDishLists = editItemMap.get(itemLists1.getItem() + "_" + itemLists1.getSelected());
+            checkedLists=new ArrayList<>();
+            for(int i=0;i<selectedDishLists.size();i++) {
+                CheckedList checkedList = new CheckedList(
+                        selectedDishLists.get(i).getDish(),
+                        0
+                );
+                checkedLists.add(checkedList);
+            }
+        }
         holder.recyclerview_dish.setHasFixedSize(true);
         holder.recyclerview_dish.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         PlaceOrderViewAdapterDish placeOrderViewAdapterDish = new PlaceOrderViewAdapterDish(context, getViewModel, checkedLists);
@@ -77,7 +92,7 @@ public class PlaceOrderViewCartAdapterItem extends RecyclerView.Adapter<PlaceOrd
     @Override
     public int getItemCount() {
 
-            return itemLists.size();
+        return itemLists.size();
 
     }
 
