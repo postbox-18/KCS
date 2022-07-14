@@ -54,6 +54,7 @@ public class DoneDialogfragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 getViewModel.setI_value(0);
+                getViewModel.setRefresh(0);
                 dismiss();
             }
         });

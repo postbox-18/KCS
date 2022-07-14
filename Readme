@@ -13,12 +13,10 @@ PENDING
 1-alert check box to select the func (OK and CANCEL btn)
 5-search to find the item
 10-Three Level Expandable View
-17-Refresh swipe down
 18-Save Order in phone number
 21-clear hash map using alert message
 22-show empty logo for my order fragment which list is empty
 23-edit date time and count  in place order fragment
-24-clear reset data after order btn is clicked
 25-click on edit button and goes to header fragment edit date time count
 
 FINISHED
@@ -39,7 +37,10 @@ FINISHED
 14-BREADCRUMBS click to back to fragment
 15-lottie files for order saved
 16-bottom sheet in my orders scroll problem
+17-Refresh swipe down
 19-set forgot password
 20-cancel order delete after 15days
+24-clear reset data after order btn is clicked
+
 
 

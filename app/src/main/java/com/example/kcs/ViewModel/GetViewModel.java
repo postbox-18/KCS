@@ -47,6 +47,10 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<HeaderList>> headerListMutableList = new MutableLiveData<>();
     private List<HeaderList> headerList = new ArrayList<>();
 
+    //refresh
+    private Integer refresh=-1;
+    private MutableLiveData<Integer> refreshLiveData=new MutableLiveData<>();
+
     //func List
     private MutableLiveData<List<FunList>> funMutableList = new MutableLiveData<>();
     private List<FunList> funLists = new ArrayList<>();
@@ -305,6 +309,16 @@ public class GetViewModel extends AndroidViewModel {
         CheckUserDetails();
 
 
+    }
+
+
+    public MutableLiveData<Integer> getRefreshLiveData() {
+        return refreshLiveData;
+    }
+
+    public void setRefresh(Integer refresh) {
+        this.refresh = refresh;
+        this.refreshLiveData.postValue(refresh);
     }
 
     public void setSelected_date(String selected_date) {
