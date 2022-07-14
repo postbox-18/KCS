@@ -17,7 +17,8 @@ PENDING
 21-clear hash map using alert message
 22-show empty logo for my order fragment which list is empty
 23-edit date time and count  in place order fragment
-25-click on edit button and goes to header fragment edit date time count
+25-click on edit button and goes to header fragment "date , time , count" to edit the existing date time and count.
+27-
 
 FINISHED
 1-alert check box to select the func
