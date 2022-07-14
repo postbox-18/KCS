@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -58,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+
+    //swipe to refresh
+    private SwipeRefreshLayout refreshLayout;
 
     //Bread Crumbs
     private LinearLayout breadCrums;
@@ -117,13 +121,17 @@ public class MainActivity extends AppCompatActivity {
     //Item map
     private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         View parentLayout = findViewById(android.R.id.content);
         recyclerview_breadcrumbs = findViewById(R.id.recyclerview_breadcrumbs);
+        refreshLayout = findViewById(R.id.refreshLayout);
         breadCrums = findViewById(R.id.breadCrums);
+
         MyLog.e(TAG, "logout>> main activity ");
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -148,8 +156,13 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<BreadCrumbList> breadCrumbLists) {
                 breadcrumbsList = breadCrumbLists;
                 if (breadcrumbsList != null) {
+                    breadCrums.setVisibility(View.VISIBLE);
                     breadCrumbsAdapter = new BreadCrumbsAdapter(MainActivity.this, getViewModel, breadcrumbsList);
                     recyclerview_breadcrumbs.setAdapter(breadCrumbsAdapter);
+                }
+                else
+                {
+                    breadCrums.setVisibility(View.GONE);
                 }
             }
         });
@@ -250,25 +263,7 @@ public class MainActivity extends AppCompatActivity {
                         for (String x : stringSet)
                             aList.add(x);
 
-                        //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                      /*  userItemLists = new ArrayList<>();
-                        for (int i = 0; i < aList.size(); i++) {
-                            MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
-                            MyLog.e(TAG, "chs>>list size " + editHeaderMap.get(aList.get(i)).size());
-                            UserItemList userItemList = new UserItemList(
-                                    aList.get(i),
-                                    editHeaderMap.get(aList.get(i)).size()
-                            );
-                            userItemLists.add(userItemList);
-                        }
-                        getViewModel.setUserItemLists(userItemLists);
-                        MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());*/
-                        /*if (userItemLists.size() > 0) {
-                            snackbar.show();
-                            MyLog.e(TAG, "chs>>snackbar Show");
-                        } else {
-                            snackbar.dismiss();
-                        }*/
+
                         break;
                     } else {
                         if (session_title.equals(selectedSessionLists.get(k).getSession_title())) {
@@ -331,39 +326,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*getViewModel.getF_mapMutable().observe(this, new Observer<LinkedHashMap<String, List<CheckedList>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, List<CheckedList>> stringListLinkedHashMap1) {
-                stringListLinkedHashMap = stringListLinkedHashMap1;
-                MyLog.e(TAG, "chs>>keyset>>" + stringListLinkedHashMap.keySet());
 
-                Set<String> stringSet = stringListLinkedHashMap.keySet();
-                List<String> aList = new ArrayList<String>(stringSet.size());
-                for (String x : stringSet)
-                    aList.add(x);
-
-                //MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-                userItemLists.clear();
-                for (int i = 0; i < aList.size(); i++) {
-                    MyLog.e(TAG, "chs>>list header>> " + aList.get(i));
-                    MyLog.e(TAG, "chs>>list size " + stringListLinkedHashMap.get(aList.get(i)).size());
-                    UserItemList userItemList = new UserItemList(
-                            aList.get(i),
-                            stringListLinkedHashMap.get(aList.get(i)).size()
-                    );
-                    userItemLists.add(userItemList);
-                }
-                getViewModel.setUserItemLists(userItemLists);
-                MyLog.e(TAG, "chs>>list header>> " + userItemLists.size());
-                if (userItemLists.size() > 0) {
-                    snackbar.show();
-                } else {
-                    snackbar.dismiss();
-                }
-
-
-            }
-        });*/
 
 
         //get user-item list
@@ -453,6 +416,29 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        //onclick swipe down
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getViewModel.setRefresh(0);
+                refreshLayout.setRefreshing(false);
+            }
+        });
+
+
+        //get refresh int
+        getViewModel.getRefreshLiveData().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if(integer==0) {
+                    finish();
+                    startActivity(getIntent());
+                }
+                getViewModel.setRefresh(-1);
+            }
+        });
+
 
 
         getViewModel.setI_value(0);
@@ -558,6 +544,13 @@ public class MainActivity extends AppCompatActivity {
             }
             //super.onBackPressed();
             getSupportFragmentManager().popBackStackImmediate();
+            MyLog.e(TAG, "breadcrumbs>>onBackPressedAct:onBackPressed out:");
+            String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+            MyLog.e(TAG, "breadcrumbs>>onBackPressedAct:onBackPressed out:"+tag);
+            if(tag.equals("HomeFragment"))
+            {
+                getViewModel.setRefresh(0);
+            }
         } else {
 
             super.onBackPressed();
@@ -567,6 +560,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
 
 
     private void showAlertDialog(List<FunList> funLists) {
