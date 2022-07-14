@@ -526,21 +526,40 @@ public class PlaceOrderFragment extends Fragment {
         String[] dt = (str[1]).split(" ");
         String date = dt[0];
         String time = dt[1] + " " + dt[2];*/
-        String[] str = oldDateTimeCount.split("_");
-        String oldDate = str[0];
-        String oldTime = str[1];
-        String oldCount = str[2];
+        if (oldDateTimeCount == null) {
+            String[] scb = date_time.split("/");
+            String count = scb[1];
+            String[] str = (scb[0]).split("!");
+            String sess = str[0];
+            String[] dt = (str[1]).split(" ");
+            String date = dt[0];
+            String time = dt[1] + " " + dt[2];
 
-        MyLog.e(TAG, "placeorders>>time>>" + oldTime);
-        MyLog.e(TAG, "placeorders>>oldCount>>" + oldCount);
+            MyLog.e(TAG, "placeorders>>time>>" + time);
+            MyLog.e(TAG, "placeorders>>oldCount>>" + count);
 
-        String s = session_title + "!" + oldTime + "-" + oldCount + "_true";
-        MyLog.e(TAG, "placeorders>>ses  time>>" + s);
-        oldDate=oldDate.replace("/","-");
-        MyLog.e(TAG, "placeorders>>date>>" + oldDate);
-        databaseReference.child(func_title).child(oldDate).child(s).child(headerList_title).child(item_title).removeValue();
-        MyLog.e(TAG, "cancel remove commit");
+            String s = sess + "!" + time + "-" + count + "_true";
+            MyLog.e(TAG, "placeorders>>ses  time>>" + s);
+            date = date.replace("/", "-");
+            MyLog.e(TAG, "placeorders>>date>>" + date);
+            databaseReference.child(func_title).child(date).child(s).child(headerList_title).child(item_title).removeValue();
+            MyLog.e(TAG, "cancel remove commit");
+        } else {
+            String[] str = oldDateTimeCount.split("_");
+            String oldDate = str[0];
+            String oldTime = str[1];
+            String oldCount = str[2];
 
+            MyLog.e(TAG, "placeorders>>time>>" + oldTime);
+            MyLog.e(TAG, "placeorders>>oldCount>>" + oldCount);
+
+            String s = session_title + "!" + oldTime + "-" + oldCount + "_true";
+            MyLog.e(TAG, "placeorders>>ses  time>>" + s);
+            oldDate = oldDate.replace("/", "-");
+            MyLog.e(TAG, "placeorders>>date>>" + oldDate);
+            databaseReference.child(func_title).child(oldDate).child(s).child(headerList_title).child(item_title).removeValue();
+            MyLog.e(TAG, "cancel remove commit");
+        }
 
         //add data
         n++;
@@ -585,7 +604,6 @@ public class PlaceOrderFragment extends Fragment {
             }
         });
     }
-
 
 
 }
