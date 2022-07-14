@@ -123,9 +123,7 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                 for (int k = 0; k < o_selectedHeaders.size(); k++) {
 
                     String header = o_selectedHeaders.get(k).getHeader();
-                    MyLog.e(TAG, "orders>>orderHeaderMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(orderHeaderMap));
                     orderItemMap = orderHeaderMap.get(header);
-                    MyLog.e(TAG, "orders>>orderItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(orderItemMap));
                     Set<String> stringSet = orderItemMap.keySet();
                     List<String> aList = new ArrayList<String>(stringSet.size());
                     for (String x : stringSet)
@@ -135,7 +133,6 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                             aList.size()
                     );
                     myOrdersList.add(myOrdersList1);
-                    MyLog.e(TAG, "orders>>myOrdersList\n" + new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
                     holder.recyclerview_item_list.setHasFixedSize(true);
                     holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                     MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);
@@ -144,14 +141,12 @@ public class MyorderSessiondapters extends RecyclerView.Adapter<MyorderSessionda
                     {
                         o_orderDishLists=new ArrayList<>();
                         o_orderDishLists=orderItemMap.get(aList.get(l));
-                        MyLog.e(TAG,"orders>>o_orderDishLists\n"+new GsonBuilder().setPrettyPrinting().create().toJson(o_orderDishLists));
                         myOrdersList=new ArrayList<>();
                         MyOrdersList myOrdersList1 = new MyOrdersList(
                                 header,
                                 o_orderDishLists.size()
                         );
                         myOrdersList.add(myOrdersList1);
-                        MyLog.e(TAG,"orders>>myOrdersList\n"+new GsonBuilder().setPrettyPrinting().create().toJson(myOrdersList));
                         holder.recyclerview_item_list.setHasFixedSize(true);
                         holder.recyclerview_item_list.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                         MyorderItemListAdapters itemListAdapters = new MyorderItemListAdapters(context, getViewModel, myOrdersList);

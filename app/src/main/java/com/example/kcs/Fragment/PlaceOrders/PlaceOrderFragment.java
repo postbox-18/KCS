@@ -255,6 +255,7 @@ public class PlaceOrderFragment extends Fragment {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> stringLinkedHashMapLinkedHashMap) {
                 funcMap = stringLinkedHashMapLinkedHashMap;
+
                 MyLog.e(TAG, "chs>>list func map ");
                 sessionMap = funcMap.get(func_title);
                 //set session list

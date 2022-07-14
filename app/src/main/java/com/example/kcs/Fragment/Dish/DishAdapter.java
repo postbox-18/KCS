@@ -126,6 +126,13 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
             }
         });
 
+        //get header map
+        getViewModel.getHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> stringLinkedHashMapLinkedHashMap) {
+                headerMap=new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
+            }
+        });
 
         //check if checked list item already selected
         if (selected_s_map.size() > 0) {
@@ -238,6 +245,8 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                     getViewModel.setHeaderMap(headerMap);
                     //set session map
                     getViewModel.setSessionMap(sessionMap);*/
+                    //set header map
+                    getViewModel.setHeaderMap(headerMap);
                     //set func map
                     getViewModel.setFuncMap(funcMap);
                     MyLog.e(TAG, "selected_s_map>>size>>" + selected_s_map.size());
