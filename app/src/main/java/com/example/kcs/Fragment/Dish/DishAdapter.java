@@ -134,6 +134,8 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
             }
         });
 
+        final DishList dishLists1 = dishLists.get(position);
+
         //check if checked list item already selected
         if (selected_s_map.size() > 0) {
             for (int k = 0; k < selected_s_map.size(); k++) {
@@ -143,11 +145,13 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                         final CheckedList checkedLists1 = checkedLists.get(i);
                         MyLog.e(TAG, "checked>>" + checkedLists1.getPosition());
                         MyLog.e(TAG, "checked>>" + position);
-                        if (checkedLists1.getPosition() == position) {
+                        if (checkedLists1.getItemList().equals(dishLists1.getDish())) {
                             //MyLog.e(TAG, "checked>>" + checkedLists1.getItemList());
                             holder.dish_check.setChecked(true);
-
-                        }
+                        }/*if (checkedLists1.getPosition() == position) {
+                            //MyLog.e(TAG, "checked>>" + checkedLists1.getItemList());
+                            holder.dish_check.setChecked(true);
+                        }*/
                     }
                 } else {
                     checkedLists=new ArrayList<>();
@@ -162,7 +166,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
 
 
 
-        final DishList dishLists1 = dishLists.get(position);
+        //final DishList dishLists1 = dishLists.get(position);
         holder.dish_check.setText(dishLists1.getDish());
         if (dishLists1.getBoolens().equals("true")) {
             String[] str = (dishLists1.getDish()).split("-");

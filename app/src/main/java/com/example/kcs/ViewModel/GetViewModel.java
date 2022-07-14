@@ -48,8 +48,8 @@ public class GetViewModel extends AndroidViewModel {
     private List<HeaderList> headerList = new ArrayList<>();
 
     //refresh
-    private Integer refresh=-1;
-    private MutableLiveData<Integer> refreshLiveData=new MutableLiveData<>();
+    private Integer refresh = -1;
+    private MutableLiveData<Integer> refreshLiveData = new MutableLiveData<>();
 
     //func List
     private MutableLiveData<List<FunList>> funMutableList = new MutableLiveData<>();
@@ -1304,8 +1304,6 @@ public class GetViewModel extends AndroidViewModel {
         //set item map
         editItemMapMutableLiveData.postValue(editItemMap);
 
-
-
     }
 
     //date,ses,dTime,b
@@ -1388,66 +1386,83 @@ public class GetViewModel extends AndroidViewModel {
             }
         }*/
 
-
-        ///////////////**GET POSITION FOR DISH ITEM************/////////
-        MyLog.e(TAG,"edit_dish>>d_ItemMap header_title"+header_title);
-        d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
-        ///////////////**END END GET POSITION FOR DISH ITEMEND END ************/////////
-
-
-        Set<String> set = editItemMap.keySet();
-        List<String> aList1 = new ArrayList<String>(set.size());
-        for (String x1 : set)
-            aList1.add(x1);
-
-        selectedItemLists = new ArrayList<>();
-        for (int i = 0; i < aList1.size(); i++) {
-            SelectedItemList itemList = new SelectedItemList();
-            String[] str = (aList1.get(i)).split("_");
-            itemList.setItem(str[0]);
-            itemList.setSelected(str[1]);
-            selectedItemLists.add(itemList);
+        //ge edit header list
+        Set<String> set3 = editHeaderMap.keySet();
+        List<String> aList13 = new ArrayList<String>(set3.size());
+        for (String x13 : set3)
+            aList13.add(x13);
+        selectedHeadersList = new ArrayList<>();
+        for (int i = 0; i < aList13.size(); i++) {
+            SelectedHeader selectedHeader = new SelectedHeader(
+                    aList13.get(i)
+            );
+            selectedHeadersList.add(selectedHeader);
         }
+
+
         e_ItemMap = new LinkedHashMap<>();
 
+        for (int n = 0; n < selectedHeadersList.size(); n++) {
+            String header_title = selectedHeadersList.get(n).getHeader();
+            ///////////////**GET POSITION FOR DISH ITEM************/////////
+            //get item map
+            MyLog.e(TAG, "editOrders>>get header_title" + header_title);
+            d_DishMap = new LinkedHashMap<>();
+            d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
 
-        for (int i = 0; i < selectedItemLists.size(); i++) {
-            String item = selectedItemLists.get(i).getItem() + "_" + selectedItemLists.get(i).getSelected();
 
-            dishLists=new ArrayList<>();
-            ////////////**********************//////////////
-            dishLists=d_DishMap.get(item);
+            //get edit item map
+            editItemMap=new LinkedHashMap<>();
+            editItemMap=editHeaderMap.get(header_title);
 
-            ////////////**********************//////////////
 
-            selectedDishLists = new ArrayList<>();
-            selectedDishLists = editItemMap.get(item);
-            checkedLists = new ArrayList<>();
-            for (int j = 0; j < selectedDishLists.size(); j++) {
-                String e_dish=selectedDishLists.get(j).getDish();
-                for(int l=0;l<dishLists.size();l++)
-                {
-                    String dish=dishLists.get(l).getDish();
-                    if(e_dish.equals(dish)) {
-                        CheckedList checkedList = new CheckedList(
-                                e_dish,
-                                l
-                        );
-                        checkedLists.add(checkedList);
+            Set<String> set = editItemMap.keySet();
+            List<String> aList1 = new ArrayList<String>(set.size());
+            for (String x1 : set)
+                aList1.add(x1);
+
+            selectedItemLists = new ArrayList<>();
+            for (int w = 0; w < aList1.size(); w++) {
+                SelectedItemList itemList = new SelectedItemList();
+                String[] str = (aList1.get(w)).split("_");
+                itemList.setItem(str[0]);
+                itemList.setSelected(str[1]);
+                selectedItemLists.add(itemList);
+            }
+            ///////////////**END END GET POSITION FOR DISH ITEMEND END ************/////////
+            for (int i = 0; i < selectedItemLists.size(); i++) {
+                String item = selectedItemLists.get(i).getItem() + "_" + selectedItemLists.get(i).getSelected();
+
+                MyLog.e(TAG, "editOrders>>get item title>>" + item);
+                selectedDishLists = new ArrayList<>();
+                selectedDishLists = editItemMap.get(item);
+
+                dishLists=new ArrayList<>();
+                dishLists=d_DishMap.get(item);
+
+                checkedLists = new ArrayList<>();
+                for (int j = 0; j < selectedDishLists.size(); j++) {
+                    String e_dish = selectedDishLists.get(j).getDish();
+                    for (int l = 0; l < dishLists.size(); l++) {
+                        String dish = dishLists.get(l).getDish();
+                        if (e_dish.equals(dish)) {
+                            CheckedList checkedList = new CheckedList(
+                                    e_dish,
+                                    l
+                            );
+                            checkedLists.add(checkedList);
+                        } else {
+                            continue;
+                        }
+
+
                     }
-                    else
-                    {
-                        continue;
-                    }
 
+                    e_ItemMap.put(item, checkedLists);
 
                 }
-
-                e_ItemMap.put(item, checkedLists);
-
             }
         }
-
 
         edit_selected_s_map.add(e_ItemMap);
         check_s_mapMutable.postValue(edit_selected_s_map);
@@ -1515,28 +1530,27 @@ public class GetViewModel extends AndroidViewModel {
                 //set replace bolen
                 for (int l = 0; l < c_selectedHeaders.size(); l++) {
                     header_title = c_selectedHeaders.get(l).getHeader();
-                    editItemMap=editHeaderMap.get(header_title);
+                    editItemMap = editHeaderMap.get(header_title);
 
                     Set<String> stringSet2 = editItemMap.keySet();
                     List<String> aList2 = new ArrayList<String>(stringSet2.size());
                     for (String x2 : stringSet2)
                         aList2.add(x2);
-                    selectedItemLists=new ArrayList<>();
-                    for(int p=0;p<aList2.size();p++)
-                    {
-                        String[]arr=(aList2.get(p)).split("_");
-                        SelectedItemList list=new SelectedItemList();
+                    selectedItemLists = new ArrayList<>();
+                    for (int p = 0; p < aList2.size(); p++) {
+                        String[] arr = (aList2.get(p)).split("_");
+                        SelectedItemList list = new SelectedItemList();
                         list.setItem(arr[0]);
                         list.setSelected(arr[1]);
                         selectedItemLists.add(list);
                     }
                     for (int k = 0; k < selectedItemLists.size(); k++) {
 
-                        String item=selectedItemLists.get(k).getItem()+"_"+selectedItemLists.get(k).getSelected();
-                        selectedDishLists=new ArrayList<>();
-                        selectedDishLists=editItemMap.get(item);
-                        for(int q=0;q<selectedDishLists.size();q++) {
-                            MyLog.e(TAG, "cancels>>\nfunc>>"+func_title+"\ndate>>"+date+"\nsess>>"+newData+"\nheader>>"+header_title+"\nitem>>"+item+"\ndish>>"+selectedDishLists.get(q).getDish());
+                        String item = selectedItemLists.get(k).getItem() + "_" + selectedItemLists.get(k).getSelected();
+                        selectedDishLists = new ArrayList<>();
+                        selectedDishLists = editItemMap.get(item);
+                        for (int q = 0; q < selectedDishLists.size(); q++) {
+                            MyLog.e(TAG, "cancels>>\nfunc>>" + func_title + "\ndate>>" + date + "\nsess>>" + newData + "\nheader>>" + header_title + "\nitem>>" + item + "\ndish>>" + selectedDishLists.get(q).getDish());
                             MyLog.e(TAG, "cancels>> add commit");
                             databaseReference.child(func_title).child(date).child(newData).child(header_title).child(item).child(String.valueOf(q)).setValue(selectedDishLists.get(q).getDish());
                         }
