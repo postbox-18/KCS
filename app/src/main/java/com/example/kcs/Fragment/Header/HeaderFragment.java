@@ -75,7 +75,7 @@ public class HeaderFragment extends Fragment {
     //date and time
     private TextView date_picker_actions;
     private TextView time_picker, count;
-    private String funcTitle, s_time_picker, s_date_picker_actions, e_session_title, date_time, s_count,oldDateTimeCount;
+    private String funcTitle, s_time_picker, s_date_picker_actions, e_session_title, date_time, s_count, oldDateTimeCount;
     private DatePickerDialog datePicker;
     private List<TimeList> timeLists = new ArrayList<>();
 
@@ -225,7 +225,7 @@ public class HeaderFragment extends Fragment {
         getViewModel.getOldDateTimeCountLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                oldDateTimeCount=s;
+                oldDateTimeCount = s;
             }
         });
 
@@ -233,7 +233,7 @@ public class HeaderFragment extends Fragment {
         getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
+                editFunc_Map = stringLinkedHashMapLinkedHashMap;
                 editDateMap = editFunc_Map.get(funcTitle);
                 MyLog.e(TAG, "order>>funcTitle>>" + funcTitle);
                 if (editDateMap == null) {
@@ -244,10 +244,10 @@ public class HeaderFragment extends Fragment {
                     MyLog.e(TAG, "edits>>date " + s_date_picker_actions);
                     String date = s_date_picker_actions.replace("/", "-");
                     //oldDateTimeCount
-                    String[]arr=oldDateTimeCount.split("_");
-                    String oldDate=arr[0];
-                    String oldTime=arr[1];
-                    String oldCount=arr[2];
+                    String[] arr = oldDateTimeCount.split("_");
+                    String oldDate = arr[0];
+                    String oldTime = arr[1];
+                    String oldCount = arr[2];
                     MyLog.e(TAG, "edits>>oldDate " + oldDate);
                     oldDate = oldDate.replace("/", "-");
 
@@ -456,15 +456,34 @@ public class HeaderFragment extends Fragment {
         date_picker_actions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
-                        // adding the selected date in the edittext
-                        date_picker_actions.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
-                        getViewModel.setDate_picker(date_picker_actions.getText().toString());
-                    }
-                }, year, month, day);
 
+                MyLog.e(TAG,"day>>setText>>"+date_picker_actions.getText().toString());
+
+                if ((date_picker_actions.getText().toString()).isEmpty()) {
+                    datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
+                            // adding the selected date in the edittext
+                            date_picker_actions.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                            getViewModel.setDate_picker(date_picker_actions.getText().toString());
+                        }
+                    }, year, month, day);
+                } else {
+                    String[]arr=(date_picker_actions.getText().toString()).split("/");
+                    int day= Integer.parseInt(arr[0]);
+                    int month= Integer.parseInt(arr[1]);
+                    int year= Integer.parseInt(arr[2]);
+                    MyLog.e(TAG,"day>>"+day+"\nmonth>>"+month+"\nyear>>"+year);
+                    datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
+                            // adding the selected date in the edittext
+                            date_picker_actions.setText(dayOfMonth + "/" + (month) + "/" + year);
+                            getViewModel.setDate_picker(date_picker_actions.getText().toString());
+                        }
+                    }, year, month, day);
+
+                }
                 // set minimum date to be selected as today
                 datePicker.getDatePicker().setMinDate(calendar.getTimeInMillis());
 
@@ -483,7 +502,7 @@ public class HeaderFragment extends Fragment {
                 LinearLayout linearLayout = new LinearLayout(getContext());
                 final EditText countEdit = new EditText(getContext());
 
-                if(!(count.getText().toString()).isEmpty()) {
+                if (!(count.getText().toString()).isEmpty()) {
                     countEdit.setText(count.getText().toString());
                 }
                 // write the email using which you registered
