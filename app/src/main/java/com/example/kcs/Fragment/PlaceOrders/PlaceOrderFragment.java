@@ -248,14 +248,18 @@ public class PlaceOrderFragment extends Fragment {
 
                         //set selected session list and session date and time
                         MyLog.e(TAG, "chs>>list sess>> " + arr[0]);
-
                         MyLog.e(TAG, "chs>>list time>> " + arr[1]);
-                        SelectedSessionList list = new SelectedSessionList();
-                        list.setBolen(null);
-                        list.setSession_title(arr[0]);
-                        list.setS_count(count);
-                        list.setTime(oldDate + " " + arr[1]);
-                        selectedSessionLists.add(list);
+                        if ((arr[0]).equals(session_title) && (arr[1]).equals(arr[1])) {
+                            SelectedSessionList list = new SelectedSessionList();
+                            list.setBolen(null);
+                            list.setSession_title(arr[0]);
+                            list.setS_count(count);
+                            list.setTime(oldDate + " " + arr[1]);
+                            selectedSessionLists.add(list);
+                            break;
+                        } else {
+                            continue;
+                        }
                     }
 
                     //set selected session
@@ -408,13 +412,18 @@ public class PlaceOrderFragment extends Fragment {
                     selectedSessionLists = new ArrayList<>();
 
                     for (int i = 0; i < aList12.size(); i++) {
-                        SelectedSessionList sessionList = new SelectedSessionList();
                         String[] arrCount = (aList12.get(i)).split("/");
-                        sessionList.setS_count(arrCount[1]);
                         String[] arrSess = (arrCount[0]).split("!");
-                        sessionList.setTime(arrSess[1]);
-                        sessionList.setSession_title(arrSess[0]);
-                        selectedSessionLists.add(sessionList);
+                        if (session_title.equals(arrSess[0]) && (time).equals(arrSess[1]) && (s_count).equals(arrCount[1])) {
+                            SelectedSessionList sessionList = new SelectedSessionList();
+                            sessionList.setS_count(arrCount[1]);
+                            sessionList.setTime(arrSess[1]);
+                            sessionList.setSession_title(arrSess[0]);
+                            selectedSessionLists.add(sessionList);
+                            break;
+                        } else {
+                            continue;
+                        }
                     }
 
 

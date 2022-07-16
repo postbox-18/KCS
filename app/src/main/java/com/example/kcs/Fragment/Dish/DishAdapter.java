@@ -143,6 +143,10 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
             @Override
             public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
                 sessionDateTimes = stringListLinkedHashMap.get(funcTitle + "-" + sessionTitle);
+                MyLog.e(TAG, "dateTimes>>s_session_title>>title>>" + funcTitle + "-" + sessionTitle);
+                MyLog.e(TAG, "dateTimes>>s_session_title>>stringListLinkedHashMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                MyLog.e(TAG, "dateTimes>>s_session_title>>sessionDateTimes>>" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
+
             }
         });
 

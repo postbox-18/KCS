@@ -211,6 +211,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MyLog.e(TAG, "s_counts>>sess set >>" + sess_date);
                 alertDialog(sess_date, 0, list.getBolen());
             }
         });
@@ -232,6 +233,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     }
 
     private void alertDialog(String session_title, int n, String bolen) {
+        MyLog.e(TAG, "s_counts>>sess set alertDialog >>" + session_title);
 
         String[] scb = session_title.split("-");
         String[] cb = (scb[1]).split("_");

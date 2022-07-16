@@ -157,8 +157,6 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
         else {
             final SelectedSessionList list = sessionLists.get(position);
 
-
-
             holder.session_title.setText(list.getSession_title());
             holder.session_title.setTextColor(context.getResources().getColor(R.color.colorSecondary));
             MyLog.e(TAG,"count>>else>>"+list.getS_count());
@@ -190,8 +188,11 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
                 );
                 selectedHeaders.add(list1);
             }
-
             getViewModel.setSelectedHeadersList(selectedHeaders);*/
+
+
+
+
             Set<String> stringSet = editHeaderMap.keySet();
             List<String> aList = new ArrayList<String>(stringSet.size());
             for (String x : stringSet)

@@ -75,7 +75,7 @@ public class HeaderFragment extends Fragment {
     //date and time
     private TextView date_picker_actions;
     private TextView time_picker, count;
-    private String funcTitle, s_time_picker, s_date_picker_actions, e_session_title, date_time, s_count, oldDateTimeCount;
+    private String funcTitle, s_time_picker, s_date_picker_actions, date_time, s_count, oldDateTimeCount;
     private DatePickerDialog datePicker;
     private List<TimeList> timeLists = new ArrayList<>();
 
@@ -253,27 +253,34 @@ public class HeaderFragment extends Fragment {
 
 
                     editSessionMap = editDateMap.get(oldDate);
+                    MyLog.e(TAG, "headerCoutn>>\ntime>>" + s_time_picker + "\ncount>>" + s_count + "\nsession>>" + s_session_title);
 
                     Set<String> stringSet = editSessionMap.keySet();
                     List<String> aList = new ArrayList<String>(stringSet.size());
                     for (String x : stringSet)
                         aList.add(x);
-                    MyLog.e(TAG, "order>>date>>" + aList.get(0));
-                    String[] scb = (aList.get(0)).split("/");
-                    s_count = scb[1];
-                    count.setText(s_count);
-                    getViewModel.setS_count(s_count);
-
-                    String[] str = (scb[0]).split("!");
-                    e_session_title = str[0];
-                    String time = str[1];
-
+                    for (int i = 0; i < aList.size(); i++) {
+                        MyLog.e(TAG, "order>>date>>" + aList.get(i));
+                        String[] scb = (aList.get(i)).split("/");
+                        String[] str = (scb[0]).split("!");
+                        s_session_title = str[0];
+                        String time = str[1];
+                        if (s_count.equals(scb[1]) && (s_time_picker).equals(time)) {
+                            MyLog.e(TAG, "headerCoutn>> if>>"+s_count+">>"+time);
+                            s_count = scb[1];
+                            count.setText(s_count);
+                            getViewModel.setS_count(s_count);
+                            break;
+                        } else {
+                            continue;
+                        }
+                    }
                     //change 12:12 AM to 24-hrs time
                     SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
                     SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
                     String stime = null;
                     try {
-                        stime = date24Format.format(date12Format.parse(time));
+                        stime = date24Format.format(date12Format.parse(s_time_picker));
                     } catch (ParseException e) {
                         e.printStackTrace();
                         MyLog.e(TAG, "time>>error>>" + e.getMessage());
@@ -285,7 +292,7 @@ public class HeaderFragment extends Fragment {
 
                     //check the date and time selection
                     //check condition if lunch or breakfast
-                    getViewModel.CheckTime(e_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
+                    getViewModel.CheckTime(s_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
                 }
             }
         });

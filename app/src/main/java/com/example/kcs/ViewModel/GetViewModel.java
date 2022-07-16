@@ -1205,7 +1205,7 @@ public class GetViewModel extends AndroidViewModel {
 
         String date_time = s_date_picker_actions + " " + t_time;
         MyLog.e(TAG, "dateTime>>date_time>>" + date_time);
-        MyLog.e(TAG, "dateTime>>s_session_title>>" + s_session_title);
+        MyLog.e(TAG, "dateTimes>>s_session_title>>checkTime>>" + s_session_title);
         String start_dt, end_dt;
         if (s_session_title.equals("Breakfast") || s_session_title.equals("Break Fast")) {
 
@@ -1230,6 +1230,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     private void alertTime(String s_session_title, String start_dt, String end_dt, String date_time, int hourOfDay, int minute, String s_date_picker_actions, String funcTitle) {
+        MyLog.e(TAG, "dateTimes>>s_session_title>>alertTime>>" + s_session_title);
 
           /* MyLog.e(TAG,"dateTime>>startdate_time>>"+start_dt);
             MyLog.e(TAG,"dateTime>>endDateTime>>"+end_dt);
@@ -1237,6 +1238,7 @@ public class GetViewModel extends AndroidViewModel {
             MyLog.e(TAG,"dateTime>>end>>"+date_time.compareTo(end_dt));*/
 
         if (date_time.compareTo(start_dt) >= 0 && date_time.compareTo(end_dt) <= 0) {
+
             boolean isPM = (hourOfDay >= 12);
             String time = String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM");
             time_pickerMutable.postValue(time);
@@ -1251,7 +1253,7 @@ public class GetViewModel extends AndroidViewModel {
             String d = funcTitle + "-" + s_session_title;
             f_mapsdt.put(d, sessionDateTimes);
             f_mapsdtMutableLiveData.postValue(f_mapsdt);
-
+            session_titleMutable.postValue(s_session_title);
 
         } else {
             alertMutable.postValue(0);
