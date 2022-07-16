@@ -424,26 +424,113 @@ public class HeaderFragment extends Fragment {
                     mHour = c.get(Calendar.HOUR_OF_DAY);
                     mMinute = c.get(Calendar.MINUTE);
 
-                    // Launch Time Picker Dialog
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                            new TimePickerDialog.OnTimeSetListener() {
+                    String[] arr = (time_picker.getText().toString()).split("-");
+                    try {
 
-                                @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay,
-                                                      int minute) {
-                                    //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
-                                    // txtTime.setText(hourOfDay + ":" + minute);
+                        if ((arr[1]) == null) {
+                            String[] str = (time_picker.getText().toString()).split(" ");
+
+                            //change 12:12 AM to 24-hrs time
+                            SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                            SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
+                            String stime = null;
+                            try {
+                                stime = date24Format.format(date12Format.parse(time_picker.getText().toString()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                MyLog.e(TAG, "time>>error>>" + e.getMessage());
+                            }
+                            MyLog.e(TAG, "times>>" + stime);
+                            MyLog.e(TAG, "times>>\nhour>>" + mHour + "\nmin>>" + mMinute);
+
+                            // Launch Time Picker Dialog
+                            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                                    new TimePickerDialog.OnTimeSetListener() {
+
+                                        @Override
+                                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                                              int minute) {
+                                            //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
+                                            // txtTime.setText(hourOfDay + ":" + minute);
 
 
-                                    //check condition if lunch or breakfast
-                                    getViewModel.CheckTime(s_session_title, (date_picker_actions.getText().toString()), hourOfDay, minute, funcTitle);
+                                            //check condition if lunch or breakfast
+                                            getViewModel.CheckTime(s_session_title, (date_picker_actions.getText().toString()), hourOfDay, minute, funcTitle);
 
-                                    boolean isPM = (hourOfDay >= 12);
-                                    time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+                                            boolean isPM = (hourOfDay >= 12);
+                                            time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
 
-                                }
-                            }, mHour, mMinute, false);
-                    timePickerDialog.show();
+                                        }
+                                    }, mHour, mMinute, false);
+                            timePickerDialog.show();
+
+                        } else {
+                            // Launch Time Picker Dialog
+                            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                                    new TimePickerDialog.OnTimeSetListener() {
+
+                                        @Override
+                                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                                              int minute) {
+                                            //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
+                                            // txtTime.setText(hourOfDay + ":" + minute);
+
+
+                                            //check condition if lunch or breakfast
+                                            getViewModel.CheckTime(s_session_title, (date_picker_actions.getText().toString()), hourOfDay, minute, funcTitle);
+
+                                            boolean isPM = (hourOfDay >= 12);
+                                            time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+
+                                        }
+                                    }, mHour, mMinute, false);
+                            timePickerDialog.show();
+
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        MyLog.e(TAG, "times>>erroe>>" + e.getMessage());
+
+
+                        //change 12:12 AM to 24-hrs time
+                        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
+                        String stime = null;
+                        try {
+                            stime = date24Format.format(date12Format.parse(time_picker.getText().toString()));
+                        } catch (ParseException m) {
+                            m.printStackTrace();
+                            MyLog.e(TAG, "time>>error>>" + e.getMessage());
+                        }
+                        MyLog.e(TAG, "times>>" + stime);
+                        String[] str = stime.split(":");
+                        int mHour = Integer.parseInt(str[0]);
+                        int mMinute = Integer.parseInt(str[1]);
+                        MyLog.e(TAG, "times>>\nhour>>" + mHour + "\nmin>>" + mMinute);
+
+                        // Launch Time Picker Dialog
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                                new TimePickerDialog.OnTimeSetListener() {
+
+                                    @Override
+                                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                                          int minute) {
+                                        //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
+                                        // txtTime.setText(hourOfDay + ":" + minute);
+
+
+                                        //check condition if lunch or breakfast
+                                        getViewModel.CheckTime(s_session_title, (date_picker_actions.getText().toString()), hourOfDay, minute, funcTitle);
+
+                                        boolean isPM = (hourOfDay >= 12);
+                                        time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+
+                                    }
+                                }, mHour, mMinute, false);
+                        timePickerDialog.show();
+
+
+                    }
+
                 } else {
                     Toast.makeText(getContext(), "Please select date first", Toast.LENGTH_SHORT).show();
                 }
@@ -457,7 +544,7 @@ public class HeaderFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                MyLog.e(TAG,"day>>setText>>"+date_picker_actions.getText().toString());
+                MyLog.e(TAG, "day>>setText>>" + date_picker_actions.getText().toString());
 
                 if ((date_picker_actions.getText().toString()).isEmpty()) {
                     datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
@@ -469,11 +556,11 @@ public class HeaderFragment extends Fragment {
                         }
                     }, year, month, day);
                 } else {
-                    String[]arr=(date_picker_actions.getText().toString()).split("/");
-                    int day= Integer.parseInt(arr[0]);
-                    int month= Integer.parseInt(arr[1]);
-                    int year= Integer.parseInt(arr[2]);
-                    MyLog.e(TAG,"day>>"+day+"\nmonth>>"+month+"\nyear>>"+year);
+                    String[] arr = (date_picker_actions.getText().toString()).split("/");
+                    int day = Integer.parseInt(arr[0]);
+                    int month = Integer.parseInt(arr[1]);
+                    int year = Integer.parseInt(arr[2]);
+                    MyLog.e(TAG, "day>>" + day + "\nmonth>>" + month + "\nyear>>" + year);
                     datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
