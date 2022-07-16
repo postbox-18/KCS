@@ -140,8 +140,8 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<String> img_func_titleMutable = new MutableLiveData<>();
 
     //Img Func Hash map
-    private LinkedHashMap<String, List<ImgList>> if_f_map = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, List<ImgList>>> if_f_mapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, List<ImgList>> funImgMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<ImgList>>> funImgMapMutableLiveData = new MutableLiveData<>();
 
     //Selected Header title
     private String header_title;
@@ -584,7 +584,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<LinkedHashMap<String, List<ImgList>>> getIf_f_mapMutableLiveData() {
-        return if_f_mapMutableLiveData;
+        return funImgMapMutableLiveData;
     }
 
     public MutableLiveData<LinkedHashMap<String, List<SessionDateTime>>> getF_mapsdtMutableLiveData() {
@@ -924,7 +924,8 @@ public class GetViewModel extends AndroidViewModel {
 
                         //set img url list
                         imgLists.add(list);
-                        if_f_map.put(img_func_title, imgLists);
+
+                        funImgMap.put(img_func_title, imgLists);
                         //set img func list
                         ImgFunList funList = new ImgFunList(
                                 img_func_title
@@ -938,7 +939,7 @@ public class GetViewModel extends AndroidViewModel {
                 //set img fun list
                 img_funMutableList.postValue(img_funLists);
                 //set img url list
-                if_f_mapMutableLiveData.postValue(if_f_map);
+                funImgMapMutableLiveData.postValue(funImgMap);
 
             }
 

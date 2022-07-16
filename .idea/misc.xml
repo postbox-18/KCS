@@ -14,8 +14,10 @@
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/fragment_header.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/fragment_item.xml" value="0.25" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/fragment_my_orders.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/fragment_place_order.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/fun_activity.xml" value="0.25" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/header_layout.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/item_checkbox_list.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/list_cardview.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/myorder_cardview.xml" value="0.25" />
@@ -24,6 +26,7 @@
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/place_order_session.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/place_sheet_order_date.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/select_date.xml" value="0.25" />
+        <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/select_func.xml" value="0.23703703703703705" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/select_item_count.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/selected_item_list_cardview.xml" value="0.25" />
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/KCS/app/src/main/res/layout/view_cart_card_view.xml" value="0.24895833333333334" />

@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.kcs.Classes.ImgFunList;
+import com.example.kcs.Classes.ImgList;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.SharedPreferences_data;
 
@@ -102,6 +104,8 @@ public class MyOrdersFragment extends Fragment {
     private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
 
 
+
+
     public MyOrdersFragment() {
         // Required empty public constructor
     }
@@ -146,6 +150,9 @@ public class MyOrdersFragment extends Fragment {
         getViewModel.GetMyOrdersDetails(s_user_name);
 
         getViewModel.setFunc_Session(null);
+
+
+
 
         //clear editfunc map
         editFunc_Map.clear();
