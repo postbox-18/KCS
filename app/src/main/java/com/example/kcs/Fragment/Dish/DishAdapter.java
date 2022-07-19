@@ -30,6 +30,7 @@ import com.example.kcs.Fragment.Items.ItemList;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.SelectedDishList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -50,10 +51,23 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
     private LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>> headerMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>> sessionMap = new LinkedHashMap<>();
     private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<CheckedList>>>>> funcMap = new LinkedHashMap<>();
-    private String funcTitle, sessionTitle, header_title, item_title,s_count;
+    private String funcTitle, sessionTitle, header_title, item_title,s_count,oldDateTimeCount;
     private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
     private List<SelectedSessionList> selectedSessionLists = new ArrayList<>();
-
+    //Edit HashMap
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
+    //selected dish list
+    private List<SelectedDishList> selectedDishLists=new ArrayList<>();
+    private List<SelectedDishList> oldSelectedDishLists=new ArrayList<>();
 
 
     public DishAdapter(Context context, List<DishList> dishLists, GetViewModel getViewModel, List<LinkedHashMap<String, List<CheckedList>>> selected_s_map, LinkedHashMap<String, List<CheckedList>> itemMap) {
@@ -81,7 +95,13 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
             itemMap=new LinkedHashMap<>();
             MyLog.e(TAG,"itemMap is null");
         }
-
+        //get oldDateTimeCount
+        getViewModel.getOldDateTimeCountLiveData().observe((LifecycleOwner) context, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                oldDateTimeCount=s;
+            }
+        });
         //get head count
         getViewModel.getS_countLiveData().observe((LifecycleOwner) context, new Observer<String>() {
             @Override
@@ -123,6 +143,10 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
             @Override
             public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
                 sessionDateTimes = stringListLinkedHashMap.get(funcTitle + "-" + sessionTitle);
+                MyLog.e(TAG, "dateTimes>>s_session_title>>title>>" + funcTitle + "-" + sessionTitle);
+                MyLog.e(TAG, "dateTimes>>s_session_title>>stringListLinkedHashMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
+                MyLog.e(TAG, "dateTimes>>s_session_title>>sessionDateTimes>>" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
+
             }
         });
 
@@ -134,6 +158,16 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
             }
         });
 
+        //get edit fun map
+        getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> stringLinkedHashMapLinkedHashMap) {
+                editFunc_Map=stringLinkedHashMapLinkedHashMap;
+            }
+        });
+
+        final DishList dishLists1 = dishLists.get(position);
+
         //check if checked list item already selected
         if (selected_s_map.size() > 0) {
             for (int k = 0; k < selected_s_map.size(); k++) {
@@ -143,11 +177,13 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                         final CheckedList checkedLists1 = checkedLists.get(i);
                         MyLog.e(TAG, "checked>>" + checkedLists1.getPosition());
                         MyLog.e(TAG, "checked>>" + position);
-                        if (checkedLists1.getPosition() == position) {
+                        if (checkedLists1.getItemList().equals(dishLists1.getDish())) {
                             //MyLog.e(TAG, "checked>>" + checkedLists1.getItemList());
                             holder.dish_check.setChecked(true);
-
-                        }
+                        }/*if (checkedLists1.getPosition() == position) {
+                            //MyLog.e(TAG, "checked>>" + checkedLists1.getItemList());
+                            holder.dish_check.setChecked(true);
+                        }*/
                     }
                 } else {
                     checkedLists=new ArrayList<>();
@@ -162,7 +198,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
 
 
 
-        final DishList dishLists1 = dishLists.get(position);
+        //final DishList dishLists1 = dishLists.get(position);
         holder.dish_check.setText(dishLists1.getDish());
         if (dishLists1.getBoolens().equals("true")) {
             String[] str = (dishLists1.getDish()).split("-");
@@ -255,9 +291,45 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                     //set selected session
                     getViewModel.setSelectedSessionLists(selectedSessionLists);
 
+
+
+
+                    if(oldDateTimeCount!=null) {
+                        MyLog.e(TAG,"oldDateTimeCount is not null");
+
+                        //oldDateTimeCount
+                        String[] str = oldDateTimeCount.split("_");
+                        String oldDate = str[0];
+                        String oldTime = str[1];
+                        String oldCount = str[2];
+                        //set selected dish into edit item map
+                        for (int i = 0; i < checkedLists.size(); i++) {
+                            SelectedDishList list = new SelectedDishList(
+                                    checkedLists.get(i).getItemList()
+                            );
+                            selectedDishLists.add(list);
+                        }
+                        oldDate = oldDate.replace("/", "-");
+                        editDateMap = editFunc_Map.get(funcTitle);
+                        editSessionMap = editDateMap.get(oldDate);
+                        String s1 = sessionTitle + "!" + oldTime + "/" + oldCount;
+                        editHeaderMap = editSessionMap.get(s1);
+                        editItemMap = editHeaderMap.get(header_title);
+                    /*oldSelectedDishLists=new ArrayList<>();
+                    oldSelectedDishLists=editItemMap.get(item_title);*/
+                        editItemMap.put(item_title, selectedDishLists);
+                        getViewModel.setEditItemMap(editItemMap);
+                    }
+                    else
+                    {
+                        MyLog.e(TAG,"oldDateTimeCount is null");
+                    }
+
+
                     Gson gson = new Gson();
                     String json = gson.toJson(checkedLists);
                     new SharedPreferences_data(context).setChecked_item_list(json);
+
 
 
                 }

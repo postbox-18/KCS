@@ -48,8 +48,8 @@ public class GetViewModel extends AndroidViewModel {
     private List<HeaderList> headerList = new ArrayList<>();
 
     //refresh
-    private Integer refresh=-1;
-    private MutableLiveData<Integer> refreshLiveData=new MutableLiveData<>();
+    private Integer refresh = -1;
+    private MutableLiveData<Integer> refreshLiveData = new MutableLiveData<>();
 
     //func List
     private MutableLiveData<List<FunList>> funMutableList = new MutableLiveData<>();
@@ -140,8 +140,8 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<String> img_func_titleMutable = new MutableLiveData<>();
 
     //Img Func Hash map
-    private LinkedHashMap<String, List<ImgList>> if_f_map = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, List<ImgList>>> if_f_mapMutableLiveData = new MutableLiveData<>();
+    private LinkedHashMap<String, List<ImgList>> funImgMap = new LinkedHashMap<>();
+    private MutableLiveData<LinkedHashMap<String, List<ImgList>>> funImgMapMutableLiveData = new MutableLiveData<>();
 
     //Selected Header title
     private String header_title;
@@ -161,6 +161,10 @@ public class GetViewModel extends AndroidViewModel {
     //Fragment to pass
     private Integer i_value;
     private MutableLiveData<Integer> value = new MutableLiveData<>();
+
+    //Orders Empty
+    private Integer emptyValue=0;
+    private MutableLiveData<Integer> emptyValueLive = new MutableLiveData<>();
 
     //item Fragment
     private Integer i_fragment;
@@ -301,16 +305,34 @@ public class GetViewModel extends AndroidViewModel {
     //head count
     private String s_count;
     private MutableLiveData<String> s_countLiveData = new MutableLiveData<>();
+    //old DateTimeCount
+    private String oldDateTimeCount;
+    private MutableLiveData<String> oldDateTimeCountLiveData = new MutableLiveData<>();
 
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
         CheckUserDetails();
-
-
     }
 
+    public void setEmptyValue(Integer emptyValue) {
+        this.emptyValue = emptyValue;
+        this.emptyValueLive.postValue(emptyValue);
+    }
+
+    public MutableLiveData<Integer> getEmptyValueLive() {
+        return emptyValueLive;
+    }
+
+    public MutableLiveData<String> getOldDateTimeCountLiveData() {
+        return oldDateTimeCountLiveData;
+    }
+
+    public void setOldDateTimeCount(String oldDateTimeCount) {
+        this.oldDateTimeCount = oldDateTimeCount;
+        this.oldDateTimeCountLiveData.postValue(oldDateTimeCount);
+    }
 
     public MutableLiveData<Integer> getRefreshLiveData() {
         return refreshLiveData;
@@ -573,7 +595,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<LinkedHashMap<String, List<ImgList>>> getIf_f_mapMutableLiveData() {
-        return if_f_mapMutableLiveData;
+        return funImgMapMutableLiveData;
     }
 
     public MutableLiveData<LinkedHashMap<String, List<SessionDateTime>>> getF_mapsdtMutableLiveData() {
@@ -681,6 +703,11 @@ public class GetViewModel extends AndroidViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int size = 0;
                 MyLog.e(TAG, "onData>>snapshot>>" + snapshot);
+                if (snapshot.getValue() == null) {
+                    MyLog.e(TAG, "onData>>snapshot>> children is null" );
+
+                    emptyValueLive.postValue(1);
+                }
                 //o_myOrderFuncLists = new ArrayList<>();
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     //o_selectedSessionLists = new ArrayList<>();
@@ -913,7 +940,8 @@ public class GetViewModel extends AndroidViewModel {
 
                         //set img url list
                         imgLists.add(list);
-                        if_f_map.put(img_func_title, imgLists);
+
+                        funImgMap.put(img_func_title, imgLists);
                         //set img func list
                         ImgFunList funList = new ImgFunList(
                                 img_func_title
@@ -927,7 +955,7 @@ public class GetViewModel extends AndroidViewModel {
                 //set img fun list
                 img_funMutableList.postValue(img_funLists);
                 //set img url list
-                if_f_mapMutableLiveData.postValue(if_f_map);
+                funImgMapMutableLiveData.postValue(funImgMap);
 
             }
 
@@ -1194,7 +1222,7 @@ public class GetViewModel extends AndroidViewModel {
 
         String date_time = s_date_picker_actions + " " + t_time;
         MyLog.e(TAG, "dateTime>>date_time>>" + date_time);
-        MyLog.e(TAG, "dateTime>>s_session_title>>" + s_session_title);
+        MyLog.e(TAG, "dateTimes>>s_session_title>>checkTime>>" + s_session_title);
         String start_dt, end_dt;
         if (s_session_title.equals("Breakfast") || s_session_title.equals("Break Fast")) {
 
@@ -1219,6 +1247,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     private void alertTime(String s_session_title, String start_dt, String end_dt, String date_time, int hourOfDay, int minute, String s_date_picker_actions, String funcTitle) {
+        MyLog.e(TAG, "dateTimes>>s_session_title>>alertTime>>" + s_session_title);
 
           /* MyLog.e(TAG,"dateTime>>startdate_time>>"+start_dt);
             MyLog.e(TAG,"dateTime>>endDateTime>>"+end_dt);
@@ -1226,6 +1255,7 @@ public class GetViewModel extends AndroidViewModel {
             MyLog.e(TAG,"dateTime>>end>>"+date_time.compareTo(end_dt));*/
 
         if (date_time.compareTo(start_dt) >= 0 && date_time.compareTo(end_dt) <= 0) {
+
             boolean isPM = (hourOfDay >= 12);
             String time = String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM");
             time_pickerMutable.postValue(time);
@@ -1240,7 +1270,7 @@ public class GetViewModel extends AndroidViewModel {
             String d = funcTitle + "-" + s_session_title;
             f_mapsdt.put(d, sessionDateTimes);
             f_mapsdtMutableLiveData.postValue(f_mapsdt);
-
+            session_titleMutable.postValue(s_session_title);
 
         } else {
             alertMutable.postValue(0);
@@ -1303,8 +1333,7 @@ public class GetViewModel extends AndroidViewModel {
         editHeaderMapMutableLiveData.postValue(editHeaderMap);
         //set item map
         editItemMapMutableLiveData.postValue(editItemMap);
-
-
+        MyLog.e(TAG, "editOrders>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
     }
 
@@ -1321,6 +1350,10 @@ public class GetViewModel extends AndroidViewModel {
         time_pickerMutable.postValue(dTime);
         //set head count
         s_countLiveData.postValue(count);
+
+        //set old date time count
+        String oldDateTimeCount = date + "_" + dTime + "_" + count;
+        oldDateTimeCountLiveData.postValue(oldDateTimeCount);
 
 
 /*
@@ -1388,66 +1421,83 @@ public class GetViewModel extends AndroidViewModel {
             }
         }*/
 
-
-        ///////////////**GET POSITION FOR DISH ITEM************/////////
-        MyLog.e(TAG,"edit_dish>>d_ItemMap header_title"+header_title);
-        d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
-        ///////////////**END END GET POSITION FOR DISH ITEMEND END ************/////////
-
-
-        Set<String> set = editItemMap.keySet();
-        List<String> aList1 = new ArrayList<String>(set.size());
-        for (String x1 : set)
-            aList1.add(x1);
-
-        selectedItemLists = new ArrayList<>();
-        for (int i = 0; i < aList1.size(); i++) {
-            SelectedItemList itemList = new SelectedItemList();
-            String[] str = (aList1.get(i)).split("_");
-            itemList.setItem(str[0]);
-            itemList.setSelected(str[1]);
-            selectedItemLists.add(itemList);
+        //ge edit header list
+        Set<String> set3 = editHeaderMap.keySet();
+        List<String> aList13 = new ArrayList<String>(set3.size());
+        for (String x13 : set3)
+            aList13.add(x13);
+        selectedHeadersList = new ArrayList<>();
+        for (int i = 0; i < aList13.size(); i++) {
+            SelectedHeader selectedHeader = new SelectedHeader(
+                    aList13.get(i)
+            );
+            selectedHeadersList.add(selectedHeader);
         }
+
+
         e_ItemMap = new LinkedHashMap<>();
 
+        for (int n = 0; n < selectedHeadersList.size(); n++) {
+            String header_title = selectedHeadersList.get(n).getHeader();
+            ///////////////**GET POSITION FOR DISH ITEM************/////////
+            //get item map
+            MyLog.e(TAG, "editOrders>>get header_title" + header_title);
+            d_DishMap = new LinkedHashMap<>();
+            d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
 
-        for (int i = 0; i < selectedItemLists.size(); i++) {
-            String item = selectedItemLists.get(i).getItem() + "_" + selectedItemLists.get(i).getSelected();
 
-            dishLists=new ArrayList<>();
-            ////////////**********************//////////////
-            dishLists=d_DishMap.get(item);
+            //get edit item map
+            editItemMap = new LinkedHashMap<>();
+            editItemMap = editHeaderMap.get(header_title);
 
-            ////////////**********************//////////////
 
-            selectedDishLists = new ArrayList<>();
-            selectedDishLists = editItemMap.get(item);
-            checkedLists = new ArrayList<>();
-            for (int j = 0; j < selectedDishLists.size(); j++) {
-                String e_dish=selectedDishLists.get(j).getDish();
-                for(int l=0;l<dishLists.size();l++)
-                {
-                    String dish=dishLists.get(l).getDish();
-                    if(e_dish.equals(dish)) {
-                        CheckedList checkedList = new CheckedList(
-                                e_dish,
-                                l
-                        );
-                        checkedLists.add(checkedList);
+            Set<String> set = editItemMap.keySet();
+            List<String> aList1 = new ArrayList<String>(set.size());
+            for (String x1 : set)
+                aList1.add(x1);
+
+            selectedItemLists = new ArrayList<>();
+            for (int w = 0; w < aList1.size(); w++) {
+                SelectedItemList itemList = new SelectedItemList();
+                String[] str = (aList1.get(w)).split("_");
+                itemList.setItem(str[0]);
+                itemList.setSelected(str[1]);
+                selectedItemLists.add(itemList);
+            }
+            ///////////////**END END GET POSITION FOR DISH ITEMEND END ************/////////
+            for (int i = 0; i < selectedItemLists.size(); i++) {
+                String item = selectedItemLists.get(i).getItem() + "_" + selectedItemLists.get(i).getSelected();
+
+                MyLog.e(TAG, "editOrders>>get item title>>" + item);
+                selectedDishLists = new ArrayList<>();
+                selectedDishLists = editItemMap.get(item);
+
+                dishLists = new ArrayList<>();
+                dishLists = d_DishMap.get(item);
+
+                checkedLists = new ArrayList<>();
+                for (int j = 0; j < selectedDishLists.size(); j++) {
+                    String e_dish = selectedDishLists.get(j).getDish();
+                    for (int l = 0; l < dishLists.size(); l++) {
+                        String dish = dishLists.get(l).getDish();
+                        if (e_dish.equals(dish)) {
+                            CheckedList checkedList = new CheckedList(
+                                    e_dish,
+                                    l
+                            );
+                            checkedLists.add(checkedList);
+                        } else {
+                            continue;
+                        }
+
+
                     }
-                    else
-                    {
-                        continue;
-                    }
 
+                    e_ItemMap.put(item, checkedLists);
 
                 }
-
-                e_ItemMap.put(item, checkedLists);
-
             }
         }
-
 
         edit_selected_s_map.add(e_ItemMap);
         check_s_mapMutable.postValue(edit_selected_s_map);
@@ -1515,28 +1565,27 @@ public class GetViewModel extends AndroidViewModel {
                 //set replace bolen
                 for (int l = 0; l < c_selectedHeaders.size(); l++) {
                     header_title = c_selectedHeaders.get(l).getHeader();
-                    editItemMap=editHeaderMap.get(header_title);
+                    editItemMap = editHeaderMap.get(header_title);
 
                     Set<String> stringSet2 = editItemMap.keySet();
                     List<String> aList2 = new ArrayList<String>(stringSet2.size());
                     for (String x2 : stringSet2)
                         aList2.add(x2);
-                    selectedItemLists=new ArrayList<>();
-                    for(int p=0;p<aList2.size();p++)
-                    {
-                        String[]arr=(aList2.get(p)).split("_");
-                        SelectedItemList list=new SelectedItemList();
+                    selectedItemLists = new ArrayList<>();
+                    for (int p = 0; p < aList2.size(); p++) {
+                        String[] arr = (aList2.get(p)).split("_");
+                        SelectedItemList list = new SelectedItemList();
                         list.setItem(arr[0]);
                         list.setSelected(arr[1]);
                         selectedItemLists.add(list);
                     }
                     for (int k = 0; k < selectedItemLists.size(); k++) {
 
-                        String item=selectedItemLists.get(k).getItem()+"_"+selectedItemLists.get(k).getSelected();
-                        selectedDishLists=new ArrayList<>();
-                        selectedDishLists=editItemMap.get(item);
-                        for(int q=0;q<selectedDishLists.size();q++) {
-                            MyLog.e(TAG, "cancels>>\nfunc>>"+func_title+"\ndate>>"+date+"\nsess>>"+newData+"\nheader>>"+header_title+"\nitem>>"+item+"\ndish>>"+selectedDishLists.get(q).getDish());
+                        String item = selectedItemLists.get(k).getItem() + "_" + selectedItemLists.get(k).getSelected();
+                        selectedDishLists = new ArrayList<>();
+                        selectedDishLists = editItemMap.get(item);
+                        for (int q = 0; q < selectedDishLists.size(); q++) {
+                            MyLog.e(TAG, "cancels>>\nfunc>>" + func_title + "\ndate>>" + date + "\nsess>>" + newData + "\nheader>>" + header_title + "\nitem>>" + item + "\ndish>>" + selectedDishLists.get(q).getDish());
                             MyLog.e(TAG, "cancels>> add commit");
                             databaseReference.child(func_title).child(date).child(newData).child(header_title).child(item).child(String.valueOf(q)).setValue(selectedDishLists.get(q).getDish());
                         }

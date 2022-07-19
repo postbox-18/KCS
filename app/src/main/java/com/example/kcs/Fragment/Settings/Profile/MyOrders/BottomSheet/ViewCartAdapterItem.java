@@ -8,6 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.SelectedDishList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -40,7 +43,17 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
     private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     private List<SelectedItemList> selectedItemLists = new ArrayList<>();
     private String session_title,bolen;
-
+    //Edit HashMap
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
 
     public ViewCartAdapterItem(Context context, GetViewModel getViewModel, List<SelectedItemList> selectedItemLists, LinkedHashMap<String, List<OrderDishLists>> orderItemMap, String func_title, String header, String sess, String date) {
         this.context = context;
@@ -89,6 +102,7 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
         } else if (bolen.equals("false")) {
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
         }
+
 
 
         orderDishListsses=orderItemMap.get(item);

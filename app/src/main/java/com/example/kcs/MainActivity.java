@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private List<DishList> dishLists = new ArrayList<>();
     private UserDishListAdapters userDishListAdapters;
-    private String headerList_title, func_title, session_title, date, item_title;
+    private String headerList_title, func_title, session_title, date, item_title,oldDateTimeCount;
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<FunList> funLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
@@ -242,6 +242,8 @@ public class MainActivity extends AppCompatActivity {
                 date = s;
             }
         });
+
+
         //get selected session list
         getViewModel.getSelectedSessionListsMutableLiveData().observe(this, new Observer<List<SelectedSessionList>>() {
             @Override
@@ -277,10 +279,16 @@ public class MainActivity extends AppCompatActivity {
 
                             MyLog.e(TAG, "placeorder>>get date_time>>" + date_time);
                             headerMap = sessionMap.get(date_time);
-                            MyLog.e(TAG, "dish>>headerList_title>>" +headerList_title);
-
+                            MyLog.e(TAG, "dish>>headerList_title>>" + headerList_title);
+                            if (headerMap == null) {
+                                MyLog.e(TAG, "dish>>headerMap is null");
+                                snackbar.dismiss();
+                            }
+                            else
+                            {
                             itemMap = headerMap.get(headerList_title);
                             MyLog.e(TAG, "dish>>item_title>>" + item_title);
+
 
                             Set<String> stringSet = itemMap.keySet();
                             List<String> aList = new ArrayList<String>(stringSet.size());
@@ -308,6 +316,7 @@ public class MainActivity extends AppCompatActivity {
                                 snackbar.dismiss();
                             }
                             break;
+                        }
                         } else {
                             continue;
                         }
@@ -399,6 +408,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         snackbar.dismiss();
+
+
+
                         //get func title is selected
                         //GetFuncTitleList(funLists, stringListLinkedHashMap, integer);
                         MyLog.e(TAG, "integer>>int>>" + integer);

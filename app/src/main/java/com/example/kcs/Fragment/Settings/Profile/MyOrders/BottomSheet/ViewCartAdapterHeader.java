@@ -18,6 +18,7 @@ import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.SelectedDishList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -47,6 +48,17 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
     //Item map
     private LinkedHashMap<String, List<OrderDishLists>> orderItemMap = new LinkedHashMap<>();
     private List<SelectedItemList> selectedItemLists =new ArrayList<>();
+    //Edit HashMap
+    //func map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Map = new LinkedHashMap<>();
+    //Date map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>> editDateMap = new LinkedHashMap<>();
+    //Session map
+    private LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>> editSessionMap = new LinkedHashMap<>();
+    //Header map
+    private LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> editHeaderMap = new LinkedHashMap<>();
+    //Item map
+    private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
 
 
     public ViewCartAdapterHeader(Context context, GetViewModel getViewModel, List<SelectedHeader> selectedHeadersList, String session_title, String func_title, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>> orderHeaderMap, String date) {
@@ -88,6 +100,16 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
         } else if (bolen.equals("false")) {
             holder.header_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
         }
+
+        //get edit item map to new hashmap()
+        getViewModel.getEditItemMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedDishList>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, List<SelectedDishList>> stringListLinkedHashMap) {
+                editItemMap=new LinkedHashMap<>(stringListLinkedHashMap);
+                getViewModel.setEditItemMap(editItemMap);
+            }
+        });
+
 
 
         //o_orderDishListsses = orderHeaderMap.get(list.getHeader());

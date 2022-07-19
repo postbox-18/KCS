@@ -75,7 +75,7 @@ public class HeaderFragment extends Fragment {
     //date and time
     private TextView date_picker_actions;
     private TextView time_picker, count;
-    private String funcTitle, s_time_picker, s_date_picker_actions, e_session_title, date_time, s_count;
+    private String funcTitle, s_time_picker, s_date_picker_actions, date_time, s_count, oldDateTimeCount;
     private DatePickerDialog datePicker;
     private List<TimeList> timeLists = new ArrayList<>();
 
@@ -221,13 +221,19 @@ public class HeaderFragment extends Fragment {
             }
         });
 
-        //get edit func map
+        //get oldDateTimeCount
+        getViewModel.getOldDateTimeCountLiveData().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                oldDateTimeCount = s;
+            }
+        });
 
         //get edit func map
         getViewModel.getEditFuncMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
+                editFunc_Map = stringLinkedHashMapLinkedHashMap;
                 editDateMap = editFunc_Map.get(funcTitle);
                 MyLog.e(TAG, "order>>funcTitle>>" + funcTitle);
                 if (editDateMap == null) {
@@ -237,28 +243,44 @@ public class HeaderFragment extends Fragment {
                 } else {
                     MyLog.e(TAG, "edits>>date " + s_date_picker_actions);
                     String date = s_date_picker_actions.replace("/", "-");
-                    editSessionMap = editDateMap.get(date);
+                    //oldDateTimeCount
+                    String[] arr = oldDateTimeCount.split("_");
+                    String oldDate = arr[0];
+                    String oldTime = arr[1];
+                    String oldCount = arr[2];
+                    MyLog.e(TAG, "edits>>oldDate " + oldDate);
+                    oldDate = oldDate.replace("/", "-");
+
+
+                    editSessionMap = editDateMap.get(oldDate);
+                    MyLog.e(TAG, "headerCoutn>>\ntime>>" + s_time_picker + "\ncount>>" + s_count + "\nsession>>" + s_session_title);
 
                     Set<String> stringSet = editSessionMap.keySet();
                     List<String> aList = new ArrayList<String>(stringSet.size());
                     for (String x : stringSet)
                         aList.add(x);
-                    MyLog.e(TAG, "order>>date>>" + aList.get(0));
-                    String[] scb = (aList.get(0)).split("/");
-                    s_count = scb[1];
-                    count.setText(s_count);
-                    getViewModel.setS_count(s_count);
-
-                    String[] str = (scb[0]).split("!");
-                    e_session_title = str[0];
-                    String time = str[1];
-
+                    for (int i = 0; i < aList.size(); i++) {
+                        MyLog.e(TAG, "order>>date>>" + aList.get(i));
+                        String[] scb = (aList.get(i)).split("/");
+                        String[] str = (scb[0]).split("!");
+                        s_session_title = str[0];
+                        String time = str[1];
+                        if (s_count.equals(scb[1]) && (s_time_picker).equals(time)) {
+                            MyLog.e(TAG, "headerCoutn>> if>>"+s_count+">>"+time);
+                            s_count = scb[1];
+                            count.setText(s_count);
+                            getViewModel.setS_count(s_count);
+                            break;
+                        } else {
+                            continue;
+                        }
+                    }
                     //change 12:12 AM to 24-hrs time
                     SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
                     SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
                     String stime = null;
                     try {
-                        stime = date24Format.format(date12Format.parse(time));
+                        stime = date24Format.format(date12Format.parse(s_time_picker));
                     } catch (ParseException e) {
                         e.printStackTrace();
                         MyLog.e(TAG, "time>>error>>" + e.getMessage());
@@ -270,7 +292,7 @@ public class HeaderFragment extends Fragment {
 
                     //check the date and time selection
                     //check condition if lunch or breakfast
-                    getViewModel.CheckTime(e_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
+                    getViewModel.CheckTime(s_session_title, date, Integer.parseInt(hrs[0]), Integer.parseInt(hrs[1]), funcTitle);
                 }
             }
         });
@@ -409,26 +431,113 @@ public class HeaderFragment extends Fragment {
                     mHour = c.get(Calendar.HOUR_OF_DAY);
                     mMinute = c.get(Calendar.MINUTE);
 
-                    // Launch Time Picker Dialog
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                            new TimePickerDialog.OnTimeSetListener() {
+                    String[] arr = (time_picker.getText().toString()).split("-");
+                    try {
 
-                                @Override
-                                public void onTimeSet(TimePicker view, int hourOfDay,
-                                                      int minute) {
-                                    //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
-                                    // txtTime.setText(hourOfDay + ":" + minute);
+                        if ((arr[1]) == null) {
+                            String[] str = (time_picker.getText().toString()).split(" ");
+
+                            //change 12:12 AM to 24-hrs time
+                            SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                            SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
+                            String stime = null;
+                            try {
+                                stime = date24Format.format(date12Format.parse(time_picker.getText().toString()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                                MyLog.e(TAG, "time>>error>>" + e.getMessage());
+                            }
+                            MyLog.e(TAG, "times>>" + stime);
+                            MyLog.e(TAG, "times>>\nhour>>" + mHour + "\nmin>>" + mMinute);
+
+                            // Launch Time Picker Dialog
+                            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                                    new TimePickerDialog.OnTimeSetListener() {
+
+                                        @Override
+                                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                                              int minute) {
+                                            //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
+                                            // txtTime.setText(hourOfDay + ":" + minute);
 
 
-                                    //check condition if lunch or breakfast
-                                    getViewModel.CheckTime(s_session_title, (date_picker_actions.getText().toString()), hourOfDay, minute, funcTitle);
+                                            //check condition if lunch or breakfast
+                                            getViewModel.CheckTime(s_session_title, (date_picker_actions.getText().toString()), hourOfDay, minute, funcTitle);
 
-                                    boolean isPM = (hourOfDay >= 12);
-                                    time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+                                            boolean isPM = (hourOfDay >= 12);
+                                            time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
 
-                                }
-                            }, mHour, mMinute, false);
-                    timePickerDialog.show();
+                                        }
+                                    }, mHour, mMinute, false);
+                            timePickerDialog.show();
+
+                        } else {
+                            // Launch Time Picker Dialog
+                            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                                    new TimePickerDialog.OnTimeSetListener() {
+
+                                        @Override
+                                        public void onTimeSet(TimePicker view, int hourOfDay,
+                                                              int minute) {
+                                            //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
+                                            // txtTime.setText(hourOfDay + ":" + minute);
+
+
+                                            //check condition if lunch or breakfast
+                                            getViewModel.CheckTime(s_session_title, (date_picker_actions.getText().toString()), hourOfDay, minute, funcTitle);
+
+                                            boolean isPM = (hourOfDay >= 12);
+                                            time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+
+                                        }
+                                    }, mHour, mMinute, false);
+                            timePickerDialog.show();
+
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        MyLog.e(TAG, "times>>erroe>>" + e.getMessage());
+
+
+                        //change 12:12 AM to 24-hrs time
+                        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
+                        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm");
+                        String stime = null;
+                        try {
+                            stime = date24Format.format(date12Format.parse(time_picker.getText().toString()));
+                        } catch (ParseException m) {
+                            m.printStackTrace();
+                            MyLog.e(TAG, "time>>error>>" + e.getMessage());
+                        }
+                        MyLog.e(TAG, "times>>" + stime);
+                        String[] str = stime.split(":");
+                        int mHour = Integer.parseInt(str[0]);
+                        int mMinute = Integer.parseInt(str[1]);
+                        MyLog.e(TAG, "times>>\nhour>>" + mHour + "\nmin>>" + mMinute);
+
+                        // Launch Time Picker Dialog
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                                new TimePickerDialog.OnTimeSetListener() {
+
+                                    @Override
+                                    public void onTimeSet(TimePicker view, int hourOfDay,
+                                                          int minute) {
+                                        //String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"
+                                        // txtTime.setText(hourOfDay + ":" + minute);
+
+
+                                        //check condition if lunch or breakfast
+                                        getViewModel.CheckTime(s_session_title, (date_picker_actions.getText().toString()), hourOfDay, minute, funcTitle);
+
+                                        boolean isPM = (hourOfDay >= 12);
+                                        time_picker.setText(String.format("%02d:%02d %s", (hourOfDay == 12 || hourOfDay == 0) ? 12 : hourOfDay % 12, minute, isPM ? "PM" : "AM"));
+
+                                    }
+                                }, mHour, mMinute, false);
+                        timePickerDialog.show();
+
+
+                    }
+
                 } else {
                     Toast.makeText(getContext(), "Please select date first", Toast.LENGTH_SHORT).show();
                 }
@@ -441,15 +550,34 @@ public class HeaderFragment extends Fragment {
         date_picker_actions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
-                        // adding the selected date in the edittext
-                        date_picker_actions.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
-                        getViewModel.setDate_picker(date_picker_actions.getText().toString());
-                    }
-                }, year, month, day);
 
+                MyLog.e(TAG, "day>>setText>>" + date_picker_actions.getText().toString());
+
+                if ((date_picker_actions.getText().toString()).isEmpty()) {
+                    datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
+                            // adding the selected date in the edittext
+                            date_picker_actions.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+                            getViewModel.setDate_picker(date_picker_actions.getText().toString());
+                        }
+                    }, year, month, day);
+                } else {
+                    String[] arr = (date_picker_actions.getText().toString()).split("/");
+                    int day = Integer.parseInt(arr[0]);
+                    int month = Integer.parseInt(arr[1]);
+                    int year = Integer.parseInt(arr[2]);
+                    MyLog.e(TAG, "day>>" + day + "\nmonth>>" + month + "\nyear>>" + year);
+                    datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(android.widget.DatePicker view, int year, int month, int dayOfMonth) {
+                            // adding the selected date in the edittext
+                            date_picker_actions.setText(dayOfMonth + "/" + (month) + "/" + year);
+                            getViewModel.setDate_picker(date_picker_actions.getText().toString());
+                        }
+                    }, year, month, day);
+
+                }
                 // set minimum date to be selected as today
                 datePicker.getDatePicker().setMinDate(calendar.getTimeInMillis());
 
@@ -467,7 +595,8 @@ public class HeaderFragment extends Fragment {
                 builder.setTitle("Head Count");
                 LinearLayout linearLayout = new LinearLayout(getContext());
                 final EditText countEdit = new EditText(getContext());
-                if(!(countEdit.getText().toString()).isEmpty()) {
+
+                if (!(count.getText().toString()).isEmpty()) {
                     countEdit.setText(count.getText().toString());
                 }
                 // write the email using which you registered

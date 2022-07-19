@@ -43,7 +43,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private List<SelectedSessionList> e_sessionLists = new ArrayList<>();
     private BottomSheetDialog bottomSheet;
     //edit hash map list
-    private List<SelectedDishList> selectedDishLists=new ArrayList<>();
+    private List<SelectedDishList> selectedDishLists = new ArrayList<>();
     private List<SessionDateTime> sessionDateTimes = new ArrayList<>();
     //cancel map
     //Edit HashMap
@@ -100,7 +100,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         //get user name shared prefernces
         s_user_name = new SharedPreferences_data(context).getS_user_name();
         //clear
-///////////***************************clear list in live data model****************************//////////////////////
+        ///////////***************************clear list in live data model****************************//////////////////////
         //get Edit Delete Cancel value
         getViewModel.getEcdLive().observe((LifecycleOwner) context, new Observer<Integer>() {
             @Override
@@ -114,7 +114,9 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         getViewModel.getEditItemMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedDishList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SelectedDishList>> stringListLinkedHashMap) {
-                editItemMap=stringListLinkedHashMap;
+                editItemMap = stringListLinkedHashMap;
+                //editItemMap = new LinkedHashMap<>();
+                getViewModel.setEditItemMap(editItemMap);
             }
         });
         ///////////***************************clear list in live data model****************************//////////////////////
@@ -124,7 +126,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         getViewModel.getEditFuncMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> stringLinkedHashMapLinkedHashMap) {
-                editFunc_Map=stringLinkedHashMapLinkedHashMap;
+                editFunc_Map = stringLinkedHashMapLinkedHashMap;
             }
         });
         //get edit selected header and session list
@@ -138,12 +140,11 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
 
         e_sessionLists = new ArrayList<>();
         getViewModel.setE_sessionLists(e_sessionLists);
-        editItemMap = new LinkedHashMap<>();
-        getViewModel.setEditItemMap(editItemMap);
 
 
 
         final SelectedSessionList list = o_selectedSessionLists.get(position);
+
 
         //set session date time bolen
         String sess_date = list.getSession_title() + "!" + list.getTime() + "-" + list.getS_count() + "_" + list.getBolen();
@@ -210,6 +211,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MyLog.e(TAG, "s_counts>>sess set >>" + sess_date);
                 alertDialog(sess_date, 0, list.getBolen());
             }
         });
@@ -231,6 +233,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     }
 
     private void alertDialog(String session_title, int n, String bolen) {
+        MyLog.e(TAG, "s_counts>>sess set alertDialog >>" + session_title);
 
         String[] scb = session_title.split("-");
         String[] cb = (scb[1]).split("_");
