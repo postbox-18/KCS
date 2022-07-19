@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.kcs.Classes.ImgFunList;
@@ -67,6 +68,7 @@ public class MyOrdersFragment extends Fragment {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private String TAG = "MyOrdersFragment";
+    private LinearLayout no_record,myorders;
 
     private LinkedHashMap<String, List<MyOrdersList>> myordersHashMap = new LinkedHashMap<>();
     private LinkedHashMap<String, List<SelectedHeader>> selectedHeaderMap = new LinkedHashMap<>();
@@ -104,8 +106,6 @@ public class MyOrdersFragment extends Fragment {
     private LinkedHashMap<String, List<SelectedDishList>> editItemMap = new LinkedHashMap<>();
 
 
-
-
     public MyOrdersFragment() {
         // Required empty public constructor
     }
@@ -137,6 +137,8 @@ public class MyOrdersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_my_orders, container, false);
 
         back_btn = view.findViewById(R.id.back_btn);
+        no_record = view.findViewById(R.id.no_record);
+        myorders = view.findViewById(R.id.myorders);
         recyclerview_my_orders = view.findViewById(R.id.recyclerview_my_orders);
 
 
@@ -152,7 +154,18 @@ public class MyOrdersFragment extends Fragment {
         getViewModel.setFunc_Session(null);
 
 
+        //get empty value
+        getViewModel.getEmptyValueLive().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                if (integer == 1) {
+                    no_record.setVisibility(View.VISIBLE);
+                    myorders.setVisibility(View.GONE);
 
+                }
+                getViewModel.setEmptyValue(0);
+            }
+        });
 
         //clear editfunc map
         editFunc_Map.clear();
@@ -208,7 +221,7 @@ public class MyOrdersFragment extends Fragment {
 
                     bottomSheet.setContentView(bottom_view);
                     bottomSheet.show();
-                    if (s_orderFunc_Map == null || s_orderFunc_Map.size()==0) {
+                    if (s_orderFunc_Map == null || s_orderFunc_Map.size() == 0) {
                         s_orderFunc_Map = new LinkedHashMap<>();
                         MyLog.e(TAG, "s_orderFunc_Map is null");
 

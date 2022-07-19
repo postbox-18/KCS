@@ -162,6 +162,10 @@ public class GetViewModel extends AndroidViewModel {
     private Integer i_value;
     private MutableLiveData<Integer> value = new MutableLiveData<>();
 
+    //Orders Empty
+    private Integer emptyValue=0;
+    private MutableLiveData<Integer> emptyValueLive = new MutableLiveData<>();
+
     //item Fragment
     private Integer i_fragment;
     private MutableLiveData<Integer> i_fragmentMutable = new MutableLiveData<>();
@@ -310,8 +314,15 @@ public class GetViewModel extends AndroidViewModel {
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
         CheckUserDetails();
+    }
 
+    public void setEmptyValue(Integer emptyValue) {
+        this.emptyValue = emptyValue;
+        this.emptyValueLive.postValue(emptyValue);
+    }
 
+    public MutableLiveData<Integer> getEmptyValueLive() {
+        return emptyValueLive;
     }
 
     public MutableLiveData<String> getOldDateTimeCountLiveData() {
@@ -692,6 +703,11 @@ public class GetViewModel extends AndroidViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int size = 0;
                 MyLog.e(TAG, "onData>>snapshot>>" + snapshot);
+                if (snapshot.getValue() == null) {
+                    MyLog.e(TAG, "onData>>snapshot>> children is null" );
+
+                    emptyValueLive.postValue(1);
+                }
                 //o_myOrderFuncLists = new ArrayList<>();
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     //o_selectedSessionLists = new ArrayList<>();
@@ -1336,7 +1352,7 @@ public class GetViewModel extends AndroidViewModel {
         s_countLiveData.postValue(count);
 
         //set old date time count
-        String oldDateTimeCount=date+"_"+dTime+"_"+count;
+        String oldDateTimeCount = date + "_" + dTime + "_" + count;
         oldDateTimeCountLiveData.postValue(oldDateTimeCount);
 
 
@@ -1431,8 +1447,8 @@ public class GetViewModel extends AndroidViewModel {
 
 
             //get edit item map
-            editItemMap=new LinkedHashMap<>();
-            editItemMap=editHeaderMap.get(header_title);
+            editItemMap = new LinkedHashMap<>();
+            editItemMap = editHeaderMap.get(header_title);
 
 
             Set<String> set = editItemMap.keySet();
@@ -1456,8 +1472,8 @@ public class GetViewModel extends AndroidViewModel {
                 selectedDishLists = new ArrayList<>();
                 selectedDishLists = editItemMap.get(item);
 
-                dishLists=new ArrayList<>();
-                dishLists=d_DishMap.get(item);
+                dishLists = new ArrayList<>();
+                dishLists = d_DishMap.get(item);
 
                 checkedLists = new ArrayList<>();
                 for (int j = 0; j < selectedDishLists.size(); j++) {

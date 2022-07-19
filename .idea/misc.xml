@@ -86,7 +86,8 @@
         <entry key="app/src/main/res/layout/img_activity.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/item_cardview_list.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/item_checkbox_list.xml" value="0.19375" />
-        <entry key="app/src/main/res/layout/layout_breadcrums.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/layout_breadcrums.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/layout_no_record.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/list_cardview.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/myorder_cardview.xml" value="0.18" />
         <entry key="app/src/main/res/layout/myorderlist_cardview.xml" value="0.19375" />
