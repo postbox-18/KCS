@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Fragments.Control_Panel.Control_PanelFragment;
@@ -22,6 +23,7 @@ import com.google.gson.GsonBuilder;
 public class MainActivity extends AppCompatActivity {
     private String TAG = "MainActivity";
     private GetViewModel getViewModel;
+    private SwipeRefreshLayout refreshLayout;
     private int integer = -1;
 
     @Override
@@ -30,25 +32,39 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
 
+        refreshLayout=findViewById(R.id.refreshLayout);
+
         MyLog.e(TAG, "logout>> main activity ");
+        //onclick swipe down
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getViewModel.setRefresh(0);
+                refreshLayout.setRefreshing(false);
+            }
+        });
 
         //get refresh
         getViewModel.getRefreshLiveData().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer1) {
                 integer = integer1;
-                finish();
-                startActivity(getIntent());
-                getViewModel.setI_value(integer);
-                MyLog.e(TAG, "maps>>itemArrayListMap set>");
+                if(integer==0) {
+                    finish();
+                    startActivity(getIntent());
+                    getViewModel.setI_value(integer);
+                    MyLog.e(TAG, "maps>>itemArrayListMap set>");
+                    integer=1;
+                }
+
 
             }
         });
 
 
         //load data base
-        getViewModel.GetOrdesList();
         getViewModel.GetUserList();
+        getViewModel.GetOrdesList();
         //getViewModel.GetSessionList();
         /*getViewModel.GetHeader();
         getViewModel.GetFun();
@@ -112,12 +128,19 @@ public class MainActivity extends AppCompatActivity {
             MyLog.i(TAG, "onBackPressedAct:onBackPressed pop:");
             //super.onBackPressed();
             getSupportFragmentManager().popBackStackImmediate();
+            MyLog.e(TAG, "breadcrumbs>>onBackPressedAct:onBackPressed out:");
+            String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
+            MyLog.e(TAG, "breadcrumbs>>onBackPressedAct:onBackPressed out:"+tag);
+            if(tag.equals("HomeFragment"))
+            {
+                getViewModel.setRefresh(0);
+            }
         } else {
             super.onBackPressed();
             MyLog.i(TAG, "onBackPressedAct:onBackPressed in:");
             //snack
-
         }
+
 
     }
 }

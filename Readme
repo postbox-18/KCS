@@ -5,22 +5,23 @@ https://stackoverflow.com/questions/31253555/how-do-i-create-a-circular-endless-
 
 
 Pending
-1-Control Panel update header and also change in database which have data
-2-control panel edit and remove data
-
+6-Show orders username in one cardview into func
+7-
 
 
 Solved
+1-Control Panel update header and also change in database which have data
 1-add phone to order save list in base
         999999999
         |
         ----fun
         |
         ----nv
+2-cancel order delete after 15days
 2-add func name in base
         |
         ----fun
         |
         ----nv
 4-login activity add then get data from base
-2-cancel order delete after 15days
+5-control panel edit and remove data

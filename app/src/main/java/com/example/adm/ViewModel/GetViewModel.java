@@ -101,9 +101,7 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<LinkedHashMap<String, List<DishList>>> dishListMapMutableLiveData = new MutableLiveData<>();
     //session list
     private List<SessionList> sessionLists = new ArrayList<>();
-    /*private LinkedHashMap<String, List<SessionList>> ss_f_map = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, List<SessionList>>> ss_f_mapMutableLiveData = new MutableLiveData<>();
-*/
+
 
     //updated list
     private List<UpdatedList> updatedLists = new ArrayList<>();
@@ -112,23 +110,15 @@ public class GetViewModel extends AndroidViewModel {
     //selected Item list
     private List<OrderDishLists> orderDishLists = new ArrayList<>();
     private MutableLiveData<List<OrderDishLists>> orderItemListsMutableLiveData = new MutableLiveData<>();
-    /*private LinkedHashMap<String, List<OrderItemLists>> orderItemList_f_map = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, List<OrderItemLists>>> orderItemList_f_mapMutableLiveData = new MutableLiveData<>();*/
 
     //orderlist to get item list view
     private OrderLists orderListsView;
     private MutableLiveData<OrderLists> orderListsViewMutableLiveData = new MutableLiveData<>();
 
-    //selected list
-    /*private List<SelectedHeader> selectedHeaders = new ArrayList<>();
-    private MutableLiveData<List<SelectedHeader>> selectedHeadersMutableLiveData = new MutableLiveData<>();*/
 
-    //selected session and header in hash map
-    /*private LinkedHashMap<String, List<SelectedHeader>> sh_f_map = new LinkedHashMap<>();
-    private MutableLiveData<LinkedHashMap<String, List<SelectedHeader>>> sh_f_mapMutableLiveData = new MutableLiveData<>();*/
 
     private String TAG = "ViewClassModel";
-    String s_user_name, func, header, session_title, item, selected;
+    String user_name,phone_number, func, header, session_title, item, selected;
     //Email check
     private List<CheckEmail> checkEmails = new ArrayList<>();
     private MutableLiveData<List<CheckEmail>> checkEmailsMutableLiveData = new MutableLiveData<>();
@@ -250,18 +240,7 @@ public class GetViewModel extends AndroidViewModel {
         return checkEmailsMutableLiveData;
     }
 
-    /*public MutableLiveData<LinkedHashMap<String, List<SelectedHeader>>> getSh_f_mapMutableLiveData() {
-        return sh_f_mapMutableLiveData;
-    }*/
 
-/*    public MutableLiveData<List<SessionList>> getSessionListsMutableLiveData() {
-        return sessionListsMutableLiveData;
-    }*/
-
-    /*   public MutableLiveData<List<SelectedHeader>> getSelectedHeadersMutableLiveData() {
-           return selectedHeadersMutableLiveData;
-       }
-   */
     public void setOrderListsView(OrderLists orderListsView) {
         this.orderListsView = orderListsView;
         this.orderListsViewMutableLiveData.postValue(orderListsView);
@@ -490,7 +469,20 @@ public class GetViewModel extends AndroidViewModel {
                 MyLog.e(TAG, "onData>>snapshot>>" + shot1);
                 //o_myOrderFuncLists = new ArrayList<>();
                 for (DataSnapshot snapshot : shot1.getChildren()) {
-                    s_user_name = snapshot.getKey().toString();
+                    phone_number = snapshot.getKey().toString();
+                    for(int i=0;i<userLists.size();i++)
+                    {
+                        if(phone_number.equals(userLists.get(i).getPhone_number()))
+                        {
+                            user_name=userLists.get(i).getUsername();
+                            break;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+
                     orderFunc_Map = new LinkedHashMap<>();
                     for (DataSnapshot datas : snapshot.getChildren()) {
                         //o_selectedSessionLists = new ArrayList<>();
@@ -547,7 +539,8 @@ public class GetViewModel extends AndroidViewModel {
                         }
                         orderFunc_Map.put(func, orderDateMap);
                     }
-                    orderMap.put(s_user_name, orderFunc_Map);
+                    String userPhone=user_name+"-"+phone_number;
+                    orderMap.put(userPhone, orderFunc_Map);
 
                 }
                 orderMapMutableLiveData.postValue(orderMap);
@@ -728,17 +721,17 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-    public void DeleteDate(String s_user_name, String funcTitle, String gn_date) {
+    public void DeleteDate(String phone_number, String funcTitle, String gn_date) {
 
         //remove old data
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");
         MyLog.e(TAG, "dates>> funcTitle  " + funcTitle);
-        MyLog.e(TAG, "dates>> s_user_name  " + s_user_name);
+        MyLog.e(TAG, "dates>> phone_number  " + phone_number);
         MyLog.e(TAG, "dates>>date   " + gn_date);
 
         //remove data
-        databaseReference.child(s_user_name).child(funcTitle).child(gn_date).removeValue();
+        databaseReference.child(phone_number).child(funcTitle).child(gn_date).removeValue();
         MyLog.e(TAG, "dates remove commit");
     }
 

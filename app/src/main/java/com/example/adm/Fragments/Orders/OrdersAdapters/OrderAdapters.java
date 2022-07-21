@@ -71,13 +71,15 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     public void onBindViewHolder(@NonNull OrderAdapters.ViewHolder holder, int position) {
         final OrderLists orderLists1 = orderLists.get(position);
         holder.user_name.setText(orderLists1.getS_user_name());
+        holder.phone_number.setText(orderLists1.getPhone_number());
         holder.func.setText(orderLists1.getFunc());
         MyLog.e(TAG,"item>>func >"+orderLists1.getFunc());
         getViewModel.getOrderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>>>> stringLinkedHashMapLinkedHashMap) {
                 orderMap=new LinkedHashMap<>(stringLinkedHashMapLinkedHashMap);
-                orderFunc_Map=new LinkedHashMap<>(orderMap).get(orderLists1.getS_user_name());
+                String s=orderLists1.getS_user_name()+"-"+orderLists1.getPhone_number();
+                orderFunc_Map=new LinkedHashMap<>(orderMap).get(s);
                 orderDateMap=new LinkedHashMap<>(orderFunc_Map).get(orderLists1.getFunc());
                 //get date list
                 Set<String> stringSet = orderDateMap.keySet();
@@ -126,7 +128,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView profile;
-        private TextView user_name, func;
+        private TextView user_name, func,phone_number;
         private RecyclerView recyclerview_date;
         private CardView item_cardView;
 
@@ -134,6 +136,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
             super(view);
             profile = view.findViewById(R.id.profile);
             user_name = view.findViewById(R.id.user_name);
+            phone_number = view.findViewById(R.id.phone_number);
             func = view.findViewById(R.id.func);
             recyclerview_date = view.findViewById(R.id.recyclerview_date);
             item_cardView = view.findViewById(R.id.item_cardView);

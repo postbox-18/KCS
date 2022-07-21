@@ -22,7 +22,6 @@ import com.example.adm.Fragments.Orders.OrdersAdapters.OrderAdapters;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -123,8 +122,10 @@ public class OrdersFragment extends Fragment {
                 o_usernames.clear();
                 for(int i=0;i<aList.size();i++)
                 {
+                    String[]str=(aList.get(i)).split("-");
                     Username username=new Username(
-                            aList.get(i)
+                            str[0],
+                            str[1]
                     );
                     o_usernames.add(username);
                 }
@@ -133,7 +134,9 @@ public class OrdersFragment extends Fragment {
                 for(int l=0;l<o_usernames.size();l++)
                 {
                     String username=o_usernames.get(l).getUsername();
-                    orderFunc_Map=new LinkedHashMap<>(orderMap).get(username);
+                    String phone_number=o_usernames.get(l).getPhone_number();
+                    String s=username+"-"+phone_number;
+                    orderFunc_Map=new LinkedHashMap<>(orderMap).get(s);
                     //get func
                     Set<String> stringSet1 = orderFunc_Map.keySet();
                     List<String> aList1 = new ArrayList<String>(stringSet1.size());
@@ -144,8 +147,7 @@ public class OrdersFragment extends Fragment {
                     {
                         OrderLists orderLists=new OrderLists(
                                 username,
-                                aList1.get(k)
-                        );
+                                aList1.get(k), phone_number);
                         o_orderLists.add(orderLists);
                         orderAdapters=new OrderAdapters(getContext(),o_orderLists,getViewModel);
                         recyclerView_order_list.setAdapter(orderAdapters);
