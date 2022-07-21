@@ -206,7 +206,7 @@ public class OrdersFragment extends Fragment {
                 if(orderLists!=null) {
                     //get session list
                     MyLog.e(TAG,"SessionList>>deatils>>"+orderLists.getS_user_name()+"\t\t"+orderLists.getFunc());
-                    orderFunc_Map=b_orderMap.get(orderLists.getS_user_name());
+                    orderFunc_Map=b_orderMap.get(orderLists.getS_user_name()+"-"+orderLists.getPhone_number());
                     func_title.setText(orderLists.getFunc());
                     user_name.setText(orderLists.getS_user_name());
                     orderDateMap=new LinkedHashMap<>(orderFunc_Map).get(orderLists.getFunc());
