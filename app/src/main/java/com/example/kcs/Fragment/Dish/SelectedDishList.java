@@ -1,4 +1,4 @@
-package com.example.kcs.ViewModel;
+package com.example.kcs.Fragment.Dish;
 
 public class SelectedDishList {
     private final String dish;

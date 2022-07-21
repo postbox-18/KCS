@@ -14,10 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Login_Register.LoginActivity;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
+import com.example.kcs.ViewModel.SharedPreferences_data;
 
 /**
  * A simple {@link Fragment} subclass.

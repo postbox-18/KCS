@@ -28,7 +28,7 @@ import com.airbnb.lottie.LottieListener;
 import com.example.kcs.Classes.CheckEmail;
 import com.example.kcs.DialogFragment.LoadingDialogs;
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.ViewModel.SharedPreferences_data;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;

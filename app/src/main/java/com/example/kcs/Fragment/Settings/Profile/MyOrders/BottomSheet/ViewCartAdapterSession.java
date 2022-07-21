@@ -17,13 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.ViewModel.SharedPreferences_data;
 import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.SelectedDishList;
+import com.example.kcs.Fragment.Dish.SelectedDishList;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     private List<OrderDishLists> orderDishListsses = new ArrayList<>();
     private ViewCartAdapterItem viewCartAdapterItem;
     private String TAG = "ViewCartAdapterSession";
-    private String func_title, s_user_name, sess_title, date;
+    private String func_title, phone_number, sess_title, date;
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
     private List<SelectedSessionList> e_sessionLists = new ArrayList<>();
@@ -98,7 +98,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
     public void onBindViewHolder(@NonNull ViewCartAdapterSession.ViewHolder holder, int position) {
 
         //get user name shared prefernces
-        s_user_name = new SharedPreferences_data(context).getS_user_name();
+        phone_number = new SharedPreferences_data(context).getS_phone_number();
         //clear
         ///////////***************************clear list in live data model****************************//////////////////////
         //get Edit Delete Cancel value
@@ -269,10 +269,10 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                     MyLog.e(TAG, "Cancel>>sess_date>>" + session_title);
                     //Cancel
                     //set cancel hash map
-                    getViewModel.CancelOrders(func_title, session_title, n, s_user_name, bolen, editFunc_Map, date);
+                    getViewModel.CancelOrders(func_title, session_title, n, phone_number, bolen, editFunc_Map, date);
                 } else if (n == 2) {
                     //Delete
-                    getViewModel.CancelOrders(func_title, session_title, n, s_user_name, bolen, editFunc_Map, date);
+                    getViewModel.CancelOrders(func_title, session_title, n, phone_number, bolen, editFunc_Map, date);
 
                 }
 

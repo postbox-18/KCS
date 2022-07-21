@@ -18,7 +18,7 @@ import com.example.kcs.Fragment.PlaceOrders.Items.PlaceOrderViewCartAdapterItem;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.SelectedDishList;
+import com.example.kcs.Fragment.Dish.SelectedDishList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

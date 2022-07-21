@@ -14,12 +14,12 @@ import com.example.kcs.Classes.ImgFunList;
 import com.example.kcs.Classes.ImgList;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.Classes.TimeList;
+import com.example.kcs.Fragment.Dish.SelectedDishList;
 import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.SelectedItemList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrderFuncList;
 import com.example.kcs.Fragment.Session.SessionList;
-import com.example.kcs.Classes.SharedPreferences_data;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.HeaderList;
 import com.example.kcs.Fragment.Items.CheckedList;
@@ -695,9 +695,9 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-    public void GetMyOrdersDetails(String s_user_name) {
+    public void GetMyOrdersDetails(String phone_number) {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
+        databaseReference = firebaseDatabase.getReference("Orders").child(phone_number);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1505,9 +1505,9 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-    public void CancelOrders(String func_title, String session_title, int n, String s_user_name, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Maps, String date) {
+    public void CancelOrders(String func_title, String session_title, int n, String phone_number, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Maps, String date) {
         MyLog.e(TAG, "cancel ");
-        MyLog.e(TAG, "cancel " + session_title);
+        MyLog.e(TAG, "cancelSess>>" + session_title);
         String[] str = session_title.split("_");
         String[] scb = (str[0]).split("-");
         String count = scb[1];
@@ -1541,13 +1541,14 @@ public class GetViewModel extends AndroidViewModel {
 
             //remove old data
             firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
+            databaseReference = firebaseDatabase.getReference("Orders").child(phone_number);
             MyLog.e(TAG, "cancel>>sess value  " + session_title);
             MyLog.e(TAG, "cancel>>date value  " + date);
 
             //remove data
             databaseReference.child(func_title).child(date).child(session_title).removeValue();
             MyLog.e(TAG, "cancel remove commit");
+            MyLog.e(TAG, "cancelSess>>Remove data" );
 
 
             if (old.equals("true")) {
@@ -1559,7 +1560,7 @@ public class GetViewModel extends AndroidViewModel {
 
                 //add new data
                 firebaseDatabase = FirebaseDatabase.getInstance();
-                databaseReference = firebaseDatabase.getReference("Orders").child(s_user_name);
+                databaseReference = firebaseDatabase.getReference("Orders").child(phone_number);
                 String newData = sess + "-" + count + "_" + old;
                 MyLog.e(TAG, "cancel>> value  " + newData);
                 //set replace bolen
@@ -1587,6 +1588,7 @@ public class GetViewModel extends AndroidViewModel {
                         for (int q = 0; q < selectedDishLists.size(); q++) {
                             MyLog.e(TAG, "cancels>>\nfunc>>" + func_title + "\ndate>>" + date + "\nsess>>" + newData + "\nheader>>" + header_title + "\nitem>>" + item + "\ndish>>" + selectedDishLists.get(q).getDish());
                             MyLog.e(TAG, "cancels>> add commit");
+                            MyLog.e(TAG, "cancelSess>>add commit" );
                             databaseReference.child(func_title).child(date).child(newData).child(header_title).child(item).child(String.valueOf(q)).setValue(selectedDishLists.get(q).getDish());
                         }
                     }
@@ -1596,16 +1598,16 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public void DeleteDate(String s_user_name, String funcTitle, String gn_date) {
+    public void DeleteDate(String phone_number, String funcTitle, String gn_date) {
         //remove old data
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");
         MyLog.e(TAG, "dates>> funcTitle  " + funcTitle);
-        MyLog.e(TAG, "dates>> s_user_name  " + s_user_name);
+        MyLog.e(TAG, "dates>> phone_number  " + phone_number);
         MyLog.e(TAG, "dates>>date   " + gn_date);
 
         //remove data
-        databaseReference.child(s_user_name).child(funcTitle).child(gn_date).removeValue();
+        databaseReference.child(phone_number).child(funcTitle).child(gn_date).removeValue();
         MyLog.e(TAG, "dates remove commit");
     }
 

@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.example.kcs.DialogFragment.DoneDialogfragment;
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.ViewModel.SharedPreferences_data;
 import com.example.kcs.Fragment.Dish.DishList;
 import com.example.kcs.Fragment.Func.FunList;
 import com.example.kcs.Fragment.Header.SessionDateTime;
@@ -32,13 +32,12 @@ import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.SelectedDishList;
+import com.example.kcs.Fragment.Dish.SelectedDishList;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -71,7 +70,7 @@ public class PlaceOrderFragment extends Fragment {
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
-    private String func_title, header_title, user_name, session_title, date_time, date, time, s_count, oldDateTimeCount;
+    private String func_title, header_title, phone_number, session_title, date_time, date, time, s_count, oldDateTimeCount;
     private TextView func_title_view;
     private String TAG = "PlaceOrderFragment";
     //firebase database retrieve
@@ -185,7 +184,7 @@ public class PlaceOrderFragment extends Fragment {
         });
 
         //get username
-        user_name = new SharedPreferences_data(getContext()).getS_user_name();
+        phone_number = new SharedPreferences_data(getContext()).getS_phone_number();
 
         //get session list
         getViewModel.getSession_titleMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -386,7 +385,7 @@ public class PlaceOrderFragment extends Fragment {
                                     MyLog.e(TAG, "dish>>item title>>" + itemLists.get(l).getItem() + "_" + itemLists.get(l).getSelected());
                                     checkedLists = itemMap.get(itemLists.get(l).getItem() + "_" + itemLists.get(l).getSelected());
                                     String item = itemLists.get(l).getItem() + "_" + itemLists.get(l).getSelected();
-                                    SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), item, selectedSessionLists.get(k).getSession_title(), checkedLists, date_time, selectedSessionLists.get(k).getS_count(), null);
+                                    SaveOrders(func_title, phone_number, selectedHeadersList.get(i).getHeader(), item, selectedSessionLists.get(k).getSession_title(), checkedLists, date_time, selectedSessionLists.get(k).getS_count(), null);
                                 }
                             }
                             doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
@@ -491,7 +490,7 @@ public class PlaceOrderFragment extends Fragment {
                                     String date_Time = session_title + "!" + date + " " + time + "/" + s_count;
                                     MyLog.e(TAG, "placeorder>>date_Time>>" + date_Time);
 
-                                    SaveOrders(func_title, user_name, selectedHeadersList.get(i).getHeader(), item, selectedSessionLists.get(k).getSession_title(), checkedLists, date_Time, selectedSessionLists.get(k).getS_count(), oldDateTimeCount);
+                                    SaveOrders(func_title, phone_number, selectedHeadersList.get(i).getHeader(), item, selectedSessionLists.get(k).getSession_title(), checkedLists, date_Time, selectedSessionLists.get(k).getS_count(), oldDateTimeCount);
 
                                 }
                             }
@@ -519,12 +518,12 @@ public class PlaceOrderFragment extends Fragment {
         return view;
     }
 
-    private void SaveOrders(String func_title, String user_name, String headerList_title, String item_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_count, String oldDateTimeCount) {
+    private void SaveOrders(String func_title, String phone_number, String headerList_title, String item_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_count, String oldDateTimeCount) {
 
 
         //remove old data
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Orders").child(user_name);
+        databaseReference = firebaseDatabase.getReference("Orders").child(phone_number);
         MyLog.e(TAG, "cancel>>sess value  " + session_title);
         MyLog.e(TAG, "cancel>>date value  " + date);
         //remove data
@@ -596,7 +595,7 @@ public class PlaceOrderFragment extends Fragment {
 
                     String s = sess + "!" + time + "-" + count + "_true";
                     MyLog.e(TAG, "placeorders>>ses  time>>" + s);
-                    databaseReference.child(user_name).child(func_title).child(date).child(s).child(headerList_title).child(item_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
+                    databaseReference.child(phone_number).child(func_title).child(date).child(s).child(headerList_title).child(item_title).child(String.valueOf(i)).setValue(checkedLists1.get(i).getItemList());
                 }
                 MyLog.e(TAG, "comit");
 

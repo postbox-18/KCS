@@ -14,13 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.ViewModel.SharedPreferences_data;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.SelectedDishList;
+import com.example.kcs.Fragment.Dish.SelectedDishList;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -92,7 +92,7 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
     @Override
     public void onBindViewHolder(@NonNull MyOrdersAdapterDate.ViewHolder holder, int position) {
         final SelectedDateList list = dateLists.get(position);
-        String username=new SharedPreferences_data(context).getS_user_name();
+        String phone_number=new SharedPreferences_data(context).getS_phone_number();
         gn_Date=list.getDate();
         //get data func,header,list item size from hash map
         holder.date.setText(list.getDate());
@@ -235,7 +235,7 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
             int n=Integer.parseInt(dayDifference);
             MyLog.e(TAG,"dates>>delete>>"+n);
             if(n>=2) {
-                getViewModel.DeleteDate(username, funcTitle, gn_Date);
+                getViewModel.DeleteDate(phone_number, funcTitle, gn_Date);
             }
 
         }

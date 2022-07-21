@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.ViewModel.SharedPreferences_data;
 import com.example.kcs.Fragment.Items.CheckedList;
 import com.example.kcs.Fragment.PlaceOrders.Header.PlaceOrderViewCartAdapterHeader;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
@@ -22,8 +22,7 @@ import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishL
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.ViewCartAdapterItem;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.SelectedDishList;
-import com.google.gson.GsonBuilder;
+import com.example.kcs.Fragment.Dish.SelectedDishList;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -35,7 +34,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
     private List<OrderDishLists> orderDishListsses = new ArrayList<>();
     private ViewCartAdapterItem viewCartAdapterItem;
     private String TAG = "PlaceOrderViewCartAdapterSession";
-    private String func_title, s_user_name, date,time,count,oldDateTimeCount;
+    private String func_title, phone_number, date,time,count,oldDateTimeCount;
     private List<SelectedSessionList> sessionLists = new ArrayList<>();
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
@@ -86,7 +85,7 @@ public class PlaceOrderViewCartAdapterSession extends RecyclerView.Adapter<Place
     @Override
     public void onBindViewHolder(@NonNull PlaceOrderViewCartAdapterSession.ViewHolder holder, int position) {
         //get user name shared prefernces
-        s_user_name = new SharedPreferences_data(context).getS_user_name();
+        phone_number = new SharedPreferences_data(context).getS_phone_number();
 
         //get selected session
         //Incase change session breakfast to lunch
