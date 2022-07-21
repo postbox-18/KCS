@@ -13,14 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.ViewModel.SharedPreferences_data;
 import com.example.kcs.Fragment.Header.SessionDateTime;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.SelectedDishList;
+import com.example.kcs.Fragment.Dish.SelectedDishList;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
     private List<OrderDishLists> orderDishListsses = new ArrayList<>();
     private ViewCartAdapterItem viewCartAdapterItem;
     private String TAG = "ViewCartAdapterDate";
-    private String func_title, s_user_name, sess_title;
+    private String func_title, phone_number, sess_title;
 
     private GetViewModel getViewModel;
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
@@ -92,7 +92,7 @@ public class ViewCartAdapterDate extends RecyclerView.Adapter<ViewCartAdapterDat
     public void onBindViewHolder(@NonNull ViewCartAdapterDate.ViewHolder holder, int position) {
 
         //get user name shared prefernces
-        s_user_name = new SharedPreferences_data(context).getS_user_name();
+        phone_number = new SharedPreferences_data(context).getS_phone_number();
         //clear
 ///////////***************************clear list in live data model****************************//////////////////////
         //get Edit Delete Cancel value

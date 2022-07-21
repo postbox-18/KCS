@@ -1,4 +1,4 @@
-package com.example.kcs.Classes;
+package com.example.kcs.ViewModel;
 
 import android.content.Context;
 import android.content.SharedPreferences;

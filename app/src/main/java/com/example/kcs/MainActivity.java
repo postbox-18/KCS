@@ -5,7 +5,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,7 +21,7 @@ import android.widget.LinearLayout;
 import com.example.kcs.BreadCrumbs.BreadCrumbList;
 import com.example.kcs.BreadCrumbs.BreadCrumbsAdapter;
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.ViewModel.SharedPreferences_data;
 import com.example.kcs.Fragment.Dish.DishFragment;
 import com.example.kcs.Fragment.Dish.DishList;
 import com.example.kcs.Fragment.Func.FunList;
@@ -36,13 +35,12 @@ import com.example.kcs.Fragment.Dish.DishSelectedList.UserDishListAdapters;
 import com.example.kcs.Fragment.PlaceOrders.PlaceOrderFragment;
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
-import com.example.kcs.Fragment.Session.SessionList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersFragment;
 import com.example.kcs.Fragment.Settings.Profile.ProfileFragment;
 import com.example.kcs.Fragment.Session.SessionFragment;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.SelectedDishList;
+import com.example.kcs.Fragment.Dish.SelectedDishList;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private List<FunList> funLists = new ArrayList<>();
     private List<HeaderList> headerLists = new ArrayList<>();
     private CardView view_cart_cardView;
-    private String user_name;
+    private String phone_number;
     private Integer integer, frag_integer = -1;
     //item map
     private LinkedHashMap<String, List<CheckedList>> itemMap = new LinkedHashMap<>();
@@ -135,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         MyLog.e(TAG, "logout>> main activity ");
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        user_name = new SharedPreferences_data(getApplication()).getS_user_name();
+        phone_number = new SharedPreferences_data(getApplication()).getS_phone_number();
 
         //to load data base
         getViewModel.GetHeader();

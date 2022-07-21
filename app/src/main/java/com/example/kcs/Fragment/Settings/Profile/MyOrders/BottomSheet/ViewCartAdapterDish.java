@@ -4,27 +4,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
-import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
-import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
-import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
+import com.example.kcs.ViewModel.SharedPreferences_data;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.SelectedDishList;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ViewCartAdapterDish extends RecyclerView.Adapter<ViewCartAdapterDish.ViewHolder> {
@@ -32,7 +24,7 @@ public class ViewCartAdapterDish extends RecyclerView.Adapter<ViewCartAdapterDis
     private List<OrderDishLists> orderDishListsses = new ArrayList<>();
     private String TAG = "ViewCartAdapterDish";
     private GetViewModel getViewModel;
-    private String func_title, header, username, date, sess, item_title;
+    private String func_title, header, phone_number, date, sess, item_title;
     private int n;
 
 
@@ -63,8 +55,8 @@ public class ViewCartAdapterDish extends RecyclerView.Adapter<ViewCartAdapterDis
         holder.dish.setText(orderDishLists1.getItemList());
 
 
-        //get username
-        username = new SharedPreferences_data(context).getS_user_name();
+        //get phone_number
+        phone_number = new SharedPreferences_data(context).getS_phone_number();
 /*
         //get func title
         getViewModel.getFunc_title_Mutable().observe((LifecycleOwner) context, new Observer<String>() {
@@ -132,7 +124,7 @@ public class ViewCartAdapterDish extends RecyclerView.Adapter<ViewCartAdapterDis
             MyLog.e(TAG, "s_count>>else is not null \nfunc>>" + func_title+"\nheader>>"+header+"\n>>dish>>"+orderDishLists1.getItemList()
                     +"\nitem title>>"+item_title+"\nsess>>"+sess+"\ndate>>"+date+"\nn>>"+n);
             //set edit hash map
-            getViewModel.EditMap(func_title, header, orderDishListsses, item_title, position, n, username, sess, date);
+            getViewModel.EditMap(func_title, header, orderDishListsses, item_title, position, n, phone_number, sess, date);
         }
 
 

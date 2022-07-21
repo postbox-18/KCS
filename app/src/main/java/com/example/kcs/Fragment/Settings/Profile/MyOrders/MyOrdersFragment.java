@@ -3,7 +3,6 @@ package com.example.kcs.Fragment.Settings.Profile.MyOrders;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,10 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.kcs.Classes.ImgFunList;
-import com.example.kcs.Classes.ImgList;
 import com.example.kcs.Classes.MyLog;
-import com.example.kcs.Classes.SharedPreferences_data;
+import com.example.kcs.ViewModel.SharedPreferences_data;
 
 import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.PlaceOrders.Session.SelectedSessionList;
@@ -30,7 +27,7 @@ import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrders
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.example.kcs.ViewModel.SelectedDishList;
+import com.example.kcs.Fragment.Dish.SelectedDishList;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -63,7 +60,7 @@ public class MyOrdersFragment extends Fragment {
     private List<SelectedHeader> selectedHeaders = new ArrayList<>();
     private List<MyOrderFuncList> myOrderFuncLists = new ArrayList<>();
     private MyOrdersAdapter myOrdersAdapter;
-    private String header, func_title, s_user_name, func_session_title;
+    private String header, func_title, phone_number, func_session_title;
     private String item = "";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -146,10 +143,10 @@ public class MyOrdersFragment extends Fragment {
         recyclerview_my_orders.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         myOrdersList = new ArrayList<>();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        s_user_name = new SharedPreferences_data(getContext()).getS_user_name();
+        phone_number = new SharedPreferences_data(getContext()).getS_phone_number();
 
         //to load data in my order details
-        getViewModel.GetMyOrdersDetails(s_user_name);
+        getViewModel.GetMyOrdersDetails(phone_number);
 
         getViewModel.setFunc_Session(null);
 
@@ -265,7 +262,7 @@ public class MyOrdersFragment extends Fragment {
                     bottomSheet.show();
 
                     //get session list
-                    MyLog.e(TAG, "SessionList>>deatils>>" + s_user_name + "\t\t" + func_title);
+                    MyLog.e(TAG, "SessionList>>deatils>>" + phone_number + "\t\t" + func_title);
                     //sessionLists.clear();
 
                     //get order date map
