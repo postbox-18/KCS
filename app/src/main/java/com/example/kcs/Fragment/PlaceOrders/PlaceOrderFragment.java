@@ -70,7 +70,7 @@ public class PlaceOrderFragment extends Fragment {
     private List<CheckedList> checkedLists = new ArrayList<>();
     private List<SelectedHeader> selectedHeadersList = new ArrayList<>();
     private GetViewModel getViewModel;
-    private String func_title, header_title, phone_number, session_title, date_time, date, time, s_count, oldDateTimeCount;
+    private String func_title, header_title, phone_number, session_title, date_time, date, time, s_count, oldDateTimeCount,username;
     private TextView func_title_view;
     private String TAG = "PlaceOrderFragment";
     //firebase database retrieve
@@ -151,7 +151,7 @@ public class PlaceOrderFragment extends Fragment {
         recyclerview_session.setHasFixedSize(true);
         recyclerview_session.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-
+        username = new SharedPreferences_data(getContext()).getS_user_name();
         //get time picker
         getViewModel.getTime_pickerMutable().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
@@ -390,11 +390,14 @@ public class PlaceOrderFragment extends Fragment {
                             }
                             doneDialogfragment.show(getParentFragmentManager(), "DoneDialogfragment");
 
+
                         } else {
                             MyLog.e(TAG, "Header map is empty");
                         }
                     }
-                } else {
+
+                }
+                else {
                     MyLog.e(TAG, "placeorder>>get funcMap>>" + func_title);
                     editDateMap = editFunc_Map.get(func_title);
                     MyLog.e(TAG, "placeorder>>get sessionMap>>" + session_title);
@@ -501,10 +504,14 @@ public class PlaceOrderFragment extends Fragment {
                         }
                     }
 
+
+
                 }
 
 
             }
+
+
         });
 
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -517,6 +524,7 @@ public class PlaceOrderFragment extends Fragment {
 
         return view;
     }
+
 
     private void SaveOrders(String func_title, String phone_number, String headerList_title, String item_title, String session_title, List<CheckedList> checkedLists1, String date_time, String s_count, String oldDateTimeCount) {
 
@@ -611,6 +619,8 @@ public class PlaceOrderFragment extends Fragment {
                 Toast.makeText(getContext(), "Fail to add data " + error, Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 
 
