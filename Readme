@@ -8,9 +8,12 @@ https://stackoverflow.com/questions/31253555/how-do-i-create-a-circular-endless-
 
 
 Pending
-6-Show orders username in one cardview into func
-7-
 
+7-delete after order date in notify fragment
+8-highlight unread notify msg
+9-tap to view the orders
+10-count in notify tab
+11-
 
 Solved
 1-Control Panel update header and also change in database which have data
@@ -28,3 +31,4 @@ Solved
         ----nv
 4-login activity add then get data from base
 5-control panel edit and remove data
+6-Show orders username in one cardview into func(NO NEED)
