@@ -84,6 +84,8 @@ public class HomeFragment extends Fragment {
         //tablayout
         tabLayout.addTab(tabLayout.newTab().setText("Orders"));
         tabLayout.addTab(tabLayout.newTab().setText("Users"));
+        tabLayout.addTab(tabLayout.newTab().setText("Notification"));
+        tabLayout.addTab(tabLayout.newTab().setText("Profile"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         final MyFragments_Adapter adapter = new MyFragments_Adapter(getContext(),getParentFragmentManager(), tabLayout.getTabCount());

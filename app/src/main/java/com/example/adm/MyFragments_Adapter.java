@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.example.adm.Fragments.Notification.NotificationFragment;
 import com.example.adm.Fragments.Orders.OrdersFragment;
+import com.example.adm.Fragments.ProfileFragment;
 import com.example.adm.Fragments.Users.UserFragment;
 
 public class MyFragments_Adapter extends FragmentStatePagerAdapter {
@@ -38,6 +40,13 @@ public class MyFragments_Adapter extends FragmentStatePagerAdapter {
             case 1:
                 UserFragment userFragment = new UserFragment();
                 return userFragment;
+            case 2:
+                NotificationFragment notificationFragment=new NotificationFragment();
+                return notificationFragment;
+            case 3:
+                ProfileFragment profileFragment=new ProfileFragment();
+                return profileFragment;
+
             default:
                 return null;
         }

@@ -16,6 +16,7 @@ import com.example.adm.Fragments.Control_Panel.Func.FuncList;
 import com.example.adm.Fragments.Control_Panel.Header.HeaderList;
 import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
 import com.example.adm.Fragments.Control_Panel.Func.UpdatedList;
+import com.example.adm.Fragments.Notification.NotifyList;
 import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderDishLists;
 import com.example.adm.Fragments.Orders.Classes.UserItemList;
 import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderLists;
@@ -116,9 +117,8 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<OrderLists> orderListsViewMutableLiveData = new MutableLiveData<>();
 
 
-
     private String TAG = "ViewClassModel";
-    String user_name,phone_number, func, header, session_title, item, selected;
+    String user_name, phone_number, func, header, session_title, item, selected;
     //Email check
     private List<CheckEmail> checkEmails = new ArrayList<>();
     private MutableLiveData<List<CheckEmail>> checkEmailsMutableLiveData = new MutableLiveData<>();
@@ -147,6 +147,10 @@ public class GetViewModel extends AndroidViewModel {
     private String dateString;
     private MutableLiveData<String> dateStringLive = new MutableLiveData<>();
 
+    //notify
+    private List<NotifyList> notifyLists = new ArrayList<>();
+    private MutableLiveData<List<NotifyList>> notifyListsMutableData = new MutableLiveData<>();
+
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
@@ -154,6 +158,15 @@ public class GetViewModel extends AndroidViewModel {
 
         CheckUserDetails();
 
+    }
+
+    public MutableLiveData<List<NotifyList>> getNotifyListsMutableData() {
+        return notifyListsMutableData;
+    }
+
+    public void setNotifyLists(List<NotifyList> notifyLists) {
+        this.notifyLists = notifyLists;
+        this.notifyListsMutableData.postValue(notifyLists);
     }
 
     public MutableLiveData<Integer> getRefreshLiveData() {
@@ -453,9 +466,6 @@ public class GetViewModel extends AndroidViewModel {
         });
     }
 
-    /*public MutableLiveData<List<OrderLists>> getOrderListsMutable() {
-        return orderListsMutable;
-    }*/
 
     public void GetOrdesList() {
 
@@ -470,15 +480,11 @@ public class GetViewModel extends AndroidViewModel {
                 //o_myOrderFuncLists = new ArrayList<>();
                 for (DataSnapshot snapshot : shot1.getChildren()) {
                     phone_number = snapshot.getKey().toString();
-                    for(int i=0;i<userLists.size();i++)
-                    {
-                        if(phone_number.equals(userLists.get(i).getPhone_number()))
-                        {
-                            user_name=userLists.get(i).getUsername();
+                    for (int i = 0; i < userLists.size(); i++) {
+                        if (phone_number.equals(userLists.get(i).getPhone_number())) {
+                            user_name = userLists.get(i).getUsername();
                             break;
-                        }
-                        else
-                        {
+                        } else {
                             continue;
                         }
                     }
@@ -539,7 +545,7 @@ public class GetViewModel extends AndroidViewModel {
                         }
                         orderFunc_Map.put(func, orderDateMap);
                     }
-                    String userPhone=user_name+"-"+phone_number;
+                    String userPhone = user_name + "-" + phone_number;
                     orderMap.put(userPhone, orderFunc_Map);
 
                 }
@@ -673,7 +679,7 @@ public class GetViewModel extends AndroidViewModel {
 
         if (dish == null) {
             databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("List");
-            String[] str=item.split("_");
+            String[] str = item.split("_");
             String item_b = str[0] + "_" + selected;
             for (int i = 0; i < dishLists.size(); i++) {
 
@@ -753,4 +759,32 @@ public class GetViewModel extends AndroidViewModel {
 
 
     }
+
+    public void GetNotify() {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("Notifications");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                notifyLists = new ArrayList<>();
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                    MyLog.e(TAG, "notify>>key>>" +datas.getKey().toString());
+                    MyLog.e(TAG, "notify>>value>>" +datas.getValue().toString());
+                    NotifyList list = new NotifyList(
+                            datas.getValue().toString()
+                    );
+                    notifyLists.add(list);
+                }
+                notifyListsMutableData.postValue(notifyLists);
+                MyLog.e(TAG, "notify>>" + new GsonBuilder().setPrettyPrinting().create().toJson(notifyLists));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
+
