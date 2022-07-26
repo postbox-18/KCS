@@ -136,8 +136,6 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
             public void onChanged(LinkedHashMap<String, List<SessionDateTime>> stringListLinkedHashMap) {
                 sessionDateTimes = stringListLinkedHashMap.get(funcTitle + "-" + sessionTitle);
                 MyLog.e(TAG, "dateTimes>>s_session_title>>title>>" + funcTitle + "-" + sessionTitle);
-                MyLog.e(TAG, "dateTimes>>s_session_title>>stringListLinkedHashMap>>" + new GsonBuilder().setPrettyPrinting().create().toJson(stringListLinkedHashMap));
-                MyLog.e(TAG, "dateTimes>>s_session_title>>sessionDateTimes>>" + new GsonBuilder().setPrettyPrinting().create().toJson(sessionDateTimes));
 
             }
         });
@@ -294,6 +292,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                         String oldDate = str[0];
                         String oldTime = str[1];
                         String oldCount = str[2];
+
                         //set selected dish into edit item map
                         for (int i = 0; i < checkedLists.size(); i++) {
                             SelectedDishList list = new SelectedDishList(
@@ -301,14 +300,23 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.ViewHolder> {
                             );
                             selectedDishLists.add(list);
                         }
+
                         oldDate = oldDate.replace("/", "-");
                         editDateMap = editFunc_Map.get(funcTitle);
                         editSessionMap = editDateMap.get(oldDate);
                         String s1 = sessionTitle + "!" + oldTime + "/" + oldCount;
                         editHeaderMap = editSessionMap.get(s1);
+                        MyLog.e(TAG, "editOrder>>get>>header_title\n" + header_title);
+
                         editItemMap = editHeaderMap.get(header_title);
                     /*oldSelectedDishLists=new ArrayList<>();
                     oldSelectedDishLists=editItemMap.get(item_title);*/
+                        if(editItemMap==null)
+                        {
+                            editItemMap=new LinkedHashMap<>();
+                            editHeaderMap.put(header_title,editItemMap);
+                            MyLog.e(TAG, "editOrder>>editItemMap is null");
+                        }
                         editItemMap.put(item_title, selectedDishLists);
                         getViewModel.setEditItemMap(editItemMap);
                     }

@@ -1337,7 +1337,6 @@ public class GetViewModel extends AndroidViewModel {
         editHeaderMapMutableLiveData.postValue(editHeaderMap);
         //set item map
         editItemMapMutableLiveData.postValue(editItemMap);
-        MyLog.e(TAG, "editOrders>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
     }
 
