@@ -198,7 +198,10 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
             });
 
         }
+
+        //////////////*********remove old data automatic**************///////////////////////
         //clear date list
+
         Date date1=new Date();
         Date date2=new Date();
 
@@ -222,6 +225,8 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
         }
         //MyLog.e(TAG,"dates>>diff>>"+date2.before(date1));
 
+
+
         if(date2.before(date1))
         {
             //Comparing dates
@@ -239,10 +244,8 @@ public class MyOrdersAdapterDate extends RecyclerView.Adapter<MyOrdersAdapterDat
             }
 
         }
-        else
-        {
+        //////////////*********remove old data automatic**************///////////////////////
 
-        }
     }
 
 

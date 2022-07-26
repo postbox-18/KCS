@@ -43,6 +43,8 @@ import java.util.Objects;
 import java.util.Set;
 
 public class GetViewModel extends AndroidViewModel {
+
+    private String username;
     //Header List
     private MutableLiveData<List<HeaderList>> headerListMutableList = new MutableLiveData<>();
     private List<HeaderList> headerList = new ArrayList<>();
@@ -163,7 +165,7 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> value = new MutableLiveData<>();
 
     //Orders Empty
-    private Integer emptyValue=0;
+    private Integer emptyValue = 0;
     private MutableLiveData<Integer> emptyValueLive = new MutableLiveData<>();
 
     //item Fragment
@@ -308,6 +310,7 @@ public class GetViewModel extends AndroidViewModel {
     //old DateTimeCount
     private String oldDateTimeCount;
     private MutableLiveData<String> oldDateTimeCountLiveData = new MutableLiveData<>();
+
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -667,6 +670,7 @@ public class GetViewModel extends AndroidViewModel {
         });
     }
 
+
     public void GetSession() {
 
         databaseReference = firebaseDatabase.getReference("Items").child("Selected&UnSelected").child("Session");
@@ -704,7 +708,7 @@ public class GetViewModel extends AndroidViewModel {
                 int size = 0;
                 MyLog.e(TAG, "onData>>snapshot>>" + snapshot);
                 if (snapshot.getValue() == null) {
-                    MyLog.e(TAG, "onData>>snapshot>> children is null" );
+                    MyLog.e(TAG, "onData>>snapshot>> children is null");
 
                     emptyValueLive.postValue(1);
                 }
@@ -1505,14 +1509,17 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-    public void CancelOrders(String func_title, String session_title, int n, String phone_number, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Maps, String date) {
+    public void CancelOrders(String func_title, String sessCount, int n, String phone_number, String bolen, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>>> editFunc_Maps, String date) {
         MyLog.e(TAG, "cancel ");
-        MyLog.e(TAG, "cancelSess>>" + session_title);
-        String[] str = session_title.split("_");
+        MyLog.e(TAG, "cancelSess>>" + sessCount);
+        String[] str = sessCount.split("_");
         String[] scb = (str[0]).split("-");
         String count = scb[1];
         String sess = scb[0];
-        String old = str[1];
+        String[] arr2 = sess.split("!");
+        String session_title = arr2[0];
+        String time = arr2[1];
+        String oldBolen = str[1];
         String s = sess + "/" + count;
 
         editDateMap = editFunc_Maps.get(func_title);
@@ -1542,26 +1549,38 @@ public class GetViewModel extends AndroidViewModel {
             //remove old data
             firebaseDatabase = FirebaseDatabase.getInstance();
             databaseReference = firebaseDatabase.getReference("Orders").child(phone_number);
-            MyLog.e(TAG, "cancel>>sess value  " + session_title);
+            MyLog.e(TAG, "cancel>>sess value  " + sessCount);
             MyLog.e(TAG, "cancel>>date value  " + date);
 
             //remove data
-            databaseReference.child(func_title).child(date).child(session_title).removeValue();
+            databaseReference.child(func_title).child(date).child(sessCount).removeValue();
             MyLog.e(TAG, "cancel remove commit");
-            MyLog.e(TAG, "cancelSess>>Remove data" );
+            MyLog.e(TAG, "cancelSess>>Remove data");
+
+            if (n == 2) {
+                //notify
+                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Notifications");
+                username = new SharedPreferences_data(getApplication()).getS_user_name();
+                String msg = "Data Delete by " + username + " (contact number: " + phone_number + ") and Function is " + func_title + " session is " + session_title + " at " + date + " Time is " + time + " Total Count is " + count;
+                MyLog.e(TAG, "notify>>" + msg);
+                DatabaseReference databaseReference1 = databaseReference.push();
+                databaseReference1.setValue(msg);
+
+            }
 
 
-            if (old.equals("true")) {
-                old = "false";
-            } else if (old.equals("false")) {
-                old = "true";
+            if (oldBolen.equals("true")) {
+                oldBolen = "false";
+            } else if (oldBolen.equals("false")) {
+                oldBolen = "true";
             }
             if (n == 1) {
 
                 //add new data
                 firebaseDatabase = FirebaseDatabase.getInstance();
                 databaseReference = firebaseDatabase.getReference("Orders").child(phone_number);
-                String newData = sess + "-" + count + "_" + old;
+                String newData = sess + "-" + count + "_" + oldBolen;
                 MyLog.e(TAG, "cancel>> value  " + newData);
                 //set replace bolen
                 for (int l = 0; l < c_selectedHeaders.size(); l++) {
@@ -1588,18 +1607,30 @@ public class GetViewModel extends AndroidViewModel {
                         for (int q = 0; q < selectedDishLists.size(); q++) {
                             MyLog.e(TAG, "cancels>>\nfunc>>" + func_title + "\ndate>>" + date + "\nsess>>" + newData + "\nheader>>" + header_title + "\nitem>>" + item + "\ndish>>" + selectedDishLists.get(q).getDish());
                             MyLog.e(TAG, "cancels>> add commit");
-                            MyLog.e(TAG, "cancelSess>>add commit" );
+                            MyLog.e(TAG, "cancelSess>>add commit");
                             databaseReference.child(func_title).child(date).child(newData).child(header_title).child(item).child(String.valueOf(q)).setValue(selectedDishLists.get(q).getDish());
                         }
                     }
                 }
+
+                //notify
+                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference databaseReference = firebaseDatabase.getReference("Notifications");
+                username = new SharedPreferences_data(getApplication()).getS_user_name();
+
+                String msg = "Items Modified by " + username + " (contact number: " + phone_number + ") and Function is " + func_title + " session is " + session_title + " at " + date + " Time is " + time + " Total Count is " + count;
+                MyLog.e(TAG, "notify>>" + msg);
+                DatabaseReference databaseReference1=databaseReference.push();
+                databaseReference1.setValue(msg);
+
+
             }
         }
 
     }
 
     public void DeleteDate(String phone_number, String funcTitle, String gn_date) {
-        //remove old data
+        //remove old data automatic
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Orders");
         MyLog.e(TAG, "dates>> funcTitle  " + funcTitle);
@@ -1609,7 +1640,12 @@ public class GetViewModel extends AndroidViewModel {
         //remove data
         databaseReference.child(phone_number).child(funcTitle).child(gn_date).removeValue();
         MyLog.e(TAG, "dates remove commit");
+
+
+
+
     }
+
 
 }
 
