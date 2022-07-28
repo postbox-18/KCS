@@ -1,6 +1,7 @@
 package com.example.kcs.ViewModel;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,10 @@ import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
+import com.example.kcs.R;
+import com.example.kcs.RetroFit.Notification;
+import com.example.kcs.RetroFit.RootList;
+import com.example.kcs.RetroFit.UserService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,6 +46,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GetViewModel extends AndroidViewModel {
 
@@ -310,6 +324,10 @@ public class GetViewModel extends AndroidViewModel {
     //old DateTimeCount
     private String oldDateTimeCount;
     private MutableLiveData<String> oldDateTimeCountLiveData = new MutableLiveData<>();
+
+    //Retro fit
+    private Call<Notification> call;
+
 
 
     public GetViewModel(@NonNull Application application) {
@@ -1557,6 +1575,7 @@ public class GetViewModel extends AndroidViewModel {
             MyLog.e(TAG, "cancelSess>>Remove data");
 
             if (n == 2) {
+
                 //notify
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference("Notifications");
@@ -1565,6 +1584,8 @@ public class GetViewModel extends AndroidViewModel {
                 MyLog.e(TAG, "notify>>" + msg);
                 DatabaseReference databaseReference1 = databaseReference.push();
                 databaseReference1.setValue(msg);
+                PushNotify("Delete",msg);
+
 
             }
 
@@ -1621,11 +1642,89 @@ public class GetViewModel extends AndroidViewModel {
                 MyLog.e(TAG, "notify>>" + msg);
                 DatabaseReference databaseReference1=databaseReference.push();
                 databaseReference1.setValue(msg);
+                PushNotify("Modified",msg);
 
 
             }
         }
 
+    }
+
+    public void PushNotify(String Title, String msg) {
+        //https://fcm.googleapis.com/fcm/send
+        String url = "https://fcm.googleapis.com/";
+        HttpLoggingInterceptor.Level level = HttpLoggingInterceptor.Level.BODY;
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(level);
+
+        okhttp3.OkHttpClient client = new OkHttpClient().newBuilder()
+                .addInterceptor(logging)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .followRedirects(true)
+                .followSslRedirects(true)
+                .retryOnConnectionFailure(true)
+                .build();
+
+        // on below line we are creating a retrofit
+        // builder and passing our base url
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                // as we are sending data in json format so
+                // we have to add Gson converter factory
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                // at last we are building our retrofit builder.
+                .build();
+        // below line is to create an instance for our retrofit api class.
+        UserService retrofitAPI = retrofit.create(UserService.class);
+
+        // passing data from our text fields to our modal class.
+        Notification notification = new Notification(Title, msg);
+        RootList rootList1 = new RootList();
+        rootList1.setnotification(notification);
+        rootList1.setto(getApplication().getResources().getString(R.string.access_token));
+        Log.e(TAG, "call>>rootList1>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(rootList1));
+        // calling a method to create a post and passing our modal class.
+        Call<RootList> call = retrofitAPI.createPost(rootList1, getApplication().getResources().getString(R.string.server_key));
+
+        // on below line we are executing our method.
+        call.enqueue(new Callback<RootList>() {
+            @Override
+            public void onResponse(Call<RootList> call, Response<RootList> response) {
+                // this method is called when we get response from our api.
+
+
+                /*Log.e(TAG,"call>>call>>"+new GsonBuilder().setPrettyPrinting().create().toJson(call));
+                Log.e(TAG,"call>>response>>"+new GsonBuilder().setPrettyPrinting().create().toJson(response));*/
+
+                // below line is for hiding our progress bar.
+
+
+                // on below line we are setting empty text
+                // to our both edit text.
+
+
+                // we are getting response from our body
+                // and passing it to our modal class.
+                RootList responseFromAPI = response.body();
+
+                // on below line we are getting our data from modal class and adding it to our string.
+                String responseString = "Response Code : " + response.code();
+                Log.e(TAG, "call>>response code : " + responseString);
+                // below line we are setting our
+                // string to our text view.
+            }
+
+            @Override
+            public void onFailure(Call<RootList> call, Throwable t) {
+                // setting text to our text view when
+                // we get error response from API.
+
+                Log.e(TAG, "call>>Error found is : " + t.getMessage());
+
+            }
+        });
     }
 
     public void DeleteDate(String phone_number, String funcTitle, String gn_date) {

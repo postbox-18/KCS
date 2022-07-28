@@ -130,6 +130,7 @@ public class DoneDialogfragment extends DialogFragment {
         MyLog.e(TAG, "notify>>" + msg);
         DatabaseReference databaseReference1=databaseReference.push();
         databaseReference1.setValue(msg);
+        getViewModel.PushNotify("Orders Placed",msg);
 
     }
 
