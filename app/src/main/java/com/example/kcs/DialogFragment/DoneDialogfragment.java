@@ -125,11 +125,13 @@ public class DoneDialogfragment extends DialogFragment {
         MyLog.e(TAG, "placeorders>>time>>" + time);
 
         String s = sess + "!" + time + "-" + count + "_true";
+        date=date.replace("/","-");
         MyLog.e(TAG, "placeorders>>ses  time>>" + s);
         String msg = "Orders Placed by " + username +" (contact number: "+phonenumber+ ") and Function is " + func_title + " session is " + sess + " at " + date + " Time is " + time + " Total Count is " + count;
         MyLog.e(TAG, "notify>>" + msg);
         DatabaseReference databaseReference1=databaseReference.push();
-        databaseReference1.setValue(msg);
+        databaseReference1.child(date).setValue(msg);
+        getViewModel.PushNotify("Orders Placed",msg);
 
     }
 

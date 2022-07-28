@@ -61,20 +61,21 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     //Anim
-    private Animation slide_down_anim,slide_up_anim,fade_in_anim;
+    private Animation slide_down_anim, slide_up_anim, fade_in_anim;
     private ConstraintLayout head_layout;
     private ImageView bg_banner;
 
     //loading
-    private LoadingDialogs loadingDialog=new LoadingDialogs();
+    private LoadingDialogs loadingDialog = new LoadingDialogs();
 
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private GetViewModel getViewModel;
     //check mail
-    private List<CheckEmail> checkEmails=new ArrayList<>();
+    private List<CheckEmail> checkEmails = new ArrayList<>();
     private boolean check_email = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +94,6 @@ public class RegisterActivity extends AppCompatActivity {
         lottie_loading = findViewById(R.id.lottie_loading);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-
 
 
         Top_Bg();
@@ -194,12 +194,16 @@ public class RegisterActivity extends AppCompatActivity {
                                     new SharedPreferences_data(RegisterActivity.this).setS_phone_number(s_phone_number);
                                     new SharedPreferences_data(RegisterActivity.this).setS_password(s_password);
                                     new SharedPreferences_data(RegisterActivity.this).setS_email(s_email);
+                                    
+                                    String msg="New Registrations Email:"+s_email+" Name:"+s_user_name+" PhoneNumber:"+s_phone_number;
+                                    getViewModel.PushNotify("New Registrations",msg);
+                                    
                                 }
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
                                     Toast.makeText(RegisterActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
-                                    MyLog.e(TAG,"fail to get data "+error.getMessage());
+                                    MyLog.e(TAG, "fail to get data " + error.getMessage());
                                 }
                             });
                             //Next Screen Login
@@ -228,16 +232,13 @@ public class RegisterActivity extends AppCompatActivity {
         getViewModel.getCheckEmailsMutableLiveData().observe(this, new Observer<List<CheckEmail>>() {
             @Override
             public void onChanged(List<CheckEmail> checkEmails1) {
-                checkEmails=checkEmails1;
-                for(int i=0;i<checkEmails1.size();i++) {
-                    if (s_email.equals(checkEmails1.get(i).getEmail()))
-                    {
-                        check_email=true;
+                checkEmails = checkEmails1;
+                for (int i = 0; i < checkEmails1.size(); i++) {
+                    if (s_email.equals(checkEmails1.get(i).getEmail())) {
+                        check_email = true;
                         break;
-                    }
-                    else
-                    {
-                        check_email=false;
+                    } else {
+                        check_email = false;
                         continue;
                     }
                 }
@@ -263,15 +264,11 @@ public class RegisterActivity extends AppCompatActivity {
         //both password are correct
         else if (!s_password.equals(s_re_password)) {
             re_password.setError("Passwords are not same");
-        }
-        else if(s_password.length()<7 && s_re_password.length()<7)
-        {
+        } else if (s_password.length() < 7 && s_re_password.length() < 7) {
             password.setError("Please enter a password");
             re_password.setError("Please enter a password");
-        }
-       else if(check_email)
-        {
-            AlertDialog.Builder alert =new AlertDialog.Builder(RegisterActivity.this);
+        } else if (check_email) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(RegisterActivity.this);
             alert.setMessage("You have already Register");
             alert.setTitle("Alert");
             alert.setCancelable(false);
@@ -282,20 +279,20 @@ public class RegisterActivity extends AppCompatActivity {
                     dialog.cancel();
                 }
             });
-            AlertDialog alertDialog=alert.create();
+            AlertDialog alertDialog = alert.create();
             alertDialog.show();
-        }
-        else {
+        } else {
             //shared-preferences
-            loadingDialog.show(getSupportFragmentManager(),"Loading dailog");
-            MyLog.e(TAG, "errors>> continue regi" );
+            loadingDialog.show(getSupportFragmentManager(), "Loading dailog");
+            MyLog.e(TAG, "errors>> continue regi");
 
             return true;
         }
         return false;
 
     }
-//check valid email id
+
+    //check valid email id
     private boolean isValidEmail(String s_email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(s_email).matches();
     }
@@ -305,6 +302,7 @@ public class RegisterActivity extends AppCompatActivity {
         return android.util.Patterns.PHONE.matcher(s_phone_number).matches();
 
     }
+
     //anim
     private void Top_Bg() {
         slide_down_anim = AnimationUtils.loadAnimation(getApplicationContext(),
