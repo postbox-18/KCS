@@ -1580,10 +1580,11 @@ public class GetViewModel extends AndroidViewModel {
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference("Notifications");
                 username = new SharedPreferences_data(getApplication()).getS_user_name();
+                date=date.replace("/","-");
                 String msg = "Data Delete by " + username + " (contact number: " + phone_number + ") and Function is " + func_title + " session is " + session_title + " at " + date + " Time is " + time + " Total Count is " + count;
                 MyLog.e(TAG, "notify>>" + msg);
                 DatabaseReference databaseReference1 = databaseReference.push();
-                databaseReference1.setValue(msg);
+                databaseReference1.child(date).setValue(msg);
                 PushNotify("Delete",msg);
 
 
@@ -1637,11 +1638,11 @@ public class GetViewModel extends AndroidViewModel {
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference("Notifications");
                 username = new SharedPreferences_data(getApplication()).getS_user_name();
-
+                date=date.replace("/","-");
                 String msg = "Items Modified by " + username + " (contact number: " + phone_number + ") and Function is " + func_title + " session is " + session_title + " at " + date + " Time is " + time + " Total Count is " + count;
                 MyLog.e(TAG, "notify>>" + msg);
                 DatabaseReference databaseReference1=databaseReference.push();
-                databaseReference1.setValue(msg);
+                databaseReference1.child(date).setValue(msg);
                 PushNotify("Modified",msg);
 
 
