@@ -7,11 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.adm.MyFragments_Adapter;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 import com.google.android.material.tabs.TabLayout;

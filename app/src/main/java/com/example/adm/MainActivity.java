@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
 
+        getViewModel.GetTokenKey();
+
         refreshLayout=findViewById(R.id.refreshLayout);
 
         MyLog.e(TAG, "logout>> main activity ");

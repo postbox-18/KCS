@@ -1,4 +1,4 @@
-package com.example.adm;
+package com.example.adm.Fragments;
 
 import android.content.Context;
 

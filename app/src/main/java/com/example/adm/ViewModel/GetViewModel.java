@@ -1,6 +1,7 @@
 package com.example.adm.ViewModel;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,11 +22,15 @@ import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderDishLists;
 import com.example.adm.Fragments.Orders.Classes.UserItemList;
 import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderLists;
 import com.example.adm.Fragments.Users.UserDetailsList;
+import com.example.adm.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
@@ -786,5 +791,22 @@ public class GetViewModel extends AndroidViewModel {
         });
     }
 
+    public void GetTokenKey() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            MyLog.e(TAG, "task>>error>>"+task.getException());
+                            return;
+                        }
+                        String token = task.getResult();
+
+                        // Log and toast
+                        String msg = getApplication().getString(R.string.fcm_token, token);
+                        MyLog.e(TAG, "task>>"+msg);
+                    }
+                });
+    }
 }
 
