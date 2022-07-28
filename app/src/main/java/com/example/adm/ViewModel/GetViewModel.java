@@ -33,7 +33,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.GsonBuilder;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -766,6 +769,9 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void GetNotify() {
+
+
+        //get notify data
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Notifications");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -773,12 +779,75 @@ public class GetViewModel extends AndroidViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 notifyLists = new ArrayList<>();
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                    MyLog.e(TAG, "notify>>key>>" +datas.getKey().toString());
-                    MyLog.e(TAG, "notify>>value>>" +datas.getValue().toString());
-                    NotifyList list = new NotifyList(
-                            datas.getValue().toString()
-                    );
-                    notifyLists.add(list);
+                    String key=datas.getKey().toString();
+                    for (DataSnapshot snapshot1 : datas.getChildren()) {
+                        MyLog.e(TAG, "notify>>key>>" + snapshot1.getKey().toString());
+                        MyLog.e(TAG, "notify>>value>>" + snapshot1.getValue().toString());
+
+
+
+                        /////////////*******CLEAR EXPIRED DATE**************////////////////////////////
+                        //clear date list
+                        String gn_Date=snapshot1.getKey().toString();
+                        Date date1=new Date();
+                        Date date2=new Date();
+                        Date date = new Date();
+
+                        SimpleDateFormat dates = new SimpleDateFormat("dd/MM/yyyy");
+                        String current_Date = dates.format(date);
+                        gn_Date=gn_Date.replace("-","/");
+                        MyLog.e(TAG,"notifyDates>>GN>>"+gn_Date+">>Cure>>"+current_Date);
+
+                        //Setting dates
+                        try {
+                            date1 = dates.parse(current_Date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            date2 = dates.parse(gn_Date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        //MyLog.e(TAG,"dates>>diff>>"+date2.before(date1));
+
+                        if(date2.before(date1))
+                        {
+                            //Comparing dates
+                            long difference = Math.abs(date1.getTime() - date2.getTime());
+                            long differenceDates = difference / (24 * 60 * 60 * 1000);
+
+                            //Convert long to String
+                            String dayDifference = Long.toString(differenceDates);
+                            MyLog.e(TAG,"notifyDates>>differ>>"+dayDifference);
+                            gn_Date=gn_Date.replace("/","-");
+                            int n=Integer.parseInt(dayDifference);
+                            MyLog.e(TAG,"notifyDates>>delete>>"+n);
+                            if(n>=7) {
+                                //remove expiry date
+                                firebaseDatabase = FirebaseDatabase.getInstance();
+                                databaseReference = firebaseDatabase.getReference("Notifications");
+                                MyLog.e(TAG,"notifyDates>>\nkey>>"+key+"\t==\tgn_date>>"+gn_Date);
+                                databaseReference.child(key).child(gn_Date).removeValue();
+                            }
+
+                        }
+                        else
+                        {
+
+                        }
+
+
+                        /////////////***********END END CLEAR EXPIRED DATE END END**********////////////////////////////
+
+
+
+                        NotifyList list = new NotifyList(
+                                snapshot1.getKey().toString(),
+                                snapshot1.getValue().toString()
+                        );
+                        notifyLists.add(list);
+                    }
                 }
                 notifyListsMutableData.postValue(notifyLists);
                 MyLog.e(TAG, "notify>>" + new GsonBuilder().setPrettyPrinting().create().toJson(notifyLists));

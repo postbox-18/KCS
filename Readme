@@ -4,14 +4,14 @@ https://postbox-18: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@github.com/postbox-1
 
 https://aliahmedbd.github.io/Ticker-Using-Recycler-View-Android/
 https://stackoverflow.com/questions/31253555/how-do-i-create-a-circular-endless-recyclerview
+https://www.techotopia.com/index.php/Working_with_Firebase_Realtime_Database_Lists
+
 
 
 
 Pending
 
-7-delete after order date in notify fragment
 8-highlight unread notify msg
-9-tap to view the orders
 10-count in notify tab
 11-
 
@@ -32,3 +32,5 @@ Solved
 4-login activity add then get data from base
 5-control panel edit and remove data
 6-Show orders username in one cardview into func(NO NEED)
+7-delete when expired date order in notify fragment
+9-tap to view the orders(NO NEED)
