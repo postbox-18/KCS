@@ -1354,6 +1354,7 @@ public class GetViewModel extends AndroidViewModel {
         editHeaderMapMutableLiveData.postValue(editHeaderMap);
         //set item map
         editItemMapMutableLiveData.postValue(editItemMap);
+        MyLog.e(TAG, "editmaps>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map) + "\n\n");
 
     }
 
@@ -1376,7 +1377,7 @@ public class GetViewModel extends AndroidViewModel {
         oldDateTimeCountLiveData.postValue(oldDateTimeCount);
 
 
-/*
+        /*
         //get header map
         String sd = ses + "!" + dTime + "/" + count;
 
@@ -1443,6 +1444,15 @@ public class GetViewModel extends AndroidViewModel {
             }
         }*/
 
+        String[] srr = sess.split("_");
+        String session_time_count = srr[0];
+        session_time_count = session_time_count.replace("-", "/");
+        editDateMap=editFunc_Map.get(func);
+        date=date.replace("/","-");
+        editSessionMap=editDateMap.get(date);
+        editHeaderMap = editSessionMap.get(session_time_count);
+        MyLog.e(TAG, "editmap>>editHeaderMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editHeaderMap) + "\n\n");
+
         //ge edit header list
         Set<String> set3 = editHeaderMap.keySet();
         List<String> aList13 = new ArrayList<String>(set3.size());
@@ -1450,16 +1460,13 @@ public class GetViewModel extends AndroidViewModel {
             aList13.add(x13);
         selectedHeadersList = new ArrayList<>();
         for (int i = 0; i < aList13.size(); i++) {
-            if (position == i) {
-                MyLog.e(TAG, "editmap>>headerTitle>?" + aList13.get(i));
-                SelectedHeader selectedHeader = new SelectedHeader(
-                        aList13.get(i)
-                );
-                selectedHeadersList.add(selectedHeader);
-                break;
-            } else {
-                continue;
-            }
+
+            MyLog.e(TAG, "editmap>>headerTitle>?" + aList13.get(i));
+            SelectedHeader selectedHeader = new SelectedHeader(
+                    aList13.get(i)
+            );
+            selectedHeadersList.add(selectedHeader);
+
         }
 
 
@@ -1568,9 +1575,7 @@ public class GetViewModel extends AndroidViewModel {
         for (int n = 0; n < selectedHeadersList.size(); n++) {
             editHeaderMap.put(selectedHeadersList.get(n).getHeader(), editItemMap);
 
-            String[] srr = sess.split("_");
-            String session_time_count = srr[0];
-            session_time_count = session_time_count.replace("-", "/");
+
             editSessionMap.put(session_time_count, editHeaderMap);
 
             date = date.replace("/", "-");
@@ -1582,7 +1587,6 @@ public class GetViewModel extends AndroidViewModel {
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
 
         MyLog.e(TAG, "editmap>>editItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editItemMap) + "\n\n");
-        MyLog.e(TAG, "editmap>>editHeaderMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editHeaderMap) + "\n\n");
         MyLog.e(TAG, "editmap>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
 

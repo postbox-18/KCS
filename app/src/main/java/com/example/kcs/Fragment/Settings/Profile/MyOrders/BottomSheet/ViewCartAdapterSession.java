@@ -110,15 +110,27 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 getViewModel.setEcd(n);
             }
         });
-        //get item map
+        ///////////***************************clear list in live data model****************************//////////////////////
+        //get edit header map
+        getViewModel.getEditHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> stringLinkedHashMapLinkedHashMap) {
+                editHeaderMap=stringLinkedHashMapLinkedHashMap;
+                editHeaderMap=new LinkedHashMap<>();
+                getViewModel.setEditHeaderMap(editHeaderMap);
+            }
+        });
+
+        //get edit item map
         getViewModel.getEditItemMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedDishList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SelectedDishList>> stringListLinkedHashMap) {
                 editItemMap = stringListLinkedHashMap;
-                //editItemMap = new LinkedHashMap<>();
+                editItemMap = new LinkedHashMap<>();
                 getViewModel.setEditItemMap(editItemMap);
             }
         });
+
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get edit func map to cancel orders

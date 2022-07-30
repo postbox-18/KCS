@@ -101,14 +101,18 @@ public class ViewCartAdapterHeader extends RecyclerView.Adapter<ViewCartAdapterH
             holder.header_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
         }
 
-        //get edit item map to new hashmap()
+        ///////////***************************clear list in live data model****************************//////////////////////
+        //get edit item map
         getViewModel.getEditItemMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedDishList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SelectedDishList>> stringListLinkedHashMap) {
-                editItemMap=new LinkedHashMap<>(stringListLinkedHashMap);
+                editItemMap = stringListLinkedHashMap;
+                editItemMap = new LinkedHashMap<>();
                 getViewModel.setEditItemMap(editItemMap);
             }
         });
+        ///////////***************************clear list in live data model****************************//////////////////////
+
 
 
 
