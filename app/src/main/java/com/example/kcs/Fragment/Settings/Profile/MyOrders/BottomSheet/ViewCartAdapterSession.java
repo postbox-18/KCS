@@ -265,7 +265,7 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 if (n == 0) {
                     getViewModel.setI_value(1);
                     MyLog.e(TAG,"editmap>>pso>>"+position);
-                    getViewModel.getSelecteds_map(date, ses, dTime, b, count,position);
+                    getViewModel.getSelecteds_map(date, ses, dTime, b, count,position,func_title,session_title);
                 } else if (n == 1) {
                     MyLog.e(TAG, "Cancel>>sess_date>>" + session_title);
                     //Cancel

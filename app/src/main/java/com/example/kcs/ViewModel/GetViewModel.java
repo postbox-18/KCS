@@ -1358,11 +1358,11 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     //date,ses,dTime,b
-    public void getSelecteds_map(String date, String ses, String dTime, String b, String count, int position) {
+    public void getSelecteds_map(String date, String session_title, String dTime, String b, String count, int position, String func, String sess) {
 
 
         //set session title live
-        session_titleMutable.postValue(ses);
+        session_titleMutable.postValue(session_title);
         //set date picker
         date = date.replace("-", "/");
         date_pickerMutable.postValue(date);
@@ -1388,7 +1388,8 @@ public class GetViewModel extends AndroidViewModel {
             aList.add(x);
 
         MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-       *//* e_selectedHeaders.clear();
+       */
+        /* e_selectedHeaders.clear();
         for (int i = 0; i < aList.size(); i++) {
             //set selected header list
             SelectedHeader list = new SelectedHeader(
@@ -1404,7 +1405,8 @@ public class GetViewModel extends AndroidViewModel {
         e_headerMap = new LinkedHashMap<>();
         for (int k = 0; k < e_selectedHeaders.size(); k++) {
             header_title = e_selectedHeaders.get(k).getHeader();
-            selectedHeadersList = (editHeaderMap).get(header_title);*//*
+            selectedHeadersList = (editHeaderMap).get(header_title);*/
+        /*
             //set item list from header map in data base
             //itemLists = f_maps.get(header_title);
             d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
@@ -1524,9 +1526,64 @@ public class GetViewModel extends AndroidViewModel {
                 }
             }
         }
+        MyLog.e(TAG, "editmap>>editFunc_Map>>before\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
+
+
+
+        /*{
+      "Wedding": {
+        "30-7-2022": {
+          "Dinner!05:58 PM/56": {
+            "Dessert": {
+              "Ice Creams_true": [
+                {
+                  "dish": "black current"
+                },
+                {
+                  "dish": "chocolate"
+                }
+              ]*/
+
+        /*"Wedding": {
+        "30/7/2022": {
+          "Dinner!06:00 PM-66_true": {
+            "Veg": {
+              "Chiken_true": [
+                {
+                  "dish": "Kerala Chicken Roast"
+                },
+                {
+                  "dish": "Chilli"
+                }
+              ]
+            }*/
 
         edit_selected_s_map.add(e_ItemMap);
         check_s_mapMutable.postValue(edit_selected_s_map);
+        editHeaderMap = new LinkedHashMap<>();
+        editSessionMap = new LinkedHashMap<>();
+        editDateMap = new LinkedHashMap<>();
+        editFunc_Map = new LinkedHashMap<>();
+
+        for (int n = 0; n < selectedHeadersList.size(); n++) {
+            editHeaderMap.put(selectedHeadersList.get(n).getHeader(), editItemMap);
+
+            String[] srr = sess.split("_");
+            String session_time_count = srr[0];
+            session_time_count = session_time_count.replace("-", "/");
+            editSessionMap.put(session_time_count, editHeaderMap);
+
+            date = date.replace("/", "-");
+            editDateMap.put(date, editSessionMap);
+
+            editFunc_Map.put(func, editDateMap);
+        }
+
+        editFunc_MapMutableLiveData.postValue(editFunc_Map);
+
+        MyLog.e(TAG, "editmap>>editItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editItemMap) + "\n\n");
+        MyLog.e(TAG, "editmap>>editHeaderMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editHeaderMap) + "\n\n");
+        MyLog.e(TAG, "editmap>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
 
     }
