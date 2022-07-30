@@ -329,7 +329,6 @@ public class GetViewModel extends AndroidViewModel {
     private Call<Notification> call;
 
 
-
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
@@ -1359,7 +1358,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     //date,ses,dTime,b
-    public void getSelecteds_map(String date, String ses, String dTime, String b, String count) {
+    public void getSelecteds_map(String date, String ses, String dTime, String b, String count, int position) {
 
 
         //set session title live
@@ -1449,10 +1448,16 @@ public class GetViewModel extends AndroidViewModel {
             aList13.add(x13);
         selectedHeadersList = new ArrayList<>();
         for (int i = 0; i < aList13.size(); i++) {
-            SelectedHeader selectedHeader = new SelectedHeader(
-                    aList13.get(i)
-            );
-            selectedHeadersList.add(selectedHeader);
+            if (position == i) {
+                MyLog.e(TAG, "editmap>>headerTitle>?" + aList13.get(i));
+                SelectedHeader selectedHeader = new SelectedHeader(
+                        aList13.get(i)
+                );
+                selectedHeadersList.add(selectedHeader);
+                break;
+            } else {
+                continue;
+            }
         }
 
 
@@ -1523,6 +1528,7 @@ public class GetViewModel extends AndroidViewModel {
         edit_selected_s_map.add(e_ItemMap);
         check_s_mapMutable.postValue(edit_selected_s_map);
 
+
     }
 
 
@@ -1580,12 +1586,12 @@ public class GetViewModel extends AndroidViewModel {
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference("Notifications");
                 username = new SharedPreferences_data(getApplication()).getS_user_name();
-                date=date.replace("/","-");
+                date = date.replace("/", "-");
                 String msg = "Data Delete by " + username + " (contact number: " + phone_number + ") and Function is " + func_title + " session is " + session_title + " at " + date + " Time is " + time + " Total Count is " + count;
                 MyLog.e(TAG, "notify>>" + msg);
                 DatabaseReference databaseReference1 = databaseReference.push();
                 databaseReference1.child(date).setValue(msg);
-                PushNotify("Delete",msg);
+                PushNotify("Delete", msg);
 
 
             }
@@ -1638,12 +1644,12 @@ public class GetViewModel extends AndroidViewModel {
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference("Notifications");
                 username = new SharedPreferences_data(getApplication()).getS_user_name();
-                date=date.replace("/","-");
+                date = date.replace("/", "-");
                 String msg = "Items Modified by " + username + " (contact number: " + phone_number + ") and Function is " + func_title + " session is " + session_title + " at " + date + " Time is " + time + " Total Count is " + count;
                 MyLog.e(TAG, "notify>>" + msg);
-                DatabaseReference databaseReference1=databaseReference.push();
+                DatabaseReference databaseReference1 = databaseReference.push();
                 databaseReference1.child(date).setValue(msg);
-                PushNotify("Modified",msg);
+                PushNotify("Modified", msg);
 
 
             }
@@ -1739,8 +1745,6 @@ public class GetViewModel extends AndroidViewModel {
         //remove data
         databaseReference.child(phone_number).child(funcTitle).child(gn_date).removeValue();
         MyLog.e(TAG, "dates remove commit");
-
-
 
 
     }
