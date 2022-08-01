@@ -1354,7 +1354,6 @@ public class GetViewModel extends AndroidViewModel {
         editHeaderMapMutableLiveData.postValue(editHeaderMap);
         //set item map
         editItemMapMutableLiveData.postValue(editItemMap);
-        MyLog.e(TAG, "editmaps>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map) + "\n\n");
 
     }
 
@@ -1451,7 +1450,6 @@ public class GetViewModel extends AndroidViewModel {
         date=date.replace("/","-");
         editSessionMap=editDateMap.get(date);
         editHeaderMap = editSessionMap.get(session_time_count);
-        MyLog.e(TAG, "editmap>>editHeaderMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editHeaderMap) + "\n\n");
 
         //ge edit header list
         Set<String> set3 = editHeaderMap.keySet();
@@ -1533,7 +1531,6 @@ public class GetViewModel extends AndroidViewModel {
                 }
             }
         }
-        MyLog.e(TAG, "editmap>>editFunc_Map>>before\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
 
 
@@ -1586,8 +1583,6 @@ public class GetViewModel extends AndroidViewModel {
 
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
 
-        MyLog.e(TAG, "editmap>>editItemMap\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editItemMap) + "\n\n");
-        MyLog.e(TAG, "editmap>>editFunc_Map\n" + new GsonBuilder().setPrettyPrinting().create().toJson(editFunc_Map));
 
 
     }
@@ -1752,7 +1747,6 @@ public class GetViewModel extends AndroidViewModel {
         RootList rootList1 = new RootList();
         rootList1.setnotification(notification);
         rootList1.setto(getApplication().getResources().getString(R.string.access_token));
-        Log.e(TAG, "call>>rootList1>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(rootList1));
         // calling a method to create a post and passing our modal class.
         Call<RootList> call = retrofitAPI.createPost(rootList1, getApplication().getResources().getString(R.string.server_key));
 
@@ -1763,8 +1757,7 @@ public class GetViewModel extends AndroidViewModel {
                 // this method is called when we get response from our api.
 
 
-                /*Log.e(TAG,"call>>call>>"+new GsonBuilder().setPrettyPrinting().create().toJson(call));
-                Log.e(TAG,"call>>response>>"+new GsonBuilder().setPrettyPrinting().create().toJson(response));*/
+
 
                 // below line is for hiding our progress bar.
 
