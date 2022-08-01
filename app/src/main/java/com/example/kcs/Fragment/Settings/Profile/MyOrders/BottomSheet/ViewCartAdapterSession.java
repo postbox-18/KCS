@@ -110,15 +110,27 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 getViewModel.setEcd(n);
             }
         });
-        //get item map
+        ///////////***************************clear list in live data model****************************//////////////////////
+        //get edit header map
+        getViewModel.getEditHeaderMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>>>() {
+            @Override
+            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<SelectedDishList>>> stringLinkedHashMapLinkedHashMap) {
+                editHeaderMap=stringLinkedHashMapLinkedHashMap;
+                editHeaderMap=new LinkedHashMap<>();
+                getViewModel.setEditHeaderMap(editHeaderMap);
+            }
+        });
+
+        //get edit item map
         getViewModel.getEditItemMapMutableLiveData().observe((LifecycleOwner) context, new Observer<LinkedHashMap<String, List<SelectedDishList>>>() {
             @Override
             public void onChanged(LinkedHashMap<String, List<SelectedDishList>> stringListLinkedHashMap) {
                 editItemMap = stringListLinkedHashMap;
-                //editItemMap = new LinkedHashMap<>();
+                editItemMap = new LinkedHashMap<>();
                 getViewModel.setEditItemMap(editItemMap);
             }
         });
+
         ///////////***************************clear list in live data model****************************//////////////////////
 
         //get edit func map to cancel orders
@@ -212,27 +224,27 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
             @Override
             public void onClick(View view) {
                 MyLog.e(TAG, "s_counts>>sess set >>" + sess_date);
-                alertDialog(sess_date, 0, list.getBolen());
+                alertDialog(sess_date, 0, list.getBolen(),position);
             }
         });
         //cancel
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alertDialog(sess_date, 1, list.getBolen());
+                alertDialog(sess_date, 1, list.getBolen(),position);
             }
         });//edit
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alertDialog(sess_date, 2, list.getBolen());
+                alertDialog(sess_date, 2, list.getBolen(),position);
             }
         });
 
 
     }
 
-    private void alertDialog(String session_title, int n, String bolen) {
+    private void alertDialog(String session_title, int n, String bolen,int position) {
         MyLog.e(TAG, "s_counts>>sess set alertDialog >>" + session_title);
 
         String[] scb = session_title.split("-");
@@ -264,7 +276,8 @@ public class ViewCartAdapterSession extends RecyclerView.Adapter<ViewCartAdapter
                 MyLog.e(TAG, "cancel>>value sess " + n);
                 if (n == 0) {
                     getViewModel.setI_value(1);
-                    getViewModel.getSelecteds_map(date, ses, dTime, b, count);
+                    MyLog.e(TAG,"editmap>>pso>>"+position);
+                    getViewModel.getSelecteds_map(date, ses, dTime, b, count,position,func_title,session_title);
                 } else if (n == 1) {
                     MyLog.e(TAG, "Cancel>>sess_date>>" + session_title);
                     //Cancel

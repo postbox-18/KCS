@@ -24,7 +24,8 @@ PENDING
 28-when save btn is clicked header map is empty alert user "header map is null please try again later"
 31-updating breadcrums ui in github starts bread crums
 32-standard bottomsheet to show checked dish with snack bar tap to view full details and also drag to view the details
-33-
+33-in myorders fragment refresh the page
+34-
 
 
 FINISHED
@@ -59,7 +60,7 @@ FINISHED
 
 
 ERROR
-2-
+2-edit btn click in that date all session is add to edit map.
 
 
 SOLVED

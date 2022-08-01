@@ -8,6 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -100,6 +102,7 @@ public class ViewCartAdapterItem extends RecyclerView.Adapter<ViewCartAdapterIte
         } else if (bolen.equals("false")) {
             holder.item_layout.setBackgroundColor(context.getResources().getColor(R.color.text_silver));
         }
+
 
 
 

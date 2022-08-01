@@ -329,7 +329,6 @@ public class GetViewModel extends AndroidViewModel {
     private Call<Notification> call;
 
 
-
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
@@ -1359,11 +1358,11 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     //date,ses,dTime,b
-    public void getSelecteds_map(String date, String ses, String dTime, String b, String count) {
+    public void getSelecteds_map(String date, String session_title, String dTime, String b, String count, int position, String func, String sess) {
 
 
         //set session title live
-        session_titleMutable.postValue(ses);
+        session_titleMutable.postValue(session_title);
         //set date picker
         date = date.replace("-", "/");
         date_pickerMutable.postValue(date);
@@ -1377,7 +1376,7 @@ public class GetViewModel extends AndroidViewModel {
         oldDateTimeCountLiveData.postValue(oldDateTimeCount);
 
 
-/*
+        /*
         //get header map
         String sd = ses + "!" + dTime + "/" + count;
 
@@ -1389,7 +1388,8 @@ public class GetViewModel extends AndroidViewModel {
             aList.add(x);
 
         MyLog.e(TAG,"chs>>list size>> "+ aList.size());
-       *//* e_selectedHeaders.clear();
+       */
+        /* e_selectedHeaders.clear();
         for (int i = 0; i < aList.size(); i++) {
             //set selected header list
             SelectedHeader list = new SelectedHeader(
@@ -1405,7 +1405,8 @@ public class GetViewModel extends AndroidViewModel {
         e_headerMap = new LinkedHashMap<>();
         for (int k = 0; k < e_selectedHeaders.size(); k++) {
             header_title = e_selectedHeaders.get(k).getHeader();
-            selectedHeadersList = (editHeaderMap).get(header_title);*//*
+            selectedHeadersList = (editHeaderMap).get(header_title);*/
+        /*
             //set item list from header map in data base
             //itemLists = f_maps.get(header_title);
             d_DishMap = new LinkedHashMap<>(d_ItemMap.get(header_title));
@@ -1442,6 +1443,14 @@ public class GetViewModel extends AndroidViewModel {
             }
         }*/
 
+        String[] srr = sess.split("_");
+        String session_time_count = srr[0];
+        session_time_count = session_time_count.replace("-", "/");
+        editDateMap=editFunc_Map.get(func);
+        date=date.replace("/","-");
+        editSessionMap=editDateMap.get(date);
+        editHeaderMap = editSessionMap.get(session_time_count);
+
         //ge edit header list
         Set<String> set3 = editHeaderMap.keySet();
         List<String> aList13 = new ArrayList<String>(set3.size());
@@ -1449,10 +1458,13 @@ public class GetViewModel extends AndroidViewModel {
             aList13.add(x13);
         selectedHeadersList = new ArrayList<>();
         for (int i = 0; i < aList13.size(); i++) {
+
+            MyLog.e(TAG, "editmap>>headerTitle>?" + aList13.get(i));
             SelectedHeader selectedHeader = new SelectedHeader(
                     aList13.get(i)
             );
             selectedHeadersList.add(selectedHeader);
+
         }
 
 
@@ -1520,8 +1532,59 @@ public class GetViewModel extends AndroidViewModel {
             }
         }
 
+
+
+        /*{
+      "Wedding": {
+        "30-7-2022": {
+          "Dinner!05:58 PM/56": {
+            "Dessert": {
+              "Ice Creams_true": [
+                {
+                  "dish": "black current"
+                },
+                {
+                  "dish": "chocolate"
+                }
+              ]*/
+
+        /*"Wedding": {
+        "30/7/2022": {
+          "Dinner!06:00 PM-66_true": {
+            "Veg": {
+              "Chiken_true": [
+                {
+                  "dish": "Kerala Chicken Roast"
+                },
+                {
+                  "dish": "Chilli"
+                }
+              ]
+            }*/
+
         edit_selected_s_map.add(e_ItemMap);
         check_s_mapMutable.postValue(edit_selected_s_map);
+        //editHeaderMap = new LinkedHashMap<>();
+        editSessionMap = new LinkedHashMap<>();
+        editDateMap = new LinkedHashMap<>();
+        editFunc_Map = new LinkedHashMap<>();
+
+
+        for (int n = 0; n < selectedHeadersList.size(); n++) {
+            //editHeaderMap.put(selectedHeadersList.get(n).getHeader(), editItemMap);
+
+
+            editSessionMap.put(session_time_count, editHeaderMap);
+
+            date = date.replace("/", "-");
+            editDateMap.put(date, editSessionMap);
+
+            editFunc_Map.put(func, editDateMap);
+        }
+
+        editFunc_MapMutableLiveData.postValue(editFunc_Map);
+
+
 
     }
 
@@ -1580,12 +1643,12 @@ public class GetViewModel extends AndroidViewModel {
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference("Notifications");
                 username = new SharedPreferences_data(getApplication()).getS_user_name();
-                date=date.replace("/","-");
+                date = date.replace("/", "-");
                 String msg = "Data Delete by " + username + " (contact number: " + phone_number + ") and Function is " + func_title + " session is " + session_title + " at " + date + " Time is " + time + " Total Count is " + count;
                 MyLog.e(TAG, "notify>>" + msg);
                 DatabaseReference databaseReference1 = databaseReference.push();
                 databaseReference1.child(date).setValue(msg);
-                PushNotify("Delete",msg);
+                PushNotify("Delete", msg);
 
 
             }
@@ -1638,12 +1701,12 @@ public class GetViewModel extends AndroidViewModel {
                 FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference databaseReference = firebaseDatabase.getReference("Notifications");
                 username = new SharedPreferences_data(getApplication()).getS_user_name();
-                date=date.replace("/","-");
+                date = date.replace("/", "-");
                 String msg = "Items Modified by " + username + " (contact number: " + phone_number + ") and Function is " + func_title + " session is " + session_title + " at " + date + " Time is " + time + " Total Count is " + count;
                 MyLog.e(TAG, "notify>>" + msg);
-                DatabaseReference databaseReference1=databaseReference.push();
+                DatabaseReference databaseReference1 = databaseReference.push();
                 databaseReference1.child(date).setValue(msg);
-                PushNotify("Modified",msg);
+                PushNotify("Modified", msg);
 
 
             }
@@ -1685,7 +1748,6 @@ public class GetViewModel extends AndroidViewModel {
         RootList rootList1 = new RootList();
         rootList1.setnotification(notification);
         rootList1.setto(getApplication().getResources().getString(R.string.access_token));
-        Log.e(TAG, "call>>rootList1>>\n" + new GsonBuilder().setPrettyPrinting().create().toJson(rootList1));
         // calling a method to create a post and passing our modal class.
         Call<RootList> call = retrofitAPI.createPost(rootList1, getApplication().getResources().getString(R.string.server_key));
 
@@ -1696,8 +1758,7 @@ public class GetViewModel extends AndroidViewModel {
                 // this method is called when we get response from our api.
 
 
-                /*Log.e(TAG,"call>>call>>"+new GsonBuilder().setPrettyPrinting().create().toJson(call));
-                Log.e(TAG,"call>>response>>"+new GsonBuilder().setPrettyPrinting().create().toJson(response));*/
+
 
                 // below line is for hiding our progress bar.
 
@@ -1739,8 +1800,6 @@ public class GetViewModel extends AndroidViewModel {
         //remove data
         databaseReference.child(phone_number).child(funcTitle).child(gn_date).removeValue();
         MyLog.e(TAG, "dates remove commit");
-
-
 
 
     }
