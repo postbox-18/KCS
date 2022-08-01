@@ -1564,13 +1564,14 @@ public class GetViewModel extends AndroidViewModel {
 
         edit_selected_s_map.add(e_ItemMap);
         check_s_mapMutable.postValue(edit_selected_s_map);
-        editHeaderMap = new LinkedHashMap<>();
+        //editHeaderMap = new LinkedHashMap<>();
         editSessionMap = new LinkedHashMap<>();
         editDateMap = new LinkedHashMap<>();
         editFunc_Map = new LinkedHashMap<>();
 
+
         for (int n = 0; n < selectedHeadersList.size(); n++) {
-            editHeaderMap.put(selectedHeadersList.get(n).getHeader(), editItemMap);
+            //editHeaderMap.put(selectedHeadersList.get(n).getHeader(), editItemMap);
 
 
             editSessionMap.put(session_time_count, editHeaderMap);
