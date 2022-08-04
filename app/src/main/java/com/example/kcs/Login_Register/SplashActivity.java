@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.example.kcs.Fragment.HomeFragment;
+import com.example.kcs.MainActivity;
 import com.example.kcs.ViewModel.SharedPreferences_data;
 import com.example.kcs.R;
 import com.google.firebase.database.DatabaseReference;
@@ -51,6 +53,8 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+
                 String check=new SharedPreferences_data(SplashActivity.this).getS_email();
                 if(check==null||check.isEmpty()) {
                     Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
@@ -58,8 +62,17 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                    if(new SharedPreferences_data(SplashActivity.this).is_UserGuest())
+                    {
+                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                    }
                 }
+
 
                 /*databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override

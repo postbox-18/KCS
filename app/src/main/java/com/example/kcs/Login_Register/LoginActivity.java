@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText email;
     private AutoCompleteTextView password;
     private AppCompatButton login_btn;
-    private TextView no_account,forgot;
+    private TextView no_account, forgot;
     private String s_email, s_password;
     private String TAG = "LoginActivity";
     private CheckBox remember_me;
@@ -164,30 +164,28 @@ public class LoginActivity extends AppCompatActivity {
         forgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder=new AlertDialog.Builder(LoginActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                 builder.setTitle("Recover Password");
-                LinearLayout linearLayout=new LinearLayout(LoginActivity.this);
-                final EditText emailet= new EditText(LoginActivity.this);
+                LinearLayout linearLayout = new LinearLayout(LoginActivity.this);
+                final EditText emailet = new EditText(LoginActivity.this);
 
                 // write the email using which you registered
-                if((email.getText().toString()).isEmpty())
-                {
+                if ((email.getText().toString()).isEmpty()) {
                     emailet.setHint("Email");
-                }
-                else {
+                } else {
                     emailet.setText(email.getText().toString());
                 }
                 emailet.setMinEms(16);
                 emailet.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 linearLayout.addView(emailet);
-                linearLayout.setPadding(10,10,10,10);
+                linearLayout.setPadding(10, 10, 10, 10);
                 builder.setView(linearLayout);
 
                 // Click on Recover and a email will be sent to your registered email id
                 builder.setPositiveButton("Recover", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String email=emailet.getText().toString().trim();
+                        String email = emailet.getText().toString().trim();
                         beginRecovery(email);
                     }
                 });
@@ -204,6 +202,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
     private void beginRecovery(String email) {
 
         loadingDialog.show(getSupportFragmentManager(), "Loading dailog");
@@ -215,24 +214,23 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 loadingDialog.dismiss();
-                if(task.isSuccessful())
-                {
+                if (task.isSuccessful()) {
                     // if isSuccessful then done message will be shown
                     // and you can change the password
-                    Toast.makeText(LoginActivity.this,"Done sent",Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Toast.makeText(LoginActivity.this,"Error Occurred",Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Done sent", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Error Occurred", Toast.LENGTH_LONG).show();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 loadingDialog.dismiss();
-                Toast.makeText(LoginActivity.this,"Error Failed",Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "Error Failed", Toast.LENGTH_LONG).show();
             }
         });
     }
+
     private void Auth() {
         mAuth.signInWithEmailAndPassword(s_email, s_password)
                 .addOnCompleteListener(
@@ -262,8 +260,11 @@ public class LoginActivity extends AppCompatActivity {
                                         MyLog.e(TAG, "logout>> remember me is checked");
                                         MyLog.e(TAG, "logout>>Check box checked>>" + remember_me.isChecked());
                                         check_password = true;
+                                        SharedPreferences_data.set_IsGuest(true);
+
 
                                     } else {
+                                        SharedPreferences_data.set_IsGuest(false);
                                         MyLog.e(TAG, "logout>>Check box not checked>>" + remember_me.isChecked());
                                         SharedPreferences_data.logout_User();
 
@@ -271,6 +272,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                     login();
                                 } else {
+                                    SharedPreferences_data.set_IsGuest(false);
 
                                     // sign-in failed
                                     Toast.makeText(getApplicationContext(),
@@ -351,7 +353,7 @@ public class LoginActivity extends AppCompatActivity {
             password.setError("Please enter a valid password");
         } else {
             MyLog.e(TAG, "error>>success");
-            MyLog.e(TAG, "errors>> continue login" );
+            MyLog.e(TAG, "errors>> continue login");
             getViewModel.setEmail(s_email);
             return true;
         }
