@@ -15,6 +15,7 @@ public class SharedPreferences_data {
     private static final String session_title="session_title";
 
     private static final String s_email="s_email";
+
     public SharedPreferences_data(Context context) {
         sharedPreferences = context.getSharedPreferences("password", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -45,6 +46,22 @@ public class SharedPreferences_data {
     public static void setEditor(SharedPreferences.Editor editor) {
         SharedPreferences_data.editor = editor;
     }
+
+
+    public static void set_IsGuest(boolean b_Guest) {
+        if (sharedPreferences != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("USER_Type", b_Guest);
+            editor.apply();
+        }
+    }
+    public boolean is_UserGuest() {
+        if (sharedPreferences != null) {
+            return sharedPreferences.getBoolean("USER_Type", false);
+        }
+        return false;
+    }
+
     public void setS_user_name(String user_name){
         sharedPreferences.edit().putString(s_user_name, user_name).commit();
 
