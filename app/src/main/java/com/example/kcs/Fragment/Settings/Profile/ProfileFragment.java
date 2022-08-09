@@ -103,8 +103,10 @@ public class ProfileFragment extends Fragment {
                 MyLog.e(TAG,"logout>> btn clicked");
                 SharedPreferences_data.logout_User();
                 new SharedPreferences_data(getContext()).setBoolen_check("false");
+                SharedPreferences_data.setVerifyOTP(false);
                 Intent intent=new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
+
 
             }
         });

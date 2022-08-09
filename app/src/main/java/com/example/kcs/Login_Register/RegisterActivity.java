@@ -201,7 +201,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String phoneNumber = "+91" + phone_number.getText().toString();
 
-                if (check_phoneNumberExistsInDataBase(phoneNumber)) {
+                if (check_phoneNumberExistsInDataBase(phone_number.getText().toString())) {
                     //alert dialog
                     AlertDialog.Builder alert = new AlertDialog.Builder(RegisterActivity.this);
                     alert.setMessage("You have already Register.");
@@ -578,8 +578,10 @@ public class RegisterActivity extends AppCompatActivity {
         public void onVerificationFailed(FirebaseException e) {
             // displaying error message with firebase exception.
             Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            msg.setText(e.getMessage());
+            msg.setText(e.getMessage()+"!");
             Log.e(TAG, "error>>186>>" + e.getMessage());
+            send_otp.setVisibility(View.VISIBLE);
+            progress_bar.setVisibility(View.GONE);
 
 
         }
@@ -589,11 +591,19 @@ public class RegisterActivity extends AppCompatActivity {
     private void verifyCode(String code) {
         // below line is used for getting
         // credentials from our verification id and code.
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        try {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
 
-        // after getting credential we are
-        // calling sign in method.
-        signInWithCredential(credential);
+            // after getting credential we are
+            // calling sign in method.
+            signInWithCredential(credential);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            msg.setText(e.getMessage() + "!");
+            send_otp.setVisibility(View.VISIBLE);
+            progress_bar.setVisibility(View.GONE);
+
+        }
     }
 
     private void signInWithCredential(PhoneAuthCredential credential) {
@@ -624,8 +634,9 @@ public class RegisterActivity extends AppCompatActivity {
                             // if the code is not correct then we are
                             // displaying an error message to the user.
                             Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            msg.setText(String.valueOf(task.getException()));
-
+                            msg.setText(String.valueOf(task.getException())+"!");
+                            send_otp.setVisibility(View.VISIBLE);
+                            progress_bar.setVisibility(View.GONE);
                             Log.e(TAG, "valid>>117>>" + task.getException());
                         }
                     }
