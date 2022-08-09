@@ -482,7 +482,8 @@ public class GetViewModel extends AndroidViewModel {
         return f_mapMutable;
     }*/
 
-    /*public void GetUserList() {
+    public void GetUserList() {
+        userLists=new ArrayList<>();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users-Id");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -512,7 +513,7 @@ public class GetViewModel extends AndroidViewModel {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
             }
         });
-    }*/
+    }
 
 
     public void GetOrdesList() {
