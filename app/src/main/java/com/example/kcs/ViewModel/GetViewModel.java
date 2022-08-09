@@ -327,12 +327,38 @@ public class GetViewModel extends AndroidViewModel {
     //Retro fit
     private Call<Notification> call;
 
+    //token
+    private String token;
+    private MutableLiveData<String> tokenLiveData = new MutableLiveData<>();
+
 
     public GetViewModel(@NonNull Application application) {
         super(application);
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
         CheckUserDetails();
+        GetToken();
+    }
+
+
+    public MutableLiveData<String> getTokenLiveData() {
+        return tokenLiveData;
+    }
+
+    private void GetToken() {
+        databaseReference = firebaseDatabase.getReference("Token").child("Receiver");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                token = String.valueOf(snapshot.getValue());
+                tokenLiveData.postValue(token);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "Fail to update data.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void setEmptyValue(Integer emptyValue) {
@@ -1445,9 +1471,9 @@ public class GetViewModel extends AndroidViewModel {
         String[] srr = sess.split("_");
         String session_time_count = srr[0];
         session_time_count = session_time_count.replace("-", "/");
-        editDateMap=editFunc_Map.get(func);
-        date=date.replace("/","-");
-        editSessionMap=editDateMap.get(date);
+        editDateMap = editFunc_Map.get(func);
+        date = date.replace("/", "-");
+        editSessionMap = editDateMap.get(date);
         editHeaderMap = editSessionMap.get(session_time_count);
 
         //ge edit header list
@@ -1582,7 +1608,6 @@ public class GetViewModel extends AndroidViewModel {
         }
 
         editFunc_MapMutableLiveData.postValue(editFunc_Map);
-
 
 
     }
@@ -1746,7 +1771,9 @@ public class GetViewModel extends AndroidViewModel {
         Notification notification = new Notification(Title, msg);
         RootList rootList1 = new RootList();
         rootList1.setnotification(notification);
-        rootList1.setto(getApplication().getResources().getString(R.string.access_token));
+        MyLog.e(TAG, "call>>response token: " + token);
+
+        rootList1.setto(token);
         // calling a method to create a post and passing our modal class.
         Call<RootList> call = retrofitAPI.createPost(rootList1, getApplication().getResources().getString(R.string.server_key));
 
@@ -1755,8 +1782,6 @@ public class GetViewModel extends AndroidViewModel {
             @Override
             public void onResponse(Call<RootList> call, Response<RootList> response) {
                 // this method is called when we get response from our api.
-
-
 
 
                 // below line is for hiding our progress bar.
@@ -1772,7 +1797,7 @@ public class GetViewModel extends AndroidViewModel {
 
                 // on below line we are getting our data from modal class and adding it to our string.
                 String responseString = "Response Code : " + response.code();
-                Log.e(TAG, "call>>response code : " + responseString);
+                MyLog.e(TAG, "call>>response code : " + responseString);
                 // below line we are setting our
                 // string to our text view.
             }
@@ -1782,7 +1807,7 @@ public class GetViewModel extends AndroidViewModel {
                 // setting text to our text view when
                 // we get error response from API.
 
-                Log.e(TAG, "call>>Error found is : " + t.getMessage());
+                MyLog.e(TAG, "call>>Error found is : " + t.getMessage());
 
             }
         });
