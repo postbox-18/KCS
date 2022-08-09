@@ -214,6 +214,21 @@ public class RegisterActivity extends AppCompatActivity {
                     });
                     AlertDialog alertDialog = alert.create();
                     alertDialog.show();
+                }else if (check_phoneNumberExistsInUserBase(phone_number.getText().toString())) {
+                    //alert dialog
+                    AlertDialog.Builder alert = new AlertDialog.Builder(RegisterActivity.this);
+                    alert.setMessage("You have already Register in Users App.");
+                    alert.setTitle("Alert");
+                    alert.setCancelable(false);
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @SuppressLint("NotifyDataSetChanged")
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alertDialog = alert.create();
+                    alertDialog.show();
                 } else {
                     sendVerificationCode(phoneNumber);
                     progress_bar.setVisibility(View.VISIBLE);
@@ -228,6 +243,36 @@ public class RegisterActivity extends AppCompatActivity {
                 getViewModel.getCheckPhoneNumberMutableLiveData().observe(RegisterActivity.this, new Observer<List<CheckPhoneNumber>>() {
                     @Override
                     public void onChanged(List<CheckPhoneNumber> checkPhoneNumbers1) {
+                        checkPhoneNumbers=new ArrayList<>();
+                        checkPhoneNumbers =checkPhoneNumbers1;
+                        for (int i = 0; i < checkPhoneNumbers1.size(); i++) {
+                            if (phoneNumber.equals(checkPhoneNumbers1.get(i).getPhone_number())) {
+                                check_phone = true;
+                                MyLog.e(TAG,"check_phone>>if>>"+check_phone);
+                                MyLog.e(TAG,"check_phone>>if>>"+phoneNumber+"=="+checkPhoneNumbers1.get(i).getPhone_number());
+
+                                break;
+
+                            } else {
+                                MyLog.e(TAG,"check_phone>>else>>"+check_phone);
+                                MyLog.e(TAG,"check_phone>>else>>"+phoneNumber+"=="+checkPhoneNumbers1.get(i).getPhone_number());
+
+                                check_phone = false;
+                                continue;
+                            }
+                        }
+                    }
+                });
+                MyLog.e(TAG,"check_phone>>"+check_phone);
+                return check_phone;
+            }
+            private boolean check_phoneNumberExistsInUserBase(String phoneNumber) {
+
+                //checkemail list in data base
+                getViewModel.getCheckUserPhoneNumberMutableLiveData().observe(RegisterActivity.this, new Observer<List<CheckPhoneNumber>>() {
+                    @Override
+                    public void onChanged(List<CheckPhoneNumber> checkPhoneNumbers1) {
+                        checkPhoneNumbers=new ArrayList<>();
                         checkPhoneNumbers = checkPhoneNumbers1;
                         for (int i = 0; i < checkPhoneNumbers1.size(); i++) {
                             if (phoneNumber.equals(checkPhoneNumbers1.get(i).getPhone_number())) {
@@ -250,6 +295,9 @@ public class RegisterActivity extends AppCompatActivity {
                 MyLog.e(TAG,"check_phone>>"+check_phone);
                 return check_phone;
             }
+
+
+
         });
 
 
@@ -326,6 +374,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
+
 
     /*private void Auth() {
         mAuth.createUserWithEmailAndPassword(s_email, s_password)

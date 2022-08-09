@@ -207,7 +207,8 @@ public class LoginActivity extends AppCompatActivity {
                     send_otp.setVisibility(View.GONE);
                     otp.setVisibility(View.VISIBLE);
 
-                } else {
+                }
+                else {
 
                     //alert dialog
                     AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
@@ -231,6 +232,7 @@ public class LoginActivity extends AppCompatActivity {
                 getViewModel.getCheckPhoneNumberMutableLiveData().observe(LoginActivity.this, new Observer<List<CheckPhoneNumber>>() {
                     @Override
                     public void onChanged(List<CheckPhoneNumber> checkPhoneNumbers1) {
+                        checkPhoneNumbers=new ArrayList<>();
                         checkPhoneNumbers = checkPhoneNumbers1;
                         for (int i = 0; i < checkPhoneNumbers1.size(); i++) {
                             if (phoneNumber.equals(checkPhoneNumbers1.get(i).getPhone_number())) {

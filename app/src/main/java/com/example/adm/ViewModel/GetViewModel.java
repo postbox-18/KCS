@@ -129,6 +129,10 @@ public class GetViewModel extends AndroidViewModel {
     //Phone check
     private List<CheckPhoneNumber> checkPhoneNumbers = new ArrayList<>();
     private MutableLiveData<List<CheckPhoneNumber>> checkPhoneNumberMutableLiveData = new MutableLiveData<>();
+
+    //User Phone check
+    private List<CheckPhoneNumber> checkUserPhoneNumbers = new ArrayList<>();
+    private MutableLiveData<List<CheckPhoneNumber>> checkUserPhoneNumberMutableLiveData = new MutableLiveData<>();
     //My Order HashMap
     private List<OrderDishLists> o_orderDishLists = new ArrayList<>();
 
@@ -163,8 +167,9 @@ public class GetViewModel extends AndroidViewModel {
         //firebase
         firebaseDatabase = FirebaseDatabase.getInstance();
 
+        CheckAdmDetails();
         CheckUserDetails();
-        GetUserList();
+        //GetUserList();
 
     }
 
@@ -172,6 +177,9 @@ public class GetViewModel extends AndroidViewModel {
 
     public MutableLiveData<List<CheckPhoneNumber>> getCheckPhoneNumberMutableLiveData() {
         return checkPhoneNumberMutableLiveData;
+    }
+    public MutableLiveData<List<CheckPhoneNumber>> getCheckUserPhoneNumberMutableLiveData() {
+        return checkUserPhoneNumberMutableLiveData;
     }
 
     public MutableLiveData<List<NotifyList>> getNotifyListsMutableData() {
@@ -223,7 +231,7 @@ public class GetViewModel extends AndroidViewModel {
         return orderMapMutableLiveData;
     }
 
-    private void CheckUserDetails() {
+    private void CheckAdmDetails() {
         checkPhoneNumbers = new ArrayList<>();
         databaseReference = firebaseDatabase.getReference("Admin");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -239,6 +247,32 @@ public class GetViewModel extends AndroidViewModel {
                 }
                 MyLog.e(TAG, "errors>>at firebase  emails out " + check_email);
                 checkPhoneNumberMutableLiveData.postValue(checkPhoneNumbers);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void CheckUserDetails() {
+        checkUserPhoneNumbers = new ArrayList<>();
+        databaseReference = firebaseDatabase.getReference("Users-Id");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MyLog.e(TAG, "snap>>" + snapshot);
+                for (DataSnapshot datas : snapshot.getChildren()) {
+                    MyLog.e(TAG, "error>>at firebase  emails " + datas.getKey());
+                    CheckPhoneNumber checkEmails1 = new CheckPhoneNumber(
+                            datas.getKey()
+                    );
+                    checkUserPhoneNumbers.add(checkEmails1);
+                }
+                MyLog.e(TAG, "errors>>at firebase  emails out " + check_email);
+                checkUserPhoneNumberMutableLiveData.postValue(checkUserPhoneNumbers);
 
             }
 
@@ -448,7 +482,7 @@ public class GetViewModel extends AndroidViewModel {
         return f_mapMutable;
     }*/
 
-    public void GetUserList() {
+    /*public void GetUserList() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users-Id");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -478,7 +512,7 @@ public class GetViewModel extends AndroidViewModel {
                 Toast.makeText(getApplication(), "Fail to get data.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }*/
 
 
     public void GetOrdesList() {
