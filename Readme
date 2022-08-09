@@ -27,6 +27,8 @@ PENDING
 33-in myorders fragment refresh the page
 34-Check Phone number in user id data
 35-load on send otp btn.
+36-Admin data can't in "Users-Id" and also in "Users-Id" data can't have in "Admin" in Both Register and Login.
+37-
 
 FINISHED
 1-alert check box to select the func
