@@ -209,7 +209,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@drawable/register_btn"
+                android:background="@drawable/register_btn_silver"
                 android:text="Login"
                 android:textAlignment="center"
                 android:textColor="@color/white"

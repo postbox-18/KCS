@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //load data base
-        getViewModel.GetUserList();
+        //getViewModel.GetUserList();
         getViewModel.GetOrdesList();
         //getViewModel.GetSessionList();
         /*getViewModel.GetHeader();
