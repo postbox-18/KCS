@@ -33,12 +33,16 @@
         <entry key="app/src/main/res/drawable/ic_menu_camera.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_plus_lg.xml" value="0.1205" />
         <entry key="app/src/main/res/drawable/ic_plus_solid.xml" value="0.1205" />
+        <entry key="app/src/main/res/drawable/ic_send_check.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_trash3.xml" value="0.125" />
         <entry key="app/src/main/res/drawable/mytabs.xml" value="0.184" />
+        <entry key="app/src/main/res/drawable/register_btn.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/register_btn_silver.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/tab_bottom.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/tab_react.xml" value="0.184" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/add_itembox.xml" value="0.15818725951261223" />
         <entry key="app/src/main/res/layout/all_list_cardview.xml" value="0.19270833333333334" />

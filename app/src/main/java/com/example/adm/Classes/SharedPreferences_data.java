@@ -18,6 +18,21 @@ public class SharedPreferences_data {
         editor = sharedPreferences.edit();
 
     }
+
+    public static void setVerifyOTP(boolean b_verifyOTP) {
+        if (sharedPreferences != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("verifyOTP", b_verifyOTP);
+            editor.apply();
+        }
+    }
+    public boolean isVerifyOTP() {
+        if (sharedPreferences != null) {
+            return sharedPreferences.getBoolean("verifyOTP", false);
+        }
+        return false;
+    }
+
     public static boolean logout_User() {
         if (editor != null) {
             editor.remove("enter_password");

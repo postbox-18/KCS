@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SharedPreferences_data;
+import com.example.adm.MainActivity;
 import com.example.adm.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,34 +53,25 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                String check=new SharedPreferences_data(SplashActivity.this).getS_email();
-                if(check==null||check.isEmpty()) {
+                String phone=new SharedPreferences_data(SplashActivity.this).getS_phone_number();
+                if(phone==null||phone.isEmpty()) {
                     Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
                     startActivity(intent);
                 }
                 else
                 {
-                    startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                    if(new SharedPreferences_data(SplashActivity.this).isVerifyOTP())
+                    {
+                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                    }
                 }
+                finish();
 
-                /*databaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //MyLog.e(TAG, "snap>>" + snapshot);
-                        for (DataSnapshot datas : snapshot.getChildren()) {
-                           *//* MyLog.e(TAG, "snap>>" + datas.child("username").getValue().toString());
-                            MyLog.e(TAG, "snap>>" + datas.child("email").getValue().toString());
-                            MyLog.e(TAG, "snap>>" + datas.child("phone_number").getValue().toString());*//*
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(SplashActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
-                    }
-                });*/
 
 
             }
