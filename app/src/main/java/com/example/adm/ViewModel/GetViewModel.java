@@ -915,6 +915,10 @@ public class GetViewModel extends AndroidViewModel {
                         // Log and toast
                         String msg = getApplication().getString(R.string.fcm_token, token);
                         MyLog.e(TAG, "task>>"+msg);
+
+                        databaseReference = firebaseDatabase.getReference("Token");
+                        databaseReference.child("Receiver").setValue(token);
+
                     }
                 });
     }
