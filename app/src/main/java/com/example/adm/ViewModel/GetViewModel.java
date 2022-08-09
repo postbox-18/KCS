@@ -164,6 +164,7 @@ public class GetViewModel extends AndroidViewModel {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         CheckUserDetails();
+        GetUserList();
 
     }
 

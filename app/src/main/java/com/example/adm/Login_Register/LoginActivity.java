@@ -5,14 +5,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +31,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
+import com.example.adm.Classes.CheckPhoneNumber;
 import com.example.adm.Classes.LoadingDialogs;
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SharedPreferences_data;
@@ -35,22 +41,33 @@ import com.example.adm.ViewModel.GetViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 public class LoginActivity extends AppCompatActivity {
     //primary field
-    private EditText email;
-    private AutoCompleteTextView password;
+    //primary field
+    private AutoCompleteTextView otp, phone_number;
     private AppCompatButton login_btn;
-    private TextView no_account,forgot;
-    private String s_email, s_password;
+    private TextView no_account, forgot, msg;
+    private ImageView send_otp;
+    private ProgressBar progress_bar;
+    // verification ID
+    private String verificationId;
+    private boolean verifyOTP = false;
     private String TAG = "LoginActivity";
     private CheckBox remember_me;
     private boolean check_password = false;
-    private boolean check_email = false;
     private String s_check_box;
     //firebase auth
     private FirebaseAuth mAuth;
@@ -63,6 +80,8 @@ public class LoginActivity extends AppCompatActivity {
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private List<CheckPhoneNumber> checkPhoneNumbers = new ArrayList<>();
+    private boolean check_phone = false;
     private GetViewModel getViewModel;
 
     @Override
@@ -72,8 +91,11 @@ public class LoginActivity extends AppCompatActivity {
         getViewModel = new ViewModelProvider(this).get(GetViewModel.class);
 
         //id's
-        email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
+        otp = findViewById(R.id.otp);
+        send_otp = findViewById(R.id.send_otp);
+        phone_number = findViewById(R.id.phone_number);
+        progress_bar = findViewById(R.id.progress_bar);
+        msg = findViewById(R.id.msg);
         login_btn = findViewById(R.id.login_btn);
         bg_banner = findViewById(R.id.headings);
         head_layout = findViewById(R.id.head_layout);
@@ -109,8 +131,148 @@ public class LoginActivity extends AppCompatActivity {
         //firebase auth
         mAuth = FirebaseAuth.getInstance();
 
+        //check if phone number is 10 digit
+        phone_number.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                MyLog.e(TAG, "otp>>afterTextChanged>>" + s);
+                int counts = s.length();
+                MyLog.e(TAG, "otp>>afterTextChanged>>counts>>" + counts);
+                MyLog.e(TAG, "otp>>afterTextChanged>>phone_number>>" + phone_number.getText().toString());
+                if (counts == 10) {
+                    isValidPhoneNumber(phone_number.getText().toString());
+                    send_otp.setVisibility(View.VISIBLE);
+                } else {
+                    send_otp.setVisibility(View.GONE);
+
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+
+            }
+        });
+
+        //otp verify
+        otp.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                MyLog.e(TAG, "otp>>afterTextChanged>>" + s);
+                int counts = s.length();
+                MyLog.e(TAG, "otp>>afterTextChanged>>counts>>" + counts);
+                MyLog.e(TAG, "otp>>afterTextChanged>>phone_number>>" + otp.getText().toString());
+                if (counts == 6) {
+                    verifyCode(otp.getText().toString());
+                }
+                send_otp.setVisibility(View.VISIBLE);
+                progress_bar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+
+            }
+        });
+
+
+        //click on send_otp
+
+        send_otp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String phoneNumber = "+91" + phone_number.getText().toString();
+
+                if (check_phoneNumberExistsInDataBase(phone_number.getText().toString())) {
+                    sendVerificationCode(phoneNumber);
+                    progress_bar.setVisibility(View.VISIBLE);
+                    send_otp.setVisibility(View.GONE);
+                    otp.setVisibility(View.VISIBLE);
+
+                } else {
+
+                    //alert dialog
+                    AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
+                    alert.setMessage("You Haven't Register Yet.");
+                    alert.setTitle("Alert");
+                    alert.setCancelable(false);
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @SuppressLint("NotifyDataSetChanged")
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alertDialog = alert.create();
+                    alertDialog.show();
+                }
+            }
+
+            private boolean check_phoneNumberExistsInDataBase(String phoneNumber) {
+                //checkemail list in data base
+                getViewModel.getCheckPhoneNumberMutableLiveData().observe(LoginActivity.this, new Observer<List<CheckPhoneNumber>>() {
+                    @Override
+                    public void onChanged(List<CheckPhoneNumber> checkPhoneNumbers1) {
+                        checkPhoneNumbers = checkPhoneNumbers1;
+                        for (int i = 0; i < checkPhoneNumbers1.size(); i++) {
+                            if (phoneNumber.equals(checkPhoneNumbers1.get(i).getPhone_number())) {
+                                check_phone = true;
+                                MyLog.e(TAG, "check_phone>>if>>" + check_phone);
+                                MyLog.e(TAG, "check_phone>>if>>" + phoneNumber + "==" + checkPhoneNumbers1.get(i).getPhone_number());
+
+                                break;
+
+                            } else {
+                                MyLog.e(TAG, "check_phone>>else>>" + check_phone);
+                                MyLog.e(TAG, "check_phone>>else>>" + phoneNumber + "==" + checkPhoneNumbers1.get(i).getPhone_number());
+
+                                check_phone = false;
+                                continue;
+                            }
+                        }
+                    }
+                });
+                MyLog.e(TAG, "check_phone>>" + check_phone);
+                return check_phone;
+            }
+        });
+
+
         //login btn onclick
         login_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadingDialog.show(getSupportFragmentManager(), "Loading dailog");
+                if (verifyOTP) {
+                    login();
+                } else {
+                    loadingDialog.dismiss();
+                    Toast.makeText(LoginActivity.this, "Please Try Again", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        //login btn onclick
+      /*  login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 s_email = email.getText().toString();
@@ -123,7 +285,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Please check the values", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
         //page to register can't have a account
         no_account.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +293,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
-        getViewModel.getEmailMutable().observe(LoginActivity.this, new Observer<Boolean>() {
+        /*getViewModel.getEmailMutable().observe(LoginActivity.this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 //check details
@@ -156,11 +318,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
 
         //onclick forgot password
         //forgot on click
-        forgot.setOnClickListener(new View.OnClickListener() {
+        /*forgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder=new AlertDialog.Builder(LoginActivity.this);
@@ -199,7 +361,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
                 builder.create().show();
             }
-        });
+        });*/
 
 
     }
@@ -232,14 +394,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-    private void Auth() {
+    /*private void Auth() {
         mAuth.signInWithEmailAndPassword(s_email, s_password)
                 .addOnCompleteListener(
                         new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(
                                     @NonNull Task<AuthResult> task) {
-                                            /*FireseBaseDataDetails(s_email);
+                                            *//*FireseBaseDataDetails(s_email);
                                             getViewModel.setEmail(s_email);
                                             getViewModel.getEmailMutable().observe(LoginActivity.this, new Observer<Boolean>() {
                                                 @Override
@@ -247,7 +409,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     check_email=aBoolean;
                                                 }
                                             });
-                                            if (task.isSuccessful()&&check_email) {*/
+                                            if (task.isSuccessful()&&check_email) {*//*
 
                                 if (task.isSuccessful()) {
                                     Toast.makeText(getApplicationContext(),
@@ -283,7 +445,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             }
                         });
-    }
+    }*/
 
     /*private void FireseBaseDataDetails(String s_email) {
         databaseReference = firebaseDatabase.getReference("Users-Id");
@@ -326,15 +488,17 @@ public class LoginActivity extends AppCompatActivity {
         // if sign-in is successful
         // intent to home activity
 
-        new SharedPreferences_data(getApplicationContext()).setEnter_password(s_password);
-        new SharedPreferences_data(getApplicationContext()).setBoolen_check(String.valueOf(check_password));
+        new SharedPreferences_data(getApplicationContext()).setS_phone_number(phone_number.getText().toString());
+        SharedPreferences_data.setVerifyOTP(true);
+
         Intent intent = new Intent(LoginActivity.this,
                 MainActivity.class);
         startActivity(intent);
+        finish();
 
     }
 
-    private boolean CheckDeatils() {
+    /*private boolean CheckDeatils() {
         //check details
         if (!isValidEmail(s_email)) {
             loadingDialog.dismiss();
@@ -354,7 +518,7 @@ public class LoginActivity extends AppCompatActivity {
             return true;
         }
         return false;
-    }
+    }*/
 
     //check valid email id
     private boolean isValidEmail(String s_email) {
@@ -384,6 +548,138 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         }, 5000);
+    }
+    //OTP
+    private void sendVerificationCode(String number) {
+        // this method is used for getting
+        // OTP on user phone number.
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(number)         // Phone number to verify
+                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                        .setActivity(this)                 // Activity (for callback binding)
+                        .setCallbacks(mCallBack)         // OnVerificationStateChangedCallbacks
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+        progress_bar.setVisibility(View.GONE);
+        send_otp.setVisibility(View.VISIBLE);
+
+    }
+
+    // callback method is called on Phone auth provider.
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks
+
+            // initializing our callbacks for on
+            // verification callback method.
+            mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+        // below method is used when
+        // OTP is sent from Firebase
+        @Override
+        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            super.onCodeSent(s, forceResendingToken);
+            // when we receive the OTP it
+            // contains a unique id which
+            // we are storing in our string
+            // which we have already created.
+            verificationId = s;
+        }
+
+        // this method is called when user
+        // receive OTP from Firebase.
+        @Override
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            // below line is used for getting OTP code
+            // which is sent in phone auth credentials.
+            final String code = phoneAuthCredential.getSmsCode();
+
+            // checking if the code
+            // is null or not.
+            if (code != null) {
+                // if the code is not null then
+                // we are setting that code to
+                // our OTP edittext field.
+                //otp.setText(code);
+
+                // after setting this code
+                // to OTP edittext field we
+                // are calling our verifycode method.
+                MyLog.e(TAG, "valid>>code>>" + code);
+                verifyCode(code);
+            } else {
+                otp.setError("Please enter the OTP");
+            }
+        }
+
+        // this method is called when firebase doesn't
+        // sends our OTP code due to any error or issue.
+        @Override
+        public void onVerificationFailed(FirebaseException e) {
+            // displaying error message with firebase exception.
+            Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            msg.setText(e.getMessage() + "!");
+            Log.e(TAG, "error>>186>>" + e.getMessage());
+            send_otp.setVisibility(View.VISIBLE);
+            progress_bar.setVisibility(View.GONE);
+
+
+        }
+    };
+
+    // below method is use to verify code from Firebase.
+    private void verifyCode(String code) {
+        // below line is used for getting
+        // credentials from our verification id and code.
+        try {
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+
+            // after getting credential we are
+            // calling sign in method.
+            signInWithCredential(credential);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            msg.setText(e.getMessage() + "!");
+            send_otp.setVisibility(View.VISIBLE);
+            progress_bar.setVisibility(View.GONE);
+
+        }
+    }
+
+    private void signInWithCredential(PhoneAuthCredential credential) {
+        // inside this method we are checking if
+        // the code entered is correct or not.
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // if the code is correct and the task is successful
+                            // we are sending our user to new activity.
+                            /*Intent i = new Intent(RegisterActivity.this, HomeActivity.class);
+                            startActivity(i);
+                            finish();*/
+                            verifyOTP = true;
+                            SharedPreferences_data.setVerifyOTP(true);
+                            login_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.register_btn));
+                            login_btn.setClickable(true);
+                            MyLog.e(TAG, "valid>>verifyOTP>>" + verifyOTP);
+                        } else {
+                            verifyOTP = false;
+                            SharedPreferences_data.setVerifyOTP(false);
+                            login_btn.setClickable(false);
+                            MyLog.e(TAG, "valid>>verifyOTP>>" + verifyOTP);
+                            login_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.register_btn_silver));
+
+                            // if the code is not correct then we are
+                            // displaying an error message to the user.
+                            Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            msg.setText(String.valueOf(task.getException()) + "!");
+                            send_otp.setVisibility(View.VISIBLE);
+                            progress_bar.setVisibility(View.GONE);
+                            Log.e(TAG, "valid>>117>>" + task.getException());
+                        }
+                    }
+                });
     }
 
 }

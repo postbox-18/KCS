@@ -285,7 +285,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             private void SaveDataBase() {
-                databaseReference = firebaseDatabase.getReference("Users-Id");
+                databaseReference = firebaseDatabase.getReference("Admin");
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

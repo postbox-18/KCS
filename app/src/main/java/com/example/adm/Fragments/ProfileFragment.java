@@ -88,7 +88,6 @@ public class ProfileFragment extends Fragment {
         user_name=view.findViewById(R.id.user_name);
         email=view.findViewById(R.id.email);
         log_out=view.findViewById(R.id.logout);
-        log_out=view.findViewById(R.id.logout);
         control_panel_card=view.findViewById(R.id.control_panel_card);
         back_btn=view.findViewById(R.id.back_btn);
 
@@ -103,6 +102,8 @@ public class ProfileFragment extends Fragment {
                 MyLog.e(TAG,"logout>> btn clicked");
                 SharedPreferences_data.logout_User();
                 new SharedPreferences_data(getContext()).setBoolen_check("false");
+                SharedPreferences_data.setVerifyOTP(false);
+
                 Intent intent=new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
 

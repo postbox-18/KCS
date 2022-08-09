@@ -77,7 +77,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/headings"
-    app:layout_constraintVertical_weight="1.5"
+    app:layout_constraintVertical_weight="0.5"
     android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,43 +104,72 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/email"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:drawablePadding="10dp"
-                    android:ems="10"
-                    android:hint="useremailid@gmail.com"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
-                    android:padding="25dp"
-                    android:singleLine="true"
-                    android:textColor="@color/colorSecondary" />
+                    android:orientation="horizontal">
+                    <AutoCompleteTextView
+                        android:id="@+id/phone_number"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/text_silver"
+                        android:drawablePadding="10dp"
+                        android:hint="Phone Number"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLength="10"
+                        android:padding="15dp"
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
+                    <ImageView
+                        android:id="@+id/send_otp"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.2"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_send_check"/>
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        android:layout_width="wrap_content"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
 
 
                 <AutoCompleteTextView
-                    android:id="@+id/password"
+                    android:id="@+id/otp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
                     android:drawablePadding="10dp"
-                    android:hint="Password"
+                    android:visibility="gone"
+                    android:hint="OTP"
                     android:imeOptions="actionDone"
-                    android:inputType="textPassword"
-                    android:maxLength="8"
+                    android:inputType="number"
+                    android:maxLength="6"
                     android:padding="25dp"
                     android:singleLine="true"
-
-                    android:textColor="@color/colorSecondary" />
+                    android:textColor="@color/black" />
 
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:layout_margin="10dp"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:visibility="gone"
                 android:layout_height="wrap_content">
             <CheckBox
                 android:id="@+id/remember_me"
@@ -166,7 +195,8 @@
         <LinearLayout
             android:id="@+id/register_btn_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="0.5"
             android:layout_margin="20dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
