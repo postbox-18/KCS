@@ -50,15 +50,17 @@
         <entry key="app/src/main/res/drawable/ic_knife_01.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_knife_01_cancel.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_search_black_24dp.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/ic_send_check.xml" value="0.196" />
         <entry key="app/src/main/res/drawable/ic_trash3_fill.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_trash3_fill_cancel.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_truckclock.xml" value="0.116" />
         <entry key="app/src/main/res/drawable/ic_user_solid.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/register_btn.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/register_btn_silver.xml" value="0.196" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
-        <entry key="app/src/main/res/layout/activity_register.xml" value="0.12" />
+        <entry key="app/src/main/res/layout/activity_register.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
         <entry key="app/src/main/res/layout/app_bar_home.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/app_bar_home__sample.xml" value="0.19375" />

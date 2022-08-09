@@ -55,7 +55,27 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
 
 
-                String check=new SharedPreferences_data(SplashActivity.this).getS_email();
+                String phone=new SharedPreferences_data(SplashActivity.this).getS_phone_number();
+                if(phone==null||phone.isEmpty()) {
+                    Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else
+                {
+                    if(new SharedPreferences_data(SplashActivity.this).isVerifyOTP())
+                    {
+                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                    }
+                    finish();
+                }
+
+                /*String check=new SharedPreferences_data(SplashActivity.this).getS_email();
                 if(check==null||check.isEmpty()) {
                     Intent intent = new Intent(SplashActivity.this, RegisterActivity.class);
                     startActivity(intent);
@@ -71,25 +91,7 @@ public class SplashActivity extends AppCompatActivity {
                     {
                         startActivity(new Intent(SplashActivity.this,LoginActivity.class));
                     }
-                }
-
-
-                /*databaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        MyLog.e(TAG, "snap>>" + snapshot);
-                        for (DataSnapshot datas : snapshot.getChildren()) {
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(SplashActivity.this, "Fail to get data.", Toast.LENGTH_SHORT).show();
-                    }
-                });*/
-
+                }*/
 
             }
         }, 5000);

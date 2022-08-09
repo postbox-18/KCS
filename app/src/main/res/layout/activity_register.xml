@@ -35,7 +35,8 @@
         <LinearLayout
             android:id="@+id/name_ct"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             app:layout_constraintBottom_toTopOf="@id/register_btn_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -77,7 +78,7 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -126,10 +127,14 @@
                 android:singleLine="true"
                 android:fontFamily="@font/robotoitalic"
                 android:textColor="@color/black" />
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
             <AutoCompleteTextView
                 android:id="@+id/phone_number"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/text_silver"
                 android:drawablePadding="10dp"
@@ -141,8 +146,37 @@
                 android:padding="15dp"
                 android:singleLine="true"
                 android:textColor="@color/black" />
+    <ImageView
+        android:id="@+id/send_otp"
+        android:layout_width="0dp"
+        android:layout_weight="0.2"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/ic_send_check"/>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"/>
 
+</LinearLayout>
             <AutoCompleteTextView
+                android:id="@+id/otp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/text_silver"
+                android:drawablePadding="10dp"
+                android:imeOptions="actionDone"
+                android:visibility="gone"
+                android:maxLength="6"
+                android:padding="15dp"
+                android:inputType="number"
+                android:fontFamily="@font/robotoitalic"
+                android:singleLine="true"
+                android:textColor="@color/black"/>
+
+          <!--  <AutoCompleteTextView
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -169,15 +203,24 @@
                 android:maxLength="8"
                 android:padding="15dp"
                 android:singleLine="true"
-                android:textColor="@color/black" />
+                android:textColor="@color/black" />-->
 </LinearLayout>
     </androidx.cardview.widget.CardView>
+                <TextView
+                    android:id="@+id/msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"/>
             </LinearLayout>
         </LinearLayout>
     <LinearLayout
         android:id="@+id/register_btn_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="0.2"
         android:layout_margin="20dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -190,8 +233,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/register_btn"
+            android:background="@drawable/register_btn_silver"
             android:text="Register"
+            android:clickable="false"
             android:fontFamily="@font/robotocondensedbold"
             android:textAlignment="center"
             android:textColor="@color/white"
