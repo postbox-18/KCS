@@ -62,6 +62,20 @@ public class SharedPreferences_data {
         return false;
     }
 
+    public static void setVerifyOTP(boolean b_verifyOTP) {
+        if (sharedPreferences != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("verifyOTP", b_verifyOTP);
+            editor.apply();
+        }
+    }
+    public boolean isVerifyOTP() {
+        if (sharedPreferences != null) {
+            return sharedPreferences.getBoolean("verifyOTP", false);
+        }
+        return false;
+    }
+
     public void setS_user_name(String user_name){
         sharedPreferences.edit().putString(s_user_name, user_name).commit();
 
