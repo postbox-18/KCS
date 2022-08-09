@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
         });
         //firebase auth
         mAuth = FirebaseAuth.getInstance();
-        getViewModel.getEmailMutable().observe(LoginActivity.this, new Observer<Boolean>() {
+        getViewModel.getphoneNumberMutable().observe(LoginActivity.this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 //check details

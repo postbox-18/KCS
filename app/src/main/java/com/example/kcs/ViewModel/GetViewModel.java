@@ -9,7 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.kcs.BreadCrumbs.BreadCrumbList;
-import com.example.kcs.Classes.CheckEmail;
+import com.example.kcs.Classes.CheckPhoneNumber;
 import com.example.kcs.Fragment.Dish.DishList;
 import com.example.kcs.Classes.ImgFunList;
 import com.example.kcs.Classes.ImgList;
@@ -39,7 +39,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -124,9 +123,9 @@ public class GetViewModel extends AndroidViewModel {
     private MutableLiveData<List<LinkedHashMap<String, List<ItemList>>>> s_mapMutable = new MutableLiveData<>();*/
 
     //check user login
-    private MutableLiveData<Boolean> EmailMutable = new MutableLiveData<>();
+    private MutableLiveData<Boolean> phoneNumberMutable = new MutableLiveData<>();
     private String email;
-    private boolean check_email = false;
+    private boolean check_phoneNumber = false;
 
     //firebase database retrieve
     private FirebaseDatabase firebaseDatabase;
@@ -225,8 +224,8 @@ public class GetViewModel extends AndroidViewModel {
     private String TAG = "ViewClassModel";
 
     //Email check
-    private List<CheckEmail> checkEmails = new ArrayList<>();
-    private MutableLiveData<List<CheckEmail>> checkEmailsMutableLiveData = new MutableLiveData<>();
+    private List<CheckPhoneNumber> checkPhoneNumbers = new ArrayList<>();
+    private MutableLiveData<List<CheckPhoneNumber>> checkPhoneNumberMutableLiveData = new MutableLiveData<>();
 
     //date picker alert
     private MutableLiveData<String> date_pickerMutable = new MutableLiveData<>();
@@ -564,21 +563,21 @@ public class GetViewModel extends AndroidViewModel {
 
 
     private void CheckUserDetails() {
-        checkEmails = new ArrayList<>();
+        checkPhoneNumbers = new ArrayList<>();
         databaseReference = firebaseDatabase.getReference("Users-Id");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "snap>>" + snapshot);
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                    MyLog.e(TAG, "error>>at firebase  emails " + datas.child("email").getValue().toString());
-                    CheckEmail checkEmails1 = new CheckEmail(
-                            datas.child("email").getValue().toString()
+                    MyLog.e(TAG, "error>>at firebase  emails " + datas.getKey());
+                    CheckPhoneNumber checkEmails1 = new CheckPhoneNumber(
+                            datas.getKey()
                     );
-                    checkEmails.add(checkEmails1);
+                    checkPhoneNumbers.add(checkEmails1);
                 }
-                MyLog.e(TAG, "errors>>at firebase  emails out " + check_email);
-                checkEmailsMutableLiveData.postValue(checkEmails);
+                MyLog.e(TAG, "errors>>at firebase  phone_number out " + check_phoneNumber);
+                checkPhoneNumberMutableLiveData.postValue(checkPhoneNumbers);
 
             }
 
@@ -601,8 +600,8 @@ public class GetViewModel extends AndroidViewModel {
     }
 
 
-    public MutableLiveData<List<CheckEmail>> getCheckEmailsMutableLiveData() {
-        return checkEmailsMutableLiveData;
+    public MutableLiveData<List<CheckPhoneNumber>> getCheckPhoneNumberMutableLiveData() {
+        return checkPhoneNumberMutableLiveData;
     }
 
     public void setSessionDateTimes(List<SessionDateTime> sessionDateTimes) {
@@ -927,8 +926,8 @@ public class GetViewModel extends AndroidViewModel {
 
     }
 
-    public MutableLiveData<Boolean> getEmailMutable() {
-        return EmailMutable;
+    public MutableLiveData<Boolean> getphoneNumberMutable() {
+        return phoneNumberMutable;
     }
 
 
@@ -1051,7 +1050,7 @@ public class GetViewModel extends AndroidViewModel {
 
     private void GetUserDeatils(String email) {
         MyLog.e(TAG, "errors>> GetUserDeatils");
-        check_email = false;
+        check_phoneNumber = false;
         databaseReference = firebaseDatabase.getReference("Users-Id");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1060,7 +1059,7 @@ public class GetViewModel extends AndroidViewModel {
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     MyLog.e(TAG, "error>>at firebase  emails " + datas.child("email").getValue().toString());
                     if (Objects.equals(email, datas.child("email").getValue().toString())) {
-                        MyLog.e(TAG, "errors>>at firebase  emails if " + check_email);
+                        MyLog.e(TAG, "errors>>at firebase  emails if " + check_phoneNumber);
                         String email = datas.child("email").getValue().toString();
                         String username = datas.child("username").getValue().toString();
                         String phone_number = datas.child("phone_number").getValue().toString();
@@ -1073,19 +1072,19 @@ public class GetViewModel extends AndroidViewModel {
                         if (phone_number != null) {
                             new SharedPreferences_data(getApplication()).setS_phone_number(datas.child("phone_number").getValue().toString());
                         }
-                        check_email = true;
+                        check_phoneNumber = true;
 
 
                         break;
                     } else {
-                        check_email = false;
+                        check_phoneNumber = false;
                         continue;
 
                     }
 
                 }
-                MyLog.e(TAG, "errors>>at firebase  emails out " + check_email);
-                EmailMutable.postValue(check_email);
+                MyLog.e(TAG, "errors>>at firebase  emails out " + check_phoneNumber);
+                phoneNumberMutable.postValue(check_phoneNumber);
 
 
             }

@@ -29,7 +29,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieListener;
 
-import com.example.kcs.Classes.CheckEmail;
+import com.example.kcs.Classes.CheckPhoneNumber;
 import com.example.kcs.DialogFragment.LoadingDialogs;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.MainActivity;
@@ -59,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     //primary field
     private EditText user_name, email;
-    private TextView already_login;
+    private TextView already_login, msg;
     private AutoCompleteTextView phone_number, otp;
     private ImageView send_otp;
     private ProgressBar progress_bar;
@@ -88,8 +88,8 @@ public class RegisterActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private GetViewModel getViewModel;
     //check mail
-    private List<CheckEmail> checkEmails = new ArrayList<>();
-    private boolean check_email = false;
+    private List<CheckPhoneNumber> checkPhoneNumbers = new ArrayList<>();
+    private boolean check_phone = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +103,7 @@ public class RegisterActivity extends AppCompatActivity {
         otp = findViewById(R.id.otp);
         send_otp = findViewById(R.id.send_otp);
         progress_bar = findViewById(R.id.progress_bar);
+        msg = findViewById(R.id.msg);
 
         register_btn = findViewById(R.id.register_btn);
         already_login = findViewById(R.id.already_login);
@@ -169,7 +170,7 @@ public class RegisterActivity extends AppCompatActivity {
                 MyLog.e(TAG, "otp>>afterTextChanged>>counts>>" + counts);
                 MyLog.e(TAG, "otp>>afterTextChanged>>phone_number>>" + otp.getText().toString());
                 if (counts == 6) {
-                   verifyCode(otp.getText().toString());
+                    verifyCode(otp.getText().toString());
                     send_otp.setVisibility(View.VISIBLE);
                     progress_bar.setVisibility(View.GONE);
                 } else {
@@ -194,16 +195,62 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
-
         //click on send_otp
         send_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String phoneNumber = "+91" + phone_number.getText().toString();
-                sendVerificationCode(phoneNumber);
-                progress_bar.setVisibility(View.VISIBLE);
-                send_otp.setVisibility(View.GONE);
-                otp.setVisibility(View.VISIBLE);
+
+                if (check_phoneNumberExistsInDataBase(phoneNumber)) {
+                    //alert dialog
+                    AlertDialog.Builder alert = new AlertDialog.Builder(RegisterActivity.this);
+                    alert.setMessage("You have already Register.");
+                    alert.setTitle("Alert");
+                    alert.setCancelable(false);
+                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @SuppressLint("NotifyDataSetChanged")
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    AlertDialog alertDialog = alert.create();
+                    alertDialog.show();
+                } else {
+                    sendVerificationCode(phoneNumber);
+                    progress_bar.setVisibility(View.VISIBLE);
+                    send_otp.setVisibility(View.GONE);
+                    otp.setVisibility(View.VISIBLE);
+
+                }
+            }
+
+            private boolean check_phoneNumberExistsInDataBase(String phoneNumber) {
+                //checkemail list in data base
+                getViewModel.getCheckPhoneNumberMutableLiveData().observe(RegisterActivity.this, new Observer<List<CheckPhoneNumber>>() {
+                    @Override
+                    public void onChanged(List<CheckPhoneNumber> checkPhoneNumbers1) {
+                        checkPhoneNumbers = checkPhoneNumbers1;
+                        for (int i = 0; i < checkPhoneNumbers1.size(); i++) {
+                            if (phoneNumber.equals(checkPhoneNumbers1.get(i).getPhone_number())) {
+                                check_phone = true;
+                                MyLog.e(TAG,"check_phone>>if>>"+check_phone);
+                                MyLog.e(TAG,"check_phone>>if>>"+phoneNumber+"=="+checkPhoneNumbers1.get(i).getPhone_number());
+
+                                break;
+
+                            } else {
+                                MyLog.e(TAG,"check_phone>>else>>"+check_phone);
+                                MyLog.e(TAG,"check_phone>>else>>"+phoneNumber+"=="+checkPhoneNumbers1.get(i).getPhone_number());
+
+                                check_phone = false;
+                                continue;
+                            }
+                        }
+                    }
+                });
+                MyLog.e(TAG,"check_phone>>"+check_phone);
+                return check_phone;
             }
         });
 
@@ -265,6 +312,7 @@ public class RegisterActivity extends AppCompatActivity {
                 });
                 //Next Screen Login
                 startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                finish();
             }
 
         });
@@ -273,6 +321,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
             }
         });
 
@@ -420,7 +469,7 @@ public class RegisterActivity extends AppCompatActivity {
             MyLog.e(TAG, "valid>>verifyOTP>>");
 
         } else {
-            MyLog.e(TAG,"valid>>");
+            MyLog.e(TAG, "valid>>");
 
             //shared-preferences
             loadingDialog.show(getSupportFragmentManager(), "Loading dailog");
@@ -516,11 +565,9 @@ public class RegisterActivity extends AppCompatActivity {
                 // after setting this code
                 // to OTP edittext field we
                 // are calling our verifycode method.
-                MyLog.e(TAG,"valid>>code>>"+code);
+                MyLog.e(TAG, "valid>>code>>" + code);
                 verifyCode(code);
-            }
-            else
-            {
+            } else {
                 otp.setError("Please enter the OTP");
             }
         }
@@ -531,6 +578,7 @@ public class RegisterActivity extends AppCompatActivity {
         public void onVerificationFailed(FirebaseException e) {
             // displaying error message with firebase exception.
             Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            msg.setText(e.getMessage());
             Log.e(TAG, "error>>186>>" + e.getMessage());
 
 
@@ -565,17 +613,19 @@ public class RegisterActivity extends AppCompatActivity {
                             SharedPreferences_data.setVerifyOTP(true);
                             register_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.register_btn));
                             register_btn.setClickable(true);
-                            MyLog.e(TAG,"valid>>verifyOTP>>"+verifyOTP);
+                            MyLog.e(TAG, "valid>>verifyOTP>>" + verifyOTP);
                         } else {
                             verifyOTP = false;
                             SharedPreferences_data.setVerifyOTP(false);
                             register_btn.setClickable(false);
-                            MyLog.e(TAG,"valid>>verifyOTP>>"+verifyOTP);
+                            MyLog.e(TAG, "valid>>verifyOTP>>" + verifyOTP);
                             register_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.register_btn_silver));
 
                             // if the code is not correct then we are
                             // displaying an error message to the user.
                             Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            msg.setText(String.valueOf(task.getException()));
+
                             Log.e(TAG, "valid>>117>>" + task.getException());
                         }
                     }
