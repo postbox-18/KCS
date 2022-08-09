@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView already_login;
     private AutoCompleteTextView phone_number, otp;
     private ImageView send_otp;
+    private ProgressBar progress_bar;
     private String s_user_name, s_phone_number, s_email;
     private boolean verifyOTP = false;
     //Tagging
@@ -100,6 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
         phone_number = findViewById(R.id.phone_number);
         otp = findViewById(R.id.otp);
         send_otp = findViewById(R.id.send_otp);
+        progress_bar = findViewById(R.id.progress_bar);
 
         register_btn = findViewById(R.id.register_btn);
         already_login = findViewById(R.id.already_login);
@@ -168,8 +171,10 @@ public class RegisterActivity extends AppCompatActivity {
                 if (counts == 6) {
                    verifyCode(otp.getText().toString());
                     send_otp.setVisibility(View.VISIBLE);
+                    progress_bar.setVisibility(View.GONE);
                 } else {
-                    send_otp.setVisibility(View.GONE);
+                    send_otp.setVisibility(View.VISIBLE);
+                    progress_bar.setVisibility(View.GONE);
 
                 }
             }
@@ -188,12 +193,16 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+
+
         //click on send_otp
         send_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String phoneNumber = "+91" + phone_number.getText().toString();
                 sendVerificationCode(phoneNumber);
+                progress_bar.setVisibility(View.VISIBLE);
+                send_otp.setVisibility(View.GONE);
                 otp.setVisibility(View.VISIBLE);
             }
         });
@@ -464,6 +473,8 @@ public class RegisterActivity extends AppCompatActivity {
                         .setCallbacks(mCallBack)         // OnVerificationStateChangedCallbacks
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
+        progress_bar.setVisibility(View.GONE);
+        send_otp.setVisibility(View.VISIBLE);
 
     }
 
@@ -552,12 +563,15 @@ public class RegisterActivity extends AppCompatActivity {
                             finish();*/
                             verifyOTP = true;
                             SharedPreferences_data.setVerifyOTP(true);
-
+                            register_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.register_btn));
+                            register_btn.setClickable(true);
                             MyLog.e(TAG,"valid>>verifyOTP>>"+verifyOTP);
                         } else {
                             verifyOTP = false;
                             SharedPreferences_data.setVerifyOTP(false);
+                            register_btn.setClickable(false);
                             MyLog.e(TAG,"valid>>verifyOTP>>"+verifyOTP);
+                            register_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.register_btn_silver));
 
                             // if the code is not correct then we are
                             // displaying an error message to the user.
