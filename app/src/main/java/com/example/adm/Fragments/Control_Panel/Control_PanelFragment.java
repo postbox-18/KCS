@@ -2,31 +2,16 @@ package com.example.adm.Fragments.Control_Panel;
 
 import android.os.Bundle;
 
-import androidx.appcompat.widget.AppCompatButton;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.example.adm.Fragments.Control_Panel.Dish.DishList;
-import com.example.adm.Fragments.Control_Panel.Header.HeaderAdapter;
-import com.example.adm.Fragments.Control_Panel.Header.HeaderList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,16 +29,10 @@ public class Control_PanelFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private RecyclerView recyclerview_header;
-    private List<HeaderList> headerList=new ArrayList<>();
-    private HeaderAdapter headerAdapter;
 
-    private ImageView back_btn;
     private GetViewModel getViewModel;
-    //item map
-    private LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> itemArrayListMap = new LinkedHashMap<>();
-    //dish map
-    private LinkedHashMap<String, List<DishList>> dishListMap = new LinkedHashMap<>();
+    private CardView phone_number_Cardview,header_Cardview;
+
 
 
     private String TAG="Control_PanelFragment";
@@ -85,48 +64,22 @@ public class Control_PanelFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_control__panel, container, false);
         getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
 
-        back_btn=view.findViewById(R.id.back_btn);
-        recyclerview_header=view.findViewById(R.id.recyclerview_header);
+        header_Cardview=view.findViewById(R.id.header_Cardview);
+        phone_number_Cardview=view.findViewById(R.id.phone_number_Cardview);
 
-
-        recyclerview_header.setHasFixedSize(true);
-        recyclerview_header.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-
-
-        headerList=new ArrayList<>();
-
-
-        //get item map list
-        getViewModel.getItemArrayListMapMutableLiveData().observe(getViewLifecycleOwner(), new Observer<LinkedHashMap<String, LinkedHashMap<String, List<DishList>>>>() {
-            @Override
-            public void onChanged(LinkedHashMap<String, LinkedHashMap<String, List<DishList>>> stringLinkedHashMapLinkedHashMap) {
-                itemArrayListMap=stringLinkedHashMapLinkedHashMap;
-                Set<String> stringSet = itemArrayListMap.keySet();
-                List<String> aList = new ArrayList<String>(stringSet.size());
-                for (String x : stringSet)
-                    aList.add(x);
-                headerList=new ArrayList<>();
-                for(int i=0;i<aList.size();i++)
-                {
-                    HeaderList list=new HeaderList(
-                            aList.get(i)
-                    );
-                    headerList.add(list);
-                }
-                headerAdapter=new HeaderAdapter(getContext(),headerList,getViewModel,itemArrayListMap);
-                recyclerview_header.setAdapter(headerAdapter);
-
-            }
-        });
-
-        back_btn.setOnClickListener(new View.OnClickListener() {
+        header_Cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               getViewModel.setI_value(0);
+                getViewModel.setI_value(1);
             }
         });
 
-
+        phone_number_Cardview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getViewModel.setI_value(6);
+            }
+        });
 
         return view;
     }

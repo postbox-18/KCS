@@ -1,4 +1,4 @@
-package com.example.adm.Fragments.Control_Panel.Dish;
+package com.example.adm.Fragments.Control_Panel.HeaderFrags.Dish;
 
 public class DishList {
     private String dish,bolen;

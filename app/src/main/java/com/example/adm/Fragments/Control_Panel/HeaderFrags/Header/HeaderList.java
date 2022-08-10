@@ -1,4 +1,4 @@
-package com.example.adm.Fragments.Control_Panel.Header;
+package com.example.adm.Fragments.Control_Panel.HeaderFrags.Header;
 
 public class HeaderList {
     private final String header;

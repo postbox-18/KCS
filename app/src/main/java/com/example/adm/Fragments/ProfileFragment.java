@@ -119,7 +119,7 @@ public class ProfileFragment extends Fragment {
         control_panel_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               getViewModel.setI_value(1);
+               getViewModel.setI_value(5);
             }
         });
 

@@ -1,4 +1,4 @@
-package com.example.adm.Fragments.Control_Panel.Header;
+package com.example.adm.Fragments.Control_Panel.HeaderFrags.Header;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,16 +8,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.adm.Classes.MyLog;
 
-import com.example.adm.Fragments.Control_Panel.Dish.DishList;
-import com.example.adm.Fragments.Control_Panel.Item.ItemAdapter;
-import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
+import com.example.adm.Fragments.Control_Panel.HeaderFrags.Dish.DishList;
+import com.example.adm.Fragments.Control_Panel.HeaderFrags.Item.ItemArrayList;
 import com.example.adm.R;
 import com.example.adm.ViewModel.GetViewModel;
 

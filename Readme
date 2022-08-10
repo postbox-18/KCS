@@ -15,7 +15,6 @@ Pending
 10-count in notify tab
 11-control panel add biometrics
 12-control panel to change head admin to send opt to new register in ADM.
-14-store token in database to reciver adm token.
 15-
 
 
@@ -39,4 +38,6 @@ Solved
 7-delete when expired date order in notify fragment
 9-tap to view the orders(NO NEED)
 13-Admin data can't in "Users-Id" and also in "Users-Id" data can't have in "Admin" in Both Register and Login.
+14-store token in database to reciver adm token.
+
 

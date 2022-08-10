@@ -11,10 +11,10 @@ import com.example.adm.Classes.CheckPhoneNumber;
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Classes.SessionList;
 import com.example.adm.Classes.SharedPreferences_data;
-import com.example.adm.Fragments.Control_Panel.Dish.DishList;
+import com.example.adm.Fragments.Control_Panel.HeaderFrags.Dish.DishList;
 import com.example.adm.Fragments.Control_Panel.Func.FuncList;
-import com.example.adm.Fragments.Control_Panel.Header.HeaderList;
-import com.example.adm.Fragments.Control_Panel.Item.ItemArrayList;
+import com.example.adm.Fragments.Control_Panel.HeaderFrags.Header.HeaderList;
+import com.example.adm.Fragments.Control_Panel.HeaderFrags.Item.ItemArrayList;
 import com.example.adm.Fragments.Control_Panel.Func.UpdatedList;
 import com.example.adm.Fragments.Notification.NotifyList;
 import com.example.adm.Fragments.Orders.BottomSheet.Classes.OrderDishLists;
@@ -240,9 +240,10 @@ public class GetViewModel extends AndroidViewModel {
                 MyLog.e(TAG, "snap>>" + snapshot);
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     MyLog.e(TAG, "error>>at firebase  emails " + datas.getKey());
+                    String[] str=(datas.getKey()).split("_");
                     CheckPhoneNumber checkEmails1 = new CheckPhoneNumber(
-                            datas.getKey()
-                    );
+                            str[0],
+                            str[1]);
                     checkPhoneNumbers.add(checkEmails1);
                 }
                 MyLog.e(TAG, "errors>>at firebase  emails out " + check_email);
@@ -267,8 +268,8 @@ public class GetViewModel extends AndroidViewModel {
                 for (DataSnapshot datas : snapshot.getChildren()) {
                     MyLog.e(TAG, "error>>at firebase  emails " + datas.getKey());
                     CheckPhoneNumber checkEmails1 = new CheckPhoneNumber(
-                            datas.getKey()
-                    );
+                            datas.getKey(),
+                            null);
                     checkUserPhoneNumbers.add(checkEmails1);
                 }
                 MyLog.e(TAG, "errors>>at firebase  emails out " + check_email);

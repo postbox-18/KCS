@@ -12,12 +12,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.adm.Classes.MyLog;
 import com.example.adm.Fragments.Control_Panel.Control_PanelFragment;
-import com.example.adm.Fragments.Control_Panel.Dish.DishFragment;
-import com.example.adm.Fragments.Control_Panel.Item.ItemFragment;
+import com.example.adm.Fragments.Control_Panel.HeaderFrags.Dish.DishFragment;
+import com.example.adm.Fragments.Control_Panel.HeaderFrags.Header.HeaderFragment;
+import com.example.adm.Fragments.Control_Panel.HeaderFrags.Item.ItemFragment;
+import com.example.adm.Fragments.Control_Panel.PhoneNumFrags.PhoneNumberControlPanelFragment;
 import com.example.adm.Fragments.HomeFragment;
 import com.example.adm.Fragments.ProfileFragment;
 import com.example.adm.ViewModel.GetViewModel;
-import com.google.gson.GsonBuilder;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -98,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
                         fragmentTAg = "HomeFragment";
                         break;
                     case 1:
-                        fragment = new Control_PanelFragment();
+                        fragment = new HeaderFragment();
 
-                        fragmentTAg = "Control_PanelFragment";
+                        fragmentTAg = "HeaderFragment";
                         break;
                     case 2:
                         fragment = new ProfileFragment();
@@ -113,6 +114,16 @@ public class MainActivity extends AppCompatActivity {
                     case 4:
                         fragment = new DishFragment();
                         fragmentTAg = "DishFragment";
+                        break;
+                    case 5:
+                        fragment = new Control_PanelFragment();
+
+                        fragmentTAg = "Control_PanelFragment";
+                        break;
+                        case 6:
+                        fragment = new PhoneNumberControlPanelFragment();
+
+                        fragmentTAg = "PhoneNumberControlPanelFragment";
                         break;
                 }
                 fragmentTransaction.replace(R.id.Fragment, fragment);
