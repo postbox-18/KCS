@@ -3,12 +3,22 @@ package com.example.adm.Fragments.Control_Panel.PhoneNumFrags;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.example.adm.Classes.CheckPhoneNumber;
 import com.example.adm.R;
+import com.example.adm.ViewModel.GetViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +35,14 @@ public class PhoneNumberControlPanelFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+    private RecyclerView recyclerview_phone_number;
+    private List<CheckPhoneNumber> checkPhoneNumberList=new ArrayList<>();
+    private AdapterPhoneNumberControlPanel adapterPhoneNumberControlPanel;
+    private GetViewModel getViewModel;
+    private ImageView back_btn;
+
 
     public PhoneNumberControlPanelFragment() {
         // Required empty public constructor
@@ -61,6 +79,39 @@ public class PhoneNumberControlPanelFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_phone_number, container, false);
+        View view= inflater.inflate(R.layout.fragment_phone_number, container, false);
+        getViewModel = new ViewModelProvider(getActivity()).get(GetViewModel.class);
+
+        back_btn=view.findViewById(R.id.back_btn);
+        recyclerview_phone_number=view.findViewById(R.id.recyclerview_phone_number);
+
+
+        recyclerview_phone_number.setHasFixedSize(true);
+        recyclerview_phone_number.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+
+
+        checkPhoneNumberList=new ArrayList<>();
+
+
+        //get phoneNumber
+        getViewModel.getCheckPhoneNumberMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<CheckPhoneNumber>>() {
+            @Override
+            public void onChanged(List<CheckPhoneNumber> checkPhoneNumbers1) {
+                checkPhoneNumberList=checkPhoneNumbers1;
+                adapterPhoneNumberControlPanel=new AdapterPhoneNumberControlPanel(getContext(),getViewModel,checkPhoneNumberList);
+                recyclerview_phone_number.setAdapter(adapterPhoneNumberControlPanel);
+
+
+            }
+        });
+
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getViewModel.setI_value(5);
+            }
+        });
+        return view;
     }
 }
