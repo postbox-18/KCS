@@ -27,5 +27,6 @@
 
     <string name="server_key">key=AAAAX5abQ3c:APA91bGq5QcknqI5Emvawcsg1_A-A3DrKw1h9cwzB_k0jcYgzA8Ifw3M7sXRJFo-Msg_e-Wze8TkOvX01Cn9AFQ13sgqsxxI-X3vuX2F03pB9QkC-P2jBIm-fVVCbC1-Q3i5yFWX3-ri</string>
     <string name="sender_id">410548650871</string>
+    <string name="version">version 1.0</string>
 
 </resources>
