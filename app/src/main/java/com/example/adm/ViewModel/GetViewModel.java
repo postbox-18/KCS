@@ -173,6 +173,8 @@ public class GetViewModel extends AndroidViewModel {
 
         CheckAdmDetails();
         CheckUserDetails();
+        GetAdmin_Primary();
+
         //GetUserList();
 
     }

@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         getViewModel.GetUpdateFun();
         getViewModel.GetUpdateItem();
         getViewModel.GetNotify();
-        getViewModel.GetAdmin_Primary();
 
         if (integer < 0) {
             getViewModel.setI_value(0);

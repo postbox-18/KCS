@@ -197,7 +197,7 @@ public class RegisterActivity extends AppCompatActivity {
         send_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String phoneNumber = "+91" + phone_number.getText().toString();
+
 
                 if (check_phoneNumberExistsInDataBase(phone_number.getText().toString())) {
                     //alert dialog
@@ -230,10 +230,20 @@ public class RegisterActivity extends AppCompatActivity {
                     AlertDialog alertDialog = alert.create();
                     alertDialog.show();
                 } else {
-                    sendVerificationCode(phoneNumber);
-                    progress_bar.setVisibility(View.VISIBLE);
-                    send_otp.setVisibility(View.GONE);
-                    otp.setVisibility(View.VISIBLE);
+
+                    //send otp to master admin.
+                    getViewModel.getAdmin_PrimaryLiveData().observe(RegisterActivity.this, new Observer<String>() {
+                        @Override
+                        public void onChanged(String s) {
+                            String phoneNumber = "+91" +s;
+                            sendVerificationCode(phoneNumber);
+                            progress_bar.setVisibility(View.VISIBLE);
+                            send_otp.setVisibility(View.GONE);
+                            otp.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+
 
                 }
             }
@@ -338,10 +348,9 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         MyLog.e(TAG, "snap>>" + snapshot);
-                        String phoneBoolen=s_phone_number+"_true";
-                        databaseReference.child(phoneBoolen).child("email").setValue(s_email);
-                        databaseReference.child(phoneBoolen).child("phone_number").setValue(s_phone_number);
-                        databaseReference.child(phoneBoolen).child("username").setValue(s_user_name);
+                        databaseReference.child(s_phone_number).child("email").setValue(s_email);
+                        databaseReference.child(s_phone_number).child("phone_number").setValue(s_phone_number);
+                        databaseReference.child(s_phone_number).child("username").setValue(s_user_name);
 
                         new SharedPreferences_data(RegisterActivity.this).setS_user_name(s_user_name);
                         new SharedPreferences_data(RegisterActivity.this).setS_phone_number(s_phone_number);
