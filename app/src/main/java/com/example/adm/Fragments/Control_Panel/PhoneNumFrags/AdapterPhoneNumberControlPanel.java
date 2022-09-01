@@ -54,18 +54,18 @@ public class AdapterPhoneNumberControlPanel extends RecyclerView.Adapter<Adapter
         final CheckPhoneNumber item1 = checkPhoneNumberList.get(position);
         holder.phone_number.setText(item1.getPhone_number());
 
-        if((item1.getBoolen()).equals("true"))
+       /* if((item1.getBoolen()).equals("true"))
         {
             holder.switchView.setChecked(true);
             //holder.item_cardView.setCardBackgroundColor(context.getResources().getColor(R.color.light_blue_color));
             holder.phone_number.setTextColor(context.getResources().getColor(R.color.colorSecondary));
         }
         else
-        {
+        {*/
             holder.switchView.setChecked(false);
             // holder.dish_cardView.setCardBackgroundColor(context.getResources().getColor(R.color.lightGray));
             holder.phone_number.setTextColor(context.getResources().getColor(R.color.light_gray));
-        }
+
 
 
         /*holder.switchView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

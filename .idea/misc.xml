@@ -24,6 +24,7 @@
         <entry key="..\:/Users/aravi/AndroidStudioProjects/KCS Product/Adm/app/src/main/res/layout/user_details_cardview.xml" value="0.25" />
         <entry key="app/src/main/res/drawable-v24/mytabs.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/bg_banner.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/cancel_btn.xml" value="0.1925" />
         <entry key="app/src/main/res/drawable/edittext_box_light_blue.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_arrow_return_left.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_chef.xml" value="0.1" />
@@ -31,6 +32,7 @@
         <entry key="app/src/main/res/drawable/ic_gear_fill_tool.xml" value="0.184" />
         <entry key="app/src/main/res/drawable/ic_kitchen_set_solid.xml" value="0.1235" />
         <entry key="app/src/main/res/drawable/ic_menu_camera.xml" value="0.1235" />
+        <entry key="app/src/main/res/drawable/ic_pencil_square.xml" value="0.1225" />
         <entry key="app/src/main/res/drawable/ic_plus_lg.xml" value="0.1205" />
         <entry key="app/src/main/res/drawable/ic_plus_solid.xml" value="0.1205" />
         <entry key="app/src/main/res/drawable/ic_send_check.xml" value="0.1" />
@@ -67,7 +69,7 @@
         <entry key="app/src/main/res/layout/fragment_item.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_notification.xml" value="0.1938509640437728" />
         <entry key="app/src/main/res/layout/fragment_orders.xml" value="0.15" />
-        <entry key="app/src/main/res/layout/fragment_phone_number.xml" value="0.16" />
+        <entry key="app/src/main/res/layout/fragment_phone_number.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_user.xml" value="0.19375" />
@@ -88,6 +90,7 @@
         <entry key="app/src/main/res/layout/trash_layout.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/update_btn_layout.xml" value="0.19375" />
         <entry key="app/src/main/res/layout/user_details_cardview.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/verify_otp.xml" value="0.18" />
       </map>
     </option>
   </component>
