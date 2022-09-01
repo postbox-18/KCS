@@ -96,7 +96,7 @@ public class OrderAdapters extends RecyclerView.Adapter<OrderAdapters.ViewHolder
                 }
                 holder.recyclerview_date.setHasFixedSize(true);
                 holder.recyclerview_date.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                UserDateListAdapter userDateListAdapter=new UserDateListAdapter(context,getViewModel,o_dateLists,orderDateMap,orderLists1.getS_user_name(),orderLists1.getFunc());
+                UserDateListAdapter userDateListAdapter=new UserDateListAdapter(context,getViewModel,o_dateLists,orderDateMap,orderLists1.getS_user_name(),orderLists1.getFunc(),orderLists1.getPhone_number());
                 holder.recyclerview_date.setAdapter(userDateListAdapter);
 
             }

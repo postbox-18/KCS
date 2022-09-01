@@ -29,7 +29,7 @@ import java.util.Set;
 public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapter.ViewHolder> {
     private Context context;
     private String TAG = "UserDateListAdapter";
-    private String s_user_name,funcTitle;
+    private String s_user_name,funcTitle,phone_number;
     private GetViewModel getViewModel;
     //order hash map
     //order map
@@ -54,13 +54,14 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
     private String gn_Date,current_Date;
     private Date date = new Date();
 
-    public UserDateListAdapter(Context context, GetViewModel getViewModel, List<SelectedDateList> o_dateLists, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap, String s_user_name, String funcTitle) {
+    public UserDateListAdapter(Context context, GetViewModel getViewModel, List<SelectedDateList> o_dateLists, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, LinkedHashMap<String, List<OrderDishLists>>>>> orderDateMap, String s_user_name, String funcTitle,String phone_number) {
         this.context = context;
         this.getViewModel = getViewModel;
         this.o_dateLists = o_dateLists;
         this.orderDateMap = orderDateMap;
         this.s_user_name = s_user_name;
         this.funcTitle = funcTitle;
+        this.phone_number = phone_number;
     }
 
     @NonNull
@@ -112,7 +113,7 @@ public class UserDateListAdapter extends RecyclerView.Adapter<UserDateListAdapte
         holder.date_card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    String s=s_user_name+"/"+funcTitle+"/"+list.getDate();
+                    String s=s_user_name+"/"+phone_number+"/"+funcTitle+"/"+list.getDate();
                     getViewModel.setDateString(s);
             }
         });

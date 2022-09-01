@@ -176,10 +176,11 @@ public class OrdersFragment extends Fragment {
                 MyLog.e(TAG, "bottom>>dateString>" +s);
                 String[] str=s.split("/");
                 String name=str[0];
-                String func=str[1];
-                String date=str[2];
+                String phone=str[1];
+                String func=str[2];
+                String date=str[3];
 
-                orderFunc_Map=new LinkedHashMap<>(b_orderMap).get(name);
+                orderFunc_Map=new LinkedHashMap<>(b_orderMap).get(name+"-"+phone);
                 func_title.setText(func);
                 user_name.setText(name);
 
