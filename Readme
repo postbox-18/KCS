@@ -1,5 +1,5 @@
-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
-https://postbox-18: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@github.com/postbox-18/KCS.git
+
+https://postbox-18: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@github.com/postbox-18/KCS.git
 
 
 
@@ -25,10 +25,8 @@ PENDING
 31-updating breadcrums ui in github starts bread crums
 32-standard bottomsheet to show checked dish with snack bar tap to view full details and also drag to view the details
 33-in myorders fragment refresh the page
-34-Check Phone number in user id data
 35-load on send otp btn.
-36-Admin data can't in "Users-Id" and also in "Users-Id" data can't have in "Admin" in Both Register and Login.
-37-
+38-
 
 FINISHED
 1-alert check box to select the func
@@ -57,6 +55,10 @@ FINISHED
 25-click on edit button and goes to header fragment "date , time , count" to edit the existing date time and count.
 29-show time.getText in edit time and date also
 30-adding img in myorders func
+34-Check Phone number in user id data
+36-Admin data can't in "Users-Id" and also in "Users-Id" data can't have in "Admin" in Both Register and Login.
+37-ADDED FIRE CRASH ANALYSIS.
+
 
 
 
