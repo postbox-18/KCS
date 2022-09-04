@@ -293,6 +293,7 @@ public class LoginActivity extends AppCompatActivity {
                 loadingDialog.show(getSupportFragmentManager(), "Loading dailog");
                 if (verifyOTP) {
                     login();
+                    getViewModel.GetUserDeatils(phone_number.getText().toString());
                 } else {
                     loadingDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Please Try Again", Toast.LENGTH_SHORT).show();

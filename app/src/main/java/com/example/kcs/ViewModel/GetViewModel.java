@@ -947,7 +947,7 @@ public class GetViewModel extends AndroidViewModel {
     }
 
     public void setEmail(String email) {
-        GetUserDeatils(email);
+        //GetUserDeatils(email);
         this.email = email;
 
     }
@@ -1074,7 +1074,7 @@ public class GetViewModel extends AndroidViewModel {
         });
     }
 
-    private void GetUserDeatils(String email) {
+    public void GetUserDeatils(String phoeNumber) {
         MyLog.e(TAG, "errors>> GetUserDeatils");
         check_phoneNumber = false;
         databaseReference = firebaseDatabase.getReference("Users-Id");
@@ -1083,21 +1083,19 @@ public class GetViewModel extends AndroidViewModel {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyLog.e(TAG, "snap>>" + snapshot);
                 for (DataSnapshot datas : snapshot.getChildren()) {
-                    MyLog.e(TAG, "error>>at firebase  emails " + datas.child("email").getValue().toString());
-                    if (Objects.equals(email, datas.child("email").getValue().toString())) {
+                    MyLog.e(TAG, "error>>at firebase  emails " + datas.child("phone_number").getValue().toString());
+                    if ((phoeNumber).equals(datas.child("phone_number").getValue().toString())) {
                         MyLog.e(TAG, "errors>>at firebase  emails if " + check_phoneNumber);
                         String email = datas.child("email").getValue().toString();
                         String username = datas.child("username").getValue().toString();
                         String phone_number = datas.child("phone_number").getValue().toString();
-                        if (email != null) {
-                            new SharedPreferences_data(getApplication()).setS_email(email);
-                        }
-                        if (username != null) {
-                            new SharedPreferences_data(getApplication()).setS_user_name(datas.child("username").getValue().toString());
-                        }
-                        if (phone_number != null) {
-                            new SharedPreferences_data(getApplication()).setS_phone_number(datas.child("phone_number").getValue().toString());
-                        }
+
+                        new SharedPreferences_data(getApplication()).setS_email(datas.child("email").getValue().toString());
+
+                        new SharedPreferences_data(getApplication()).setS_user_name(datas.child("username").getValue().toString());
+
+                        new SharedPreferences_data(getApplication()).setS_phone_number(datas.child("phone_number").getValue().toString());
+
                         check_phoneNumber = true;
 
 
