@@ -49,6 +49,8 @@
     <color name="search_white">#faf8f8</color>
     <color name="bg_white">#eff2f9</color>
     <color name="heading_login">#771500</color>
+    <color name="backgroundbg">#F7F8F1</color>
+    <color name="headingclr">#84ADB3</color>
 
 
 </resources>

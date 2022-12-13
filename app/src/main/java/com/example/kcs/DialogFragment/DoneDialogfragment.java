@@ -130,7 +130,13 @@ public class DoneDialogfragment extends DialogFragment {
         String msg = "Orders Placed by " + username +" (contact number: "+phonenumber+ ") and Function is " + func_title + " session is " + sess + " at " + date + " Time is " + time + " Total Count is " + count;
         MyLog.e(TAG, "notify>>" + msg);
         DatabaseReference databaseReference1=databaseReference.push();
-        databaseReference1.child(date).setValue(msg);
+        databaseReference1.child("msg").setValue(msg);
+        databaseReference1.child("date").setValue(date);
+        databaseReference1.child("username").setValue(username);
+        databaseReference1.child("phone_number").setValue(phonenumber);
+        databaseReference1.child("function").setValue(func_title);
+        //Lunch!12:21 PM-528_true
+        databaseReference1.child("session").setValue(s);
         getViewModel.PushNotify("Orders Placed",msg);
 
     }

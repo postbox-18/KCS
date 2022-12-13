@@ -1727,7 +1727,14 @@ public class GetViewModel extends AndroidViewModel {
                 String msg = "Items Modified by " + username + " (contact number: " + phone_number + ") and Function is " + func_title + " session is " + session_title + " at " + date + " Time is " + time + " Total Count is " + count;
                 MyLog.e(TAG, "notify>>" + msg);
                 DatabaseReference databaseReference1 = databaseReference.push();
-                databaseReference1.child(date).setValue(msg);
+                databaseReference1.child("msg").setValue(msg);
+                databaseReference1.child("date").setValue(date);
+                databaseReference1.child("username").setValue(username);
+                databaseReference1.child("phone_number").setValue(phone_number);
+                databaseReference1.child("function").setValue(func_title);
+                //Lunch!12:21 PM-528_true
+                String Session=session_title+"!"+time+"-"+count+"_"+oldBolen;
+                databaseReference1.child("session").setValue(Session);
                 PushNotify("Modified", msg);
 
 

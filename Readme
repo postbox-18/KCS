@@ -1,5 +1,11 @@
 https://www.techotopia.com/index.php/Working_with_Firebase_Realtime_Database_Lists
 
+
+
+
+
+
+
 FEATURE UPDATES
 1-ADDRESS LOCATION USING MAP
 
@@ -20,7 +26,9 @@ PENDING
 32-standard bottomsheet to show checked dish with snack bar tap to view full details and also drag to view the details
 33-in myorders fragment refresh the page
 35-load on send otp btn.
-38-
+38-Room DB for Orders for pending process.
+39-Show Existing Phone Number for login or register.
+40-
 
 FINISHED
 1-alert check box to select the func
