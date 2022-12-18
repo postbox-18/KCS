@@ -116,7 +116,10 @@ public class OTPActivity extends AppCompatActivity {
                 if (s_user_name == null) {
                     startActivity(new Intent(OTPActivity.this, LoginActivity.class));
                 } else {
-                    startActivity(new Intent(OTPActivity.this, RegisterActivity.class));
+                    String s=s_email+"!"+s_user_name+"!"+s_phone_number;
+                    Intent  intent=new Intent(OTPActivity.this,RegisterActivity.class);
+                    intent.putExtra("OTP_VerifyUsers",s );
+                    startActivity(intent);
                 }
             }
         });

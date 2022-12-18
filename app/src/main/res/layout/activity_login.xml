@@ -22,7 +22,6 @@
             android:layout_marginBottom="10dp"
             android:src="@drawable/logintop"
             android:scaleType="centerCrop"
-            android:padding="10dp"
             app:layout_constraintBottom_toTopOf="@id/name_ct"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -227,7 +226,7 @@
                 android:textStyle="bold|italic" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <com.airbnb.lottie.LottieAnimationView
+    <!--<com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottie_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -236,5 +235,5 @@
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:lottie_rawRes="@raw/cooking" />
+        app:lottie_rawRes="@raw/cooking" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -110,6 +110,21 @@ public class RegisterActivity extends AppCompatActivity {
 
         Top_Bg();
 
+        //intent from otp activity
+        String s = getIntent().getStringExtra("OTP_VerifyUsers");
+        MyLog.e(TAG, "number>>84>>" + s);
+        if (s == null) {
+        } else {
+            String[] str = (s).split("!");
+            s_email = str[0];
+            s_user_name = str[1];
+            s_phone_number = str[2];
+            email.setText(s_email);
+            phone_number.setText(s_phone_number);
+            user_name.setText(s_user_name);
+        }
+
+
         //lottie
         /*lottie_loading.setFailureListener(new LottieListener<Throwable>() {
             @Override
@@ -215,9 +230,9 @@ public class RegisterActivity extends AppCompatActivity {
                         otp_verifyUsers.setName(s_user_name);
                         otp_verifies.add(otp_verifyUsers);*/
 
-                        String s=s_email+"!"+s_user_name+"!"+s_phone_number;
-                        Intent  intent=new Intent(RegisterActivity.this,OTPActivity.class);
-                        intent.putExtra("OTP_VerifyUsers",s );
+                        String s = s_email + "!" + s_user_name + "!" + s_phone_number;
+                        Intent intent = new Intent(RegisterActivity.this, OTPActivity.class);
+                        intent.putExtra("OTP_VerifyUsers", s);
 
                         startActivity(intent);
                         //getViewModel.setOtp_verifies(otp_verifies);
