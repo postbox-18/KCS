@@ -68,6 +68,14 @@
           }
         },
         {
+          "client_id": "410548650871-neree262c05p8v58p2rkh1690ah1f317.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kcs",
+            "certificate_hash": "ba74a77507a4f79b99a74df1ad9ab4454fb4cb52"
+          }
+        },
+        {
           "client_id": "410548650871-tvibt1fb695h2o7kb5aqhfvqrvrij2f1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

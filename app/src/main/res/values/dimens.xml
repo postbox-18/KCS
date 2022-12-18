@@ -10,4 +10,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="Layout_margin">5dp</dimen>
     <dimen name="head_title">26dp</dimen>
+    <dimen name="TitleSize">28sp</dimen>
+    <dimen name="normalSize">14sp</dimen>
+    <dimen name="Title2Size">20sp</dimen>
 </resources>

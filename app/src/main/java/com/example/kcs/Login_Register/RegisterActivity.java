@@ -7,18 +7,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -26,50 +23,40 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieListener;
-
 import com.example.kcs.Classes.CheckPhoneNumber;
 import com.example.kcs.DialogFragment.LoadingDialogs;
 import com.example.kcs.Classes.MyLog;
 import com.example.kcs.MainActivity;
-import com.example.kcs.ViewModel.SharedPreferences_data;
 import com.example.kcs.R;
 import com.example.kcs.ViewModel.GetViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
-import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.gson.GsonBuilder;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class RegisterActivity extends AppCompatActivity {
 
     //primary field
     private EditText user_name, email;
-    private TextView already_login, msg;
-    private AutoCompleteTextView phone_number, otp;
-    private ImageView send_otp;
-    private ProgressBar progress_bar;
+    //private TextView  msg;
+    private TextView already_login;
+    //private AutoCompleteTextView  otp;
+    private AutoCompleteTextView phone_number;
+    //private ImageView send_otp;
+    //private ProgressBar progress_bar;
     private String s_user_name, s_phone_number, s_email;
     private boolean verifyOTP = false;
     //Tagging
     private String TAG = "RegisterActivity";
-    private AppCompatButton register_btn;
+    //private AppCompatButton register_btn;
+    private AppCompatButton request_SMS;
     //Lottie anim
-    private LottieAnimationView lottie_loading;
+    //private LottieAnimationView lottie_loading;
     // verification ID
     private String verificationId;
     //firebase Auth
@@ -91,6 +78,8 @@ public class RegisterActivity extends AppCompatActivity {
     private List<CheckPhoneNumber> checkPhoneNumbers = new ArrayList<>();
     private boolean check_phone = false;
 
+    //private List<OTP_VerifyUsers> otp_verifies = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,16 +89,19 @@ public class RegisterActivity extends AppCompatActivity {
         user_name = findViewById(R.id.user_name);
         email = findViewById(R.id.email);
         phone_number = findViewById(R.id.phone_number);
-        otp = findViewById(R.id.otp);
+       /* otp = findViewById(R.id.otp);
         send_otp = findViewById(R.id.send_otp);
         progress_bar = findViewById(R.id.progress_bar);
-        msg = findViewById(R.id.msg);
+        msg = findViewById(R.id.msg);*/
 
-        register_btn = findViewById(R.id.register_btn);
+        //otp_verifies = new ArrayList<>();
+
+        //register_btn = findViewById(R.id.register_btn);
+        request_SMS = findViewById(R.id.request_SMS);
         already_login = findViewById(R.id.already_login);
         bg_banner = findViewById(R.id.headings);
         head_layout = findViewById(R.id.head_layout);
-        lottie_loading = findViewById(R.id.lottie_loading);
+        //lottie_loading = findViewById(R.id.lottie_loading);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         //firebase auth
@@ -117,13 +109,16 @@ public class RegisterActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
 
         Top_Bg();
+
         //lottie
-        lottie_loading.setFailureListener(new LottieListener<Throwable>() {
+        /*lottie_loading.setFailureListener(new LottieListener<Throwable>() {
             @Override
             public void onResult(Throwable result) {
                 MyLog.e(TAG, "Error:Failure:" + result.getMessage());
             }
-        });
+        });*/
+
+
         //focus on user_name
         user_name.requestFocus();
 
@@ -139,9 +134,13 @@ public class RegisterActivity extends AppCompatActivity {
                 MyLog.e(TAG, "otp>>afterTextChanged>>phone_number>>" + phone_number.getText().toString());
                 if (counts == 10) {
                     isValidPhoneNumber(phone_number.getText().toString());
-                    send_otp.setVisibility(View.VISIBLE);
+                    //send_otp.setVisibility(View.VISIBLE);
+                    request_SMS.setBackgroundDrawable(getResources().getDrawable(R.drawable.register_btn));
+                    request_SMS.setClickable(true);
                 } else {
-                    send_otp.setVisibility(View.GONE);
+                    request_SMS.setBackgroundDrawable(getResources().getDrawable(R.drawable.register_btn_silver));
+
+                    //send_otp.setVisibility(View.GONE);
 
                 }
             }
@@ -160,8 +159,113 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        /*getViewModel.getOtp_verifiesLive().observe(this, new Observer<List<OTP_VerifyUsers>>() {
+            @Override
+            public void onChanged(List<OTP_VerifyUsers> otp_verifyUsers) {
+                MyLog.e(TAG,"number>>164>>"+new GsonBuilder().setPrettyPrinting().create().toJson(otp_verifyUsers));
+
+                email.setText(otp_verifyUsers.get(0).getEmail());
+                phone_number.setText(otp_verifyUsers.get(0).getPhone_Number());
+                user_name.setText(otp_verifyUsers.get(0).getName());
+            }
+        });*/
+
+        //page to login already have a account
+        already_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
+
+        //request to send sms
+        request_SMS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                s_user_name = user_name.getText().toString();
+                s_phone_number = phone_number.getText().toString();
+                s_email = email.getText().toString();
+                if (CheckDetails()) {
+
+                    String phoneNumber = "+91" + phone_number.getText().toString();
+
+                    if (check_phoneNumberExistsInDataBase(phone_number.getText().toString())) {
+                        //alert dialog
+                        AlertDialog.Builder alert = new AlertDialog.Builder(RegisterActivity.this);
+                        alert.setMessage("You have already Register.");
+                        alert.setTitle("Alert");
+                        alert.setCancelable(false);
+                        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        AlertDialog alertDialog = alert.create();
+                        alertDialog.show();
+                    } else {
+
+
+                        /*otp_verifies.clear();
+                        OTP_VerifyUsers otp_verifyUsers = new OTP_VerifyUsers();
+                        otp_verifyUsers.setEmail(s_email);
+                        otp_verifyUsers.setPhone_Number(s_phone_number);
+                        otp_verifyUsers.setName(s_user_name);
+                        otp_verifies.add(otp_verifyUsers);*/
+
+                        String s=s_email+"!"+s_user_name+"!"+s_phone_number;
+                        Intent  intent=new Intent(RegisterActivity.this,OTPActivity.class);
+                        intent.putExtra("OTP_VerifyUsers",s );
+
+                        startActivity(intent);
+                        //getViewModel.setOtp_verifies(otp_verifies);
+
+                    /*sendVerificationCode(phoneNumber);
+                    progress_bar.setVisibility(View.VISIBLE);
+                    send_otp.setVisibility(View.GONE);
+                    otp.setVisibility(View.VISIBLE);*/
+
+                    }
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Please Enter The Details", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            private boolean check_phoneNumberExistsInDataBase(String phoneNumber) {
+                //checkemail list in data base
+                getViewModel.getCheckPhoneNumberMutableLiveData().observe(RegisterActivity.this, new Observer<List<CheckPhoneNumber>>() {
+                    @Override
+                    public void onChanged(List<CheckPhoneNumber> checkPhoneNumbers1) {
+                        checkPhoneNumbers = checkPhoneNumbers1;
+                        for (int i = 0; i < checkPhoneNumbers1.size(); i++) {
+                            if (phoneNumber.equals(checkPhoneNumbers1.get(i).getPhone_number())) {
+                                check_phone = true;
+                                MyLog.e(TAG, "check_phone>>if>>" + check_phone);
+                                MyLog.e(TAG, "check_phone>>if>>" + phoneNumber + "==" + checkPhoneNumbers1.get(i).getPhone_number());
+
+                                break;
+
+                            } else {
+                                MyLog.e(TAG, "check_phone>>else>>" + check_phone);
+                                MyLog.e(TAG, "check_phone>>else>>" + phoneNumber + "==" + checkPhoneNumbers1.get(i).getPhone_number());
+
+                                check_phone = false;
+                                continue;
+                            }
+                        }
+                    }
+                });
+                MyLog.e(TAG, "check_phone>>" + check_phone);
+                return check_phone;
+            }
+
+
+        });
+
         //otp verify
-        otp.addTextChangedListener(new TextWatcher() {
+        /*otp.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -192,11 +296,11 @@ public class RegisterActivity extends AppCompatActivity {
 
 
             }
-        });
+        });*/
 
 
         //click on send_otp
-        send_otp.setOnClickListener(new View.OnClickListener() {
+        /*send_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String phoneNumber = "+91" + phone_number.getText().toString();
@@ -252,11 +356,11 @@ public class RegisterActivity extends AppCompatActivity {
                 MyLog.e(TAG,"check_phone>>"+check_phone);
                 return check_phone;
             }
-        });
+        });*/
 
 
         //register onclick
-        register_btn.setOnClickListener(new View.OnClickListener() {
+        /*register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //get string value
@@ -315,15 +419,8 @@ public class RegisterActivity extends AppCompatActivity {
                 finish();
             }
 
-        });
-        //page to login already have a account
-        already_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                finish();
-            }
-        });
+        });*/
+
 
         /*getViewModel.getEmailMutable().observe(RegisterActivity.this, new Observer<Boolean>() {
             @Override
@@ -352,6 +449,59 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });*/
+    }
+
+    private boolean CheckDetails() {
+
+
+        //checkemail list in data base
+     /*   getViewModel.getCheckEmailsMutableLiveData().observe(this, new Observer<List<CheckEmail>>() {
+            @Override
+            public void onChanged(List<CheckEmail> checkEmails1) {
+                checkEmails = checkEmails1;
+                for (int i = 0; i < checkEmails1.size(); i++) {
+                    if (s_email.equals(checkEmails1.get(i).getEmail())) {
+                        check_email = true;
+                        break;
+                    } else {
+                        check_email = false;
+                        continue;
+                    }
+                }
+            }
+        });*/
+
+
+        //check user-name is empty
+        if (s_user_name.isEmpty()) {
+            user_name.setError("Item cannot be empty");
+            MyLog.e(TAG, "valid>>user_name>>");
+        }
+
+        //check phone-number
+        else if (!isValidPhoneNumber(s_phone_number)) {
+            phone_number.setError("Enter a valid phone number");
+            MyLog.e(TAG, "valid>>s_phone_number>>");
+
+
+        }
+        //check email-id
+        else if (!isValidEmail(s_email)) {
+            email.setError("Enter a valid Email id");
+            MyLog.e(TAG, "valid>>s_email>>");
+
+
+        } else {
+            MyLog.e(TAG, "valid>>");
+
+            //shared-preferences
+            loadingDialog.show(getSupportFragmentManager(), "Loading dailog");
+            MyLog.e(TAG, "errors>> continue regi");
+            return true;
+        }
+        return false;
+
+
     }
 
     /*private void Auth() {
@@ -411,75 +561,6 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }*/
 
-    private boolean CheckDetails() {
-
-
-        //checkemail list in data base
-     /*   getViewModel.getCheckEmailsMutableLiveData().observe(this, new Observer<List<CheckEmail>>() {
-            @Override
-            public void onChanged(List<CheckEmail> checkEmails1) {
-                checkEmails = checkEmails1;
-                for (int i = 0; i < checkEmails1.size(); i++) {
-                    if (s_email.equals(checkEmails1.get(i).getEmail())) {
-                        check_email = true;
-                        break;
-                    } else {
-                        check_email = false;
-                        continue;
-                    }
-                }
-            }
-        });*/
-
-
-        //check user-name is empty
-        if (s_user_name.isEmpty()) {
-            user_name.setError("Item cannot be empty");
-            MyLog.e(TAG, "valid>>user_name>>");
-        }
-
-        //check phone-number
-        else if (!isValidPhoneNumber(s_phone_number)) {
-            phone_number.setError("Enter a valid phone number");
-            MyLog.e(TAG, "valid>>s_phone_number>>");
-
-
-        }
-        //check email-id
-        else if (!isValidEmail(s_email)) {
-            email.setError("Enter a valid Email id");
-            MyLog.e(TAG, "valid>>s_email>>");
-
-
-        } /*else if (check_email) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(RegisterActivity.this);
-            alert.setMessage("You have already Register");
-            alert.setTitle("Alert");
-            alert.setCancelable(false);
-            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            AlertDialog alertDialog = alert.create();
-            alertDialog.show();
-        }*/ else if (!verifyOTP) {
-            MyLog.e(TAG, "valid>>verifyOTP>>");
-
-        } else {
-            MyLog.e(TAG, "valid>>");
-
-            //shared-preferences
-            loadingDialog.show(getSupportFragmentManager(), "Loading dailog");
-            MyLog.e(TAG, "errors>> continue regi");
-            return true;
-        }
-        return false;
-
-    }
-
     //check valid email id
     private boolean isValidEmail(String s_email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(s_email).matches();
@@ -510,137 +591,5 @@ public class RegisterActivity extends AppCompatActivity {
         }, 5000);
     }
 
-    //OTP
-    private void sendVerificationCode(String number) {
-        // this method is used for getting
-        // OTP on user phone number.
-        PhoneAuthOptions options =
-                PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(number)         // Phone number to verify
-                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        .setActivity(this)                 // Activity (for callback binding)
-                        .setCallbacks(mCallBack)         // OnVerificationStateChangedCallbacks
-                        .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
-        progress_bar.setVisibility(View.GONE);
-        send_otp.setVisibility(View.VISIBLE);
-
-    }
-
-    // callback method is called on Phone auth provider.
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks
-
-            // initializing our callbacks for on
-            // verification callback method.
-            mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-        // below method is used when
-        // OTP is sent from Firebase
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
-            // when we receive the OTP it
-            // contains a unique id which
-            // we are storing in our string
-            // which we have already created.
-            verificationId = s;
-        }
-
-        // this method is called when user
-        // receive OTP from Firebase.
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            // below line is used for getting OTP code
-            // which is sent in phone auth credentials.
-            final String code = phoneAuthCredential.getSmsCode();
-
-            // checking if the code
-            // is null or not.
-            if (code != null) {
-                // if the code is not null then
-                // we are setting that code to
-                // our OTP edittext field.
-                //otp.setText(code);
-
-                // after setting this code
-                // to OTP edittext field we
-                // are calling our verifycode method.
-                MyLog.e(TAG, "valid>>code>>" + code);
-                verifyCode(code);
-            } else {
-                otp.setError("Please enter the OTP");
-            }
-        }
-
-        // this method is called when firebase doesn't
-        // sends our OTP code due to any error or issue.
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            // displaying error message with firebase exception.
-            Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            msg.setText(e.getMessage()+"!");
-            Log.e(TAG, "error>>186>>" + e.getMessage());
-            send_otp.setVisibility(View.VISIBLE);
-            progress_bar.setVisibility(View.GONE);
-
-
-        }
-    };
-
-    // below method is use to verify code from Firebase.
-    private void verifyCode(String code) {
-        // below line is used for getting
-        // credentials from our verification id and code.
-        try {
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
-
-            // after getting credential we are
-            // calling sign in method.
-            signInWithCredential(credential);
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-            msg.setText(e.getMessage() + "!");
-            send_otp.setVisibility(View.VISIBLE);
-            progress_bar.setVisibility(View.GONE);
-
-        }
-    }
-
-    private void signInWithCredential(PhoneAuthCredential credential) {
-        // inside this method we are checking if
-        // the code entered is correct or not.
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // if the code is correct and the task is successful
-                            // we are sending our user to new activity.
-                            /*Intent i = new Intent(RegisterActivity.this, HomeActivity.class);
-                            startActivity(i);
-                            finish();*/
-                            verifyOTP = true;
-                            SharedPreferences_data.setVerifyOTP(true);
-                            register_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.register_btn));
-                            register_btn.setClickable(true);
-                            MyLog.e(TAG, "valid>>verifyOTP>>" + verifyOTP);
-                        } else {
-                            verifyOTP = false;
-                            SharedPreferences_data.setVerifyOTP(false);
-                            register_btn.setClickable(false);
-                            MyLog.e(TAG, "valid>>verifyOTP>>" + verifyOTP);
-                            register_btn.setBackgroundDrawable(getResources().getDrawable(R.drawable.register_btn_silver));
-
-                            // if the code is not correct then we are
-                            // displaying an error message to the user.
-                            Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            msg.setText(String.valueOf(task.getException())+"!");
-                            send_otp.setVisibility(View.VISIBLE);
-                            progress_bar.setVisibility(View.GONE);
-                            Log.e(TAG, "valid>>117>>" + task.getException());
-                        }
-                    }
-                });
-    }
 
 }

@@ -6,263 +6,298 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg"
     tools:context=".Login_Register.RegisterActivity">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/head_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/headings"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/logintop"
-        android:scaleType="centerCrop"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@id/name_ct"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_weight="0.3">
-    </ImageView>
-        <LinearLayout
-            android:id="@+id/name_ct"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/head_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            app:layout_constraintBottom_toTopOf="@id/register_btn_layout"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/headings"
-            app:layout_constraintVertical_weight="0.5"
-            android:orientation="vertical">
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/headings"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/logintop"
+                app:layout_constraintBottom_toTopOf="@id/name_ct"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_weight="0.3" />
+
             <LinearLayout
+                android:id="@+id/name_ct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
+                android:layout_alignParentTop="true"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@id/register_btn_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/headings"
+                app:layout_constraintVertical_weight="0.5">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/bebaskai"
+                        android:gravity="center"
+                        android:text="HEALTH &amp; QUALITY.."
+                        android:textColor="@color/colorSecondary"
+
+                        android:textSize="@dimen/TitleSize"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/bebaskai"
+                        android:gravity="center"
+                        android:text="FOOD ON YOUR BUDGET...."
+                        android:textColor="@color/heading_login"
+                        android:textSize="@dimen/TitleSize"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/bebaskai"
+                        android:gravity="center"
+                        android:text="REGISTER"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/TitleSize"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:visibility="gone"
+                        app:cardBackgroundColor="@color/White"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="3dp"
+                        app:contentPadding="5dp" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="15dp"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/user_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="10dp"
+                                android:ems="10"
+                                android:fontFamily="@font/robotomedium"
+                                android:hint="User Name"
+                                android:imeOptions="actionNext"
+                                android:padding="15dp"
+                                android:singleLine="true"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/text_silver" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="match_parent"
+
+                            android:layout_height="wrap_content">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/email"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="10dp"
+                                android:ems="10"
+                                android:fontFamily="@font/robotomedium"
+                                android:hint="User Email"
+                                android:imeOptions="actionNext"
+                                android:inputType="textEmailAddress"
+                                android:padding="15dp"
+                                android:singleLine="true"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/text_silver" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                                android:layout_width="match_parent"
+
+                                android:layout_height="wrap_content">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/phone_number"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:drawablePadding="10dp"
+                                    android:fontFamily="@font/robotomedium"
+                                    android:hint="Phone Number"
+                                    android:imeOptions="actionDone"
+                                    android:inputType="number"
+                                    android:maxLength="10"
+                                    android:padding="15dp"
+                                    android:singleLine="true"
+                                    android:textColor="@color/black"
+                                    android:textColorHint="@color/text_silver" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <!-- <ImageView
+                                 android:id="@+id/send_otp"
+                                 android:layout_width="0dp"
+                                 android:layout_height="wrap_content"
+                                 android:layout_gravity="center"
+                                 android:layout_weight="0.2"
+                                 android:src="@drawable/ic_send_check"
+                                 android:visibility="gone" />
+ 
+                             <ProgressBar
+                                 android:id="@+id/progress_bar"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:visibility="gone" />-->
+
+                        </LinearLayout>
+
+                        <AutoCompleteTextView
+                            android:id="@+id/otp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10dp"
+                            android:fontFamily="@font/robotomedium"
+                            android:imeOptions="actionDone"
+                            android:inputType="number"
+                            android:maxLength="6"
+                            android:padding="15dp"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/text_silver"
+                            android:visibility="gone" />
+
+                        <!--  <AutoCompleteTextView
+                              android:id="@+id/password"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:textColorHint="@color/text_silver"
+                              android:drawablePadding="10dp"
+                              android:hint="Password"
+                              android:imeOptions="actionNext"
+                              android:inputType="textPassword"
+                              android:maxLength="8"
+                              android:padding="15dp"
+                              android:fontFamily="@font/robotomedium"
+                              android:singleLine="true"
+                              android:textColor="@color/black" />
+
+                          <AutoCompleteTextView
+                              android:id="@+id/re_password"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:drawablePadding="10dp"
+                              android:textColorHint="@color/text_silver"
+                              android:hint="Re-Password"
+                              android:imeOptions="actionDone"
+                              android:inputType="textPassword"
+                              android:maxLength="8"
+                              android:padding="15dp"
+                              android:singleLine="true"
+                              android:textColor="@color/black" />-->
+                    </LinearLayout>
+                    <!--</androidx.cardview.widget.CardView>-->
+                    <!--<TextView
+                        android:id="@+id/msg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="14dp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>-->
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/register_btn_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="20dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/name_ct"
+                app:layout_constraintVertical_weight="0.2">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/request_SMS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/register_btn_silver"
+                    android:clickable="false"
+                    android:fontFamily="@font/robotocondensedbold"
+                    android:text="REQUEST SMS"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/normalSize"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/already_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/robotocondensedbold"
+                    android:text="Already have Account \n Sign-in"
+                    android:textAlignment="center"
                     android:textColor="@color/colorSecondary"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/bebaskai"
-                    android:textSize="28dp"
-                    
-                    android:gravity="center"
-                    android:text="HEALTH &amp; QUALITY.."/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:textColor="@color/heading_login"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/bebaskai"
-                    android:textSize="28dp"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:text="FOOD ON YOUR BUDGET...."/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/bebaskai"
-                    android:textSize="28dp"
-                    android:gravity="center"
-                    android:layout_height="wrap_content"
-                    android:text="REGISTER"/>
+                    android:textSize="@dimen/normalSize" />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="5dp"
-        app:cardBackgroundColor="@color/White"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="3dp"
-        app:contentPadding="5dp"
-      >
-
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/user_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawablePadding="10dp"
-                android:ems="10"
-                android:hint="User Name"
-                android:fontFamily="@font/robotoitalic"
-                android:textColorHint="@color/text_silver"
-                android:imeOptions="actionNext"
-                android:padding="15dp"
-                android:singleLine="true"
-                android:textColor="@color/black" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColorHint="@color/text_silver"
-                android:drawablePadding="10dp"
-                android:ems="10"
-                android:hint="useremailid@gmail.com"
-                android:imeOptions="actionNext"
-                android:inputType="textEmailAddress"
-                android:padding="15dp"
-                android:singleLine="true"
-                android:fontFamily="@font/robotoitalic"
-                android:textColor="@color/black" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-            <AutoCompleteTextView
-                android:id="@+id/phone_number"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textColorHint="@color/text_silver"
-                android:drawablePadding="10dp"
-                android:hint="Phone Number"
-                android:fontFamily="@font/robotoitalic"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:maxLength="10"
-                android:padding="15dp"
-                android:singleLine="true"
-                android:textColor="@color/black" />
-    <ImageView
-        android:id="@+id/send_otp"
-        android:layout_width="0dp"
-        android:layout_weight="0.2"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:src="@drawable/ic_send_check"/>
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:visibility="gone"
-        android:layout_height="wrap_content"/>
-
-</LinearLayout>
-            <AutoCompleteTextView
-                android:id="@+id/otp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColorHint="@color/text_silver"
-                android:drawablePadding="10dp"
-                android:imeOptions="actionDone"
-                android:visibility="gone"
-                android:maxLength="6"
-                android:padding="15dp"
-                android:inputType="number"
-                android:fontFamily="@font/robotoitalic"
-                android:singleLine="true"
-                android:textColor="@color/black"/>
-
-          <!--  <AutoCompleteTextView
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColorHint="@color/text_silver"
-                android:drawablePadding="10dp"
-                android:hint="Password"
-                android:imeOptions="actionNext"
-                android:inputType="textPassword"
-                android:maxLength="8"
-                android:padding="15dp"
-                android:fontFamily="@font/robotoitalic"
-                android:singleLine="true"
-                android:textColor="@color/black" />
-
-            <AutoCompleteTextView
-                android:id="@+id/re_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawablePadding="10dp"
-                android:textColorHint="@color/text_silver"
-                android:hint="Re-Password"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:maxLength="8"
-                android:padding="15dp"
-                android:singleLine="true"
-                android:textColor="@color/black" />-->
-</LinearLayout>
-    </androidx.cardview.widget.CardView>
-                <TextView
-                    android:id="@+id/msg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14dp"
-                    android:textStyle="bold"
-                    android:layout_margin="10dp"/>
-            </LinearLayout>
-        </LinearLayout>
-    <LinearLayout
-        android:id="@+id/register_btn_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintVertical_weight="0.2"
-        android:layout_margin="20dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/name_ct">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/register_btn"
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--<com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_loading"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/register_btn_silver"
-            android:text="Register"
-            android:clickable="false"
-            android:fontFamily="@font/robotocondensedbold"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/already_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Already have Account \n Sign in"
-            android:textAlignment="center"
-            android:textColor="@color/colorSecondary"
-            android:fontFamily="@font/robotoblackitalic"
-            android:textSize="15dp"
-            android:textStyle="bold|italic" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_rawRes="@raw/cooking" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:lottie_rawRes="@raw/cooking" />
-</androidx.constraintlayout.widget.ConstraintLayout>
-    
+
 </androidx.constraintlayout.widget.ConstraintLayout>

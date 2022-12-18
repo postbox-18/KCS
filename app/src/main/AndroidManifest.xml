@@ -16,6 +16,8 @@
         <activity
             android:name=".Login_Register.RegisterActivity"
             android:exported="true" />
+        <activity android:name=".Login_Register.OTPActivity"
+            android:excludeFromRecents="true" />
         <activity
             android:name=".Login_Register.SplashActivity"
             android:exported="true"

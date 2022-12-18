@@ -1,10 +1,12 @@
 package com.example.kcs.ViewModel;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
-import android.util.Log;
+import android.content.DialogInterface;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
@@ -30,6 +32,8 @@ import com.example.kcs.Fragment.PlaceOrders.Header.SelectedHeader;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.BottomSheet.OrderDishLists;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.MyOrdersList;
 import com.example.kcs.Fragment.Settings.Profile.MyOrders.MyOrdersItems.SelectedDateList;
+import com.example.kcs.Login_Register.OTPActivity;
+
 import com.example.kcs.R;
 import com.example.kcs.RetroFit.Notification;
 import com.example.kcs.RetroFit.RootList;
@@ -39,11 +43,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -331,6 +335,9 @@ public class GetViewModel extends AndroidViewModel {
     private String token;
     private MutableLiveData<String> tokenLiveData = new MutableLiveData<>();
 
+    //private otp send to phonenumber
+   /* private List<OTP_VerifyUsers> otp_verifies=new ArrayList<>();
+    private MutableLiveData<List<OTP_VerifyUsers>> otp_verifiesLive=new MutableLiveData<>();*/
 
     public GetViewModel(@NonNull Application application) {
         super(application);
@@ -340,6 +347,22 @@ public class GetViewModel extends AndroidViewModel {
         GetToken();
     }
 
+/*
+
+    public void setOtp_verifies(List<OTP_VerifyUsers> otp_verifies) {
+        MyLog.e(TAG, "number>>352>>" + new GsonBuilder().setPrettyPrinting().create().toJson(otp_verifies));
+
+        this.otp_verifies = otp_verifies;
+        this.otp_verifiesLive.postValue(otp_verifies);
+    }
+
+
+    public MutableLiveData<List<OTP_VerifyUsers>> getOtp_verifiesLive() {
+        MyLog.e(TAG,"number>>365>>"+new GsonBuilder().setPrettyPrinting().create().toJson(otp_verifiesLive));
+
+        return otp_verifiesLive;
+    }
+*/
 
     public MutableLiveData<String> getTokenLiveData() {
         return tokenLiveData;
@@ -1832,6 +1855,7 @@ public class GetViewModel extends AndroidViewModel {
 
 
     }
+
 
 
 }
