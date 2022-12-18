@@ -113,14 +113,23 @@ public class OTPActivity extends AppCompatActivity {
         back_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (s_user_name == null) {
-                    startActivity(new Intent(OTPActivity.this, LoginActivity.class));
+                String s;
+                Intent intent;
+                MyLog.e(TAG,"number>>back>>118>>"+s_user_name);
+                if (s_user_name.equals(null)) {
+                    s = null + "!" + null + "!" + s_phone_number;
+                    MyLog.e(TAG,"number>>back>>118>>LoginActivity");
+
+                    intent = new Intent(OTPActivity.this, LoginActivity.class);
+
                 } else {
-                    String s=s_email+"!"+s_user_name+"!"+s_phone_number;
-                    Intent  intent=new Intent(OTPActivity.this,RegisterActivity.class);
-                    intent.putExtra("OTP_VerifyUsers",s );
-                    startActivity(intent);
+                    s = s_email + "!" + s_user_name + "!" + s_phone_number;
+                    MyLog.e(TAG,"number>>back>>118>>RegisterActivity");
+
+                    intent = new Intent(OTPActivity.this, RegisterActivity.class);
                 }
+                intent.putExtra("OTP_VerifyUsers",s );
+                startActivity(intent);
             }
         });
 
@@ -153,7 +162,9 @@ public class OTPActivity extends AppCompatActivity {
                 //check the details
                 if (CheckDetails()) {
 
-                    if (s_user_name == null) {
+                    if (s_user_name.equals(null)) {
+                        getViewModel.GetUserDeatils(s_phone_number);
+
                         startActivity(new Intent(OTPActivity.this, MainActivity.class));
 
 
